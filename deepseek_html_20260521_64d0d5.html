@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>集成电路半导体器件 · 考前复习精要</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 24px 20px;
+            color: #1e2a3a;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            border: 1px solid #e9edf2;
+        }
+        .card-header {
+            border-left: 6px solid #2c7da0;
+            padding-left: 18px;
+            margin-bottom: 1.2rem;
+        }
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0b3b4f;
+            letter-spacing: -0.3px;
+        }
+        .card-header h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #2c7da0;
+            margin-top: 8px;
+        }
+        .subtitle {
+            color: #2c7da0;
+            font-weight: 500;
+            margin: 0.8rem 0 0.4rem 0;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        .formula {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-family: 'Courier New', 'SF Mono', monospace;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 1px 2px #00000008;
+        }
+        .highlight {
+            background: #eef2ff;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-family: monospace;
+        }
+        .grid-2 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .grid-item {
+            flex: 1;
+            min-width: 240px;
+            background: #f9fafb;
+            border-radius: 24px;
+            padding: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #e6f4f0;
+            font-weight: 600;
+        }
+        .svg-container {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .legend {
+            display: inline-flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+        }
+        @media (max-width: 680px) {
+            .card {
+                padding: 1.2rem;
+            }
+            .card-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        button {
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 标题 -->
+    <div style="text-align: center; margin-bottom: 24px;">
+        <h1 style="font-size: 2rem; color: #0f3b4c;">⚡ 半导体器件 · 考前核心笔记</h1>
+        <p style="color: #2c7da0;">PN结 · 能带理论 · MOSFET参数精讲 (含物理图解)</p>
+    </div>
+
+    <!-- ================= 第一题：二极管 ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📌 第一题 · 二极管的原理与应用</h2>
+            <h3>PN结 · 单向导电性 · 物理机制详解</h3>
+        </div>
+        <p><strong>✓ 核心物理机制：</strong> PN结内建电场 → 正向势垒降低 → 少数载流子注入 → 扩散电流；反向势垒升高 → 微小漂移电流。</p>
+        
+        <!-- 能带图 SVG (零偏/正偏对比) -->
+        <div class="svg-container">
+            <p style="font-weight: 600; margin-bottom: 8px;">📐 能带图对比 (零偏 vs 正偏)</p>
+            <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2c3e50" />
+                    </marker>
+                </defs>
+                <!-- 左半部分：零偏 -->
+                <text x="120" y="30" font-size="14" font-weight="bold" fill="#2c7da0">零偏 (平衡)</text>
+                <text x="120" y="50" font-size="12" fill="#444">P区</text>
+                <text x="280" y="50" font-size="12" fill="#444">N区</text>
+                <!-- 能带线 Ec, Ev -->
+                <line x1="40" y1="120" x2="200" y2="100" stroke="#d9534f" stroke-width="2.5" stroke-dasharray="4 2"/>
+                <line x1="200" y1="100" x2="380" y2="140" stroke="#d9534f" stroke-width="2.5" stroke-dasharray="4 2"/>
+                <text x="390" y="145" fill="#d9534f" font-size="12">E<sub>c</sub></text>
+                <line x1="40" y1="180" x2="200" y2="160" stroke="#5bc0de" stroke-width="2.5" stroke-dasharray="4 2"/>
+                <line x1="200" y1="160" x2="380" y2="200" stroke="#5bc0de" stroke-width="2.5" stroke-dasharray="4 2"/>
+                <text x="390" y="205" fill="#5bc0de" font-size="12">E<sub>v</sub></text>
+                <!-- 费米能级 -->
+                <line x1="30" y1="150" x2="390" y2="150" stroke="black" stroke-width="1.5" stroke-dasharray="6 3"/>
+                <text x="395" y="153" font-size="12" fill="black">E<sub>F</sub></text>
+                <!-- 标注耗尽层 -->
+                <rect x="170" y="90" width="60" height="120" fill="#f0e6d2" opacity="0.4" rx="4"/>
+                <text x="185" y="160" font-size="10" fill="#8b5a2b">耗尽层</text>
+                <!-- 右半部分：正偏 -->
+                <text x="550" y="30" font-size="14" font-weight="bold" fill="#2c7da0">正向偏置 (V&gt;0)</text>
+                <text x="550" y="50" font-size="12" fill="#444">P区</text>
+                <text x="710" y="50" font-size="12" fill="#444">N区</text>
+                <line x1="470" y1="110" x2="630" y2="80" stroke="#d9534f" stroke-width="2.5"/>
+                <line x1="630" y1="80" x2="810" y2="100" stroke="#d9534f" stroke-width="2.5"/>
+                <line x1="470" y1="170" x2="630" y2="140" stroke="#5bc0de" stroke-width="2.5"/>
+                <line x1="630" y1="140" x2="810" y2="160" stroke="#5bc0de" stroke-width="2.5"/>
+                <line x1="460" y1="130" x2="820" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="6 3"/>
+                <text x="470" y="200" font-size="11" fill="#1f6d49">势垒降低 → 载流子注入 → 大电流</text>
+                <!-- 箭头说明注入 -->
+                <path d="M 610 120 L 610 90" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow)"/>
+                <path d="M 650 140 L 650 170" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="615" y="85" font-size="10" fill="#e67e22">电子注入</text>
+                <text x="655" y="178" font-size="10" fill="#e67e22">空穴注入</text>
+            </svg>
+            <div class="legend">🔴 E<sub>c</sub> (导带底) &nbsp; 🔵 E<sub>v</sub> (价带顶) &nbsp; ⚫ E<sub>F</sub> (费米能级)</div>
+        </div>
+
+        <!-- I-V 特性曲线 SVG -->
+        <div class="svg-container">
+            <p style="font-weight: 600;">📈 二极管 I-V 特性 (指数正向 / 反向饱和)</p>
+            <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+                <line x1="80" y1="340" x2="650" y2="340" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="80" y1="340" x2="80" y2="30" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="660" y="330" font-size="13">V (V)</text>
+                <text x="50" y="40" font-size="13">I (mA)</text>
+                <!-- 正向指数曲线 -->
+                <path d="M 120 335 Q 180 330, 220 300 Q 250 250, 300 180 Q 340 100, 400 40" stroke="#2c7da0" stroke-width="3" fill="none"/>
+                <text x="380" y="30" fill="#2c7da0" font-size="12">正向导通</text>
+                <!-- 反向近似水平 -->
+                <line x1="100" y1="340" x2="200" y2="340" stroke="#a94442" stroke-width="2.5" stroke-dasharray="4 2"/>
+                <text x="130" y="335" fill="#a94442" font-size="12">I<sub>0</sub> 反向饱和</text>
+                <!-- 反向击穿示意 -->
+                <path d="M 200 340 Q 250 345, 280 360 L 290 380" stroke="#c0392b" stroke-width="2" fill="none"/>
+                <text x="250" y="390" fill="#c0392b" font-size="11">击穿区</text>
+                <!-- 坐标轴原点 -->
+                <circle cx="80" cy="340" r="3" fill="black"/>
+                <text x="65" y="360" font-size="12">0</text>
+            </svg>
+            <p class="formula" style="margin-top: 5px;">二极管电流方程： \( I = I_0 \left(e^{\frac{qV}{nkT}} - 1\right) \) &nbsp; 室温下 \( kT/q \approx 26\,\text{mV} \)</p>
+        </div>
+
+        <div class="subtitle">🔧 二极管典型应用（物理基础 + 实例）</div>
+        <div class="grid-2">
+            <div class="grid-item"><strong>✅ 整流</strong><br>AC→DC，利用单向导电性。 <span class="highlight">桥式整流</span>、电源适配器。</div>
+            <div class="grid-item"><strong>✅ 稳压（齐纳）</strong><br>反向击穿区电压恒定，用于 <span class="highlight">稳压电路/过压保护</span>。</div>
+            <div class="grid-item"><strong>✅ 发光二极管(LED)</strong><br>电子-空穴复合发光，<span class="highlight">\(h\nu \approx E_g\)</span> ，照明、指示。</div>
+            <div class="grid-item"><strong>✅ 光电二极管/太阳能电池</strong><br>光生载流子被内建电场分离，<span class="highlight">光探测、光伏发电</span>。</div>
+            <div class="grid-item"><strong>✅ 温度传感</strong><br>正向压降 \(V_f\) 约 -2mV/℃，集成传感器。</div>
+            <div class="grid-item"><strong>✅ 高频开关/续流</strong><br>肖特基二极管低正向压降，快速恢复。</div>
+        </div>
+    </div>
+
+    <!-- ================= 第二题：导体/半导体/绝缘体 ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📌 第二题 · 禁带宽度 & 绝缘体不导电的原因</h2>
+            <h3>能带结构对比 · 物理本质</h3>
+        </div>
+        <div class="svg-container">
+            <p style="font-weight: 600;">🏷️ 导体 · 半导体 · 绝缘体 能带对比图</p>
+            <svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg">
+                <!-- 导体（金属） -->
+                <rect x="40" y="70" width="160" height="180" rx="12" fill="#f8efe0" stroke="#aaa"/>
+                <text x="120" y="60" text-anchor="middle" font-weight="bold" fill="#2c3e50">导体 (Cu/Al)</text>
+                <rect x="60" y="90" width="120" height="60" fill="#cfe9df" stroke="#2c7da0" stroke-width="1.5"/>
+                <rect x="60" y="160" width="120" height="60" fill="#d9e2e8" stroke="#2c7da0" stroke-width="1.5"/>
+                <text x="120" y="130" text-anchor="middle" font-size="12">导带</text>
+                <text x="120" y="195" text-anchor="middle" font-size="12">价带</text>
+                <text x="120" y="280" text-anchor="middle" font-size="11" fill="#555">带隙 = 0 (重叠)</text>
+                <text x="120" y="295" text-anchor="middle" font-size="11" fill="#d97706">自由电子极多</text>
+
+                <!-- 半导体 (Si) -->
+                <rect x="280" y="70" width="160" height="180" rx="12" fill="#f0f7fb" stroke="#aaa"/>
+                <text x="360" y="60" text-anchor="middle" font-weight="bold" fill="#2c3e50">半导体 (Si, Ge)</text>
+                <rect x="300" y="90" width="120" height="50" fill="#e2f0e6" stroke="#2c7da0" stroke-width="1.5"/>
+                <rect x="300" y="180" width="120" height="50" fill="#f0e1d0" stroke="#2c7da0" stroke-width="1.5"/>
+                <!-- 禁带 -->
+                <rect x="300" y="140" width="120" height="40" fill="#fdf5e6" stroke="#f4a261" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <text x="360" y="163" text-anchor="middle" font-size="11" fill="#e67e22">E<sub>g</sub> ≈ 1.1 eV</text>
+                <text x="360" y="280" text-anchor="middle" font-size="11" fill="#555">热激发→少量载流子</text>
+
+                <!-- 绝缘体 (SiO₂) -->
+                <rect x="530" y="70" width="160" height="180" rx="12" fill="#f5eef7" stroke="#aaa"/>
+                <text x="610" y="60" text-anchor="middle" font-weight="bold" fill="#2c3e50">绝缘体 (SiO₂)</text>
+                <rect x="550" y="90" width="120" height="40" fill="#ede2f0" stroke="#2c7da0" stroke-width="1.5"/>
+                <rect x="550" y="200" width="120" height="40" fill="#f3dbcf" stroke="#2c7da0" stroke-width="1.5"/>
+                <rect x="550" y="130" width="120" height="70" fill="#fff3e0" stroke="#d97706" stroke-width="2" stroke-dasharray="4 2"/>
+                <text x="610" y="165" text-anchor="middle" font-size="11" fill="#e67e22">E<sub>g</sub> ≈ 9 eV</text>
+                <text x="610" y="280" text-anchor="middle" font-size="11" fill="#d97706">❌ 无自由载流子</text>
+            </svg>
+        </div>
+        <div class="subtitle">📖 绝缘体不导电的深层原因（必背）</div>
+        <ul style="margin: 10px 0 0 25px; line-height: 1.5;">
+            <li>🔹 <strong>禁带宽度极大</strong>：SiO₂ 的 \(E_g \approx 9\,\text{eV}\)，而室温热能 \(kT \approx 26\,\text{meV}\) 远小于 \(E_g\)。</li>
+            <li>🔹 电子无法从价带跃迁至导带 → 导带电子浓度 ≈ 0，价带电子被束缚无法形成电流。</li>
+            <li>🔹 即使外加极高电场，也无足够自由载流子参与导电（仅有极小隧穿漏电）。</li>
+            <li>🔹 对比：半导体 \(E_g\) 约 1 eV，部分电子可被激发；导体导带半满，电子自由移动。</li>
+        </ul>
+        <div class="formula" style="margin-top: 12px;">💡 本征载流子浓度： \(n_i = \sqrt{N_c N_v}\,e^{-E_g/(2kT)}\) → 绝缘体 \(n_i\) 几乎为0</div>
+    </div>
+
+    <!-- ================= 第三题：MOSFET 性能 + W/L 影响 ================= -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📌 第三题 · MOSFET 器件性能 & W/L 对特性的影响</h2>
+            <h3>关键参数 · 短沟道效应 · 版图设计权衡</h3>
+        </div>
+        <!-- MOSFET 结构简图 -->
+        <div class="svg-container">
+            <p style="font-weight: 600;">🔬 MOSFET 结构示意 (NMOS)</p>
+            <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+                <rect x="80" y="110" width="580" height="90" fill="#eef2fa" stroke="#2c7da0" stroke-width="2" rx="6"/>
+                <rect x="120" y="70" width="500" height="45" fill="#cbd5e1" stroke="#1e3a5f" stroke-width="1.5" rx="4"/>
+                <text x="370" y="98" text-anchor="middle" font-weight="bold" font-size="14">多晶硅栅 (Poly / Metal)</text>
+                <rect x="130" y="155" width="60" height="35" fill="#d9534f" rx="4"/>
+                <text x="160" y="176" text-anchor="middle" fill="white" font-size="12" font-weight="bold">N⁺</text>
+                <rect x="550" y="155" width="60" height="35" fill="#d9534f" rx="4"/>
+                <text x="580" y="176" text-anchor="middle" fill="white" font-size="12" font-weight="bold">N⁺</text>
+                <text x="160" y="210" text-anchor="middle" font-size="11">源极 S</text>
+                <text x="580" y="210" text-anchor="middle" font-size="11">漏极 D</text>
+                <text x="370" y="210" text-anchor="middle" font-size="11">P型衬底 (Bulk)</text>
+                <!-- 沟道区标注 -->
+                <rect x="190" y="158" width="360" height="30" fill="#9bc6cf" opacity="0.5" rx="3"/>
+                <text x="370" y="178" text-anchor="middle" font-size="12" font-weight="500">沟道长度 L &nbsp;→&nbsp; 宽度 W (垂直纸面)</text>
+                <!-- 氧化层示意 -->
+                <line x1="120" y1="115" x2="620" y2="115" stroke="#f4a261" stroke-width="4" stroke-dasharray="6 3"/>
+                <text x="700" y="118" fill="#f4a261" font-size="11">SiO₂ (T<sub>ox</sub>)</text>
+            </svg>
+            <p class="legend">✅ 栅压控制反型层 → 导通源漏</p>
+        </div>
+
+        <!-- 关键性能参数表 -->
+        <div class="subtitle">📊 主要器件性能参数 & 物理含义</div>
+        <table>
+            <thead><tr><th>参数</th><th>符号</th><th>物理意义</th><th>对电路影响</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>阈值电压</td><td>\(V_t\)</td><td>开启沟道最小栅压</td><td>决定开关速度/功耗，受掺杂、氧化层影响</td></tr>
+                <tr><td>开态电流</td><td>\(I_{on}\)</td><td>饱和区最大驱动电流</td><td>越大 → 充放电越快 → 工作频率越高</td></tr>
+                <tr><td>关态电流</td><td>\(I_{off}\)</td><td>\(V_{gs}=0\) 时漏电流</td><td>越小 → 静态功耗越低，待机续航长</td></tr>
+                <tr><td>跨导</td><td>\(g_m\)</td><td>\(\partial I_d/\partial V_{gs}\)</td><td>放大能力，越大电压增益越高</td></tr>
+                <tr><td>输出电导</td><td>\(g_{ds}\)</td><td>\(\partial I_d/\partial V_{ds}\)</td><td>越小饱和特性越好，本征增益 \(g_m/g_{ds}\) 大</td></tr>
+                <tr><td>栅电容</td><td>\(C_g\)</td><td>\(W L C_{ox}\)</td><td>影响动态功耗和输入阻抗</td></tr>
+            </tbody>
+        </table>
+
+        <div class="subtitle">📏 沟道宽度 \(W\) 的影响（物理 + 设计权衡）</div>
+        <ul>
+            <li><strong>电流能力</strong>：\(I_d \propto W\) （线性区/饱和区）→ 宽晶体管驱动能力强。</li>
+            <li><strong>电容 & 速度</strong>：\(C_g \propto W\)，虽然 \(I_{on}\) 增大但自身栅电容也增大，一般速度仍提升。</li>
+            <li><strong>功耗</strong>：动态功耗 \(P_{dyn} \propto W\)，静态功耗 \(I_{off}\) 也正比于 \(W\)。</li>
+            <li><strong>版图面积</strong>：\(W\) 增大占用面积 ↑，单位芯片成本 ↑。</li>
+        </ul>
+
+        <div class="subtitle">📏 沟道长度 \(L\) 的影响（尤其短沟道效应）</div>
+        <div class="grid-2">
+            <div class="grid-item"><strong>✅ 长沟道 (\(L\) 较大)</strong><br>
+                • \(I_{dsat} \propto 1/L\) (平方律)<br>
+                • \(V_t\) 稳定，\(g_{ds}\) 很小 → 高本征增益<br>
+                • 速度较慢但漏电小
+            </div>
+            <div class="grid-item"><strong>⚡ 短沟道 (\(L\) 极小，纳米级)</strong><br>
+                • 速度饱和：\(I_{dsat} \approx W v_{sat}C_{ox}(V_{gs}-V_t - m\mathcal{E}_{sat}L)\)<br>
+                • <span class="highlight">\(V_t\) roll-off</span> (阈值电压降低) + DIBL → \(I_{off}\) 指数增大<br>
+                • 输出电导 \(g_{ds}\) 上升 → 增益下降<br>
+                • 优点：开关极快，集成度高
+            </div>
+        </div>
+        <div class="formula">
+            📐 长沟饱和电流公式：\(I_{dsat} = \dfrac{W}{2L}\mu C_{ox}(V_{gs}-V_t)^2\)<br>
+            🚀 短沟速度饱和近似：\(I_{dsat} = W v_{sat} C_{ox}(V_{gs}-V_t - m\mathcal{E}_{sat}L)\)
+        </div>
+
+        <!-- 对比W/L影响总结表 -->
+        <div class="subtitle">⚖️ \(W\) 与 \(L\) 对性能影响的总结对比</div>
+        <table>
+            <thead><tr><th>参数</th><th>增大 \(W\)</th><th>减小 \(L\) (短沟道)</th></tr></thead>
+            <tbody>
+                <tr><td>\(I_{on}\)</td><td>↑ 正比增加</td><td>↑↑ (但受速度饱和限制)</td></tr>
+                <tr><td>\(I_{off}\)</td><td>↑ 线性增加</td><td>↑↑ 指数上升 (短沟效应)</td></tr>
+                <tr><td>栅电容 \(C_g\)</td><td>↑ 正比</td><td>↓ 减小</td></tr>
+                <tr><td>开关速度</td><td>↑ (驱动能力提升)</td><td>↑↑ (渡越时间缩短 + 电容降)</td></tr>
+                <tr><td>静态功耗</td><td>↑</td><td>↑↑ 显著增大</td></tr>
+                <tr><td>本征增益 \(g_m/g_{ds}\)</td><td>不变 (理想)</td><td>↓ 因 \(g_{ds}\) 增大</td></tr>
+                <tr><td>面积/成本</td><td>↑</td><td>↓ 更小面积更多晶体管</td></tr>
+            </tbody>
+        </table>
+        <div class="svg-container">
+            <p style="font-weight: 600;">📉 不同 \(L\) 下 \(I_d-V_d\) 特性对比 (长沟 vs 短沟)</p>
+            <svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg">
+                <line x1="80" y1="280" x2="700" y2="280" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="80" y1="280" x2="80" y2="40" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="710" y="270" font-size="13">\(V_{ds}\) (V)</text>
+                <text x="40" y="50" font-size="13">\(I_d\)</text>
+                <!-- 长沟道饱和曲线 -->
+                <path d="M 120 270 Q 200 260, 280 180 Q 350 130, 400 120" stroke="#2c7da0" stroke-width="3" fill="none"/>
+                <text x="430" y="115" fill="#2c7da0" font-size="12">长沟道 (L=2μm) 饱和平坦</text>
+                <!-- 短沟道曲线 -->
+                <path d="M 120 270 Q 150 260, 200 210 Q 280 150, 360 140 Q 450 130, 550 130 L 600 130" stroke="#e67e22" stroke-width="3" fill="none" stroke-dasharray="5 2"/>
+                <text x="550" y="120" fill="#e67e22" font-size="12">短沟道 → 斜率大 (\(g_{ds}\)↑)</text>
+                <text x="220" y="230" fill="#e67e22" font-size="11">速度饱和 + DIBL效应</text>
+                <!-- 标注夹断点示意 -->
+                <circle cx="280" cy="180" r="3" fill="#d9534f"/>
+                <text x="290" y="175" font-size="10" fill="#d9534f">\(V_{dsat}\) (长沟)</text>
+                <circle cx="200" cy="210" r="3" fill="#d9534f"/>
+                <text x="205" y="205" font-size="10" fill="#d9534f">\(V_{dsat}\) (短沟)</text>
+            </svg>
+            <p style="margin-top: 8px;">💡 短沟道器件饱和电压更低，输出电阻 \(r_o = 1/g_{ds}\) 更小，模拟增益受限。</p>
+        </div>
+        <div class="highlight" style="display: inline-block; margin-top: 5px; background: #e9f5f1;">✅ 设计折中：在满足 \(I_{off}\) 规格下，尽量缩小 \(L\) 提升速度，并优化 \(W\) 以平衡驱动、电容与功耗。</div>
+    </div>
+
+    <!-- 额外Tips 以及 考试常用画图 -->
+    <div class="card" style="background: #fefce8;">
+        <div class="card-header">
+            <h2>🎯 考场技巧 · 必画图 & 核心公式</h2>
+        </div>
+        <ul style="margin-left: 25px; line-height: 1.6;">
+            <li>✏️ <strong>必画能带图</strong>：PN结零偏/正偏/反偏，标注 \(E_c, E_v, E_F\)，说明耗尽层宽度变化。</li>
+            <li>✏️ <strong>导体/半导体/绝缘体</strong>：三层能带对比，绝缘体画宽禁带，解释电子无法跃迁。</li>
+            <li>✏️ <strong>MOSFET I-V</strong>：画出线性区、饱和区，并标注 \(V_{dsat}\)；短沟道曲线斜率增大。</li>
+            <li>📌 二极管方程、MOSFET饱和电流平方律、\(V_t\) 表达式需默写。</li>
+        </ul>
+        <div class="formula">
+            📌 \(V_t = V_{fb} + 2\phi_B + \dfrac{\sqrt{4\epsilon_s q N_a \phi_B}}{C_{ox}}\) &nbsp;&nbsp; (NMOS增强型)<br>
+            📌 体效应：\(V_t(V_{sb}) = V_{t0} + \gamma(\sqrt{2\phi_B+V_{sb}}-\sqrt{2\phi_B})\)<br>
+            📌 CMOS 动态功耗 \(P = \alpha f C_L V_{dd}^2\)，静态功耗 \(P_{stat}=V_{dd}I_{off}\)
+        </div>
+        <p style="margin-top: 16px;">🔔 线上考试沉着应战，理解物理图像后再作答。祝你高分通过！</p>
+    </div>
+    <footer>📘 基于胡正明《现代集成电路半导体器件》整理 | 半导体物理核心考点 | 考前速览</footer>
+</div>
+</body>
+</html>
