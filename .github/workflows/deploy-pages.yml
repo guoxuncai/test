@@ -1,1 +1,35 @@
+name: Deploy Static HTML to GitHub Pages
+
+# 触发条件：推送到 main 分支时自动运行
+on:
+  push:
+    branches: [ main ]
+
+# 权限配置，Pages部署必须
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 并发：防止多次提交同时部署冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
+      - name: 上传静态网页工件
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 代表【仓库根目录】，直接使用根目录所有html/css/js
+          path: '.'
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
