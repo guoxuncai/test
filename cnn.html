@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脑神经网络与卷积 · 交互教学动画</title>
+<style>
+  :root{
+    --bg:#070b14;
+    --card:rgba(255,255,255,0.035);
+    --border:rgba(255,255,255,0.09);
+    --txt:#e2e8f0;
+    --dim:#8fa3bf;
+    --cyan:#22d3ee;
+    --amber:#fbbf24;
+    --rose:#fb7185;
+    --violet:#a78bfa;
+    --blue:#38bdf8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(900px 600px at 15% -5%, rgba(34,211,238,0.10), transparent 60%),
+      radial-gradient(900px 700px at 95% 10%, rgba(167,139,250,0.10), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(251,191,36,0.06), transparent 60%),
+      var(--bg);
+    color:var(--txt);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  header{
+    text-align:center;
+    padding:56px 20px 30px;
+  }
+  header h1{
+    margin:0 0 10px;
+    font-size:clamp(22px,3.4vw,36px);
+    font-weight:700;
+    letter-spacing:.5px;
+    background:linear-gradient(100deg,#22d3ee,#a78bfa 45%,#fbbf24);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header p{
+    margin:0;
+    color:var(--dim);
+    font-size:clamp(13px,1.6vw,15px);
+  }
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 20px 80px;
+  }
+  section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:26px 26px 30px;
+    margin-bottom:34px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 24px 60px -30px rgba(0,0,0,.9);
+  }
+  .sec-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;height:30px;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:700;
+    color:#04121c;
+    background:linear-gradient(135deg,#22d3ee,#38bdf8);
+    flex-shrink:0;
+  }
+  .badge.b2{background:linear-gradient(135deg,#fbbf24,#fb7185);}
+  .badge.b3{background:linear-gradient(135deg,#a78bfa,#818cf8);}
+  h2{
+    margin:0;
+    font-size:clamp(17px,2.2vw,21px);
+    font-weight:650;
+    letter-spacing:.3px;
+  }
+  .sub{
+    color:var(--dim);
+    font-size:13.5px;
+    margin:2px 0 20px;
+  }
+  canvas{display:block;max-width:100%;}
+
+  /* ===== 控件 ===== */
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-top:18px;
+  }
+  button{
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:550;
+    color:var(--txt);
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.13);
+    border-radius:10px;
+    padding:9px 16px;
+    cursor:pointer;
+    transition:.18s;
+    white-space:nowrap;
+  }
+  button:hover{
+    background:rgba(255,255,255,0.13);
+    transform:translateY(-1px);
+  }
+  button:active{transform:translateY(0);}
+  button.exc{
+    background:rgba(251,113,133,0.16);
+    border-color:rgba(251,113,133,0.45);
+    color:#fda4af;
+  }
+  button.exc:hover{background:rgba(251,113,133,0.28);}
+  button.inh{
+    background:rgba(167,139,250,0.16);
+    border-color:rgba(167,139,250,0.45);
+    color:#c4b5fd;
+  }
+  button.inh:hover{background:rgba(167,139,250,0.28);}
+  button.on{
+    background:rgba(34,211,238,0.22);
+    border-color:rgba(34,211,238,0.6);
+    color:#67e8f9;
+    box-shadow:0 0 0 1px rgba(34,211,238,.25), 0 0 20px -6px rgba(34,211,238,.7);
+  }
+  button.sel{
+    background:rgba(251,191,36,0.18);
+    border-color:rgba(251,191,36,0.55);
+    color:#fcd34d;
+  }
+
+  /* ===== 卷积布局 ===== */
+  .conv-stage{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+  .panel{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .panel h4{
+    margin:0;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--dim);
+    letter-spacing:.6px;
+  }
+  .op{
+    font-size:24px;
+    color:#475569;
+    font-weight:300;
+    padding-bottom:22px;
+    user-select:none;
+  }
+  .grid{
+    display:grid;
+    gap:3px;
+  }
+  #inputGrid{grid-template-columns:repeat(8,32px);grid-template-rows:repeat(8,32px);}
+  #kernelGrid{grid-template-columns:repeat(3,32px);grid-template-rows:repeat(3,32px);}
+  #outputGrid{grid-template-columns:repeat(6,32px);grid-template-rows:repeat(6,32px);}
+  .cell{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:5px;
+    font-size:11px;
+    font-variant-numeric:tabular-nums;
+    font-weight:600;
+    transition:background .28s ease,color .28s ease;
+    user-select:none;
+  }
+  .grid-wrap{
+    position:relative;
+    width:277px;
+    height:277px;
+    overflow:hidden;
+    border-radius:7px;
+    background:rgba(0,0,0,0.25);
+  }
+  #kernelOverlay{
+    position:absolute;
+    top:0;left:0;
+    width:102px;height:102px;
+    border:2px solid var(--amber);
+    border-radius:7px;
+    box-shadow:0 0 0 9999px rgba(0,0,0,0.55), 0 0 22px rgba(251,191,36,0.85), inset 0 0 14px rgba(251,191,36,0.35);
+    transition:transform .26s cubic-bezier(.4,0,.2,1);
+    pointer-events:none;
+    box-sizing:border-box;
+  }
+  .status{
+    font-size:12.5px;
+    color:var(--dim);
+    margin-top:12px;
+    text-align:center;
+    min-height:20px;
+    font-variant-numeric:tabular-nums;
+  }
+  .status b{color:var(--amber);font-weight:600;}
+
+  /* ===== 感受野 ===== */
+  .rf-stage{
+    display:flex;
+    gap:34px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+  .rf-wrap{
+    position:relative;
+    width:284px;height:284px;
+    background:rgba(0,0,0,0.25);
+    border-radius:9px;
+    overflow:hidden;
+  }
+  #rfGrid{grid-template-columns:repeat(11,24px);grid-template-rows:repeat(11,24px);gap:2px;}
+  .rf-cell{font-size:0;}
+  #rfOverlay{
+    position:absolute;
+    top:0;left:0;
+    width:76px;height:76px;
+    border:2px solid var(--violet);
+    border-radius:8px;
+    box-shadow:0 0 0 9999px rgba(0,0,0,0.5), 0 0 24px rgba(167,139,250,0.9);
+    transition:transform .55s cubic-bezier(.34,1.2,.4,1), width .55s cubic-bezier(.34,1.2,.4,1), height .55s cubic-bezier(.34,1.2,.4,1);
+    pointer-events:none;
+    box-sizing:border-box;
+  }
+  .rf-info{
+    max-width:330px;
+    font-size:14px;
+    color:var(--dim);
+  }
+  .rf-info .big{
+    font-size:17px;
+    color:#c4b5fd;
+    font-weight:650;
+    margin-bottom:10px;
+    display:block;
+  }
+  .rf-info .desc{min-height:56px;}
+  .layers{
+    display:flex;
+    gap:6px;
+    margin-top:16px;
+  }
+  .layer-dot{
+    flex:1;
+    height:5px;
+    border-radius:3px;
+    background:rgba(255,255,255,0.09);
+    transition:.3s;
+  }
+  .layer-dot.active{background:linear-gradient(90deg,#a78bfa,#818cf8);box-shadow:0 0 12px rgba(167,139,250,.8);}
+
+  footer{
+    text-align:center;
+    color:#4b5b73;
+    font-size:12.5px;
+    padding:0 20px 60px;
+  }
+  @media (max-width:720px){
+    section{padding:20px 16px 24px;}
+    .grid-wrap{width:233px;height:233px;}
+    #inputGrid{grid-template-columns:repeat(8,27px);grid-template-rows:repeat(8,27px);}
+    #kernelGrid{grid-template-columns:repeat(3,27px);grid-template-rows:repeat(3,27px);}
+    #outputGrid{grid-template-columns:repeat(6,27px);grid-template-rows:repeat(6,27px);}
+    #kernelOverlay{width:87px;height:87px;}
+    .op{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>脑神经网络机制 × 卷积原理</h1>
+  <p>交互式教学动画 · 从神经元的脉冲发放，到卷积核的滑动计算</p>
+</header>
+
+<main>
+
+  <!-- ================= 第一部分：神经元 ================= -->
+  <section>
+    <div class="sec-head">
+      <span class="badge">1</span>
+      <h2>神经元如何整合信号并发放脉冲</h2>
+    </div>
+    <p class="sub">
+      树突接收突触输入 → 胞体进行时空整合 → 膜电位超过阈值 → 沿轴突发放动作电位。
+      点击下方按钮注入信号，观察膜电位的变化。
+    </p>
+
+    <canvas id="neuronCanvas" style="width:100%;aspect-ratio:900/460;"></canvas>
+
+    <div class="controls">
+      <button class="exc" id="btnExc">⚡ 兴奋性输入 (+7 mV)</button>
+      <button class="inh" id="btnInh">🛑 抑制性输入 (−9 mV)</button>
+      <button id="btnAuto">▶ 自动模式</button>
+      <button id="btnClear">重置电位</button>
+    </div>
+  </section>
+
+  <!-- ================= 第二部分：卷积 ================= -->
+  <section>
+    <div class="sec-head">
+      <span class="badge b2">2</span>
+      <h2>卷积核如何滑过输入并生成特征图</h2>
+    </div>
+    <p class="sub">
+      3×3 的卷积核在 8×8 输入上逐格滑动，每个位置做「加权求和」，结果写入输出特征图。
+      同一个卷积核在整张图上共享参数——这就是权值共享。
+    </p>
+
+    <div class="conv-stage">
+      <div class="panel">
+        <h4>输入 8×8</h4>
+        <div class="grid-wrap">
+          <div id="inputGrid" class="grid"></div>
+          <div id="kernelOverlay"></div>
+        </div>
+      </div>
+
+      <div class="op">∗</div>
+
+      <div class="panel">
+        <h4>卷积核 3×3</h4>
+        <div id="kernelGrid" class="grid"></div>
+      </div>
+
+      <div class="op">=</div>
+
+      <div class="panel">
+        <h4>输出特征图 6×6</h4>
+        <div id="outputGrid" class="grid"></div>
+      </div>
+    </div>
+
+    <div class="controls" style="justify-content:center;">
+      <button id="btnPlay">▶ 开始卷积</button>
+      <button id="btnReset">↺ 重置</button>
+      <span style="width:1px;height:24px;background:rgba(255,255,255,.12);"></span>
+      <button class="kbtn sel" data-k="vedge">垂直边缘</button>
+      <button class="kbtn" data-k="hedge">水平边缘</button>
+      <button class="kbtn" data-k="blur">均值模糊</button>
+      <button class="kbtn" data-k="sharp">锐化</button>
+      <span style="width:1px;height:24px;background:rgba(255,255,255,.12);"></span>
+      <button id="btnSpeed">速度：中</button>
+    </div>
+    <div class="status" id="convStatus">选择卷积核，点击「开始卷积」</div>
+  </section>
+
+  <!-- ================= 第三部分：感受野 ================= -->
+  <section>
+    <div class="sec-head">
+      <span class="badge b3">3</span>
+      <h2>层级堆叠：感受野如何逐层扩大</h2>
+    </div>
+    <p class="sub">
+      每一层卷积都在前一层的基础上继续聚合局部信息。层数越深，单个神经元能"看到"的输入区域越大——这就是高层特征能表达整体语义的原因。
+    </p>
+
+    <div class="rf-stage">
+      <div class="rf-wrap">
+        <div id="rfGrid" class="grid"></div>
+        <div id="rfOverlay"></div>
+      </div>
+
+      <div class="rf-info">
+        <span class="big" id="rfTitle">第 1 层 · 3×3</span>
+        <div class="desc" id="rfText">
+          最底层的神经元只连接到输入的一个 3×3 小窗口，相当于生物视网膜/初级视皮层细胞的局部感受野。
+        </div>
+        <div class="layers" id="rfDots">
+          <div class="layer-dot active"></div>
+          <div class="layer-dot"></div>
+          <div class="layer-dot"></div>
+          <div class="layer-dot"></div>
+        </div>
+        <div class="controls">
+          <button id="btnRfPrev">← 上一层</button>
+          <button id="btnRfNext">下一层 →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>脑网络是生物计算的真实实现 · 卷积是它的高度数学化抽象</footer>
+
+<script>
+/* =========================================================
+   工具函数
+   ========================================================= */
+const $ = id => document.getElementById(id);
+
+function rrect(ctx, x, y, w, h, r){
+  r = Math.max(0, Math.min(r, h/2, w/2));
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w, y,   x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x,   y+h, r);
+  ctx.arcTo(x,   y+h, x,   y,   r);
+  ctx.arcTo(x,   y,   x+w, y,   r);
+  ctx.closePath();
+}
+
+/* =========================================================
+   第 1 部分：神经元脉冲动画
+   ========================================================= */
+(function initNeuron(){
+
+  const canvas = $('neuronCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 900, H = 460;
+
+  function fit(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = Math.round(rect.width  * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    const s = canvas.width / W;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+  }
+
+  /* ---------- 几何定义 ---------- */
+  const SOMA = { x: 380, y: 200, r: 44 };
+
+  const DENDRITES = [
+    { end:{x: 80, y: 70},  c1:{x:160, y: 70},  c2:{x:260, y:105} },
+    { end:{x: 60, y:190},  c1:{x:150, y:180},  c2:{x:255, y:192} },
+    { end:{x: 90, y:320},  c1:{x:165, y:325},  c2:{x:265, y:275} },
+    { end:{x:200, y:395},  c1:{x:235, y:360},  c2:{x:305, y:315} }
+  ];
+
+  const AXON_PATHS = [
+    [{x:424,y:200},{x:660,y:200},{x:745,y:145},{x:812,y:105}],
+    [{x:424,y:200},{x:660,y:200},{x:745,y:255},{x:812,y:295}]
+  ];
+
+  function somaEdge(end){
+    const dx = end.x - SOMA.x, dy = end.y - SOMA.y;
+    const d = Math.hypot(dx, dy) || 1;
+    return { x: SOMA.x + dx/d*SOMA.r, y: SOMA.y + dy/d*SOMA.r };
+  }
+
+  function cubicAt(p0,p1,p2,p3,t){
+    const mt = 1-t;
+    const a = mt*mt*mt, b = 3*mt*mt*t, c = 3*mt*t*t, d = t*t*t;
+    return {
+      x: a*p0.x + b*p1.x + c*p2.x + d*p3.x,
+      y: a*p0.y + b*p1.y + c*p2.y + d*p3.y
+    };
+  }
+
+  function pathLength(p){
+    let L = 0;
+    for(let i=1;i<p.length;i++) L += Math.hypot(p[i].x-p[i-1].x, p[i].y-p[i-1].y);
+    return L;
+  }
+  function pointAt(path, t){
+    const total = pathLength(path);
+    let d = t * total;
+    for(let i=1;i<path.length;i++){
+      const seg = Math.hypot(path[i].x-path[i-1].x, path[i].y-path[i-1].y);
+      if(d <= seg){
+        const k = seg > 0 ? d/seg : 0;
+        return {
+          x: path[i-1].x + (path[i].x - path[i-1].x)*k,
+          y: path[i-1].y + (path[i].y - path[i-1].y)*k
+        };
+      }
+      d -= seg;
+    }
+    return path[path.length-1];
+  }
+
+  /* ---------- 状态 ---------- */
+  const V_REST = -70, V_THRESH = -55;
+  let V = V_REST;
+  let particles = [];   // 沿树突传向胞体的输入
+  let spikes    = [];   // 沿轴突传出的动作电位
+  let auto      = false;
+  let lastFire  = 0;
+  let fireFlash = 0;
+
+  /* ---------- 交互 ---------- */
+  function addInput(type){
+    const di = Math.floor(Math.random()*DENDRITES.length);
+    particles.push({ di, t: 0, type });
+  }
+
+  function fire(){
+    V = V_REST;
+    lastFire = performance.now();
+    fireFlash = 1;
+    AXON_PATHS.forEach(p => spikes.push({ path:p, t:0 }));
+  }
+
+  $('btnExc').addEventListener('click', ()=> addInput('exc'));
+  $('btnInh').addEventListener('click', ()=> addInput('inh'));
+  $('btnAuto').addEventListener('click', function(){
+    auto = !auto;
+    this.classList.toggle('on', auto);
+    this.textContent = auto ? '⏸ 自动模式（运行中）' : '▶ 自动模式';
+  });
+  $('btnClear').addEventListener('click', ()=>{
+    V = V_REST; particles = []; spikes = [];
+  });
+
+  /* ---------- 更新 ---------- */
+  function update(dt){
+    // 膜电位漏电（回归静息）
+    V += (V_REST - V) * 0.012 * dt;
+
+    // 输入粒子
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.t += 0.013 * dt;
+      if(p.t >= 1){
+        V += (p.type === 'exc') ? 7 : -9;
+        particles.splice(i,1);
+      }
+    }
+
+    // 阈值判断 → 发放
+    if(V >= V_THRESH && performance.now() - lastFire > 260){
+      fire();
+    }
+
+    // 动作电位粒子
+    for(let i=spikes.length-1;i>=0;i--){
+      spikes[i].t += 0.014 * dt;
+      if(spikes[i].t >= 1) spikes.splice(i,1);
+    }
+
+    // 自动模式
+    if(auto && Math.random() < 0.016 * dt){
+      addInput(Math.random() < 0.72 ? 'exc' : 'inh');
+    }
+
+    if(fireFlash > 0) fireFlash -= 0.045 * dt;
+  }
+
+  /* ---------- 绘制 ---------- */
+  function drawDendrites(){
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.shadowColor = 'rgba(45,212,191,0.55)';
+    ctx.shadowBlur = 12;
+    ctx.strokeStyle = 'rgba(45,212,191,0.55)';
+    ctx.lineWidth = 4;
+    DENDRITES.forEach(d => {
+      const e = somaEdge(d.end);
+      ctx.beginPath();
+      ctx.moveTo(d.end.x, d.end.y);
+      ctx.bezierCurveTo(d.c1.x, d.c1.y, d.c2.x, d.c2.y, e.x, e.y);
+      ctx.stroke();
+    });
+    // 突触小泡
+    ctx.shadowBlur = 8;
+    DENDRITES.forEach(d => {
+      ctx.beginPath();
+      ctx.arc(d.end.x, d.end.y, 7, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(45,212,191,0.35)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(45,212,191,0.9)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawAxon(){
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = 'rgba(45,212,191,0.45)';
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = 'rgba(45,212,191,0.45)';
+    ctx.lineWidth = 4;
+    AXON_PATHS.forEach(p => {
+      ctx.beginPath();
+      ctx.moveTo(p[0].x, p[0].y);
+      for(let i=1;i<p.length;i++) ctx.lineTo(p[i].x, p[i].y);
+      ctx.stroke();
+    });
+    // 轴突末梢
+    ctx.shadowBlur = 14;
+    AXON_PATHS.forEach(p => {
+      const e = p[p.length-1];
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 8, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(251,191,36,0.28)';
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function drawSoma(){
+    const dep = Math.max(0, Math.min(1, (V - V_REST) / (V_THRESH - V_REST)));
+    const cr = Math.round(34  + (244-34 )*dep);
+    const cg = Math.round(211 + (114-211)*dep);
+    const cb = Math.round(238 + (182-238)*dep);
+
+    const g = ctx.createRadialGradient(
+      SOMA.x-14, SOMA.y-16, 4,
+      SOMA.x, SOMA.y, SOMA.r
+    );
+    g.addColorStop(0, `rgba(${Math.min(255,cr+70)},${Math.min(255,cg+45)},${Math.min(255,cb+30)},1)`);
+    g.addColorStop(1, `rgba(${cr},${cg},${cb},0.8)`);
+
+    ctx.save();
+    ctx.shadowColor = `rgba(${cr},${cg},${cb},0.95)`;
+    ctx.shadowBlur = 22 + 34*dep + (fireFlash>0 ? 40*fireFlash : 0);
+    ctx.beginPath();
+    ctx.arc(SOMA.x, SOMA.y, SOMA.r, 0, Math.PI*2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.restore();
+
+    // 内核高光
+    ctx.beginPath();
+    ctx.arc(SOMA.x-14, SOMA.y-16, 12, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.fill();
+  }
+
+  function drawParticles(){
+    particles.forEach(p => {
+      const d = DENDRITES[p.di];
+      const e = somaEdge(d.end);
+      const pos = cubicAt(d.end, d.c1, d.c2, e, p.t);
+      const col = p.type === 'exc' ? '#fb7185' : '#a78bfa';
+      ctx.save();
+      ctx.shadowColor = col;
+      ctx.shadowBlur = 16;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 5.5, 0, Math.PI*2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawSpikes(){
+    spikes.forEach(s => {
+      const pos = pointAt(s.path, s.t);
+      ctx.save();
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur = 22;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 6, 0, Math.PI*2);
+      ctx.fillStyle = '#fde68a';
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawMeter(){
+    const x = 560, y = 46, w = 300, h = 20;
+
+    // 背景槽
+    ctx.fillStyle = 'rgba(255,255,255,0.055)';
+    rrect(ctx, x, y, w, h, 6);
+    ctx.fill();
+
+    // 电位填充
+    const frac = Math.max(0, Math.min(1, (V + 75) / 25));
+    if(frac > 0.001){
+      const grad = ctx.createLinearGradient(x, 0, x+w, 0);
+      grad.addColorStop(0,   '#0e7490');
+      grad.addColorStop(0.6, '#22d3ee');
+      grad.addColorStop(1,   '#fb7185');
+      ctx.save();
+      ctx.shadowColor = 'rgba(34,211,238,0.7)';
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = grad;
+      rrect(ctx, x, y, Math.max(w*frac, 4), h, 6);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 阈值刻度
+    const tx = x + w * ((-55 + 75) / 25);
+    ctx.save();
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle = 'rgba(251,191,36,0.9)';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(tx, y-7);
+    ctx.lineTo(tx, y+h+7);
+    ctx.stroke();
+    ctx.restore();
+
+    // 文字
+    ctx.fillStyle = '#8fa3bf';
+    ctx.font = '600 13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('膜电位', x, y - 16);
+
+    ctx.fillStyle = '#fcd34d';
+    ctx.font = '600 12px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('阈值 −55 mV', tx, y + h + 22);
+
+    ctx.fillStyle = '#64748b';
+    ctx.font = '11px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('−75', x, y + h + 22);
+    ctx.textAlign = 'right';
+    ctx.fillText('−50 mV', x + w, y + h + 22);
+
+    // 当前数值
+    ctx.textAlign = 'right';
+    ctx.fillStyle = V >= V_THRESH - 3 ? '#fbbf24' : '#67e8f9';
+    ctx.font = '700 14px ui-monospace,Menlo,monospace';
+    ctx.fillText(V.toFixed(1) + ' mV', x + w, y - 16);
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    drawDendrites();
+    drawAxon();
+    drawParticles();
+    drawSpikes();
+    drawSoma();
+    drawMeter();
+  }
+
+  /* ---------- 主循环 ---------- */
+  let lastT = performance.now();
+  function loop(t){
+    const dt = Math.min((t - lastT) / 16.67, 3);
+    lastT = t;
+    update(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', fit);
+  fit();
+  requestAnimationFrame(loop);
+
+})();
+
+/* =========================================================
+   第 2 部分：卷积滑动动画
+   ========================================================= */
+(function initConv(){
+
+  const CELL = 32, GAP = 3;
+  const IN_N = 8, K_N = 3, OUT_N = IN_N - K_N + 1; // 6
+
+  const inputGrid  = $('inputGrid');
+  const kernelGrid = $('kernelGrid');
+  const outputGrid = $('outputGrid');
+  const overlay    = $('kernelOverlay');
+  const statusEl   = $('convStatus');
+
+  /* ---------- 输入图案：空心方框 ---------- */
+  const inputData = [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0]
+  ];
+
+  const kernels = {
+    vedge: { name:'垂直边缘', data:[[-1,0,1],[-1,0,1],[-1,0,1]] },
+    hedge: { name:'水平边缘', data:[[-1,-1,-1],[0,0,0],[1,1,1]] },
+    blur:  { name:'均值模糊', data:[[1/9,1/9,1/9],[1/9,1/9,1/9],[1/9,1/9,1/9]] },
+    sharp: { name:'锐化',     data:[[0,-1,0],[-1,5,-1],[0,-1,0]] }
+  };
+
+  let currentKernel = 'vedge';
+  let maxAbs = 1;
+
+  /* ---------- 渲染输入 ---------- */
+  function renderInput(){
+    inputGrid.innerHTML = '';
+    for(let r=0;r<IN_N;r++){
+      for(let c=0;c<IN_N;c++){
+        const v = inputData[r][c];
+        const d = document.createElement('div');
+        d.className = 'cell';
+        d.textContent = v;
+        if(v > 0){
+          d.style.background = 'rgba(56,189,248,0.85)';
+          d.style.color = '#0a2540';
+        }else{
+          d.style.background = 'rgba(30,41,59,0.9)';
+          d.style.color = '#475569';
+        }
+        inputGrid.appendChild(d);
+      }
+    }
+  }
+
+  /* ---------- 渲染卷积核 ---------- */
+  function renderKernel(){
+    const k = kernels[currentKernel].data;
+    kernelGrid.innerHTML = '';
+    let m = 0;
+    k.flat().forEach(v => m = Math.max(m, Math.abs(v)));
+    if(m === 0) m = 1;
+
+    for(let r=0;r<K_N;r++){
+      for(let c=0;c<K_N;c++){
+        const v = k[r][c];
+        const d = document.createElement('div');
+        d.className = 'cell';
+        d.textContent = Number.isInteger(v) ? v : (Math.round(v*100)/100);
+        const t = v / m;
+        if(t > 0){
+          d.style.background = `rgba(251,191,36,${0.18 + 0.7*t})`;
+          d.style.color = '#1c1200';
+        }else if(t < 0){
+          d.style.background = `rgba(96,165,250,${0.18 + 0.7*(-t)})`;
+          d.style.color = '#061428';
+        }else{
+          d.style.background = 'rgba(255,255,255,0.06)';
+          d.style.color = '#64748b';
+        }
+        kernelGrid.appendChild(d);
+      }
+    }
+  }
+
+  /* ---------- 输出网格 ---------- */
+  function renderOutputEmpty(){
+    outputGrid.innerHTML = '';
+    for(let i=0;i<OUT_N*OUT_N;i++){
+      const d = document.createElement('div');
+      d.className = 'cell';
+      d.style.background = 'rgba(255,255,255,0.035)';
+      d.style.color = '#f8fafc';
+      d.style.textShadow = '0 1px 3px rgba(0,0,0,.9)';
+      outputGrid.appendChild(d);
+    }
+  }
+
+  /* ---------- 计算 ---------- */
+  function computeAt(r, c){
+    const k = kernels[currentKernel].data;
+    let s = 0;
+    for(let i=0;i<K_N;i++)
+      for(let j=0;j<K_N;j++)
+        s += inputData[r+i][c+j] * k[i][j];
+    return s;
+  }
+
+  function computeMaxAbs(){
+    let m = 0;
+    for(let r=0;r<OUT_N;r++)
+      for(let c=0;c<OUT_N;c++)
+        m = Math.max(m, Math.abs(computeAt(r,c)));
+    return m || 1;
+  }
+
+  function valueColor(v){
+    const t = Math.max(-1, Math.min(1, v / maxAbs));
+    if(t >= 0){
+      const a = t;
+      return `rgba(${Math.round(30+(251-30)*a)},${Math.round(41+(191-41)*a)},${Math.round(59+(36-59)*a)},${0.55+0.45*a})`;
+    }else{
+      const a = -t;
+      return `rgba(${Math.round(30+(96-30)*a)},${Math.round(41+(165-41)*a)},${Math.round(59+(250-59)*a)},${0.55+0.45*a})`;
+    }
+  }
+
+  function setOutputCell(r, c, val){
+    const cell = outputGrid.children[r*OUT_N + c];
+    const rounded = Math.round(val*10)/10;
+    cell.textContent = rounded;
+    cell.style.background = valueColor(val);
+  }
+
+  /* ---------- 动画控制 ---------- */
+  let row = 0, col = 0, playing = false, timerId = null;
+  let speeds = [520, 340, 180], speedIdx = 1;
+
+  function moveOverlay(r, c){
+    overlay.style.transform = `translate(${c*(CELL+GAP)}px, ${r*(CELL+GAP)}px)`;
+  }
+
+  function resetAll(){
+    clearTimeout(timerId);
+    playing = false;
+    row = 0; col = 0;
+    moveOverlay(0,0);
+    renderOutputEmpty();
+    maxAbs = computeMaxAbs();
+    statusEl.innerHTML = '已重置 · 卷积核：<b>' + kernels[currentKernel].name + '</b>';
+    $('btnPlay').textContent = '▶ 开始卷积';
+    $('btnPlay').classList.remove('on');
+  }
+
+  function step(){
+    if(!playing) return;
+
+    const val = computeAt(row, col);
+    setOutputCell(row, col, val);
+
+    statusEl.innerHTML = `计算中 · 位置 (${row}, ${col}) · 输出值 <b>${Math.round(val*10)/10}</b>`;
+
+    col++;
+    if(col >= OUT_N){ col = 0; row++; }
+
+    if(row >= OUT_N){
+      playing = false;
+      statusEl.innerHTML = `✓ 完成 · 卷积核「<b>${kernels[currentKernel].name}</b>」生成了 ${OUT_N}×${OUT_N} 的特征图`;
+      $('btnPlay').textContent = '▶ 开始卷积';
+      $('btnPlay').classList.remove('on');
+      return;
+    }
+
+    moveOverlay(row, col);
+    timerId = setTimeout(step, speeds[speedIdx]);
+  }
+
+  function togglePlay(){
+    if(playing){
+      playing = false;
+      clearTimeout(timerId);
+      $('btnPlay').textContent = '▶ 继续卷积';
+      $('btnPlay').classList.remove('on');
+      return;
+    }
+    if(row >= OUT_N){ resetAll(); }
+
+    playing = true;
+    $('btnPlay').textContent = '⏸ 暂停';
+    $('btnPlay').classList.add('on');
+    timerId = setTimeout(step, speeds[speedIdx]);
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  $('btnPlay').addEventListener('click', togglePlay);
+  $('btnReset').addEventListener('click', resetAll);
+
+  $('btnSpeed').addEventListener('click', function(){
+    speedIdx = (speedIdx + 1) % 3;
+    this.textContent = '速度：' + ['慢','中','快'][speedIdx];
+  });
+
+  document.querySelectorAll('.kbtn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.kbtn').forEach(b => b.classList.remove('sel'));
+      this.classList.add('sel');
+      currentKernel = this.dataset.k;
+      resetAll();
+    });
+  });
+
+  /* ---------- 初始化 ---------- */
+  renderInput();
+  renderKernel();
+  renderOutputEmpty();
+  maxAbs = computeMaxAbs();
+  moveOverlay(0,0);
+
+})();
+
+/* =========================================================
+   第 3 部分：感受野逐层扩大
+   ========================================================= */
+(function initRF(){
+
+  const N = 11, C = 24, G = 2;
+  const grid = $('rfGrid');
+  const overlay = $('rfOverlay');
+
+  // 用随机深浅的格子模拟"输入图像"
+  for(let i=0;i<N*N;i++){
+    const r = Math.floor(i/N), c = i%N;
+    const d = document.createElement('div');
+    d.className = 'cell rf-cell';
+    // 造一个柔和的对角渐变纹理
+    const t = (r + c) / (2*(N-1));
+    const a = 0.06 + 0.28 * Math.abs(Math.sin(t*Math.PI*1.6));
+    d.style.background = `rgba(56,189,248,${a.toFixed(3)})`;
+    grid.appendChild(d);
+  }
+
+  const levels = [
+    { size:3, title:'第 1 层 · 3×3',
+      text:'最底层的神经元只连接到输入的一个 3×3 小窗口，相当于视网膜和初级视皮层细胞的局部感受野。' },
+    { size:5, title:'第 2 层 · 5×5',
+      text:'第二层在 3×3 特征图上再做一次 3×3 卷积，其感受野在原始输入上扩大到 5×5，开始捕捉边缘的组合。' },
+    { size:7, title:'第 3 层 · 7×7',
+      text:'第三层感受野继续扩张到 7×7，能响应更长的线段、角点等结构性特征。' },
+    { size:9, title:'第 4 层 · 9×9',
+      text:'第四层感受野覆盖 9×9，已经能看到大半个输入区域，足以表达轮廓与部件级别的语义。' }
+  ];
+
+  let idx = 0;
+  const dots = document.querySelectorAll('.layer-dot');
+
+  function apply(){
+    const { size, title, text } = levels[idx];
+    const off  = (N - size) / 2;
+    const left = off * (C + G);
+    const w    = size * C + (size - 1) * G;
+
+    overlay.style.transform = `translate(${left}px, ${left}px)`;
+    overlay.style.width  = w + 'px';
+    overlay.style.height = w + 'px';
+
+    $('rfTitle').textContent = title;
+    $('rfText').textContent  = text;
+
+    dots.forEach((d, i) => d.classList.toggle('active', i <= idx));
+  }
+
+  $('btnRfNext').addEventListener('click', ()=>{
+    idx = Math.min(idx + 1, levels.length - 1);
+    apply();
+  });
+  $('btnRfPrev').addEventListener('click', ()=>{
+    idx = Math.max(idx - 1, 0);
+    apply();
+  });
+
+  apply();
+
+})();
+</script>
+
+</body>
+</html>
