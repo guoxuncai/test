@@ -119,5 +119,5 @@ python tools/publish.py -m "自定义提交信息"
 | 双击 bat 提示「未检测到 Python」 | 安装 Python 并勾选 Add to PATH；安装后重开一个窗口再双击 |
 | 主页列表是空的 | 确认 html 确实在 `posts/` 的某个子目录里，然后跑一次 `发布更新.bat` |
 | 推送失败（权限/认证） | 确认 SSH key 已加到 GitHub，或用 GitHub Desktop / 手动 `git push` |
-| 本地双击 index.html 打不开列表 | 正常：浏览器安全策略限制。用「本地预览.bat」通过 http 打开即可 |
+| 列表一片空白 | ① 确认 html 在 `posts/` 的某个子目录里；② 跑一次 `发布更新.bat` 生成索引；③ 若直接双击 html 打开无内容，改用「本地预览.bat」通过 http 访问 |
 | 想改站点名/简介 | 编辑 `index.html` 里的品牌区与 hero 文案，保存后重新发布 |
