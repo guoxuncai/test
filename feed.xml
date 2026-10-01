@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>半导体 · 财经 学习笔记</title>
+    <link>https://guoxuncai.github.io/test/</link>
+    <description>半导体知识脉络与每日财经金融简报</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 01 Oct 2026 15:23:41 +0800</lastBuildDate>
+    <item>
+      <title>财经简报 · 版式示例（2026-10-01）</title>
+      <link>https://guoxuncai.github.io/test/posts/finance/2026-10-01-财经简报版式示例.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-10-01-财经简报版式示例.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[每日财经简报的标准排版示例：市场概览表格、要点框、红涨绿跌标记与标签区。真实数据请替换，确认无误后可删除本页。]]></description>
+    </item>
+    <item>
+      <title>脑神经网络与卷积 · 交互教学动画</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-09-20-脑神经网络与卷积交互教学动画.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-09-20-脑神经网络与卷积交互教学动画.html</guid>
+      <pubDate>Sun, 20 Sep 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[用交互动画拆解神经元脉冲发放机制与卷积核滑动计算过程，从生物神经元到 CNN 特征提取的可视化讲解。]]></description>
+    </item>
+    <item>
+      <title>半导体器件新手路径地图 | 设计→实验验证全流程 (详细行动清单)</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-06-01-半导体器件新手路径地图.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-06-01-半导体器件新手路径地图.html</guid>
+      <pubDate>Mon, 01 Jun 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从理论学习、软件安装、仿真练习到版图设计、MPW 流片与实验测试的完整行动清单，含每月可执行步骤与资源工具。]]></description>
+    </item>
+    <item>
+      <title>集成电路半导体器件 · 考前复习精要</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html</guid>
+      <pubDate>Thu, 21 May 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[重点梳理 PN 结、能带理论、MOSFET 核心参数与物理机制，含二极管原理、单向导电性与典型考题推导。]]></description>
+    </item>
+  </channel>
+</rss>

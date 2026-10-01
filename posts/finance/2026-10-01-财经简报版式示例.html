@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>财经简报 · 版式示例（2026-10-01）</title>
+<meta name="description" content="每日财经简报的标准排版示例：市场概览表格、要点框、红涨绿跌标记与标签区。真实数据请替换，确认无误后可删除本页。">
+<meta name="keywords" content="财经简报,版式示例,A股,半导体">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 财经 学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge fin">财经简报</span>
+    <h1 class="title">财经简报 · 版式示例（2026-10-01）</h1>
+    <div class="meta">
+      <span>2026-10-01</span>
+      <span class="sep"></span>
+      <span>模板演示页</span>
+      <span class="sep"></span>
+      <span>阅读约 1 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这是格式示例页</span>
+        本篇仅演示每日财经简报的标准排版结构（要点框 → 市场表格 → 分条资讯 → 明日关注 → 标签区）。
+        表中数字均为占位符 <code>xx</code>，不代表真实行情。<strong>正式写稿时请把此页内容整体替换；不需要展示时直接删除本文件，再运行一次「发布更新.bat」，主页会自动移除它的链接。</strong>
+      </div>
+
+      <h2>标准写法建议</h2>
+      <ol>
+        <li>文件名：<code>2026-10-01-标题关键词.html</code>，放进 <code>posts/finance/</code></li>
+        <li>页头三行元数据必须填：<code>description</code>（主页卡片摘要）、<code>keywords</code>（标签）、<code>date</code></li>
+        <li>颜色遵循 A 股习惯：<span class="up">涨用红色 .up</span>、<span class="down">跌用绿色 .down</span>，脚本与样式已内置</li>
+        <li>写完双击根目录 <code>发布更新.bat</code>，索引和 Git 推送会自动完成</li>
+      </ol>
+
+      <h2>市场概览（表格演示）</h2>
+      <table>
+        <thead>
+          <tr><th>指数 / 品种</th><th>收盘</th><th>涨跌幅</th><th>备注</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>上证指数</td><td>xx.xx</td><td class="up">+x.xx%</td><td>占位数据</td></tr>
+          <tr><td>深证成指</td><td>xx.xx</td><td class="down">-x.xx%</td><td>占位数据</td></tr>
+          <tr><td>半导体设备指数</td><td>xx.xx</td><td class="up">+x.xx%</td><td>占位数据</td></tr>
+        </tbody>
+      </table>
+
+      <h2>今日要点（列表演示）</h2>
+      <ul>
+        <li>要点一：<strong>一句话说完一件事</strong>，关键数据用加粗。</li>
+        <li>要点二：需要强调的判断可用 <em>黄色高亮</em>。</li>
+        <li>要点三：涉及涨跌的数字记得套用红绿样式。</li>
+      </ul>
+
+      <blockquote>重要结论单独拎出来放引用块，方便以后回看。</blockquote>
+
+      <h2>明日关注</h2>
+      <ol>
+        <li>待跟踪事项一</li>
+        <li>待跟踪事项二</li>
+      </ol>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#财经简报</span>
+      <span class="chip">#版式示例</span>
+      <span class="chip">#半导体</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

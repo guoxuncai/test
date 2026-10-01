@@ -1,0 +1,184 @@
+/* ==========================================================
+   文章页通用样式（每日新增的内容页统一引用）
+   文章固定放在 posts/<分类>/ 二级目录，故引用路径为：../../assets/css/article.css
+   ========================================================== */
+
+:root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #e3e7ed;
+    --text: #16202c;
+    --text-soft: #4a5768;
+    --text-mute: #7b8798;
+    --semi: #0d7ea8;
+    --fin: #b45309;
+    --accent: #1d4ed8;
+    --up: #d92f2f;    /* 涨 · 红 */
+    --down: #14902a;  /* 跌 · 绿 */
+    --radius: 14px;
+}
+
+html[data-theme="dark"] {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1b222b;
+    --border: #262d38;
+    --text: #e6edf3;
+    --text-soft: #a9b6c6;
+    --text-mute: #7d8b9d;
+    --semi: #38bdf8;
+    --fin: #fbbf24;
+    --accent: #6ea8fe;
+    --up: #f2555a;
+    --down: #2fbf5e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", Roboto, sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); }
+
+/* ---------- 顶部 ---------- */
+.topbar {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky; top: 0; z-index: 20;
+}
+.topbar-inner {
+    max-width: 860px; margin: 0 auto; padding: 0 20px;
+    height: 54px; display: flex; align-items: center; gap: 14px;
+}
+.back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .88rem; color: var(--text-soft);
+    padding: 5px 11px; border: 1px solid var(--border);
+    border-radius: 8px; transition: .18s;
+}
+.back:hover { color: var(--text); border-color: var(--text-mute); }
+.crumb { font-size: .82rem; color: var(--text-mute); }
+.topbar-spacer { flex: 1; }
+
+/* ---------- 文章容器 ---------- */
+.article {
+    max-width: 860px; margin: 0 auto; padding: 40px 20px 70px;
+}
+.article-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 42px 48px;
+    box-shadow: 0 6px 22px rgba(16, 24, 40, .06);
+}
+
+.cat-badge {
+    display: inline-block; font-size: .75rem; font-weight: 600;
+    padding: 3px 11px; border-radius: 999px; letter-spacing: .3px;
+}
+.cat-badge.semi { background: rgba(13,126,168,.1); color: var(--semi); }
+.cat-badge.fin  { background: rgba(180,83,9,.1);  color: var(--fin); }
+
+h1.title {
+    font-size: clamp(1.5rem, 3.6vw, 2.05rem);
+    line-height: 1.35; letter-spacing: -.4px; font-weight: 800;
+    margin: 14px 0 12px;
+}
+.meta {
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+    font-size: .83rem; color: var(--text-mute);
+    padding-bottom: 18px; border-bottom: 1px solid var(--border);
+}
+.sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-mute); }
+
+/* ---------- 正文排版 ---------- */
+.content { margin-top: 26px; font-size: 1rem; }
+.content > * + * { margin-top: 1.05em; }
+
+.content h2 {
+    font-size: 1.32rem; font-weight: 700; margin-top: 2em;
+    padding-left: 12px; border-left: 4px solid var(--semi);
+    line-height: 1.45; letter-spacing: -.2px;
+}
+.content h3 {
+    font-size: 1.08rem; font-weight: 650; margin-top: 1.6em; color: var(--text);
+}
+.content h4 { font-size: .98rem; font-weight: 650; margin-top: 1.4em; color: var(--text-soft); }
+
+.content p { color: var(--text-soft); }
+
+.content ul, .content ol { padding-left: 1.4em; color: var(--text-soft); }
+.content li { margin: .4em 0; }
+.content li::marker { color: var(--text-mute); }
+
+.content strong { color: var(--text); font-weight: 650; }
+.content em { font-style: normal; background: linear-gradient(transparent 62%, rgba(56,189,248,.28) 0); padding: 0 2px; }
+
+.content code {
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 6px;
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+    font-size: .88em; color: var(--text);
+}
+.content pre {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; overflow-x: auto;
+}
+.content pre code { background: none; border: none; padding: 0; font-size: .86rem; }
+
+.content blockquote {
+    border-left: 3px solid var(--border-strong, var(--border));
+    background: var(--surface-2);
+    padding: 12px 18px; border-radius: 0 10px 10px 0;
+    color: var(--text-soft); font-size: .95rem;
+}
+
+.content table {
+    width: 100%; border-collapse: collapse; font-size: .9rem;
+    display: block; overflow-x: auto; white-space: nowrap;
+}
+.content th, .content td {
+    border: 1px solid var(--border); padding: 9px 12px; text-align: left;
+}
+.content th { background: var(--surface-2); font-weight: 650; color: var(--text); }
+.content tbody tr:nth-child(even) td { background: var(--surface-2); }
+
+.content img { max-width: 100%; border-radius: 10px; border: 1px solid var(--border); }
+.content hr { border: none; border-top: 1px dashed var(--border); margin: 2em 0; }
+
+.up   { color: var(--up); font-weight: 650; }
+.down { color: var(--down); font-weight: 650; }
+
+.box {
+    border: 1px solid var(--border); border-left: 4px solid var(--fin);
+    background: var(--surface-2); border-radius: 10px;
+    padding: 14px 18px; font-size: .93rem; color: var(--text-soft);
+}
+.box .box-title {
+    font-weight: 700; color: var(--text); display: block;
+    margin-bottom: 6px; font-size: .9rem; letter-spacing: .3px;
+}
+
+.tagbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--border); }
+.tagbar .chip {
+    font-size: .75rem; padding: 3px 10px; border-radius: 999px;
+    background: var(--surface-2); color: var(--text-mute); border: 1px solid var(--border);
+}
+
+.foot {
+    max-width: 860px; margin: 0 auto; padding: 0 20px 50px;
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between;
+    color: var(--text-mute); font-size: .82rem;
+}
+
+@media (max-width: 640px) {
+    .article { padding: 24px 14px 50px; }
+    .article-inner { padding: 26px 20px; border-radius: 14px; }
+}

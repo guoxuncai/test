@@ -1,0 +1,80 @@
+{
+  "updated": "2026-10-01 15:23:41",
+  "posts": [
+    {
+      "title": "财经简报 · 版式示例（2026-10-01）",
+      "url": "posts/finance/2026-10-01-财经简报版式示例.html",
+      "date": "2026-10-01",
+      "category": "finance",
+      "categoryLabel": "财经简报",
+      "desc": "每日财经简报的标准排版示例：市场概览表格、要点框、红涨绿跌标记与标签区。真实数据请替换，确认无误后可删除本页。",
+      "tags": [
+        "财经简报",
+        "版式示例",
+        "A股",
+        "半导体"
+      ],
+      "size": 3.7
+    },
+    {
+      "title": "脑神经网络与卷积 · 交互教学动画",
+      "url": "posts/semiconductor/2026-09-20-脑神经网络与卷积交互教学动画.html",
+      "date": "2026-09-20",
+      "category": "semiconductor",
+      "categoryLabel": "半导体",
+      "desc": "用交互动画拆解神经元脉冲发放机制与卷积核滑动计算过程，从生物神经元到 CNN 特征提取的可视化讲解。",
+      "tags": [
+        "神经网络",
+        "卷积",
+        "CNN",
+        "可视化",
+        "教学动画"
+      ],
+      "size": 31.0
+    },
+    {
+      "title": "半导体器件新手路径地图 | 设计→实验验证全流程 (详细行动清单)",
+      "url": "posts/semiconductor/2026-06-01-半导体器件新手路径地图.html",
+      "date": "2026-06-01",
+      "category": "semiconductor",
+      "categoryLabel": "半导体",
+      "desc": "从理论学习、软件安装、仿真练习到版图设计、MPW 流片与实验测试的完整行动清单，含每月可执行步骤与资源工具。",
+      "tags": [
+        "半导体",
+        "学习路径",
+        "器件仿真",
+        "版图设计",
+        "流片"
+      ],
+      "size": 14.4
+    },
+    {
+      "title": "集成电路半导体器件 · 考前复习精要",
+      "url": "posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html",
+      "date": "2026-05-21",
+      "category": "semiconductor",
+      "categoryLabel": "半导体",
+      "desc": "重点梳理 PN 结、能带理论、MOSFET 核心参数与物理机制，含二极管原理、单向导电性与典型考题推导。",
+      "tags": [
+        "半导体",
+        "PN结",
+        "能带理论",
+        "MOSFET",
+        "考前复习"
+      ],
+      "size": 25.5
+    }
+  ],
+  "categories": [
+    {
+      "id": "finance",
+      "label": "财经简报",
+      "count": 1
+    },
+    {
+      "id": "semiconductor",
+      "label": "半导体",
+      "count": 3
+    }
+  ]
+}

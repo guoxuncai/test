@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ↓↓↓ 以下三项会被 tools/publish.py 读取，生成主页卡片，请务必填写 ↓↓↓ -->
+<title>{{TITLE}}</title>
+<meta name="description" content="一句话摘要，会显示在主页文章卡片上，控制在 60-80 字。">
+<meta name="keywords" content="标签1, 标签2, 标签3">
+<meta name="date" content="{{DATE}}">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 财经 学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge fin">财经简报</span>
+    <h1 class="title">{{TITLE}}</h1>
+    <div class="meta">
+      <span>{{DATE}}</span>
+      <span class="sep"></span>
+      <span>阅读约 3 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">本期要点</span>
+        用 2-3 句话概括今天最值得关注的信息，读者扫一眼就知道值不值得往下读。
+      </div>
+
+      <h2>市场概览</h2>
+      <p>正文段落示例。A 股三大指数今日表现：<span class="up">上证指数 ▲ 0.52%</span>、<span class="down">创业板指 ▼ 0.31%</span>。红涨绿跌样式已内置，直接用 <code>.up</code> / <code>.down</code> class 即可。</p>
+
+      <table>
+        <thead><tr><th>指数</th><th>收盘</th><th>涨跌幅</th></tr></thead>
+        <tbody>
+          <tr><td>上证指数</td><td>3210.45</td><td class="up">+0.52%</td></tr>
+          <tr><td>深证成指</td><td>10233.18</td><td class="down">-0.18%</td></tr>
+        </tbody>
+      </table>
+
+      <h2>重点资讯</h2>
+      <h3>1. 资讯小标题</h3>
+      <ul>
+        <li>要点一，建议一句话说完一件事。</li>
+        <li>要点二，可用 <strong>加粗</strong> 或 <em>高亮</em> 强调关键数据。</li>
+      </ul>
+
+      <blockquote>如果有一段需要单独拎出来的判断或结论，用引用块。</blockquote>
+
+      <h2>半导体侧观察</h2>
+      <p>留给产业链、设备、材料的跟踪记录。</p>
+
+      <h2>明日关注</h2>
+      <ol>
+        <li>待跟踪事项一</li>
+        <li>待跟踪事项二</li>
+      </ol>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#标签1</span>
+      <span class="chip">#标签2</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
