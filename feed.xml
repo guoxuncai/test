@@ -5,13 +5,20 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 01 Oct 2026 19:33:33 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 01 Oct 2026 19:42:24 +0800</lastBuildDate>
     <item>
       <title>芯片设计流程与 EDA 工具链</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从需求规格到 GDSII 流片的数字 IC 全流程、模拟 IC 差异、PPA 权衡、DRC/LVS 签核，以及可免费上手的开源 EDA 全栈工具链]]></description>
+    </item>
+    <item>
+      <title>芯片封装、测试与失效分析</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片封装测试与失效分析.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片封装测试与失效分析.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从 CP 晶圆测试、封装类型、FT 成品分档到电学表征（IV/CV）、可靠性试验与失效分析手段，覆盖回片后拿到芯片要做的全部动作]]></description>
     </item>
     <item>
       <title>芯片制造工艺流程详解</title>
@@ -26,6 +33,13 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-10-01瑾年财经早报_.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[9月最后一个交易日，A股涨跌互现： 上证指数收涨0.31% ，深成指微跌0.11%，创业板指跌0.23%，科创50重挫2.51%。两市合计成交超1.8万亿元。]]></description>
+    </item>
+    <item>
+      <title>版图设计实战 · DRC / LVS 与匹配技巧</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从工艺层含义、设计规则到 DRC/LVS/PEX 签核，讲清共质心匹配、Dummy、保护环、天线效应与闩锁防护，含反相器版图逐步示例]]></description>
     </item>
     <item>
       <title>半导体物理基础 · 能带与载流子</title>

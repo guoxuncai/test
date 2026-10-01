@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>版图设计实战 · DRC / LVS 与匹配技巧</title>
+<meta name="description" content="从工艺层含义、设计规则到 DRC/LVS/PEX 签核，讲清共质心匹配、Dummy、保护环、天线效应与闩锁防护，含反相器版图逐步示例。">
+<meta name="keywords" content="版图设计,DRC,LVS,匹配,共质心,天线效应,保护环,闩锁效应,Klayout">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 版图</span>
+    <h1 class="title">版图设计实战 · DRC / LVS 与匹配技巧</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 7 篇</span><span class="sep"></span>
+      <span>阅读约 14 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        电路图画好了，怎么变成工厂能读懂的几何图形？这一篇讲版图的<strong>层含义、设计规则、四大检查</strong>，
+        以及模拟版图里最要紧的<em>匹配</em>与两类致命效应（天线效应、闩锁效应）。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">版图是什么</a></li>
+          <li><a href="#s2">必须认识的工艺层</a></li>
+          <li><a href="#s3">设计规则在约束什么</a></li>
+          <li><a href="#s4">四种检查：DRC / LVS / ERC / PEX</a></li>
+          <li><a href="#s5">匹配：模拟版图的灵魂</a></li>
+          <li><a href="#s6">天线效应</a></li>
+          <li><a href="#s7">闩锁效应 Latch-up</a></li>
+          <li><a href="#s8">实战：画一个反相器版图</a></li>
+          <li><a href="#s9">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 版图是什么</h2>
+
+      <p>版图（Layout）是芯片的<strong>几何描述</strong>：用多层多边形告诉工厂"哪里留硅、哪里刻掉、哪里铺金属、哪里打孔"。
+      它直接对应制造时的掩膜（Mask），最终输出 GDSII / OASIS 文件交付代工厂。</p>
+
+      <div class="note">
+        <b>一句话理解版图与电路的关系：</b>电路图（Schematic）定义<em>连什么</em>，版图定义<em>怎么摆放、怎么连线、多大尺寸</em>。
+        同样的电路，版图画得好不好，性能可以差出一个数量级 —— 这正是模拟版图工程师的价值所在。
+      </div>
+
+      <h2 id="s2">2. 必须认识的工艺层</h2>
+
+      <table class="term-table">
+        <thead><tr><th>层（常见缩写）</th><th>含义</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td>NW / PW</td><td>N 阱 / P 阱</td><td>定义衬底类型，PMOS 做在 N 阱里</td></tr>
+          <tr><td>OD / AA / DIFF</td><td>有源区（扩散区）</td><td>可以做晶体管的区域，之外都是场氧隔离</td></tr>
+          <tr><td>PO / POLY</td><td>多晶硅</td><td>栅极；也可做电阻、短距离连线</td></tr>
+          <tr><td>PP / NP（注入层）</td><td>P+ / N+ 注入</td><td>区分源漏的掺杂类型</td></tr>
+          <tr><td>CT / CO（接触孔）</td><td>Contact</td><td>连接有源区/多晶硅与第 1 层金属</td></tr>
+          <tr><td>M1 … Mn</td><td>金属层</td><td>互连线；层数随工艺递增（先进工艺 10+ 层）</td></tr>
+          <tr><td>VIA1 … VIAn-1</td><td>通孔</td><td>连接相邻两层金属</td></tr>
+          <tr><td>IM / Metal 选项层</td><td>识别层 / 电阻层</td><td>用于器件识别或特殊器件（电阻、电容、二极管）</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <b>记忆方法：</b>纵向"搭楼梯"—— 有源区/多晶硅 → 接触孔 → M1 → VIA1 → M2 → VIA2 → M3 …，
+        每一级只能和相邻级相连。这也是版图工具里"打孔串层"必须一层层来的原因。
+      </div>
+
+      <h2 id="s3">3. 设计规则在约束什么</h2>
+
+      <p>设计规则（Design Rule）是代工厂根据工艺能力给出的几何约束。违反它，芯片造不出来或良率极低。</p>
+
+      <table>
+        <thead><tr><th>规则类型</th><th>含义</th><th>典型例子</th></tr></thead>
+        <tbody>
+          <tr><td>最小宽度 Width</td><td>线条或图形不能太窄</td><td>M1 最小线宽 0.14 μm</td></tr>
+          <tr><td>最小间距 Space</td><td>同层图形之间不能太近</td><td>M1 间距 0.14 μm</td></tr>
+          <tr><td>包围 Enclosure</td><td>上层图形要把下层完全包住</td><td>接触孔四周 M1 至少包 0.03 μm</td></tr>
+          <tr><td>延伸 Extension</td><td>栅极两侧有源区要伸出去</td><td>PO 两侧 OD 至少延伸 0.18 μm</td></tr>
+          <tr><td>面积 Area</td><td>图形不能太小以免脱落</td><td>M1 最小面积 0.02 μm²</td></tr>
+          <tr><td>密度 Density</td><td>各层覆盖率需落在区间内</td><td>M1 密度 20%~80%，不足要填 Dummy</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>为什么必须填 Dummy（虚拟图形）？</b>CMP 抛光时，金属稀疏的区域会被磨得更多（Dishing）、
+        密集区域磨得少，导致表面高低不平，后续光刻对焦失败。因此需要往空白处填<em>不与电路连接的</em>金属块，
+        让整层密度均匀。先进工艺下 Dummy 由工具自动插入，但要注意它引入的额外寄生电容。
+      </div>
+
+      <h2 id="s4">4. 四种检查：DRC / LVS / ERC / PEX</h2>
+
+      <table>
+        <thead><tr><th>检查</th><th>全称</th><th>回答的问题</th><th>不过的后果</th></tr></thead>
+        <tbody>
+          <tr><td>DRC</td><td>Design Rule Check</td><td>几何上<strong>能不能造</strong></td><td>流片失败或良率极低</td></tr>
+          <tr><td>LVS</td><td>Layout vs Schematic</td><td>连出来是不是<strong>你要的电路</strong></td><td>连接错误，功能不对</td></tr>
+          <tr><td>ERC</td><td>Electrical Rule Check</td><td>有没有<strong>电学违规</strong>（浮空节点、衬底未接等）</td><td>潜在的可靠性与功能隐患</td></tr>
+          <tr><td>PEX</td><td>Parasitic Extraction</td><td>实际有<strong>多大寄生 R/C</strong></td><td>后仿真与实测对不上</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>流程顺序不能乱：</b>DRC 全绿 → LVS 匹配 → PEX 提取寄生 → <strong>后仿真</strong>（Post-layout Simulation）。
+        很多新手只做前仿真就以为万事大吉，回片后却发现带宽差一倍 —— 差的往往就是那几十 fF 的寄生电容。
+      </div>
+
+      <h2 id="s5">5. 匹配：模拟版图的灵魂</h2>
+
+      <p>电流镜、差分对、带隙基准这类电路，要求两个"标称相同"的器件真的相同。
+      但工艺存在<em>系统性梯度</em>（掺杂、温度、应力在硅片上的分布不均），所以要用版图技巧抵消：</p>
+
+      <table>
+        <thead><tr><th>技巧</th><th>做法</th><th>抵消什么</th></tr></thead>
+        <tbody>
+          <tr><td>共质心 Common-centroid</td><td>两器件拆成若干单元，交叉对称摆放，使两者的"重心"重合</td><td>线性梯度（沿 x 或 y 方向的工艺变化）</td></tr>
+          <tr><td>交叉耦合 Cross-coupling</td><td>A/B/A/B 交替排列</td><td>一阶梯度</td></tr>
+          <tr><td>同向 Same orientation</td><td>所有器件朝向一致</td><td>各向异性效应（离子注入角度、晶向）</td></tr>
+          <tr><td>Dummy 器件</td><td>在阵列两端加不接入电路的相同器件</td><td>边缘刻蚀负载效应（边缘与中间刻蚀速率不同）</td></tr>
+          <tr><td>保护环 Guard Ring</td><td>用重掺杂环包围敏感器件并接到固定电位</td><td>衬底噪声耦合与闩锁</td></tr>
+          <tr><td>加大器件面积</td><td>WL 增大</td><td>随机失配（失配 ∝ 1/√(WL)）</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="共质心与交叉耦合匹配示意">
+          <text x="90" y="24" text-anchor="middle" font-size="13" fill="var(--text-mute)">✗ 简单并排（受梯度影响）</text>
+          <g>
+            <rect x="40" y="40" width="40" height="60" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.4"/>
+            <rect x="86" y="40" width="40" height="60" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.4"/>
+            <rect x="132" y="40" width="40" height="60" fill="var(--fin)" fill-opacity=".5" stroke="var(--fin)" stroke-width="1.4"/>
+            <rect x="178" y="40" width="40" height="60" fill="var(--fin)" fill-opacity=".5" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="80" y="80" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">A</text>
+            <text x="172" y="80" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">B</text>
+            <path d="M40 112 L218 112" stroke="var(--up)" stroke-width="1.6" stroke-dasharray="4 3"/>
+            <text x="129" y="132" text-anchor="middle" font-size="11" fill="var(--up)">工艺梯度方向 →</text>
+          </g>
+
+          <text x="440" y="24" text-anchor="middle" font-size="13" fill="var(--text-mute)">✓ 共质心 + Dummy（重心重合）</text>
+          <g>
+            <rect x="300" y="40" width="38" height="60" fill="var(--text-mute)" fill-opacity=".25" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <text x="319" y="80" text-anchor="middle" font-size="11" fill="var(--text-mute)">D</text>
+            <rect x="344" y="40" width="38" height="60" fill="var(--fin)" fill-opacity=".5" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="363" y="80" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">B</text>
+            <rect x="388" y="40" width="38" height="60" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="407" y="80" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <rect x="432" y="40" width="38" height="60" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="451" y="80" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <rect x="476" y="40" width="38" height="60" fill="var(--fin)" fill-opacity=".5" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="495" y="80" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">B</text>
+            <rect x="520" y="40" width="38" height="60" fill="var(--text-mute)" fill-opacity=".25" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <text x="539" y="80" text-anchor="middle" font-size="11" fill="var(--text-mute)">D</text>
+            <circle cx="429" cy="70" r="5" fill="var(--up)"/>
+            <text x="429" y="130" text-anchor="middle" font-size="11" fill="var(--up)">A 与 B 的几何重心重合</text>
+          </g>
+
+          <text x="129" y="170" text-anchor="middle" font-size="11" fill="var(--text-mute)">A 在左、B 在右，梯度使二者失配</text>
+          <text x="429" y="152" text-anchor="middle" font-size="11" fill="var(--down)">A/B 对称分布，梯度影响被抵消</text>
+        </svg>
+        <figcaption>图 1：匹配版图对比。共质心（ABBA）+ 两端 Dummy 是模拟版图最常用的标准做法。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">σ(ΔV<sub>t</sub>) ≈ A<sub>Vt</sub> / √(W · L)</span>
+        <span class="fnote">随机失配随器件面积平方根下降。想让失配减半，面积要增大 4 倍 —— 这是精度与面积之间最直接的权衡。</span>
+      </div>
+
+      <h2 id="s6">6. 天线效应</h2>
+
+      <p><strong>成因：</strong>制造过程中，等离子刻蚀会让大面积的金属线像"天线"一样收集电荷。
+      若这些电荷通过与之相连的栅极泄放，就会击穿极薄的栅氧化层，造成永久损伤。</p>
+
+      <div class="formula-block">
+        <span class="fl">天线比 = 连接到栅极的金属面积 / 栅氧化层面积　（工艺给出上限，如 400:1）</span>
+      </div>
+
+      <table>
+        <thead><tr><th>解决方法</th><th>做法</th><th>代价</th></tr></thead>
+        <tbody>
+          <tr><td>跳线（Jumper）</td><td>长金属在中途跳到上层再跳回来，断开连续收集面积</td><td>增加通孔与电阻</td></tr>
+          <tr><td>天线二极管</td><td>在栅极旁接一个到衬底的二极管提供泄放通路</td><td>增加寄生电容与面积</td></tr>
+          <tr><td>调整布线顺序</td><td>先布靠近栅极的短金属，最后接大面积金属</td><td>布线约束</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>天线效应 DRC 不过是最常见的回片杀手之一。</b>它不影响电路逻辑、仿真也完全正常，
+        却会在制造阶段批量损伤栅氧 —— 因此必须靠专门的 Antenna DRC 规则拦截，不能只看普通 DRC。
+      </div>
+
+      <h2 id="s7">7. 闩锁效应 Latch-up</h2>
+
+      <p>CMOS 结构中天然存在寄生的<strong>可控硅（SCR）</strong>：由寄生 NPN 与 PNP 互相耦合形成正反馈。
+      一旦被触发（如 I/O 上的电压过冲），就会在电源与地之间形成低阻通路，电流剧增直至烧毁芯片。</p>
+
+      <table>
+        <thead><tr><th>防护措施</th><th>原理</th></tr></thead>
+        <tbody>
+          <tr><td>保护环 Guard Ring</td><td>在 NMOS 周围加 P+ 环接地、PMOS 周围加 N+ 环接 VDD，收集少子、降低寄生电阻</td></tr>
+          <tr><td>加大衬底/阱接触密度</td><td>降低寄生电阻 R<sub>sub</sub>/R<sub>well</sub>，提高触发门槛</td></tr>
+          <tr><td>拉开 NMOS 与 PMOS 间距</td><td>降低寄生双极管的电流增益</td></tr>
+          <tr><td>ESD 保护器件</td><td>在 I/O 加钳位二极管与电源钳位，防止过冲触发</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>设计规则里"衬底接触间距"不是形式主义。</b>它直接决定寄生电阻大小，
+        也就决定了闩锁触发电流门槛。I/O 区域因为要抗 ESD，规则通常比内部电路更严格。
+      </div>
+
+      <h2 id="s8">8. 实战：画一个反相器版图</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="反相器版图俯视示意">
+          <!-- N 阱 -->
+          <rect x="200" y="30" width="280" height="95" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="340" y="24" text-anchor="middle" font-size="12" fill="var(--fin)">N 阱（PMOS 区）</text>
+
+          <!-- PMOS 有源区 -->
+          <rect x="225" y="55" width="230" height="55" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.4"/>
+          <text x="340" y="88" text-anchor="middle" font-size="12" fill="var(--text)">PMOS 有源区（P+）</text>
+
+          <!-- 栅 -->
+          <rect x="325" y="40" width="30" height="180" fill="var(--accent)" fill-opacity=".45" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="340" y="236" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">多晶硅栅（输入 IN）</text>
+
+          <!-- NMOS 有源区 -->
+          <rect x="225" y="150" width="230" height="55" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.4"/>
+          <text x="340" y="183" text-anchor="middle" font-size="12" fill="var(--semi)">NMOS 有源区（N+，在 P 衬底）</text>
+
+          <!-- 接触孔 -->
+          <g fill="var(--up)">
+            <rect x="240" y="68" width="12" height="12"/><rect x="240" y="88" width="12" height="12"/>
+            <rect x="428" y="68" width="12" height="12"/><rect x="428" y="88" width="12" height="12"/>
+            <rect x="240" y="163" width="12" height="12"/><rect x="240" y="183" width="12" height="12"/>
+            <rect x="428" y="163" width="12" height="12"/><rect x="428" y="183" width="12" height="12"/>
+          </g>
+          <text x="60" y="80" font-size="11" fill="var(--up)">■ 接触孔 CT</text>
+
+          <!-- 电源线 -->
+          <rect x="215" y="105" width="250" height="16" fill="var(--fin)" fill-opacity=".55" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="120" y="118" font-size="12" fill="var(--fin)" font-weight="700">VDD (M1)</text>
+          <rect x="215" y="205" width="250" height="16" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="120" y="218" font-size="12" fill="var(--semi)" font-weight="700">VSS (M1)</text>
+
+          <!-- 输出 -->
+          <rect x="478" y="88" width="16" height="115" fill="var(--text)" fill-opacity=".3" stroke="var(--text)" stroke-width="1.3"/>
+          <text x="560" y="140" font-size="12" fill="var(--text)" font-weight="700">OUT (M1)</text>
+          <line x1="494" y1="145" x2="552" y2="145" stroke="var(--text)" stroke-width="1.2" stroke-dasharray="4 3"/>
+        </svg>
+        <figcaption>图 2：反相器版图俯视（示意，未标尺寸）。栅极竖直跨过 PMOS 与 NMOS；源接电源/地，漏接一起作为输出。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>建议的上手顺序：</b>① 用 <strong>Xschem / 原理图工具</strong>画反相器 →
+        ② <strong>ngspice</strong> 仿真验证直流与瞬态 →
+        ③ <strong>Magic 或 Klayout</strong> 画版图 →
+        ④ 跑 <strong>DRC</strong>（Sky130 规则）→
+        ⑤ <strong>Netgen</strong> 做 LVS →
+        ⑥ 提取寄生做后仿真。走完这六步，你就完整跑通了一次"设计 → 验证 → 物理实现"的闭环。
+      </div>
+
+      <div class="note">
+        <b>新手版图十错（自查清单）：</b><br>
+        ① 衬底/阱接触忘画或太稀疏 → 闩锁风险；<br>
+        ② 接触孔数量不足 → 电流密度过大、电迁移；<br>
+        ③ 器件朝向不一致 → 失配；<br>
+        ④ 敏感差分对未做共质心 → 失调电压大；<br>
+        ⑤ 长金属线直连栅极 → 天线效应；<br>
+        ⑥ 忘了 Dummy → 刻蚀负载不均；<br>
+        ⑦ 金属密度不达标 → CMP 不平；<br>
+        ⑧ 未标注器件识别层 → LVS 认不出器件；<br>
+        ⑨ 电源/地线宽度不足 → IR-drop 与电迁移；<br>
+        ⑩ 只做前仿真就交付 → 回片性能与仿真严重不符。
+      </div>
+
+      <h2 id="s9">9. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：DRC 全绿、LVS 也通过，为什么还要做 PEX 后仿真？</summary>
+        <div class="answer">因为版图引入了前仿真中没有的寄生电阻与电容：金属线电容、通孔电阻、结电容、线间耦合电容等。
+        在高速或高精度电路中，几十 fF 的寄生就足以让带宽、建立时间、失调电压显著偏离设计值。
+        PEX 后仿真是"设计与实测能否对得上"的最后一道保险。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：某电流镜失配超标，在不改电路的前提下有哪几种版图手段？</summary>
+        <div class="answer">① 改用共质心（ABBA）排列，抵消一阶工艺梯度；② 两端加 Dummy，消除边缘刻蚀差异；
+        ③ 增大 W·L（失配 ∝ 1/√WL）；④ 保证两器件同朝向、同环境（周围图形对称）；
+        ⑤ 关键的还可加保护环隔离噪声。通常优先做①③，性价比最高。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：天线效应的本质危害是什么？为什么仿真发现不了？</summary>
+        <div class="answer">危害是制造过程中大面积金属收集的电荷通过栅极泄放，击穿薄栅氧，造成<strong>永久性损伤</strong>。
+        仿真发现不了，是因为它并非电路工作时的电学行为，而是<em>制造过程中的物理现象</em> ——
+        电路网表与 SPICE 模型里根本没有"等离子充电"这项，只能靠几何规则（天线比）来检查。</div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 1 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 2 篇：PN 结原理与特性</a></li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 3 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 5 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li class="current">第 7 篇：版图设计实战 · DRC / LVS 与匹配技巧</li>
+          <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 8 篇：芯片封装、测试与失效分析</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#版图设计</span>
+      <span class="chip">#DRC</span>
+      <span class="chip">#LVS</span>
+      <span class="chip">#共质心匹配</span>
+      <span class="chip">#天线效应</span>
+      <span class="chip">#闩锁效应</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
