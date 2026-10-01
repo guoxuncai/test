@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月18日 周五</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+  .container { max-width: 640px; margin: 0 auto; background: #fff; }
+  
+  /* 头部 */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 30px 20px 25px;
+    text-align: center;
+  }
+  .header .date-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.75;
+    letter-spacing: 1px;
+  }
+  .header .divider-line {
+    width: 40px; height: 3px; background: #e8b86d;
+    margin: 15px auto 0; border-radius: 2px;
+  }
+  
+  /* 内容区 */
+  .content { padding: 5px 16px 20px; }
+  
+  /* 板块标题 */
+  .section {
+    margin: 18px 0 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .section-header {
+    display: flex; align-items: center;
+    padding: 12px 15px;
+    font-size: 17px; font-weight: 700; color: #fff;
+  }
+  .section-header .icon { font-size: 20px; margin-right: 10px; }
+  .section-body { padding: 14px 15px; background: #fff; }
+  
+  .s-stock .section-header { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+  .s-bond .section-header { background: linear-gradient(135deg, #2980b9, #1a5276); }
+  .s-futures .section-header { background: linear-gradient(135deg, #8e44ad, #6c3483); }
+  .s-macro .section-header { background: linear-gradient(135deg, #d35400, #a04000); }
+  .s-bank .section-header { background: linear-gradient(135deg, #16a085, #0e6655); }
+  .s-wealth .section-header { background: linear-gradient(135deg, #2c3e50, #1a252f); }
+  .s-research .section-header { background: linear-gradient(135deg, #c0392b, #7b241c); }
+  .s-knowledge .section-header { background: linear-gradient(135deg, #f39c12, #d68910); }
+  
+  /* 数据表格 */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
+  .data-table td { padding: 8px 6px; border-bottom: 1px solid #f0f0f0; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .label { color: #666; width: 40%; }
+  .data-table .value { font-weight: 600; text-align: right; }
+  .up { color: #e74c3c; }
+  .down { color: #27ae60; }
+  
+  /* 板块涨跌标签 */
+  .sector-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .sector-tag {
+    padding: 4px 10px; border-radius: 4px; font-size: 13px;
+    color: #fff; font-weight: 500;
+  }
+  .tag-up { background: #e74c3c; }
+  .tag-down { background: #27ae60; }
+  
+  /* 消息卡片 */
+  .news-item {
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-item .news-title {
+    font-size: 15px; font-weight: 600; color: #2c3e50; margin-bottom: 4px;
+  }
+  .news-item .news-desc {
+    font-size: 13px; color: #666; line-height: 1.7;
+  }
+  .news-tag {
+    display: inline-block; padding: 1px 8px; border-radius: 3px;
+    font-size: 11px; margin-right: 6px; color: #fff; vertical-align: middle;
+  }
+  .tag-red { background: #e74c3c; }
+  .tag-blue { background: #2980b9; }
+  .tag-orange { background: #d35400; }
+  .tag-green { background: #27ae60; }
+  
+  /* 提示框 */
+  .highlight-box {
+    background: linear-gradient(135deg, #fff8e1, #fff3cd);
+    border-left: 4px solid #f39c12;
+    padding: 12px 15px; margin: 12px 0; border-radius: 4px;
+    font-size: 14px; color: #7d6608;
+  }
+  
+  /* 每日一学 */
+  .knowledge-card {
+    background: linear-gradient(135deg, #fef9e7, #fdebd0);
+    border-radius: 8px; padding: 16px;
+    border: 1px solid #f9e79f;
+  }
+  .knowledge-card h3 {
+    font-size: 17px; color: #b7950b; margin-bottom: 10px;
+    display: flex; align-items: center;
+  }
+  .knowledge-card h3 .k-icon { font-size: 22px; margin-right: 8px; }
+  .knowledge-card p { font-size: 14px; color: #5d4e37; line-height: 1.9; }
+  
+  /* 底部 */
+  .footer {
+    text-align: center; padding: 20px 16px 30px;
+    color: #999; font-size: 12px; line-height: 2;
+  }
+  .footer .author {
+    font-size: 14px; color: #555; font-weight: 600; margin-bottom: 4px;
+  }
+  
+  /* 关键数据卡片 */
+  .key-data-row { display: flex; gap: 8px; margin: 10px 0; }
+  .key-data-card {
+    flex: 1; text-align: center; padding: 10px 4px;
+    border-radius: 6px; background: #f8f9fa;
+  }
+  .key-data-card .kd-value { font-size: 18px; font-weight: 700; }
+  .key-data-card .kd-label { font-size: 11px; color: #999; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+  <div class="date-tag">📅 2026年9月18日 · 周五</div>
+  <h1>📊 瑾年财经早报</h1>
+  <div class="subtitle">数据驱动 · 专业解读 · 银行人自己的早报</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="content">
+
+<!-- ==================== 一、股市早参 ==================== -->
+<div class="section s-stock">
+  <div class="section-header">
+    <span class="icon">📈</span>一、股市早参
+  </div>
+  <div class="section-body">
+    <table class="data-table">
+      <tr><td class="label">上证指数</td><td class="value down">3864.28 <span style="font-size:12px">▼0.41%</span></td></tr>
+      <tr><td class="label">深证成指</td><td class="value down">— <span style="font-size:12px">▼0.33%</span></td></tr>
+      <tr><td class="label">创业板指</td><td class="value down">— <span style="font-size:12px">▼0.40%</span></td></tr>
+      <tr><td class="label">科创50</td><td class="value down">— <span style="font-size:12px">▼0.61%</span></td></tr>
+      <tr><td class="label">两市成交</td><td class="value">8688亿（沪）+ 9544亿（深）</td></tr>
+    </table>
+    
+    <p style="font-size:13px;color:#888;margin-top:6px;">📌 9月17日收盘数据（注：9月17日为周三交易日；今日9月18日市场开盘前）</p>
+
+    <div style="margin-top:12px;">
+      <p style="font-weight:600;font-size:14px;margin-bottom:6px;">🔥 涨幅前5板块</p>
+      <div class="sector-tags">
+        <span class="sector-tag tag-up">房地产服务 +3.95%</span>
+        <span class="sector-tag tag-up">海上运输 +3.24%</span>
+        <span class="sector-tag tag-up">综合消费者服务 +1.81%</span>
+        <span class="sector-tag tag-up">生命科学工具 +1.76%</span>
+        <span class="sector-tag tag-up">汽车零配件 +1.70%</span>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <p style="font-weight:600;font-size:14px;margin-bottom:6px;">❄️ 跌幅前5板块</p>
+      <div class="sector-tags">
+        <span class="sector-tag tag-down">贵金属 -4.53%</span>
+        <span class="sector-tag tag-down">其他金属与采矿 -1.53%</span>
+        <span class="sector-tag tag-down">石油天然气 -1.46%</span>
+        <span class="sector-tag tag-down">燃气 -1.22%</span>
+        <span class="sector-tag tag-down">电力 -1.20%</span>
+      </div>
+    </div>
+    
+    <div class="highlight-box" style="margin-top:12px;">
+      <strong>💡 瑾年解读：</strong>昨日A股三大指数集体收跌，科创50跌幅最大达0.61%。板块分化明显——房地产服务板块受存量房收储政策加速落地提振领涨，海运板块受出口高景气带动走强；而贵金属板块大跌4.53%，主因美联储加息预期压制金价，石油天然气等资源板块同步回调。市场仍在等待美联储议息"靴子"落地，短期缩量震荡格局延续。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 二、资金市场与债市 ==================== -->
+<div class="section s-bond">
+  <div class="section-header">
+    <span class="icon">💰</span>二、资金市场与债市
+  </div>
+  <div class="section-body">
+    <p style="font-weight:600;font-size:14px;margin-bottom:6px;">🏦 资金利率（9月17日）</p>
+    <table class="data-table">
+      <tr><td class="label">DR007</td><td class="value">1.4512%</td></tr>
+      <tr><td class="label">SHIBOR 隔夜</td><td class="value">1.46%</td></tr>
+      <tr><td class="label">SHIBOR 1周</td><td class="value">1.45%</td></tr>
+      <tr><td class="label">SHIBOR 3个月</td><td class="value">1.43%</td></tr>
+    </table>
+
+    <p style="font-weight:600;font-size:14px;margin:12px 0 6px;">📊 国债收益率曲线（9月17日）</p>
+    <table class="data-table">
+      <tr><td class="label">1年期国债</td><td class="value">1.23%</td></tr>
+      <tr><td class="label">3年期国债</td><td class="value">1.26%</td></tr>
+      <tr><td class="label">5年期国债</td><td class="value">1.41%</td></tr>
+      <tr><td class="label">10年期国债</td><td class="value">1.69%</td></tr>
+      <tr><td class="label">30年期国债</td><td class="value">2.14%</td></tr>
+    </table>
+
+    <div class="highlight-box" style="margin-top:12px;">
+      <strong>💡 瑾年解读：</strong>资金面整体均衡偏松，DR007和SHIBOR各期限利率均在1.43%-1.46%低位窄幅波动。央行昨日开展1100亿7天逆回购+6000亿隔夜逆回购操作，净投放920亿元，精准呵护跨季流动性。国债收益率曲线维持"短低长稳"格局，10年期国债收益率1.69%仍处于历史低位区间。8月经济数据偏弱为债市提供基本面支撑，短期债市大概率维持震荡偏强格局。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 三、期货市场 ==================== -->
+<div class="section s-futures">
+  <div class="section-header">
+    <span class="icon">🛢️</span>三、期货市场速览
+  </div>
+  <div class="section-body">
+    <table class="data-table">
+      <tr><td class="label">沪铜（CU）</td><td class="value up">+1.42%</td></tr>
+      <tr><td class="label">国际铜（BC）</td><td class="value up">+1.93%</td></tr>
+      <tr><td class="label">黄金（AU）</td><td class="value up">+0.66%</td></tr>
+      <tr><td class="label">铁矿石（I）</td><td class="value up">+0.35%</td></tr>
+      <tr><td class="label">螺纹钢（RB）</td><td class="value down">-0.42%</td></tr>
+      <tr><td class="label">原油（SC）</td><td class="value down" style="font-weight:700;">-5.28%</td></tr>
+      <tr><td class="label">豆油（Y）</td><td class="value down">-1.04%</td></tr>
+    </table>
+    
+    <div class="highlight-box" style="margin-top:12px;">
+      <strong>💡 瑾年解读：</strong>昨夜盘期货市场走势分化。原油大跌5.28%，受全球需求担忧及美伊局势扰动影响；铜和黄金小幅收涨，反映部分避险需求和工业金属的出口支撑。螺纹钢微跌0.42%，反映地产链需求疲弱仍在制约黑色系。整体商品市场风险偏好谨慎，关注今日白盘走势。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 四、经济要闻 ==================== -->
+<div class="section s-macro">
+  <div class="section-header">
+    <span class="icon">📰</span>四、经济要闻
+  </div>
+  <div class="section-body">
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-red">重磅</span>8月经济数据出炉：工业增5.2%，消费仅增0.4%</div>
+      <div class="news-desc">国家统计局公布8月成绩单：规上工业增加值同比+5.2%（加快0.7pct），高技术制造业大增16.7%；但社零仅增0.4%，固投降7.2%，供强需弱格局延续。新动能对工业增长贡献超六成，锂离子电池产量飙升57.2%。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-blue">政策</span>央行行长潘功胜《求是》发文：推进货币政策框架转型</div>
+      <div class="news-desc">强调淡化数量目标，更注重价格型调控，健全利率传导机制。提出拓展宏观审慎功能，维护股债汇市平稳运行。市场解读为货币政策将继续保持适度宽松基调。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-orange">海外</span>美联储议息决议即将出炉，美债收益率破5%</div>
+      <div class="news-desc">10年期美债收益率一度升至5.041%，创2007年以来新高；市场预期9月加息25bp概率超90%。全球市场静待"靴子"落地，A股短期面临外部扰动但已充分定价。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-green">地产</span>二手房交易数据首次公布，存量时代正式到来</div>
+      <div class="news-desc">1-8月二手房网签面积5.49亿㎡（+10.6%），首次超越新房销售面积（4.99亿㎡，-12.1%）。8月末商品房住宅待售面积同比首降，存量房收储政策加速落地。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 五、银行监管 ==================== -->
+<div class="section s-bank">
+  <div class="section-header">
+    <span class="icon">🏛️</span>五、银行监管动态
+  </div>
+  <div class="section-body">
+    <div class="news-item">
+      <div class="news-title">📋 央行开展7100亿逆回购操作，净投放920亿元</div>
+      <div class="news-desc">9月16日，央行开展1100亿7天逆回购（利率1.40%）+6000亿隔夜逆回购操作，当日5050亿到期，实现净投放920亿。机构认为此举精准呵护跨季流动性，巩固宽松金融环境。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title">📋 央行上海总部：8月末境外机构持银行间债券3.19万亿</div>
+      <div class="news-desc">环比有所下降，约占银行间债券市场总托管量的1.7%。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title">📋 司法部：全国查纠涉企行政执法问题案件9万余件</div>
+      <div class="news-desc">为企业挽回经济损失近310亿元，行政检查频次大幅下降，精准度有效提升。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title">📋 泸州农商银行获批增资至39.8亿元</div>
+      <div class="news-desc">多家国有大行旗下村镇银行清零，中小银行改革化险持续推进。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 六、理财市场 ==================== -->
+<div class="section s-wealth">
+  <div class="section-header">
+    <span class="icon">💳</span>六、理财市场观察
+  </div>
+  <div class="section-body">
+    <div class="key-data-row">
+      <div class="key-data-card">
+        <div class="kd-value" style="color:#2980b9;">35.8<span style="font-size:12px;">万亿</span></div>
+        <div class="kd-label">8月末理财存续规模</div>
+      </div>
+      <div class="key-data-card">
+        <div class="kd-value" style="color:#e74c3c;">1.10<span style="font-size:12px;">%</span></div>
+        <div class="kd-label">现金管理类7日年化</div>
+      </div>
+      <div class="key-data-card">
+        <div class="kd-value" style="color:#27ae60;">1.14<span style="font-size:12px;">%</span></div>
+        <div class="kd-label">理财产品破净率</div>
+      </div>
+    </div>
+    
+    <div class="news-item">
+      <div class="news-title">📊 理财规模创历史新高，8月增约3000亿</div>
+      <div class="news-desc">截至8月末，银行理财存续规模达35.8万亿，环比增加0.35万亿。固收类产品占比升至96.49%，混合类降至3%。上半年产品平均收益率小幅回升至2.05%。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title">📊 养老理财扩容在即，多家机构准备发行</div>
+      <div class="news-desc">满足监管条件的机构最早有望9月底获批发行新一批养老理财产品，部分已开始准备产品发行事宜。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title">📊 机构信披办法公开征求意见，招银自建指数再落一子</div>
+      <div class="news-desc">上周各期限纯固收产品收益率多数上升，固收+产品收益率普遍上升。现金管理类产品7日年化1.10%，环比微降0.6BP。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 七、银行研报观点 ==================== -->
+<div class="section s-research">
+  <div class="section-header">
+    <span class="icon">📝</span>七、银行研报精华
+  </div>
+  <div class="section-body">
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-blue">银河证券</span>8月金融数据：社融信贷走弱，居民融资持续下滑</div>
+      <div class="news-desc">有效信贷需求不足是信用扩张核心约束。中报释放息差企稳信号，银行基本面改善逻辑延续，继续看好银行板块配置价值。推荐工行、农行、建行、招行等。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-blue">东方证券</span>信贷少增幅度加深，社融增速边际回落</div>
+      <div class="news-desc">存贷款增速差收敛，存款搬家进程放缓。财政支出力度基本稳定，关注后续专项债和新型政策性金融工具对信贷的撬动效应。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-orange">瑞银证券</span>8月信贷疲弱，预计年内逐步改善</div>
+      <div class="news-desc">8000亿政策性银行融资工具逐步落地，预计社融增速将从8月7.2%逐步回升至年底7.5%-7.6%。特别国债注资银行将提供支撑。</div>
+    </div>
+    <div class="news-item">
+      <div class="news-title"><span class="news-tag tag-green">华源证券</span>银行负债成本下行支撑债市，超长债机会突出</div>
+      <div class="news-desc">上市银行计息负债成本率逐季下降，26Q2降至1.36%。预判年内10Y国债收益率走向1.6%，30Y国债走向2.0%以下。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 八、每日一学 ==================== -->
+<div class="section s-knowledge">
+  <div class="section-header">
+    <span class="icon">🎓</span>八、每日一学 · 经济学小知识
+  </div>
+  <div class="section-body">
+    <div class="knowledge-card">
+      <h3><span class="k-icon">📐</span>「收益率曲线倒挂」是什么？</h3>
+      <p><strong>定义：</strong>收益率曲线倒挂（Yield Curve Inversion）是指短期债券收益率高于长期债券收益率的反常现象。正常情况下，长期债券因期限风险更高，收益率应高于短期债券（即"正向曲线"）。</p>
+      <p style="margin-top:8px;"><strong>为什么重要？</strong>历史上，美国2年期与10年期国债收益率倒挂，几乎每次都领先经济衰退6-18个月。原因是：市场预期未来经济走弱→央行将降息→长期利率下降→而短期利率受当前政策约束维持高位→形成倒挂。</p>
+      <p style="margin-top:8px;"><strong>当前中国情况：</strong>目前我国国债收益率曲线仍为正向（1年期1.23%＜10年期1.69%），未出现倒挂，反映市场对经济中长期仍有信心，货币政策维持宽松基调。但曲线平坦化趋势值得关注——利差仅46bp，接近历史低位。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<div class="footer">
+  <div class="author">🎬 瑾年 · 财经早报</div>
+  <div>每日清晨7:00更新 | 数据来源：Wind金融终端</div>
+  <div style="margin-top:4px;">本报告仅供参考，不构成投资建议<br>市场有风险，投资需谨慎</div>
+  <div style="margin-top:8px;color:#bbb;">© 2026 瑾年财经 | 关注视频号「瑾年说财经」</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

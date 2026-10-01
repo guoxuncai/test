@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月25日</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+  }
+  /* 头部 */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 35px 20px 25px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+  .header-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 2px;
+    position: relative;
+  }
+  .header-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+    position: relative;
+  }
+  .header-tagline {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 3px 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    position: relative;
+    letter-spacing: 1px;
+  }
+  /* 板块标题 */
+  .section {
+    padding: 0 16px;
+    margin-bottom: 5px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    margin: 18px 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .section-title .icon {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, #e94560, #0f3460);
+    border-radius: 2px;
+    margin-right: 10px;
+  }
+  .section-title .tag {
+    font-size: 10px;
+    color: #fff;
+    background: #e94560;
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin-left: 8px;
+    font-weight: 400;
+  }
+  /* 卡片 */
+  .card {
+    background: #fafbfc;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-left: 3px solid #0f3460;
+  }
+  .card.red { border-left-color: #e94560; }
+  .card.green { border-left-color: #0e9c5e; }
+  .card.blue { border-left-color: #3b82f6; }
+  .card.orange { border-left-color: #f59e0b; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  .card-title .emoji { margin-right: 4px; }
+  /* 表格 */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: #f0f1f5;
+    color: #666;
+    font-weight: 500;
+    padding: 7px 8px;
+    text-align: center;
+    font-size: 11px;
+  }
+  .data-table td {
+    padding: 7px 8px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+  .up { color: #e94560; font-weight: 600; }
+  .down { color: #0e9c5e; font-weight: 600; }
+  .neutral { color: #999; }
+  /* 指标行 */
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+    border-bottom: 1px dashed #eee;
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { color: #666; }
+  .metric-value { font-weight: 600; }
+  /* 新闻列表 */
+  .news-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 13px;
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #0f3460;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .news-hot {
+    display: inline-block;
+    background: #e94560;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-right: 4px;
+  }
+  /* 知识点 */
+  .knowledge-box {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 10px;
+    padding: 18px;
+    margin: 16px;
+    position: relative;
+  }
+  .knowledge-label {
+    display: inline-block;
+    background: #f59e0b;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .knowledge-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #92400e;
+    margin-bottom: 10px;
+  }
+  .knowledge-text {
+    font-size: 13px;
+    color: #78350f;
+    line-height: 1.8;
+  }
+  /* 底部 */
+  .footer {
+    background: #1a1a2e;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .footer .author {
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ccc, transparent);
+    margin: 0 16px;
+  }
+  .warn-tag {
+    font-size: 10px;
+    color: #999;
+    text-align: center;
+    padding: 8px;
+  }
+  /* 数据高亮 */
+  .highlight-box {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+  }
+  .highlight-item {
+    text-align: center;
+  }
+  .highlight-num {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .highlight-label {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  /* 行业热力图 */
+  .hot-row {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    font-size: 12px;
+  }
+  .hot-name {
+    width: 55px;
+    text-align: right;
+    margin-right: 6px;
+    color: #666;
+    font-size: 11px;
+  }
+  .hot-bar {
+    height: 16px;
+    border-radius: 3px;
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .hot-bar.up { background: linear-gradient(90deg, #e94560, #f87171); }
+  .hot-bar.down-bar { background: linear-gradient(90deg, #0e9c5e, #34d399); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ========== HEADER ========== -->
+<div class="header">
+  <div class="header-title">瑾年财经早报</div>
+  <div class="header-sub">JINNIAN FINANCIAL MORNING BRIEF</div>
+  <div class="header-date">2026年9月25日 星期五 | 农历八月初五</div>
+  <div class="header-tagline">📊 银行人自己的财经早餐</div>
+</div>
+
+<!-- ========== 一、市场概览 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>市场概览<span class="tag">OVERVIEW</span>
+  </div>
+
+  <div class="card red">
+    <div class="card-title"><span class="emoji">📉</span> A股市场 · 全面回调</div>
+    <div class="highlight-box">
+      <div class="highlight-item">
+        <div class="highlight-num down">-1.22%</div>
+        <div class="highlight-label">上证指数<br>3888.37</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-num down">-2.34%</div>
+        <div class="highlight-label">深证成指<br>13316.97</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-num down">-2.68%</div>
+        <div class="highlight-label">创业板指<br>3288.95</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-num down">-1.73%</div>
+        <div class="highlight-label">沪深300<br>4439.14</div>
+      </div>
+    </div>
+    <table class="data-table" style="margin-top:8px;">
+      <tr><th>指数</th><th>收盘</th><th>涨跌幅</th><th>成交额(亿)</th></tr>
+      <tr><td>上证指数</td><td>3888.37</td><td class="down">-1.22%</td><td>7836</td></tr>
+      <tr><td>深证成指</td><td>13316.97</td><td class="down">-2.34%</td><td>8697</td></tr>
+      <tr><td>创业板指</td><td>3288.95</td><td class="down">-2.68%</td><td>4119</td></tr>
+      <tr><td>科创50</td><td>1621.87</td><td class="down">-2.35%</td><td>700</td></tr>
+      <tr><td>沪深300</td><td>4439.14</td><td class="down">-1.73%</td><td>3755</td></tr>
+      <tr><td>中证500</td><td>7624.07</td><td class="down">-2.15%</td><td>2699</td></tr>
+    </table>
+    <div style="margin-top:8px;font-size:12px;color:#888;">
+      🔴 上涨1106家 | 🟢 下跌4302家 | 🔥 涨停53家 | ❄️ 跌停16家
+    </div>
+    <div style="margin-top:4px;font-size:12px;color:#888;">
+      两市合计成交约2.78万亿 | 北向资金数据暂未披露
+    </div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title"><span class="emoji">🏭</span> 行业板块 · 仅煤炭纺织银行收红</div>
+    <div class="hot-row"><span class="hot-name">煤炭</span><span class="hot-bar up" style="width:63px;">+0.63%</span></div>
+    <div class="hot-row"><span class="hot-name">纺织服饰</span><span class="hot-bar up" style="width:35px;">+0.35%</span></div>
+    <div class="hot-row"><span class="hot-name">银行</span><span class="hot-bar up" style="width:31px;">+0.31%</span></div>
+    <div class="hot-row"><span class="hot-name">家用电器</span><span class="hot-bar up" style="width:1px;">+0.01%</span></div>
+    <div class="hot-row"><span class="hot-name">公用事业</span><span class="hot-bar down-bar" style="width:11px;">-0.11%</span></div>
+    <div style="margin-top:8px;font-size:12px;color:#e94560;">📉 跌幅前三：有色金属-3.53% | 电子-2.92% | 建筑材料-2.81%</div>
+  </div>
+</div>
+
+<!-- ========== 二、资金市场 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>资金市场<span class="tag">MONEY MARKET</span>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title"><span class="emoji">🏦</span> Shibor报价 · 利率平稳</div>
+    <table class="data-table">
+      <tr><th>期限</th><th>利率(%)</th><th>期限</th><th>利率(%)</th></tr>
+      <tr><td>隔夜</td><td>1.364</td><td>1个月</td><td>1.426</td></tr>
+      <tr><td>1周</td><td>1.400</td><td>3个月</td><td>1.430</td></tr>
+      <tr><td>2周</td><td>1.418</td><td>6个月</td><td>1.450</td></tr>
+      <tr><td></td><td></td><td>1年</td><td>1.480</td></tr>
+    </table>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title"><span class="emoji">🏛️</span> 央行公开市场操作</div>
+    <div class="metric-row">
+      <span class="metric-label">7天逆回购利率</span>
+      <span class="metric-value">1.40%</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">当日投放</span>
+      <span class="metric-value">515亿元</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">当日到期</span>
+      <span class="metric-value">1,620亿元</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">当日净回笼</span>
+      <span class="metric-value down">-1,105亿元</span>
+    </div>
+    <div style="margin-top:6px;font-size:11px;color:#888;">
+      📌 下周（9.28-9.30）公开市场将有7,033亿逆回购到期
+    </div>
+  </div>
+</div>
+
+<!-- ========== 三、债券市场 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>债券市场<span class="tag">BOND MARKET</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📈</span> 国债收益率曲线 · 低位运行</div>
+    <table class="data-table">
+      <tr><th>期限</th><th>收益率(%)</th><th>期限</th><th>收益率(%)</th></tr>
+      <tr><td>1年期</td><td>1.233</td><td>5年期</td><td>1.406</td></tr>
+      <tr><td>2年期</td><td>1.271</td><td>10年期</td><td>1.674</td></tr>
+      <tr><td></td><td></td><td>30年期</td><td>2.082</td></tr>
+    </table>
+    <div class="metric-row">
+      <span class="metric-label">10Y-1Y期限利差</span>
+      <span class="metric-value">≈44BP</span>
+    </div>
+    <div style="margin-top:6px;font-size:12px;color:#888;">
+      📊 曲线形态平坦，收益率整体处于历史低位，反映市场对经济基本面偏弱的定价
+    </div>
+  </div>
+</div>
+
+<!-- ========== 四、期货市场 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>期货市场<span class="tag">FUTURES</span>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title"><span class="emoji">🛢️</span> 商品期货主力合约</div>
+    <table class="data-table">
+      <tr><th>品种</th><th>涨跌幅</th><th>品种</th><th>涨跌幅</th></tr>
+      <tr><td>INE原油</td><td class="up">+6.96%</td><td>铁矿石</td><td class="neutral">0.00%</td></tr>
+      <tr><td>CZCE甲醇</td><td class="up">+3.26%</td><td>螺纹钢</td><td class="up">+0.03%</td></tr>
+      <tr><td>CZCE PTA</td><td class="up">+3.22%</td><td>SHFE铜</td><td class="down">-0.57%</td></tr>
+      <tr><td>豆粕</td><td class="up">+0.35%</td><td>CZCE纯碱</td><td class="down">-1.18%</td></tr>
+      <tr><td>豆油</td><td class="up">+0.39%</td><td>SHFE黄金</td><td class="down">-1.34%</td></tr>
+      <tr><td></td><td></td><td>SHFE白银</td><td class="down">-3.15%</td></tr>
+    </table>
+    <div style="margin-top:6px;font-size:12px;color:#888;">
+      🔥 原油大涨近7%领涨商品，甲醇、PTA跟涨超3%；贵金属黄金白银回调
+    </div>
+  </div>
+</div>
+
+<!-- ========== 五、经济要闻 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>经济要闻<span class="tag">MACRO NEWS</span>
+  </div>
+
+  <div class="card">
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">央行</span>
+      央行货政委员会Q3例会：发挥增量政策和存量政策集成效应，保持流动性充裕，把握好政策实施的力度、节奏和时机
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">油价</span>
+      国内成品油价上调：汽、柴油每吨分别上调395元、385元（发改委调控后），原应上调830元/800元
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">汇率</span>
+      人民币升破6.70后延续偏强走势，专家预计四季度双向波动、稳中偏强
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">央企</span>
+      国资委：推动央企加强先进制造业资源整合，加速AI在制造业普及应用
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">外资</span>
+      央行召开外资金融机构座谈会，潘功胜：实施好适度宽松的货币政策，推动金融高水平开放
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">能源</span>
+      截至8月底全国累计发电装机41.03亿千瓦，同比+11.1%；太阳能装机12.99亿千瓦+16.3%
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">地产</span>
+      北京新房中秋国庆前密集取证，6天8项目取证、3新盘同日开盘，一项目首开售罄
+    </div>
+  </div>
+</div>
+
+<!-- ========== 六、银行监管 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>银行监管<span class="tag">REGULATION</span>
+  </div>
+
+  <div class="card red">
+    <div class="card-title"><span class="emoji">⚖️</span> 监管重拳 · 央行与金监总局同日亮剑</div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">重磅</span>
+      央行对邮储银行、广发银行、渤海银行、江苏银行四家机构开出罚单，邮储银行被罚1743万元（含10项违规），广发银行被罚超千万
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">大连</span>
+      建行大连3家机构被罚160万元：贷款三查不到位、票据业务管理不到位，2人被禁业10年
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">淮南</span>
+      淮南通商农商行同日连收2张罚单合计205万，1人被终身禁业——总行"违规放贷"+支行"越权审批"
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">甘肃</span>
+      农行甘肃分行因EAST5.0数据报送不规范被罚200万元
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><span class="news-hot">趋势</span>
+      2026年"小银行、大罚单"成常态，年内市级区域银行500万以上罚单已现7例，反洗钱、数据治理、信贷三查成重灾区
+    </div>
+  </div>
+</div>
+
+<!-- ========== 七、理财市场 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>理财市场<span class="tag">WEALTH MGMT</span>
+  </div>
+
+  <div class="card green">
+    <div class="card-title"><span class="emoji">💰</span> 理财规模与收益率</div>
+    <div class="metric-row">
+      <span class="metric-label">全市场存续规模</span>
+      <span class="metric-value">33.92万亿元</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">现金管理类7日年化</span>
+      <span class="metric-value">1.10%（环比+0.3BP）</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">货币基金7日年化</span>
+      <span class="metric-value">1.03%（环比+1.9BP）</span>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">理财产品破净率</span>
+      <span class="metric-value">1.16%（环比-0.01pct）</span>
+    </div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title"><span class="emoji">📋</span> 行业动态</div>
+    <div class="news-item">
+      <span class="news-dot"></span>信披新规9月1日正式实施，理财产品业绩比较基准集中"换锚"，从固定数字转为指数利率动态刻度
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span>华夏理财发布"固收+"品牌"千帆"，按回撤目标分三档，配套穿透核查与偏离处罚机制
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span>银行理财降费潮持续：年内累计近2万条费率优惠公告，固收类产品是降费主力
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span>2026年上半年理财平均年化收益率2.05%，同比缩水844亿元（-21.66%），资产端收益下行压力显著
+    </div>
+  </div>
+</div>
+
+<!-- ========== 八、银行研报观点 ========== -->
+<div class="section">
+  <div class="section-title">
+    <span class="icon"></span>银行研报<span class="tag">RESEARCH</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📝</span> 机构观点速览</div>
+    <div class="news-item">
+      <span class="news-dot"></span><strong>国泰海通（秋季策略）：</strong>板块β趋弱，挖掘个股α。推荐业绩+股息兼具的江苏银行、宁波银行、苏州银行、杭州银行等；具备转债预期的重庆银行、常熟银行
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><strong>长江证券（周度追踪）：</strong>银行股回调后迎配置买点。息差企稳、营收加速、资产质量包袱消化推动估值修复，推荐港股国有行和A股优质城商行
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><strong>银河证券（业绩解读）：</strong>2026H1上市银行营收同比+7.4%、净利+2.96%，息差企稳信号明确。推荐工行、农行、建行、招行、南京、杭州
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><strong>广发证券（三季报前瞻）：</strong>预计Q3营收继续改善，K型分化加剧，重点关注出口区域银行：宁波、青岛、成都、齐鲁、苏州银行
+    </div>
+    <div class="news-item">
+      <span class="news-dot"></span><strong>兴业证券（半年报总结）：</strong>六大行分红率提升至31%，红利属性强化。对公改善、零售承压趋势延续，关注资产质量分化
+    </div>
+  </div>
+</div>
+
+<!-- ========== 九、每日经济学知识点 ========== -->
+<div class="knowledge-box">
+  <div class="knowledge-label">📚 每日学一点</div>
+  <div class="knowledge-title">什么是"收益率曲线倒挂"？</div>
+  <div class="knowledge-text">
+    <strong>收益率曲线</strong>是将同一类债券（通常是国债）不同期限的收益率连成的一条曲线。正常情况下，期限越长收益率越高（因为锁定资金时间越长，风险越大），曲线呈<strong>向上倾斜</strong>形态。<br><br>
+    <strong>收益率曲线倒挂</strong>是指短期债券收益率高于长期债券收益率的反常现象。例如2年期国债收益率高于10年期——这通常被视为<strong>经济衰退的预警信号</strong>。<br><br>
+    <strong>为什么重要？</strong>银行的核心盈利模式是"借短贷长"——吸收短期存款、发放长期贷款，赚取期限利差。倒挂意味着银行息差被严重压缩，盈利承压。<br><br>
+    <strong>当前中国情况：</strong>10年期国债1.674%，1年期1.233%，期限利差约44BP，曲线呈<strong>极度平坦化</strong>但尚未倒挂——反映了市场对经济基本面偏弱的定价和宽货币预期，银行息差压力仍在但较去年有所缓和。
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ========== 免责声明 ========== -->
+<div class="warn-tag">
+  ⚠️ 本早报仅供内部参考，不构成投资建议 | 数据来源：Wind、中国人民银行、金融监管总局、券商研报<br>
+  市场有风险，投资需谨慎
+</div>
+
+<!-- ========== 底部 ========== -->
+<div class="footer">
+  <div class="author">瑾年 · 财经早报</div>
+  <div style="margin-top:4px;">每个交易日清晨，与您不见不散 ☀️</div>
+  <div style="margin-top:8px;">关注视频号「瑾年说财经」获取每日深度解读</div>
+  <div style="margin-top:8px;color:rgba(255,255,255,0.3);">© 2026 Jinnian Finance. All rights reserved.</div>
+</div>
+
+</div>
+</body>
+</html>

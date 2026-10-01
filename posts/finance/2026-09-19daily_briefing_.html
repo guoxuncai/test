@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>财经早报 | 2026年9月19日 周六</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+    background:#f5f5f5;
+    color:#333;
+    line-height:1.8;
+    font-size:15px;
+    -webkit-text-size-adjust:100%;
+}
+.header{
+    background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+    color:#fff;
+    padding:30px 20px 25px;
+    text-align:center;
+}
+.header .date{
+    font-size:13px;
+    opacity:0.8;
+    margin-bottom:8px;
+    letter-spacing:1px;
+}
+.header h1{
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:6px;
+}
+.header .subtitle{
+    font-size:13px;
+    opacity:0.7;
+}
+.container{
+    max-width:680px;
+    margin:0 auto;
+    padding:0 12px;
+}
+.section{
+    background:#fff;
+    border-radius:12px;
+    margin:14px 0;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.section-header{
+    padding:14px 16px;
+    border-left:4px solid #c0392b;
+    background:linear-gradient(90deg,#fafafa 0%,#fff 100%);
+    display:flex;
+    align-items:center;
+    border-bottom:1px solid #f0f0f0;
+}
+.section-header .icon{
+    font-size:20px;
+    margin-right:10px;
+}
+.section-header h2{
+    font-size:17px;
+    font-weight:700;
+    color:#1a1a2e;
+}
+.section-body{
+    padding:14px 16px;
+}
+.market-index{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+}
+.index-item{
+    flex:1;
+    min-width:45%;
+    padding:12px;
+    background:#f8f9fa;
+    border-radius:8px;
+    text-align:center;
+}
+.index-item .name{font-size:13px;color:#888;margin-bottom:4px;}
+.index-item .value{font-size:18px;font-weight:700;color:#1a1a2e;}
+.index-item .change{font-size:13px;margin-top:2px;}
+.up{color:#e74c3c;}
+.down{color:#27ae60;}
+.flat{color:#999;}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:8px 0;
+}
+.data-table td,.data-table th{
+    padding:8px 10px;
+    border-bottom:1px solid #f0f0f0;
+    font-size:13px;
+    text-align:left;
+}
+.data-table th{
+    background:#f8f9fa;
+    color:#888;
+    font-weight:500;
+    font-size:12px;
+}
+.data-table tr:last-child td{border-bottom:none;}
+
+.highlight-box{
+    background:linear-gradient(135deg,#fff8e1,#fff3cd);
+    border-left:4px solid #f39c12;
+    padding:12px 14px;
+    border-radius:0 8px 8px 0;
+    margin:10px 0;
+    font-size:14px;
+}
+.news-item{
+    padding:10px 0;
+    border-bottom:1px dashed #eee;
+    font-size:14px;
+}
+.news-item:last-child{border-bottom:none;}
+.news-item .tag{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:3px;
+    font-size:11px;
+    margin-right:6px;
+    font-weight:600;
+}
+.tag-macro{background:#e3f2fd;color:#1565c0;}
+.tag-policy{background:#fce4ec;color:#c62828;}
+.tag-bank{background:#e8f5e9;color:#2e7d32;}
+.tag-market{background:#f3e5f5;color:#7b1fa2;}
+
+.knowledge-box{
+    background:linear-gradient(135deg,#e8f5e9,#f1f8e9);
+    border-radius:12px;
+    padding:20px 16px;
+    margin:14px 0;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.knowledge-box .k-title{
+    font-size:16px;
+    font-weight:700;
+    color:#2e7d32;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+}
+.knowledge-box .k-title .icon{font-size:22px;margin-right:8px;}
+.knowledge-box .k-body{font-size:14px;color:#333;line-height:1.9;}
+
+.footer{
+    text-align:center;
+    padding:20px;
+    color:#aaa;
+    font-size:12px;
+    line-height:1.8;
+}
+.footer .name{
+    font-size:15px;
+    color:#1a1a2e;
+    font-weight:600;
+}
+.divider{
+    height:1px;
+    background:linear-gradient(90deg,transparent,#ddd,transparent);
+    margin:6px 0;
+}
+.tag-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin:8px 0;
+}
+.tag-row .t{
+    padding:3px 10px;
+    border-radius:15px;
+    font-size:12px;
+    background:#e8eaf6;
+    color:#3949ab;
+}
+.sector-top{font-size:13px;color:#e74c3c;font-weight:600;}
+.sector-bot{font-size:13px;color:#27ae60;font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="date">2026年9月19日 · 星期六</div>
+    <h1>📊 每日财经早报</h1>
+    <div class="subtitle">金融资讯 · 市场数据 · 深度解读</div>
+</div>
+
+<div class="container">
+
+<!-- 一、股市概览 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">📈</span>
+        <h2>一、股市概览（9月17日收盘）</h2>
+    </div>
+    <div class="section-body">
+        <div class="market-index">
+            <div class="index-item">
+                <div class="name">上证指数</div>
+                <div class="value">—</div>
+                <div class="change down">-0.41%</div>
+            </div>
+            <div class="index-item">
+                <div class="name">深证成指</div>
+                <div class="value">—</div>
+                <div class="change down">-0.33%</div>
+            </div>
+            <div class="index-item">
+                <div class="name">中证500</div>
+                <div class="value">—</div>
+                <div class="change down">-0.37%</div>
+            </div>
+            <div class="index-item">
+                <div class="name">中证1000</div>
+                <div class="value">—</div>
+                <div class="change down">-0.51%</div>
+            </div>
+        </div>
+        <p style="font-size:13px;color:#888;margin-top:10px;">全A成交额：约1.83万亿 | 涨停50家 · 跌停2家</p>
+        <p style="font-size:13px;color:#888;">中证红利 -0.54% | 微盘股指数 +1.16% | 科创综指 -0.15%</p>
+        <div class="divider"></div>
+        <p style="font-size:14px;font-weight:600;margin:8px 0;">🔥 板块涨幅TOP5</p>
+        <p class="sector-top">🥇 房地产服务 +3.95% | 🥈 海上运输 +3.24% | 🥉 综合消费者服务 +1.81%</p>
+        <p class="sector-top">④ 生命科学工具 +1.76% | ⑤ 汽车零配件 +1.70%</p>
+        <p style="font-size:14px;font-weight:600;margin:8px 0;">❄️ 板块跌幅TOP5</p>
+        <p class="sector-bot">贵金属 -4.53% | 其他金属与采矿 -1.53% | 石油天然气 -1.46%</p>
+        <p class="sector-bot">燃气 -1.22% | 电力 -1.20%</p>
+    </div>
+</div>
+
+<!-- 二、资金市场 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">💰</span>
+        <h2>二、资金市场（9月17日）</h2>
+    </div>
+    <div class="section-body">
+        <table class="data-table">
+            <tr><th>指标</th><th>利率(%)</th><th>变动</th></tr>
+            <tr><td>SHIBOR隔夜</td><td>1.46</td><td>—</td></tr>
+            <tr><td>SHIBOR 7天</td><td>1.45</td><td>—</td></tr>
+            <tr><td>SHIBOR 1个月</td><td>1.42</td><td>—</td></tr>
+            <tr><td>SHIBOR 3个月</td><td>1.43</td><td>—</td></tr>
+            <tr><td>DR001</td><td>1.45</td><td>—</td></tr>
+            <tr><td>DR007</td><td>1.45</td><td>—</td></tr>
+        </table>
+        <p style="font-size:13px;color:#888;margin-top:6px;">央行连续开展隔夜逆回购操作，每日不超6000亿元，维护税期流动性平稳。9月15日开展5000亿元6个月买断式逆回购。</p>
+    </div>
+</div>
+
+<!-- 三、债市 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">📉</span>
+        <h2>三、债市（9月17日）</h2>
+    </div>
+    <div class="section-body">
+        <table class="data-table">
+            <tr><th>期限</th><th>收益率(%)</th></tr>
+            <tr><td>1年期国债</td><td>1.23</td></tr>
+            <tr><td>5年期国债</td><td>1.41</td></tr>
+            <tr><td>10年期国债</td><td>1.69</td></tr>
+            <tr><td>30年期国债</td><td>2.14</td></tr>
+        </table>
+        <p style="font-size:13px;color:#888;margin-top:6px;">曲线形态：收益率曲线平坦化，短端受资金面呵护维持低位，长端受海外加息预期和美债利率上行压制小幅走弱。</p>
+    </div>
+</div>
+
+<!-- 四、期货市场 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">🛢️</span>
+        <h2>四、期货市场（9月17日）</h2>
+    </div>
+    <div class="section-body">
+        <table class="data-table">
+            <tr><th>品种</th><th>涨跌幅</th></tr>
+            <tr><td>沪铜</td><td><span class="up">+1.00%</span></td></tr>
+            <tr><td>豆粕</td><td><span class="up">+1.25%</span></td></tr>
+            <tr><td>国际铜</td><td><span class="up">+1.16%</span></td></tr>
+            <tr><td>铁矿石</td><td><span class="up">+0.28%</span></td></tr>
+            <tr><td>黄金</td><td><span class="up">+0.11%</span></td></tr>
+            <tr><td>黄金T+D</td><td><span class="up">+0.29%</span></td></tr>
+            <tr><td>螺纹钢</td><td><span class="down">-0.13%</span></td></tr>
+            <tr><td>白银</td><td><span class="down">-0.24%</span></td></tr>
+            <tr><td>豆油</td><td><span class="down">-0.34%</span></td></tr>
+            <tr><td>原油(SC)</td><td><span class="down">-6.35%</span></td></tr>
+        </table>
+        <div class="highlight-box">
+            ⚠️ <strong>原油暴跌6.35%</strong>：霍尔木兹海峡局势虽有反复，但市场对阿曼谈判预期升温，叠加全球加息预期打压需求前景，INE原油主力合约大幅回调。贵金属板块同步承压，板块指数跌超4.5%。
+        </div>
+    </div>
+</div>
+
+<!-- 五、外汇市场 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">💱</span>
+        <h2>五、外汇市场（9月17日）</h2>
+    </div>
+    <div class="section-body">
+        <table class="data-table">
+            <tr><td>美元指数</td><td>100.23</td></tr>
+            <tr><td>人民币中间价</td><td>6.7580</td></tr>
+            <tr><td>在岸人民币(CFETS)</td><td>6.7060</td></tr>
+            <tr><td>离岸人民币</td><td>6.7040</td></tr>
+        </table>
+        <p style="font-size:13px;color:#888;margin-top:6px;">人民币较中间价走强约520基点。前8月在岸人民币升值约4%，央行重申坚持有管理浮动汇率制度，无意通过贬值获取贸易优势。</p>
+    </div>
+</div>
+
+<!-- 六、经济要闻 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">📰</span>
+        <h2>六、经济要闻</h2>
+    </div>
+    <div class="section-body">
+        <div class="news-item">
+            <span class="tag tag-macro">宏观</span>
+            <strong>8月金融数据出炉：</strong>社融存量464.8万亿元，同比+7.2%；M2余额356.81万亿，同比+7.5%；M1余额115.77万亿，同比+4.1%。前8个月社融增量23.91万亿元。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-macro">宏观</span>
+            <strong>8月经济数据发布：</strong>规模以上工业增加值同比+5.2%，社零同比+0.4%，1-8月固定资产投资同比增速持续承压。CPI同比+0.8%，PPI同比+3.8%。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-policy">政策</span>
+            <strong>国办发文治理中小企业回款难：</strong>明确大型企业向中小企业付款最长不超过60日，央企率先践行"60日付现承诺"。当前规上工业企业应收账款已达28.9万亿元。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-policy">政策</span>
+            <strong>《金融强国建设"十五五"规划》正式出台：</strong>央行表示将逐步淡化数量型中介目标，更加注重利率调控；金融监管总局强调稳妥推进地方中小金融机构风险防控。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-market">国际</span>
+            <strong>超级央行周：</strong>美联储9月15-16日议息（加息概率约87%），日本央行预计加息至1.25%，英国央行料维持3.75%不变。美欧日三大央行若同步加息，将为2006年以来首次。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-macro">宏观</span>
+            <strong>发改委推进重大工程：</strong>9月上旬连续召开"六张网"重大项目和"十五五"109项重大工程推进会议，以重大项目拉动内需、夯实投资。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-market">国际</span>
+            <strong>美国8月CPI同比+3.4%：</strong>核心CPI环比+0.3%略超预期，叠加PPI同比+5.4%，市场对美联储9月加息定价升至约87%。美柴油价格首破6美元/加仑。
+        </div>
+    </div>
+</div>
+
+<!-- 七、银行监管动态 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">🏦</span>
+        <h2>七、银行监管动态</h2>
+    </div>
+    <div class="section-body">
+        <div class="news-item">
+            <span class="tag tag-bank">监管</span>
+            <strong>金融监管总局：</strong>大力整治"价格战"、违规返佣、"高息高返"等行为，引导银行摒弃规模情结，转向以质量和效益为中心。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-bank">监管</span>
+            <strong>银行保险机构信息披露管理办法征求意见：</strong>整合三项旧规，将适用范围拓展至理财公司、信托、保险资管等，与9月1日产品层面信披新规构成"产品+机构"双层框架。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-bank">监管</span>
+            <strong>失信主体名单管理新规：</strong>将于2026年10月1日起执行，将吊销牌照、骗贷、拒不执行法院裁定三类主体纳入金融严重失信名单。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-bank">监管</span>
+            <strong>个人住房贷款管理办法试行：</strong>规定银行须在预售商品房竣工备案后方可划转贷款资金给开发商，上海、徐州、广东部分城市率先执行。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-bank">行业</span>
+            <strong>财政部增资8家中央金融企业：</strong>发行3000亿元特别国债，支持工行、农行、进出口银行等补充核心一级资本，属"未雨绸缪"的前瞻性安排。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-bank">行业</span>
+            <strong>摩根士丹利看好中国银行利润前景：</strong>预计2026年净利润增长4%-5%，2027年升至6%-7%，"反内卷"政策有助于缓解息差压力、改善资产质量。
+        </div>
+    </div>
+</div>
+
+<!-- 八、理财市场 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">💎</span>
+        <h2>八、理财市场</h2>
+    </div>
+    <div class="section-body">
+        <table class="data-table">
+            <tr><th>指标</th><th>数据</th></tr>
+            <tr><td>全市场理财存续规模</td><td>33.91万亿元（环比+0.16%）</td></tr>
+            <tr><td>现金管理类7日年化</td><td>1.10%（环比-0.6BP）</td></tr>
+            <tr><td>货币基金7日年化</td><td>1.01%（环比持平）</td></tr>
+            <tr><td>理财产品破净率</td><td>1.14%（环比-0.36pct）</td></tr>
+        </table>
+        <div class="news-item" style="margin-top:8px;">
+            <span class="tag tag-market">动态</span>
+            <strong>信披新规落地：</strong>9月1日起《银行保险机构资管产品信息披露管理办法》施行，中国理财网统一信息披露平台同步上线。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-market">动态</span>
+            <strong>第六届资产管理发展论坛：</strong>金融监管总局副局长肖远企出席，强调从"融资导向"转向"投资导向"，从"做大规模"转向"做优质量"。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-market">动态</span>
+            <strong>养老理财扩容在即：</strong>满足条件的机构最早有望9月底获批发行新一批养老理财产品。
+        </div>
+        <div class="news-item">
+            <span class="tag tag-market">创新</span>
+            <strong>招银理财发布"质价甄选指数"：</strong>以PB对ROE线性回归选股，替代传统"低PB+高ROE"交集选样，实现跨行业可比。
+        </div>
+    </div>
+</div>
+
+<!-- 九、银行研报观点 -->
+<div class="section">
+    <div class="section-header">
+        <span class="icon">📋</span>
+        <h2>九、银行研报观点</h2>
+    </div>
+    <div class="section-body">
+        <div class="news-item">
+            <strong>银河证券：</strong>2026H1上市银行营收同比+7.40%，归母净利润+2.96%。息差企稳信号明确，存款重定价红利持续释放。继续看好银行板块配置价值，推荐工行、农行、建行、招行等。
+        </div>
+        <div class="news-item">
+            <strong>华泰证券：</strong>信贷需求筑底蓄力，国有行营收进一步改善。宁波银行盈利动能持续增强（+12.1%），南京银行利息收入强劲修复（+8.2%）。
+        </div>
+        <div class="news-item">
+            <strong>中邮证券：</strong>国有行营收同比+9.38%领跑，城商行归母净利润+7.26%领先。资产质量整体平稳，对公改善与零售承压并存。
+        </div>
+        <div class="news-item">
+            <strong>中信建投：</strong>维持银行板块"强于大市"评级。上周样本理财子发行195只，平均基准利率2.44%，环比+6BP。债市预计维持区间震荡。
+        </div>
+        <div class="news-item">
+            <strong>标普全球：</strong>将中国银行业国别风险评估从第6组上调至第5组，肯定其科技与财务韧性增强。
+        </div>
+    </div>
+</div>
+
+<!-- 十、每日知识点 -->
+<div class="knowledge-box">
+    <div class="k-title">
+        <span class="icon">💡</span>
+        每日学一个知识点
+    </div>
+    <div class="k-body">
+        <strong>🔑 "超级央行周"是什么？</strong><br><br>
+        超级央行周（Super Central Bank Week）是指全球多家主要央行在同一周内集中召开货币政策会议、公布利率决议的时期。<br><br>
+        <strong>本周即为典型的超级央行周：</strong>美联储（9月15-16日）、日本央行（9月17-18日）、英国央行（9月17日）先后公布利率决议，巴西央行也同期议息。如果美、欧、日三大央行同步加息，将是2006年以来首次。<br><br>
+        <strong>为什么重要？</strong>全球主要央行的货币政策具有极强的溢出效应——美联储加息会推高美元、吸引全球资金回流美国，日本央行加息可能引发套息交易平仓冲击全球市场。当多家央行"同频共振"时，全球资产定价面临系统性重估。<br><br>
+        <strong>对普通人的影响：</strong>海外加息 → 人民币汇率承压 → 进口商品价格上升 → 国内降息空间受限 → 房贷利率、理财收益率均受影响。理解超级央行周，就是理解全球资金的"潮汐"规律。
+    </div>
+</div>
+
+</div>
+
+<div class="footer">
+    <div class="divider"></div>
+    <div class="name">瑾年 · 财经早报</div>
+    <div>每日更新 | 数据来源：Wind金融终端</div>
+    <div style="margin-top:4px;">关注我，每天一分钟，读懂财经世界 🌏</div>
+</div>
+
+</body>
+</html>

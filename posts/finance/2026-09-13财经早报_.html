@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>每日财经早报 | 2026年9月13日 周日</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+  }
+  /* 头部 */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  .header .date-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+  /* 市场概览卡片 */
+  .market-cards {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    gap: 8px;
+    background: #fafafa;
+  }
+  .market-card {
+    flex: 1 1 calc(33.33% - 8px);
+    min-width: 100px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .market-card .label {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  .market-card .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .market-card .change {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .up { color: #e74c3c; }
+  .down { color: #27ae60; }
+  /* 板块 */
+  .section {
+    padding: 16px 18px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .section:last-child { border-bottom: none; }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    padding-left: 10px;
+    border-left: 3px solid #0f3460;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-title .icon { font-size: 18px; }
+  /* 数据行 */
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #f0f0f0;
+    font-size: 14px;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row .key { color: #666; }
+  .data-row .val { font-weight: 600; }
+  /* 新闻列表 */
+  .news-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #f0f0f0;
+    font-size: 14px;
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-item .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-right: 6px;
+    color: #fff;
+    vertical-align: middle;
+  }
+  .tag-macro { background: #3498db; }
+  .tag-policy { background: #e67e22; }
+  .tag-bank { background: #2ecc71; }
+  .tag-market { background: #9b59b6; }
+  .tag-bond { background: #1abc9c; }
+  .tag-futures { background: #e74c3c; }
+  .tag-wealth { background: #f39c12; }
+  /* 知识点 */
+  .knowledge-box {
+    background: linear-gradient(135deg, #fef9e7 0%, #fdebd0 100%);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 0 18px 16px;
+    border: 1px solid #f9e79f;
+  }
+  .knowledge-box .k-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #b7950b;
+    margin-bottom: 8px;
+  }
+  .knowledge-box .k-body {
+    font-size: 14px;
+    color: #7d6608;
+    line-height: 1.8;
+  }
+  /* 底部 */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #bbb;
+    background: #fafafa;
+  }
+  .footer .author {
+    color: #0f3460;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  /* 分割线 */
+  .divider {
+    height: 8px;
+    background: #f5f5f5;
+  }
+  /* 表格 */
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .mini-table th {
+    background: #f8f9fa;
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    color: #555;
+    font-size: 12px;
+  }
+  .mini-table td {
+    padding: 7px 6px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .mini-table .name { text-align: left; }
+  .highlight { color: #e74c3c; font-weight: 700; }
+  .highlight-green { color: #27ae60; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 头部 -->
+<div class="header">
+  <div class="date-badge">📅 2026年9月13日 周日</div>
+  <h1>📊 每日财经早报</h1>
+  <div class="subtitle">上一交易日：2026年9月11日（周五）| 覆盖A股·资金市场·债市·期货·银行·理财</div>
+</div>
+
+<!-- 市场概览 -->
+<div class="market-cards">
+  <div class="market-card">
+    <div class="label">上证指数</div>
+    <div class="value">3,888.11</div>
+    <div class="change down">📉 -1.18%</div>
+  </div>
+  <div class="market-card">
+    <div class="label">深证成指</div>
+    <div class="value">13,471.26</div>
+    <div class="change down">📉 -1.08%</div>
+  </div>
+  <div class="market-card">
+    <div class="label">创业板指</div>
+    <div class="value">3,322.04</div>
+    <div class="change down">📉 -0.49%</div>
+  </div>
+  <div class="market-card">
+    <div class="label">两市成交</div>
+    <div class="value">19,717亿</div>
+    <div class="change" style="color:#e74c3c;">较前日+3,247亿</div>
+  </div>
+  <div class="market-card">
+    <div class="label">美元/人民币</div>
+    <div class="value">6.7079</div>
+    <div class="change" style="color:#999;">在岸CFETS</div>
+  </div>
+  <div class="market-card">
+    <div class="label">美元指数</div>
+    <div class="value">99.09</div>
+    <div class="change" style="color:#999;">全球市场</div>
+  </div>
+</div>
+
+<!-- 涨跌分布 -->
+<div class="market-cards" style="padding-top:0;">
+  <div class="market-card">
+    <div class="label">上涨家数</div>
+    <div class="value" style="color:#e74c3c;">643</div>
+  </div>
+  <div class="market-card">
+    <div class="label">下跌家数</div>
+    <div class="value" style="color:#27ae60;">4,870</div>
+  </div>
+  <div class="market-card">
+    <div class="label">涨停</div>
+    <div class="value" style="color:#e74c3c;">40</div>
+  </div>
+  <div class="market-card">
+    <div class="label">跌停</div>
+    <div class="value" style="color:#27ae60;">21</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 一、股市 -->
+<div class="section">
+  <div class="section-title"><span class="icon">📈</span> 一、A股市场</div>
+  <p style="font-size:14px;color:#666;margin-bottom:10px;">9月11日，A股三大指数集体收跌，市场呈现普跌格局。两市成交额放大至1.97万亿，显示多空分歧加剧。</p>
+
+  <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;">▎涨幅前5行业（申万一级）</p>
+  <table class="mini-table">
+    <tr><th>行业</th><th>涨跌幅</th></tr>
+    <tr><td class="name">通信</td><td class="highlight">+1.41%</td></tr>
+    <tr><td class="name">建筑材料</td><td class="highlight">+0.13%</td></tr>
+    <tr><td class="name">公用事业</td><td class="highlight-green">-0.27%</td></tr>
+    <tr><td class="name">国防军工</td><td class="highlight-green">-0.43%</td></tr>
+    <tr><td class="name">银行</td><td class="highlight-green">-0.43%</td></tr>
+  </table>
+
+  <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin:10px 0 6px;">▎跌幅前5行业（申万一级）</p>
+  <table class="mini-table">
+    <tr><th>行业</th><th>涨跌幅</th></tr>
+    <tr><td class="name">有色金属</td><td class="highlight-green">-3.98%</td></tr>
+    <tr><td class="name">基础化工</td><td class="highlight-green">-2.98%</td></tr>
+    <tr><td class="name">房地产</td><td class="highlight-green">-2.93%</td></tr>
+    <tr><td class="name">商贸零售</td><td class="highlight-green">-2.78%</td></tr>
+    <tr><td class="name">非银金融</td><td class="highlight-green">-2.62%</td></tr>
+  </table>
+
+  <p style="font-size:13px;color:#999;margin-top:8px;">💡 通信板块逆势领涨，受益于AI算力产业链持续催化；有色金属、化工等周期板块承压明显，反映市场对全球需求前景的担忧。</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- 二、资金市场 -->
+<div class="section">
+  <div class="section-title"><span class="icon">💰</span> 二、资金市场</div>
+  <div class="data-row"><span class="key">SHIBOR隔夜</span><span class="val">1.417%</span></div>
+  <div class="data-row"><span class="key">SHIBOR 1个月</span><span class="val">1.419%</span></div>
+  <div class="data-row"><span class="key">DR007（银存间质押7日）</span><span class="val">1.423%</span></div>
+  <div class="data-row"><span class="key">央行7天逆回购操作利率</span><span class="val">1.40%（投放40亿）</span></div>
+  <div class="data-row"><span class="key">LPR 1年期（最新）</span><span class="val">3.00%（8月20日）</span></div>
+  <div class="data-row"><span class="key">LPR 5年期（最新）</span><span class="val">3.50%（8月20日）</span></div>
+  <p style="font-size:13px;color:#999;margin-top:8px;">💡 央行9月11日开展40亿元7天期逆回购操作，利率维持1.40%。央行宣布将于9月14-17日开展隔夜逆回购操作，每日不超过6000亿元，呵护跨季流动性。资金面整体均衡偏松。</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- 三、债市 -->
+<div class="section">
+  <div class="section-title"><span class="icon">📜</span> 三、债券市场</div>
+  <div class="data-row"><span class="key">1年期国债收益率</span><span class="val">1.229%</span></div>
+  <div class="data-row"><span class="key">10年期国债收益率</span><span class="val">1.689%</span></div>
+  <div class="data-row"><span class="key">中证转债指数</span><span class="val" style="color:#27ae60;">-0.39%（成交517亿）</span></div>
+  <div class="data-row"><span class="key">国债期货T2612（10年）</span><span class="val" style="color:#27ae60;">-0.06%</span></div>
+  <div class="data-row"><span class="key">国债期货TL2612（30年）</span><span class="val" style="color:#27ae60;">-0.15%</span></div>
+  <p style="font-size:13px;color:#999;margin-top:8px;">💡 债市震荡偏弱，国债期货多数收跌。美国8月PPI超预期推升美联储加息预期，10年期美债收益率升至4.94%，对国内债市情绪形成一定压制。国内方面，9月政府债供给放量叠加季末因素，资金面或有扰动，但货币政策"中性偏松"基调未变。</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- 四、期货 -->
+<div class="section">
+  <div class="section-title"><span class="icon">🛢️</span> 四、商品期货</div>
+  <table class="mini-table">
+    <tr><th>品种</th><th>涨跌幅</th><th>核心逻辑</th></tr>
+    <tr><td class="name">INE原油</td><td class="highlight">+5.79%</td><td style="font-size:12px;">地缘风险升级，油价强势反弹</td></tr>
+    <tr><td class="name">沪铜</td><td class="highlight-green">-2.45%</td><td style="font-size:12px;">美元走强叠加需求担忧</td></tr>
+    <tr><td class="name">铁矿石</td><td class="highlight-green">-1.78%</td><td style="font-size:12px;">供需格局偏弱</td></tr>
+    <tr><td class="name">螺纹钢</td><td class="highlight-green">-1.24%</td><td style="font-size:12px;">成本支撑趋弱</td></tr>
+    <tr><td class="name">豆油</td><td class="highlight-green">-0.31%</td><td style="font-size:12px;">外盘油脂回调</td></tr>
+  </table>
+  <p style="font-size:13px;color:#999;margin-top:8px;">💡 原油受中东地缘局势紧张影响大涨5.79%，盘中一度触及838元/桶。有色金属板块整体承压，沪铜、国际铜跌幅均超2.4%。黑色系延续弱势，铁矿石、螺纹钢双双走低。8月全国期货市场成交量同比增29%，成交额增31%。</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- 五、经济要闻 -->
+<div class="section">
+  <div class="section-title"><span class="icon">📰</span> 五、经济要闻</div>
+  <div class="news-item">
+    <span class="tag tag-policy">重磅</span>
+    <strong>《金融强国建设"十五五"规划》正式出台。</strong>央行副行长陆磊9月10日在国新办发布会上介绍，规划明确了健全金融宏观调控体系、全面加强金融监管、有效防范化解金融风险等重点任务，目标到2030年形成中国特色现代金融体系总体框架。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-macro">宏观</span>
+    <strong>8月CPI同比上涨0.8%，PPI同比上涨3.8%。</strong>CPI涨幅扩大主要受能源价格推动；PPI涨幅超预期，反映上游工业品价格持续回暖。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-macro">外贸</span>
+    <strong>前8个月我国进出口总值34.78万亿元，同比增长17.6%。</strong>出口增速再度高于预期，出口链保持较高景气。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-policy">产业</span>
+    <strong>九部门印发《智能网联新能源汽车产业发展"十五五"规划》。</strong>目标到2030年新能源乘用车新车销量占比达70%，具备自动驾驶功能的汽车实现规模应用。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-policy">产业</span>
+    <strong>工信部印发《"人工智能+软件"专项行动实施方案》。</strong>到2028年培育一批高水平智能编程工具和智能开发平台，覆盖2万家规模以上软件企业。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-macro">政策</span>
+    <strong>中美正就300亿美元对等降税框架安排进行磋商。</strong>若达成共识将缓解部分出口企业压力。
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 六、银行监管 -->
+<div class="section">
+  <div class="section-title"><span class="icon">🏦</span> 六、银行监管动态</div>
+  <div class="news-item">
+    <span class="tag tag-bank">监管</span>
+    <strong>金融监管总局明确"十五五"工作重点。</strong>将一体推进防风险、强监管、促高质量发展，稳妥推进重点领域风险防控，推动地方中小金融机构减量提质，大力整治"价格战"、违规返佣、"高息高返"等行为。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-bank">增资</span>
+    <strong>8家中央金融企业增资3600亿元。</strong>金融监管总局副局长丛林表示，这将进一步增强国有大型金融机构稳健经营、抵御风险和服务实体经济的能力。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-bank">处罚</span>
+    <strong>喀什金融监管分局集中公示一批罚单，合计257万元。</strong>涉及农商行、邮储银行等，覆盖信贷管理、员工行为管理、代销业务管理等领域。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-bank">处罚</span>
+    <strong>东至农商行因贷款"三查"严重不尽职被罚40万元。</strong>两名责任人被禁止从事银行业工作。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-bank">行业</span>
+    <strong>《香港银行业2030》报告发布。</strong>99%受访银行看好香港银行业前景，围绕"联系国际、互联互通、创新赋能、共融多元"四大策略支柱提出37项建议。
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 七、理财市场 -->
+<div class="section">
+  <div class="section-title"><span class="icon">💎</span> 七、理财市场</div>
+  <div class="news-item">
+    <span class="tag tag-wealth">规模</span>
+    <strong>全市场理财产品存续规模达33.76万亿元。</strong>环比上升0.17%，破净率降至1.51%历史低位。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-wealth">QDII</span>
+    <strong>理财子公司密集发行美元理财产品。</strong>QDII额度落地后10天内发行28只美元产品，业绩比较基准3.6%-3.9%，均为固收类封闭式产品。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-wealth">打新</span>
+    <strong>4家理财公司52只产品获配燧原科技IPO。</strong>光大理财领跑，获配金额近2447万元。理财子打新已成为常态化固收增强策略。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-wealth">信披</span>
+    <strong>理财行业统一信息披露平台正式上线。</strong>9月1日起《银行保险机构资产管理产品信息披露管理办法》施行，公募产品信息须通过统一渠道披露。
+  </div>
+  <div class="news-item">
+    <span class="tag tag-wealth">养老</span>
+    <strong>养老理财产品新一轮扩围临近。</strong>多家理财子已申报材料，最早有望9月底获批发行。
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 八、银行研报 -->
+<div class="section">
+  <div class="section-title"><span class="icon">📋</span> 八、银行研报精粹</div>
+  <div class="news-item">
+    <strong>平安证券：</strong>银行板块股息率4.33%，低利率环境下股息配置价值凸显。2026H1上市银行净利润同比+3.0%，息差边际企稳支撑盈利。看好低估值高股息国有大行，关注成都、宁波、江苏等优质区域行。
+  </div>
+  <div class="news-item">
+    <strong>开源证券：</strong>银行板块处于稀缺红利重估时刻。2026H1国有行营收同比+9.38%，城商行+8.10%，资产质量静态指标平稳。前瞻资负管理能力将成为分化关键。
+  </div>
+  <div class="news-item">
+    <strong>中金公司：</strong>"十五五"央行制度升级，从"看量"转向"看价"，货币政策+宏观审慎双支柱并重。债市与股市并重，央行将健全支持资本市场货币政策工具长效机制。
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 每日知识点 -->
+<div class="knowledge-box">
+  <div class="k-title">📚 每日学一个知识点：DR007</div>
+  <div class="k-body">
+    <p><strong>DR007</strong>（存款类机构间质押式7天回购利率）是银行间市场最重要的短期利率锚之一。</p>
+    <p style="margin-top:6px;">🔹 <strong>为什么重要？</strong>它是央行观察货币政策传导效率的核心指标，反映了银行体系真实的流动性状况。央行在《"十五五"改革发展规划》中明确提出，要让短端货币市场利率围绕政策利率平稳运行。</p>
+    <p style="margin-top:6px;">🔹 <strong>怎么看？</strong>DR007持续低于7天逆回购利率（1.40%），说明银行间资金充裕；反之则说明资金偏紧。9月11日DR007报1.42%，略高于政策利率，资金面处于均衡状态。</p>
+    <p style="margin-top:6px;">🔹 <strong>与普通投资者有什么关系？</strong>DR007的变动会传导至货币基金收益率、银行理财收益和房贷利率，是判断市场利率走向的"风向标"。</p>
+  </div>
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+  <p class="author">瑾年 | 每日财经早报</p>
+  <p>数据来源：Wind金融终端 | 仅供参考，不构成投资建议</p>
+  <p>2026年9月13日</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经周报 | 美联储加息靴子落地，A股探底反弹，下周怎么走？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f6fa;
+    color: #333;
+    line-height: 1.8;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2b579a 100%);
+    padding: 50px 32px 40px;
+    text-align: center;
+    color: #fff;
+  }
+  .header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+  .header .date {
+    font-size: 13px;
+    opacity: 0.6;
+  }
+  
+  /* Content */
+  .content {
+    padding: 32px 28px 40px;
+  }
+  
+  /* Section Title */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 36px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #2b579a;
+    display: inline-block;
+  }
+  
+  .sub-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2b579a;
+    margin: 20px 0 10px;
+    padding-left: 12px;
+    border-left: 4px solid #e67e22;
+  }
+  
+  .event-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e67e22;
+    margin: 18px 0 8px;
+  }
+  
+  p {
+    font-size: 15px;
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, #fff8f0, #fff3e6);
+    border-left: 4px solid #e67e22;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: #8b4513;
+  }
+  
+  .highlight-box.warning {
+    background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+    border-left-color: #e74c3c;
+    color: #8b0000;
+  }
+  
+  .highlight-box.info {
+    background: linear-gradient(135deg, #f0f7ff, #e3efff);
+    border-left-color: #2b579a;
+    color: #1a3a5c;
+  }
+  
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  thead th {
+    background: #2b579a;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  tbody td {
+    padding: 9px 12px;
+    text-align: center;
+    border-bottom: 1px solid #eef1f6;
+  }
+  tbody tr:nth-child(even) {
+    background: #f7f9fc;
+  }
+  tbody tr:hover {
+    background: #edf2fa;
+  }
+  td.left {
+    text-align: left;
+  }
+  
+  /* Lists */
+  ul {
+    padding-left: 20px;
+    margin: 8px 0 16px;
+  }
+  ul li {
+    font-size: 14px;
+    margin-bottom: 6px;
+    list-style: none;
+    position: relative;
+    padding-left: 16px;
+  }
+  ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #e67e22;
+    font-weight: bold;
+  }
+  
+  /* Data highlight */
+  .data-highlight {
+    display: inline-block;
+    background: #2b579a;
+    color: #fff;
+    padding: 1px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0 2px;
+  }
+  .data-up {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+  .data-down {
+    color: #27ae60;
+    font-weight: 600;
+  }
+  
+  /* Calendar cards */
+  .calendar-grid {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .calendar-card {
+    background: #f7f9fc;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid #e8ecf2;
+    transition: transform 0.15s;
+  }
+  .calendar-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .calendar-card .day {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2b579a;
+    margin-bottom: 6px;
+  }
+  .calendar-card .events {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .calendar-card.holiday {
+    background: #fff5f5;
+    border-color: #ffd5d5;
+  }
+  .calendar-card.holiday .day {
+    color: #e74c3c;
+  }
+  
+  /* Separator */
+  .separator {
+    text-align: center;
+    margin: 30px 0;
+    color: #ccc;
+    font-size: 18px;
+    letter-spacing: 8px;
+  }
+  
+  /* Footer */
+  .footer {
+    background: #1a1a2e;
+    color: #999;
+    text-align: center;
+    padding: 30px 24px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .footer .disclaimer {
+    font-size: 11px;
+    color: #666;
+    margin-top: 12px;
+  }
+  
+  /* Emoji indicators */
+  .tag-fire {
+    color: #e74c3c;
+    font-size: 12px;
+  }
+  .tag-ice {
+    color: #3498db;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="tag">📊 财 经 周 报</div>
+    <h1>美联储加息靴子落地<br>A股探底反弹，下周怎么走？</h1>
+    <div class="subtitle">2026年9月第3周</div>
+    <div class="date">周日发布 · 2026年9月20日</div>
+  </div>
+
+  <div class="content">
+
+    <!-- 导读 -->
+    <p style="font-size: 16px; font-weight: 700; color: #2b579a; margin-bottom: 8px;">📌 本期导读</p>
+    <p>本周A股先跌后涨，美联储时隔三年首次加息25bp，AI半导体主线强势回归，<span class="data-highlight">科创50大涨6.39%</span>领跑。下周中秋假期前仅三个交易日，但宏观数据和产业大会密集，市场情绪有望延续修复。本期周报带你全面复盘本周行情，前瞻下周关键事件，并分享"美联储加息如何影响A股"的分析框架。</p>
+
+    <div class="separator">···</div>
+
+    <!-- 一、周末复盘 -->
+    <div class="section-title">一、周末复盘：指数探底反弹，AI主线强势回归</div>
+
+    <div class="sub-title">1.1 主要指数表现</div>
+    <table>
+      <thead>
+        <tr><th>指数</th><th>收盘点位</th><th>周涨跌幅</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="left">上证指数</td><td>3,911.87</td><td><span class="data-up">+0.61%</span></td></tr>
+        <tr><td class="left">深证成指</td><td>13,640.87</td><td><span class="data-up">+1.26%</span></td></tr>
+        <tr><td class="left">创业板指</td><td>3,372.68</td><td><span class="data-up">+1.52%</span></td></tr>
+        <tr><td class="left">科创50</td><td>—</td><td><span class="data-up">+6.39% 🔥</span></td></tr>
+        <tr><td class="left">中证1000</td><td>—</td><td><span class="data-up">+3.51%</span></td></tr>
+        <tr><td class="left">上证50</td><td>—</td><td><span class="data-down">-0.26%</span></td></tr>
+        <tr><td class="left">沪深300</td><td>—</td><td><span class="data-down">-0.06%</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 13px; color: #888;">💡 本周日均成交额约1.81万亿元，周五放量至2.09万亿，增量资金进场迹象明显。两融余额2.64万亿，市场情绪边际回暖。</p>
+
+    <div class="sub-title">1.2 行业涨跌榜</div>
+    <table>
+      <thead>
+        <tr><th>领涨行业</th><th>周涨幅</th><th>领跌行业</th><th>周跌幅</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="left">🥇 电子</td><td><span class="data-up">+6.06%</span></td><td class="left">石油石化</td><td><span class="data-down">-3.72%</span></td></tr>
+        <tr><td class="left">🥈 通信</td><td><span class="data-up">+3.75%</span></td><td class="left">农林牧渔</td><td><span class="data-down">-2.78%</span></td></tr>
+        <tr><td class="left">🥉 房地产</td><td><span class="data-up">+3.26%</span></td><td class="left">煤炭</td><td><span class="data-down">-2.71%</span></td></tr>
+        <tr><td class="left">4 机械设备</td><td><span class="data-up">+3.20%</span></td><td class="left">银行</td><td><span class="data-down">-2.66%</span></td></tr>
+        <tr><td class="left">5 建筑材料</td><td><span class="data-up">+2.32%</span></td><td class="left">社会服务</td><td><span class="data-down">-1.12%</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">1.3 热门概念板块</div>
+    <p><span class="tag-fire">🔥</span> <strong>涨幅前十：</strong>科创次新股(+12.46%)、注册制次新股(+12.20%)、中芯国际概念(+9.45%)、光刻机(+9.04%)、国家大基金持股(+8.94%)、先进封装(+8.72%)、存储芯片(+8.61%)、光刻胶(+8.23%)、CRO(+7.91%)</p>
+    <p><span class="tag-ice">❄️</span> <strong>跌幅前十：</strong>兵装重组(-5.93%)、猪肉(-4.52%)、免税店(-3.77%)、粮食(-3.35%)、可燃冰(-3.19%)等</p>
+
+    <div class="separator">···</div>
+
+    <!-- 二、本周大事件 -->
+    <div class="section-title">二、本周重磅事件回顾</div>
+
+    <div class="event-title">🔴 美联储加息25bp，时隔三年首次动手</div>
+    <p>北京时间9月17日凌晨，美联储<strong>全票通过加息25个基点</strong>，联邦基金利率升至3.75%-4.00%。这是2023年7月以来首次加息，也是沃什就任美联储主席后主导的首次利率调整。点阵图显示16位委员认为年内还需再加息一次，2026年底利率预测中值从3.8%上修至4.1%。声明公布后，10年期美债收益率一度突破5%，美元指数走强。但A股周四低开高走、周五放量上涨，显示市场对加息已有充分预期消化。</p>
+
+    <div class="event-title">🔴 日本央行跟进加息至1.25%</div>
+    <p>日央行将政策利率从1%上调至1.25%，为31年来最高水平。行长植田和男表示"重点已从推动价格上涨转向防止价格过度上涨"。<strong>美欧日三大央行同步进入加息周期</strong>，为2006年以来首次。</p>
+
+    <div class="event-title">🟡 国内8月金融数据出炉</div>
+    <p>8月末社融存量464.8万亿元，同比增长7.2%；M2同比增长7.5%；M1同比增长4.1%。信贷社融边际走弱，但出口表现亮眼：<strong>8月出口同比增长25%，集成电路出口同比飙升130%</strong>。央行宣布开展5000亿元买断式逆回购操作，维持流动性充裕。</p>
+
+    <div class="event-title">🟢 政策利好密集出台</div>
+    <p>《金融强国建设"十五五"规划》正式出台，证监会表态全力维护资本市场平稳运行；工信部发布信息通信业"十五五"规划，提出适时启动6G商用；财政部启动3000亿元特别国债注资8家中央金融企业；中美经贸团队就300亿美元对等降税框架进行磋商。</p>
+
+    <div class="separator">···</div>
+
+    <!-- 三、下周前瞻 -->
+    <div class="section-title">三、下周前瞻：中秋假期前仅三交易日</div>
+
+    <div class="highlight-box warning">
+      ⚠️ <strong>交易提醒：</strong>下周A股仅周一至周三（9/21-9/23）三个交易日，9/24（中秋）至9/27休市，9/28恢复交易。郑商所已上调PTA、甲醇等品种保证金，节前注意流动性管理。
+    </div>
+
+    <div class="sub-title">3.1 下周财经日历</div>
+    <div class="calendar-grid">
+      <div class="calendar-card">
+        <div class="day">📅 周一 9/21</div>
+        <div class="events">
+          · 中国9月LPR报价（已连续15月不变）<br>
+          · 中美经贸磋商进行中<br>
+          · 宇特光电(920157) 新股申购<br>
+          <span style="color:#e67e22;">⭐⭐⭐⭐</span>
+        </div>
+      </div>
+      <div class="calendar-card">
+        <div class="day">📅 周二 9/22</div>
+        <div class="events">
+          · 欧元区9月消费者信心指数<br>
+          · 美联储官员在美债市场会议讲话<br>
+          <span style="color:#e67e22;">⭐⭐⭐</span>
+        </div>
+      </div>
+      <div class="calendar-card">
+        <div class="day">📅 周三 9/23</div>
+        <div class="events">
+          · 欧元区9月制造业PMI初值<br>
+          · 美国9月标普PMI初值<br>
+          <span style="color:#e67e22;">⭐⭐⭐⭐</span>
+        </div>
+      </div>
+      <div class="calendar-card holiday">
+        <div class="day">🎑 周四 9/24（中秋休市）</div>
+        <div class="events">
+          · 德国9月IFO商业景气指数<br>
+          · 瑞士央行利率决议<br>
+          · 美国8月新屋销售<br>
+          · 粤芯半导体(301660)新股申购<br>
+          <span style="color:#e74c3c;">⭐⭐⭐</span>
+        </div>
+      </div>
+      <div class="calendar-card holiday">
+        <div class="day">📅 周五 9/25（休市）</div>
+        <div class="events">
+          · 美国8月耐用品订单<br>
+          · 美国9月密歇根消费者信心指数<br>
+          <span style="color:#e74c3c;">⭐⭐⭐</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-title">3.2 新股与解禁</div>
+    <table>
+      <thead><tr><th>项目</th><th>详情</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="left"><strong>新股申购</strong></td>
+          <td class="left">周一：宇特光电(920157)，发行价13.75元，北交所<br>周四：粤芯半导体(301660)，预计募资77.29亿元，创业板</td>
+        </tr>
+        <tr>
+          <td class="left"><strong>限售解禁</strong></td>
+          <td class="left">43只股票解禁，合计市值151.28亿元<br>重点：中远海特(33亿)、首药控股-U(30亿)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">3.3 产业大会密集催化——AI与半导体"超级周"</div>
+    <ul>
+      <li><strong>阿里2026云栖大会</strong>（杭州）—— 聚焦模型、Agent与Agentic Cloud</li>
+      <li><strong>GMIF 2026全球存储器创新峰会</strong>（深圳）—— 主题"AI存储，驱动未来"</li>
+      <li><strong>高通骁龙峰会</strong> —— 或发布首款2nm骁龙8 Elite Gen6</li>
+      <li><strong>Meta Connect 2026</strong> —— 或推出XR与智能眼镜新品</li>
+      <li><strong>AICC人工智能计算大会</strong> + 全球AI芯片峰会GACS</li>
+    </ul>
+    <p style="font-size: 13px; color: #888;">科技板块情绪有望在产业大会催化下延续，半导体、AI算力、存储芯片等方向值得持续跟踪。</p>
+
+    <div class="separator">···</div>
+
+    <!-- 四、轻干货 -->
+    <div class="section-title">四、轻干货：美联储加息如何影响A股？</div>
+    <p>很多朋友一听到"美联储加息"就紧张，今天用一个<strong>"三条路径"框架</strong>帮大家理清逻辑。</p>
+
+    <div class="sub-title">路径一：汇率与资金流</div>
+    <p>加息 → 美元走强 → 人民币贬值压力 → 外资流出。但本轮A股外资占比不高，且8月数据显示外资已从净流出转为净流入，<strong>这条路径的冲击力在减弱</strong>。</p>
+
+    <div class="sub-title">路径二：风险偏好</div>
+    <p>加息 → 全球风险资产估值承压 → A股情绪受拖累。这是本周前半周下跌的主因。但关键是——<strong>预期内的利空不是利空</strong>。市场在加息前已跌了一波，靴子落地后反而"利空出尽"。</p>
+
+    <div class="sub-title">路径三：基本面传导</div>
+    <p>加息 → 美国经济降温 → 中国出口承压。这条路径的影响是滞后的，需要持续跟踪美国经济数据。</p>
+
+    <div class="highlight-box info">
+      💡 <strong>核心结论：</strong>对普通投资者来说，美联储加息不用过度恐慌。真正需要关注的是加息的持续性和幅度。目前机构主流判断是——这次加息更偏向"短期"行为，而非漫长加息周期的开端。多家机构认为A股"中期底部"正在确立，上证指数有望挑战4000点。
+    </div>
+
+    <div class="separator">···</div>
+
+    <!-- 五、机构观点 -->
+    <div class="section-title">五、主流机构观点速览</div>
+    <table>
+      <thead><tr><th style="width:20%">机构</th><th style="width:80%">核心观点</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="left"><strong>浙商证券</strong></td>
+          <td class="left">中线底部逐渐确立，保持耐心、持仓待涨。上证有望挑战4000点，双创或启动中级反弹。建议均衡配置，关注双创、非银、传媒、计算机。</td>
+        </tr>
+        <tr>
+          <td class="left"><strong>中金公司</strong></td>
+          <td class="left">对A股后市不必悲观。外部"逆风"偏短期，国内基本面与中期逻辑未变。今年上市公司业绩增速有望达近五年最佳。</td>
+        </tr>
+        <tr>
+          <td class="left"><strong>申万宏源</strong></td>
+          <td class="left">美联储加息靴子落地，全球股市开启共振反弹。中期底部信号明确。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="separator">···</div>
+
+    <!-- 六、一句话总结 -->
+    <div class="section-title">六、一句话总结</div>
+    <div class="highlight-box">
+      本周A股先跌后涨，美联储加息靴子落地，AI半导体主线强势回归，中级底部信号逐渐明朗。下周节前仅三个交易日，宏观数据与产业大会密集，科技板块情绪有望延续。操作上，机构建议保持仓位、逢低布局，方向以AI、半导体、双创为主。
+    </div>
+
+    <p style="text-align: center; color: #bbb; margin-top: 36px; font-size: 16px; letter-spacing: 4px;">— END —</p>
+    <p style="text-align: center; color: #bbb; font-size: 13px; margin-top: 8px;">📧 关注我们，每周日不见不散</p>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>财经周报 · 2026年9月第3周</p>
+    <p class="disclaimer">免责声明：本文内容仅供参考，不构成任何投资建议。<br>市场有风险，投资需谨慎。</p>
+  </div>
+
+</div>
+</body>
+</html>

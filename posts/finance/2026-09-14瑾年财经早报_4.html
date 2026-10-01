@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月14日 周一</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+  .container { max-width: 680px; margin: 0 auto; background: #fff; }
+  
+  /* 头部 */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 30px 20px 25px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+  }
+  .header-date {
+    font-size: 13px;
+    letter-spacing: 3px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 12px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    position: relative;
+  }
+  .header .author {
+    margin-top: 12px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    position: relative;
+  }
+  .header .author span {
+    display: inline-block;
+    background: rgba(255,215,0,0.2);
+    padding: 2px 12px;
+    border-radius: 12px;
+  }
+
+  /* 分隔线 */
+  .divider {
+    height: 3px;
+    background: linear-gradient(90deg, #f5af19, #f12711, #f5af19);
+  }
+
+  /* 板块 */
+  .section {
+    padding: 18px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .section-title .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  /* 数据卡片 */
+  .data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .data-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border-left: 3px solid #0f3460;
+  }
+  .data-card .label {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 2px;
+  }
+  .data-card .value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .data-card .value.red { color: #e74c3c; }
+  .data-card .value.green { color: #27ae60; }
+  .data-card .change {
+    font-size: 11px;
+    margin-left: 4px;
+  }
+  .change.red { color: #e74c3c; }
+  .change.green { color: #27ae60; }
+
+  /* 表格 */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .info-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .info-table td:first-child {
+    color: #888;
+    width: 40%;
+  }
+  .info-table td:last-child {
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* 新闻列表 */
+  .news-list {
+    list-style: none;
+  }
+  .news-list li {
+    padding: 7px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 13.5px;
+  }
+  .news-list li:last-child { border-bottom: none; }
+  .news-list li .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-right: 6px;
+    font-weight: 600;
+  }
+  .tag.red { background: #ffeaea; color: #e74c3c; }
+  .tag.blue { background: #e3f0ff; color: #2980b9; }
+  .tag.green { background: #e8f8f0; color: #27ae60; }
+  .tag.orange { background: #fff3e0; color: #e67e22; }
+  .tag.purple { background: #f3e8ff; color: #8e44ad; }
+
+  /* 知识点 */
+  .knowledge-box {
+    background: linear-gradient(135deg, #fff9e6, #fff3cd);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 16px;
+  }
+  .knowledge-box .k-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #e67e22;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .knowledge-box .k-title .k-icon {
+    font-size: 20px;
+    margin-right: 8px;
+  }
+  .knowledge-box h3 {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 6px;
+  }
+  .knowledge-box p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.9;
+  }
+
+  /* 底部 */
+  .footer {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 25px 20px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .footer p { opacity: 0.7; margin: 4px 0; }
+  .footer .brand {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 1;
+    margin-bottom: 6px;
+  }
+
+  /* 高亮块 */
+  .highlight-box {
+    background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    font-size: 13px;
+    border-left: 4px solid #4285f4;
+  }
+  .highlight-box.risk {
+    background: linear-gradient(135deg, #fce8e6, #fce4e4);
+    border-left-color: #e74c3c;
+  }
+  .highlight-box.warn {
+    background: linear-gradient(135deg, #fef7e0, #fef3cd);
+    border-left-color: #f5af19;
+  }
+
+  /* 市场概览特殊样式 */
+  .market-overview {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    background: #fafafa;
+    border-radius: 10px;
+  }
+  .market-overview .item {
+    flex: 1;
+  }
+  .market-overview .item .big {
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .market-overview .item .small {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* 行业表格 */
+  .sector-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .sector-table th {
+    background: #f0f4f8;
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #555;
+    font-size: 12px;
+  }
+  .sector-table td {
+    padding: 7px 8px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .sector-table .up { color: #e74c3c; font-weight: 600; }
+  .sector-table .down { color: #27ae60; font-weight: 600; }
+
+  /* 响应式 */
+  @media (max-width: 480px) {
+    .data-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 22px; }
+    .section { padding: 14px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 头部 -->
+  <div class="header">
+    <div class="header-date">2026年9月14日 周一 · 农历七月廿三</div>
+    <h1>📊 瑾年财经早报</h1>
+    <div class="subtitle">—— 数据驱动 · 专业解读 · 每日相伴 ——</div>
+    <div class="author">🎙️ 主理人：<span>瑾年</span></div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- 市场速览 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#e8f0fe;">📈</div>
+      <h2>市场速览</h2>
+    </div>
+    <div class="market-overview">
+      <div class="item">
+        <div class="big" style="color:#e74c3c;">-1.18%</div>
+        <div class="small">上证指数</div>
+      </div>
+      <div class="item">
+        <div class="big" style="color:#e74c3c;">-1.08%</div>
+        <div class="small">深证成指</div>
+      </div>
+      <div class="item">
+        <div class="big" style="color:#e74c3c;">-0.84%</div>
+        <div class="small">沪深300</div>
+      </div>
+      <div class="item">
+        <div class="big" style="color:#e74c3c;">-0.49%</div>
+        <div class="small">创业板指</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#999;text-align:center;">数据截至 2026年9月11日（上周四收盘）</p>
+  </div>
+
+  <!-- 一、股市 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#ffe0e0;">📊</div>
+      <h2>一、股市纵览</h2>
+    </div>
+    
+    <div class="highlight-box">
+      <strong>▎核心观点：</strong>上周四A股全线回调，上证指数收跌1.18%，中证500跌幅最大达1.78%。两市超2000只个股下跌，成交额仍维持高位。通信板块逆势走强，有色金属、基础化工领跌。
+    </div>
+
+    <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin-top:12px;">🔹 主要指数表现</p>
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="label">上证指数</div>
+        <div class="value red">-1.18% <span class="change red">↓</span></div>
+      </div>
+      <div class="data-card">
+        <div class="label">深证成指</div>
+        <div class="value red">-1.08% <span class="change red">↓</span></div>
+      </div>
+      <div class="data-card">
+        <div class="label">创业板指</div>
+        <div class="value red">-0.49% <span class="change red">↓</span></div>
+      </div>
+      <div class="data-card">
+        <div class="label">沪深300</div>
+        <div class="value red">-0.84% <span class="change red">↓</span></div>
+      </div>
+      <div class="data-card">
+        <div class="label">中证500</div>
+        <div class="value red">-1.78% <span class="change red">↓</span></div>
+      </div>
+      <div class="data-card">
+        <div class="label">科创50</div>
+        <div class="value red">-1.01% <span class="change red">↓</span></div>
+      </div>
+    </div>
+
+    <table class="info-table">
+      <tr><td>两市成交额</td><td>上证 9,582亿 / 深证 10,137亿</td></tr>
+      <tr><td>涨跌家数（沪深300）</td><td>上涨55家 / 下跌237家</td></tr>
+      <tr><td>恒生指数</td><td style="color:#e74c3c;">-0.60%（24,806点）</td></tr>
+    </table>
+
+    <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin-top:12px;">🔹 行业板块涨跌</p>
+    <table class="sector-table">
+      <tr><th colspan="3" style="background:#ffeaea;color:#e74c3c;">📈 涨幅前5</th></tr>
+      <tr><td>通信</td><td class="up">+1.41%</td><td>🏆</td></tr>
+      <tr><td>建筑材料</td><td class="up">+0.13%</td><td></td></tr>
+      <tr><td>公用事业</td><td class="down">-0.27%</td><td></td></tr>
+      <tr><td>国防军工</td><td class="down">-0.43%</td><td></td></tr>
+      <tr><td>银行</td><td class="down">-0.43%</td><td></td></tr>
+    </table>
+    <table class="sector-table" style="margin-top:8px;">
+      <tr><th colspan="3" style="background:#e8f8f0;color:#27ae60;">📉 跌幅前5</th></tr>
+      <tr><td>有色金属</td><td class="down">-3.98%</td><td></td></tr>
+      <tr><td>基础化工</td><td class="down">-2.98%</td><td></td></tr>
+      <tr><td>房地产</td><td class="down">-2.93%</td><td></td></tr>
+      <tr><td>商贸零售</td><td class="down">-2.78%</td><td></td></tr>
+      <tr><td>非银金融</td><td class="down">-2.62%</td><td></td></tr>
+    </table>
+
+    <div class="highlight-box risk" style="margin-top:10px;">
+      <strong>⚠️ 关注：</strong>有色金属板块单日暴跌近4%，受全球风险偏好回落及大宗商品价格承压影响；通信板块逆市领涨，AI算力主线持续获得资金青睐。
+    </div>
+  </div>
+
+  <!-- 二、资金市场与债市 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#e0f0ff;">💰</div>
+      <h2>二、资金市场 & 债市</h2>
+    </div>
+
+    <div class="highlight-box">
+      <strong>▎核心观点：</strong>资金面边际收敛，DR001上行至1.42%。央行宣布9月14-17日连续4天开展隔夜逆回购操作，每日上限6000亿元，以对冲税期及国债发行扰动。10年期国债收益率维持1.69%低位。
+    </div>
+
+    <table class="info-table">
+      <tr><td>SHIBOR 隔夜</td><td style="color:#e74c3c;">1.417% ↑</td></tr>
+      <tr><td>SHIBOR 1个月</td><td>1.419%</td></tr>
+      <tr><td>DR007</td><td style="color:#e74c3c;">1.423% ↑</td></tr>
+      <tr><td>银行间R001</td><td>1.424%</td></tr>
+      <tr><td>银行间R007</td><td>1.419%</td></tr>
+      <tr><td>10年期国债收益率</td><td style="color:#27ae60;">1.690%</td></tr>
+      <tr><td>人民币中间价</td><td>6.7743（偏强运行）</td></tr>
+    </table>
+
+    <div class="highlight-box warn">
+      <strong>📌 央行操作前瞻：</strong>继8月之后，央行再次于月中连续开展隔夜逆回购操作，标志该工具正走向常态化。东方金诚首席分析师王青表示，这旨在平滑税期资金面波动，引导DR001围绕政策利率平稳运行，推动货币政策框架从数量型向价格型转型。
+    </div>
+
+    <div class="highlight-box">
+      <strong>📌 "十五五"货币政策方向：</strong>央行副行长陆磊在国新办发布会上表示，"十五五"时期将逐步淡化数量型中介目标，更加注重发挥利率调控作用，完善存款准备金制度，灵活精准开展公开市场操作。
+    </div>
+  </div>
+
+  <!-- 三、期货市场 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#fff0e0;">🛢️</div>
+      <h2>三、期货市场</h2>
+    </div>
+
+    <div class="highlight-box">
+      <strong>▎核心观点：</strong>国内商品期货多数下跌，纯碱跌超3%领跌，铁矿石、豆粕跟跌。INE原油逆势大涨近5%，受地缘政治及供给端扰动提振。黄金高位微调，维持941元/克附近。
+    </div>
+
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="label">INE原油</div>
+        <div class="value green">+4.96% <span class="change green">↑</span></div>
+        <div style="font-size:11px;color:#999;">850.1 元/桶</div>
+      </div>
+      <div class="data-card">
+        <div class="label">SHFE黄金</div>
+        <div class="value red">-0.04% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">941.88 元/克</div>
+      </div>
+      <div class="data-card">
+        <div class="label">SHFE铜</div>
+        <div class="value red">-0.20% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">108,440 元/吨</div>
+      </div>
+      <div class="data-card">
+        <div class="label">SHFE螺纹钢</div>
+        <div class="value red">-0.48% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">3,102 元/吨</div>
+      </div>
+      <div class="data-card">
+        <div class="label">DCE铁矿石</div>
+        <div class="value red">-1.04% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">712.5 元/吨</div>
+      </div>
+      <div class="data-card">
+        <div class="label">CZCE纯碱</div>
+        <div class="value red">-3.06% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">1,046 元/吨</div>
+      </div>
+      <div class="data-card">
+        <div class="label">DCE豆粕</div>
+        <div class="value red">-0.94% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">3,390 元/吨</div>
+      </div>
+      <div class="data-card">
+        <div class="label">SHFE铝</div>
+        <div class="value red">-0.79% <span class="change red">↓</span></div>
+        <div style="font-size:11px;color:#999;">24,000 元/吨</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 四、经济要闻 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#e8ffe0;">📰</div>
+      <h2>四、经济要闻</h2>
+    </div>
+
+    <ul class="news-list">
+      <li>
+        <span class="tag red">央行</span>
+        <strong>连续4天开展隔夜逆回购操作：</strong>央行宣布9月14-17日每日开展隔夜逆回购，操作量不超过6000亿元，应对税期、国债发行等多重资金扰动。
+      </li>
+      <li>
+        <span class="tag blue">货币政策</span>
+        <strong>"十五五"框架出炉：</strong>央行副行长陆磊表示，将优化中国特色现代货币政策框架，逐步淡化数量型中介目标，更加注重利率调控。
+      </li>
+      <li>
+        <span class="tag green">出口</span>
+        <strong>8月出口同比增25%：</strong>机电产品贡献主要增量，集成电路出口同比增129.8%，AI拉动作用进一步上升。
+      </li>
+      <li>
+        <span class="tag orange">外汇</span>
+        <strong>8月外汇储备升至34,383亿美元：</strong>环比增加195亿美元，黄金储备连续22个月增加至7,673万盎司。
+      </li>
+      <li>
+        <span class="tag purple">券商</span>
+        <strong>上半年全行业营收增长31%：</strong>中证协数据显示，150家券商上半年营收3,298亿元，净利润1,387亿元，同比分别增长31%和24%。
+      </li>
+      <li>
+        <span class="tag blue">汇率</span>
+        <strong>人民币偏强运行：</strong>中间价6.7743，逆周期调节力度约555pips，本周关注FOMC议息会议。
+      </li>
+      <li>
+        <span class="tag green">REITs</span>
+        <strong>上交所推动REITs纳入互联互通：</strong>积极推动人民币股票交易柜台纳入互联互通机制，满足全球投资者配置中国市场需求。
+      </li>
+    </ul>
+  </div>
+
+  <!-- 五、银行监管与理财 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#f0e0ff;">🏦</div>
+      <h2>五、银行监管 & 理财市场</h2>
+    </div>
+
+    <div class="highlight-box">
+      <strong>▎理财规模：</strong>截至9月6日，全市场理财产品存续规模33.76万亿元，环比增0.17%；现金管理类7日年化收益率1.10%；破净率降至1.51%历史低位。
+    </div>
+
+    <ul class="news-list">
+      <li>
+        <span class="tag red">信披新规</span>
+        <strong>理财行业信披进入"阳光时代"：</strong>9月1日起《银行保险机构资产管理产品信息披露管理办法》正式施行，中国理财网统一信息披露平台同步上线。机构不得选择性披露业绩，营销端"温差"仍存。
+      </li>
+      <li>
+        <span class="tag blue">监管评级</span>
+        <strong>理财公司监管评级办法出台：</strong>六大要素中资管能力、风险管理合计权重50%，行业竞争从拼规模转向拼投研、拼风控。
+      </li>
+      <li>
+        <span class="tag orange">反内卷</span>
+        <strong>金监局大力整治银行"价格战"：</strong>监管部门持续整顿高息高返等乱象，Q2商业银行净息差反弹至1.41%，为4年多来首次回升。
+      </li>
+      <li>
+        <span class="tag green">存款搬家</span>
+        <strong>存款理财化趋势延续：</strong>居民和企业存款均呈活期化趋势，理财投资者数量达1.51亿个，较年初增长5.59%。
+      </li>
+      <li>
+        <span class="tag purple">大额存单</span>
+        <strong>五年期大额存单重启：</strong>银行意图稳长期负债，年内银行发行"二永债"超1.3万亿元。
+      </li>
+      <li>
+        <span class="tag blue">数字人民币</span>
+        <strong>央行新增8家数字人民币运营机构：</strong>全国首笔FT升级账户数币跨境放款实现几秒到账。
+      </li>
+    </ul>
+  </div>
+
+  <!-- 六、银行研报 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:#ffe8e0;">📋</div>
+      <h2>六、银行研报精粹</h2>
+    </div>
+
+    <ul class="news-list">
+      <li>
+        <span class="tag blue">华泰证券</span>
+        <strong>银行板块："先城商行、后大行"策略：</strong>推荐江苏银行、宁波银行、成都银行等绩优+高股息标的；关注建设银行、交通银行、招商银行等国有大行配置机会。银行26H1整体不良率1.22%持平，息差企稳回升。
+      </li>
+      <li>
+        <span class="tag green">平安证券</span>
+        <strong>看好低估值高股息银行：</strong>在有效需求不足背景下，板块体现为低利率环境下的股息配置价值，重点关注成都银行、宁波银行、江苏银行、苏州银行等优质区域行。
+      </li>
+      <li>
+        <span class="tag orange">国泰海通</span>
+        <strong>上市银行金融投资规模延续高增：</strong>26H1上市银行金融投资同比+14.1%，国有大行增速18.3%领跑，OCI账户兑现克制。
+      </li>
+      <li>
+        <span class="tag purple">开源证券</span>
+        <strong>银行中报分化明显：</strong>国有行26H1营收增速9.38%领跑，城商行8.10%紧随其后；宁波银行归母净利润增12.1%居前。从"拼规模"到"拼质量"的转型加速。
+      </li>
+    </ul>
+
+    <div class="highlight-box">
+      <strong>📌 个股亮点：</strong>宁波银行26H1归母净利润同比+12.1%，首推中期分红；成都银行息差逆势扩张至1.67%，负债成本优势凸显；苏州银行营收增13.1%，盈利环比改善。
+    </div>
+  </div>
+
+  <!-- 每日知识点 -->
+  <div class="knowledge-box">
+    <div class="k-title">
+      <span class="k-icon">💡</span> 每日学一个知识点
+    </div>
+    <h3>🔍 什么是"隔夜逆回购"？央行为什么要常态化操作？</h3>
+    <p>
+      <strong>隔夜逆回购</strong>是央行向市场投放短期流动性的一种工具——央行从商业银行手中买入债券，约定第二天再卖回去，相当于给银行"过桥"一天的资金。<br><br>
+      <strong>为什么要常态化？</strong>央行调控的目标利率正从7天期（DR007）逐步转向隔夜利率（DR001），因为货币市场隔夜回购交易占比已超90%。通过隔夜逆回购操作，央行可以更精准地调节每日资金面，引导DR001在政策利率附近平稳运行。<br><br>
+      <strong>对银行人的启示：</strong>这标志着中国货币政策框架正从"数量型"（控制信贷规模）向"价格型"（调控利率）转型。未来银行流动性管理要更加关注隔夜利率的波动信号，而非单纯盯住OMO操作量。
+    </p>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="brand">瑾年财经早报</div>
+    <p>每个交易日清晨与您相约</p>
+    <p>数据来源：Wind金融终端 | 央行官网 | 中国理财网</p>
+    <p style="margin-top:8px;">⚠️ 免责声明：本早报仅供信息参考，不构成投资建议<br>市场有风险，投资需谨慎</p>
+    <p style="margin-top:12px;opacity:0.5;">© 2026 瑾年财经 | All Rights Reserved</p>
+  </div>
+
+</div>
+
+</body>
+</html>

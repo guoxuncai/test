@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月23日 周三</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.75;
+    font-size: 15px;
+    -webkit-text-size-adjust: 100%;
+}
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+}
+/* 头部 */
+.header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e2b04a, #c8963e, #e2b04a);
+}
+.header .brand {
+    font-size: 13px;
+    letter-spacing: 3px;
+    opacity: 0.8;
+    margin-bottom: 6px;
+}
+.header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.header .date {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 6px;
+}
+.header .author {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 4px;
+}
+/* 导航标签 */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+}
+.tag {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #eef1f7;
+    color: #4a5568;
+    white-space: nowrap;
+}
+.tag.hot {
+    background: #fff3e0;
+    color: #e67e22;
+}
+/* 内容区 */
+.content {
+    padding: 0 16px 24px;
+}
+/* 章节 */
+.section {
+    margin-top: 22px;
+}
+.section-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1a1a2e;
+}
+.section-title .icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.section-title h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+/* 数据卡片 */
+.data-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.data-card {
+    background: #f8f9fc;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #eef1f7;
+}
+.data-card .label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 2px;
+}
+.data-card .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+.data-card .value.up { color: #e53e3e; }
+.data-card .value.down { color: #38a169; }
+.data-card .change {
+    font-size: 11px;
+    margin-top: 2px;
+}
+.data-card .change.up { color: #e53e3e; }
+.data-card .change.down { color: #38a169; }
+/* 表格 */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 10px 0;
+}
+.info-table th {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 8px 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 12px;
+}
+.info-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #eef1f7;
+}
+.info-table tr:nth-child(even) td {
+    background: #f8f9fc;
+}
+.info-table .up { color: #e53e3e; font-weight: 600; }
+.info-table .down { color: #38a169; font-weight: 600; }
+/* 新闻列表 */
+.news-list {
+    list-style: none;
+}
+.news-list li {
+    padding: 10px 0;
+    border-bottom: 1px dashed #eef1f7;
+    font-size: 14px;
+    position: relative;
+    padding-left: 16px;
+}
+.news-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e2b04a;
+}
+.news-list li:last-child {
+    border-bottom: none;
+}
+.news-list .highlight {
+    color: #e53e3e;
+    font-weight: 600;
+}
+/* 知识点 */
+.knowledge-box {
+    background: linear-gradient(135deg, #fffdf0, #fff8e1);
+    border: 1px solid #f0d98c;
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin-top: 12px;
+}
+.knowledge-box .kb-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #b7791f;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+.knowledge-box .kb-title span {
+    margin-right: 6px;
+    font-size: 18px;
+}
+.knowledge-box .kb-body {
+    font-size: 14px;
+    color: #5a4a2f;
+    line-height: 1.8;
+}
+.knowledge-box .kb-body strong {
+    color: #975a16;
+}
+/* 金句 */
+.quote-box {
+    background: #f0f5ff;
+    border-left: 3px solid #0f3460;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #2d3748;
+    font-style: italic;
+}
+/* 底部 */
+.footer {
+    text-align: center;
+    padding: 20px 16px;
+    color: #aaa;
+    font-size: 12px;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+}
+.footer .brand-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+.footer .disclaimer {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+/* 分割线 */
+.divider {
+    text-align: center;
+    margin: 12px 0;
+    color: #ddd;
+    font-size: 12px;
+    letter-spacing: 4px;
+}
+/* 高亮框 */
+.highlight-box {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: #c53030;
+    line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 头部 -->
+<div class="header">
+    <div class="brand">J I N N I A N  ·  财 经 早 报</div>
+    <h1>每日财经早报</h1>
+    <div class="date">2026年9月23日 周三 · 总第328期</div>
+    <div class="author">出品：瑾年财经工作室</div>
+</div>
+
+<!-- 导航标签 -->
+<div class="tags">
+    <span class="tag hot">📊 A股复盘</span>
+    <span class="tag">💰 资金市场</span>
+    <span class="tag">📈 债券市场</span>
+    <span class="tag">🛢️ 期货行情</span>
+    <span class="tag">🏦 银行监管</span>
+    <span class="tag">💼 理财市场</span>
+    <span class="tag">🌍 经济要闻</span>
+    <span class="tag">📚 每日一学</span>
+</div>
+
+<div class="content">
+
+<!-- 今日摘要 -->
+<div class="highlight-box">
+    <strong>📌 今日要点：</strong>美联储三年来首次加息25bp，全球风险资产承压；A股窄幅震荡，上证微涨0.06%；央行持续呵护跨季流动性，SHIBOR低位运行；国债收益率曲线平坦化，10年期国债1.68%；理财规模8月再创新高至35.9万亿，降费潮持续。
+</div>
+
+<!-- ========== 一、股市行情 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">📊</div>
+        <h2>一、股市行情</h2>
+    </div>
+    <div class="data-cards">
+        <div class="data-card">
+            <div class="label">上证指数</div>
+            <div class="value up">3952.13</div>
+            <div class="change up">+0.06%</div>
+        </div>
+        <div class="data-card">
+            <div class="label">深证成指</div>
+            <div class="value down">13723.74</div>
+            <div class="change down">-0.05%</div>
+        </div>
+        <div class="data-card">
+            <div class="label">创业板指</div>
+            <div class="value up">3399.93</div>
+            <div class="change up">+0.01%</div>
+        </div>
+        <div class="data-card">
+            <div class="label">科创50</div>
+            <div class="value up">1665.04</div>
+            <div class="change up">+0.46%</div>
+        </div>
+    </div>
+    <p style="font-size:13px;color:#888;margin-bottom:8px;">两市合计成交 <strong>21,354亿</strong> | 涨停 <strong style="color:#e53e3e;">65家</strong> | 跌停 <strong style="color:#38a169;">5家</strong></p>
+
+    <table class="info-table">
+        <tr><th colspan="2">📈 领涨板块 Top5</th></tr>
+        <tr><td>房地产服务Ⅲ</td><td class="up">+3.09%</td></tr>
+        <tr><td>媒体</td><td class="up">+2.84%</td></tr>
+        <tr><td>信息技术服务</td><td class="up">+2.21%</td></tr>
+        <tr><td>建筑产品Ⅲ</td><td class="up">+2.01%</td></tr>
+        <tr><td>互动媒体与服务Ⅲ</td><td class="up">+1.86%</td></tr>
+    </table>
+
+    <table class="info-table">
+        <tr><th colspan="2">📉 领跌板块 Top5</th></tr>
+        <tr><td>海上运输Ⅲ</td><td class="down">-3.10%</td></tr>
+        <tr><td>能源设备与服务</td><td class="down">-2.54%</td></tr>
+        <tr><td>复合型公用事业Ⅲ</td><td class="down">-1.68%</td></tr>
+        <tr><td>建材Ⅲ</td><td class="down">-1.53%</td></tr>
+        <tr><td>酒店、餐馆与休闲</td><td class="down">-1.37%</td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#666;margin-top:8px;"><strong>📝 盘面解读：</strong>周二A股窄幅震荡，沪指微涨0.06%收于3952点，科创50领涨0.46%。房地产服务板块表现亮眼，涨幅超3%，媒体、信息技术等科技板块也较为活跃。海上运输板块受国际运价回落影响跌幅居前。两市成交2.14万亿，涨停65家，市场情绪中性偏积极。银行板块本周整体承压，申万银行指数周跌1.82%，仅中信银行微涨。</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 二、资金市场 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">💰</div>
+        <h2>二、资金市场</h2>
+    </div>
+    <table class="info-table">
+        <tr><th>指标</th><th>利率(%)</th><th>变动(bp)</th></tr>
+        <tr><td>SHIBOR 隔夜</td><td>1.3640</td><td class="down">-0.10</td></tr>
+        <tr><td>SHIBOR 7天</td><td>1.3893</td><td class="down">-1.70</td></tr>
+        <tr><td>SHIBOR 1个月</td><td>1.4233</td><td class="down">-0.10</td></tr>
+        <tr><td>DR001</td><td>1.3611</td><td>—</td></tr>
+        <tr><td>DR007</td><td>1.3841</td><td>—</td></tr>
+    </table>
+    <p style="font-size:13px;color:#666;margin-top:8px;"><strong>📝 央行操作：</strong>9月22日央行开展350亿元7天期逆回购，利率1.40%，当日无到期，净投放350亿。本周以来央行累计净投放超9200亿元，已提前启动14天期逆回购，呵护跨季资金面意图明确。DR001回落至政策利率下方，资金面整体宽松。9月23日央行将在香港发行600亿元6个月期人民币央票。</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 三、债券市场 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">📈</div>
+        <h2>三、债券市场</h2>
+    </div>
+    <table class="info-table">
+        <tr><th>期限</th><th>收益率(%)</th><th>说明</th></tr>
+        <tr><td>1年期国债</td><td>1.2317</td><td>短端低位</td></tr>
+        <tr><td>5年期国债</td><td>1.4053</td><td>中端平坦</td></tr>
+        <tr><td>10年期国债</td><td>1.6791</td><td>活跃券约1.675%</td></tr>
+    </table>
+
+    <table class="info-table">
+        <tr><th>国债期货</th><th>收盘价</th><th>合约</th></tr>
+        <tr><td>2年期(TS)</td><td>102.612</td><td>TS2612</td></tr>
+        <tr><td>5年期(TF)</td><td>106.590</td><td>TF2612</td></tr>
+        <tr><td>10年期(T)</td><td>109.615</td><td>T2612</td></tr>
+        <tr><td>30年期(TL)</td><td>117.030</td><td>TL2612</td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#666;margin-top:8px;"><strong>📝 债市综述：</strong>美联储加息落地后，国内债市窄幅震荡偏强。上周10年期国债活跃券下行1.1bp至1.675%，30年期国债下行约2bp。收益率曲线继续平坦化，10Y-1Y利差约45bp。机构认为10年期国债收益率已处低位，进一步下行空间有限，但基本面偏弱对债市仍有支撑。</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 四、期货市场 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">🛢️</div>
+        <h2>四、期货市场</h2>
+    </div>
+    <table class="info-table">
+        <tr><th>品种</th><th>收盘价</th><th>涨跌幅</th></tr>
+        <tr><td>沪银(AG)</td><td>16273</td><td class="up">+1.14%</td></tr>
+        <tr><td>铸造铝合金(AD)</td><td>23815</td><td class="up">+1.08%</td></tr>
+        <tr><td>不锈钢(SS)</td><td>13880</td><td class="up">+0.95%</td></tr>
+        <tr><td>氧化铝(AO)</td><td>2742</td><td class="up">+0.62%</td></tr>
+        <tr><td>铁矿石(I)</td><td>715.5</td><td class="up">+0.56%</td></tr>
+        <tr><td>豆粕(M)</td><td>3425</td><td class="up">+0.44%</td></tr>
+        <tr><td>沪金(AU)</td><td>941.1</td><td class="up">+0.36%</td></tr>
+        <tr><td>沪铜(CU)</td><td>111610</td><td class="up">+0.35%</td></tr>
+        <tr><td>螺纹钢(RB)</td><td>3123</td><td class="up">+0.06%</td></tr>
+        <tr><td>甲醇(MA)</td><td>—</td><td class="down">-0.78%</td></tr>
+        <tr><td>苹果(AP)</td><td>7084</td><td class="down">-0.80%</td></tr>
+        <tr><td>PTA(TA)</td><td>6162</td><td class="down">-1.60%</td></tr>
+        <tr><td>原油(SC)</td><td>694.8</td><td class="down">-3.11%</td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#666;margin-top:8px;"><strong>📝 期货综述：</strong>国内商品期货涨跌互现。贵金属表现强势，沪银涨1.14%、沪金涨0.36%，受美联储加息落地后避险情绪支撑。黑色系稳中有涨，铁矿石涨0.56%，螺纹钢微涨0.06%。原油大跌3.11%至694.8元/桶，受中东局势缓和及需求担忧影响。能化板块整体承压，PTA跌1.60%。</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 五、经济要闻 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">🌍</div>
+        <h2>五、经济要闻</h2>
+    </div>
+    <ul class="news-list">
+        <li><span class="highlight">美联储加息25bp：</span>9月16日美联储全票通过加息25bp至3.75%-4.00%，为2023年7月以来首次。点阵图显示年内或再加息一次。美股承压，美债收益率上行，10年期美债突破5%。</li>
+        <li><span class="highlight">8月经济数据K型分化：</span>工业增加值同比+5.2%（加快0.7pct），社零仅+0.4%，固投同比-7.2%，房地产投资-19.9%。出口与先进制造强、内需偏弱格局延续。</li>
+        <li><span class="highlight">8月金融数据走弱：</span>社融增量1.66万亿，同比少增9083亿；新增贷款仅600亿，居民贷款减少2029亿。M2同比+7.5%，M1同比+4.1%，剪刀差收窄至3.4%。</li>
+        <li><span class="highlight">潘功胜《求是》发文：</span>央行行长指出金融总量增速趋缓有利于保持宏观杠杆率稳定，要淡化对数量目标的关注，更加注重价格型调控。</li>
+        <li><span class="highlight">人民币升破6.7：</span>美元兑人民币中间价6.7459，在岸即期约6.70，离岸约6.698。美联储加息后人民币未明显走弱，反映出口韧性与资本流入支撑。</li>
+        <li><span class="highlight">二十届五中全会：</span>定于10月26日至29日在北京召开。中美经贸牵头人近期在纽约举行磋商。</li>
+        <li><strong>财政发力：</strong>新型政策性金融工具9月初开启投放，首批由三家政策性银行投放。9月23日国库现金定存招标合计1800亿。发改委密集推进"十五五"重大工程。</li>
+        <li><strong>LPR维持不变：</strong>9月LPR报价未调整，1年期3.10%、5年期以上3.60%。分析预计四季度或有降息空间，幅度约10bp。</li>
+    </ul>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 六、银行监管 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">🏦</div>
+        <h2>六、银行监管与行业动态</h2>
+    </div>
+    <ul class="news-list">
+        <li><span class="highlight">金融监管总局新规：</span>失信主体名单管理试行规定将于2026年10月1日施行，三类主体纳入金融严重失信名单，面临监管频次提高、授信受限等惩戒。</li>
+        <li><span class="highlight">MPA考核升级：</span>A档银行可享受法定准备金利率上浮奖励，最高达1.94%，实质增厚净息差；C档银行面临利率下调及交易商资格暂停。</li>
+        <li><span class="highlight">标普上调中国银行业评级：</span>将中国银行业国别风险评估从第6组上调至第5组，肯定科技与财务韧性增强。</li>
+        <li><strong>20家银行中期分红：</strong>合计拟派现约2661亿元，六大行分红比例上调至31%，招商银行达35%。9月以来多只银行股创年内新高。</li>
+        <li><strong>国有大行定增：</strong>第二批定向增发落地，摊薄有限。大行H股平均股息率4.64%，相对A股折价约17%。</li>
+        <li><strong>大额存单利率下行：</strong>国有大行五年期降至1.6%，三年期1.25%。多家银行推出客群专属差异化定价产品。</li>
+        <li><strong>科技金融生态建设：</strong>招商银行、浦发银行等设立科技金融专营部门，推动"商行+投行+生态"协同模式。工商银行推出"机器人AI贷"。</li>
+        <li><strong>银行研报观点：</strong>银河证券维持"推荐"评级，营收保持高增，息差企稳信号明确。长江证券建议回调后关注配置机会。湘财证券认为信贷修复仍需等待。</li>
+    </ul>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 七、理财市场 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">💼</div>
+        <h2>七、理财市场</h2>
+    </div>
+    <ul class="news-list">
+        <li><span class="highlight">理财规模再创新高：</span>8月理财规模新增约3500亿至35.9万亿，7-8月合计新增超2万亿。固收+产品年内新增超2万亿成为绝对主力。</li>
+        <li><span class="highlight">降费潮持续：</span>理财公司年内累计发布近2万条费率优惠公告，管理费从0.15%降至0.01%甚至为零。固收类产品是降费主力。</li>
+        <li><strong>收益率承压：</strong>上半年理财产品平均年化收益率2.05%，同比降幅达21.66%。固收纯债近1月年化1.13%，现金管理类约1.07%。</li>
+        <li><strong>9月季末回表：</strong>9月第三周理财规模转为回落（环比-1126亿），参考历史9月回表约1.1万亿，最后一周为关键观察窗口。</li>
+        <li><strong>破净率小幅抬升：</strong>全部产品破净率升至0.96%。近一周区间负收益率占比升至16.05%。纯债类产品整体稳健。</li>
+        <li><strong>上半年理财公司业绩分化：</strong>信银理财净利15.18亿居首（+26.9%），招银理财15.13亿紧随其后。头部三家贡献27%净利润。</li>
+        <li><strong>15只摊余成本法债基获批：</strong>封闭期63个月，募集上限80亿，主要满足银行自营资金对低回撤资产配置需求。</li>
+    </ul>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ========== 八、每日一学 ========== -->
+<div class="section">
+    <div class="section-title">
+        <div class="icon">📚</div>
+        <h2>八、每日一学</h2>
+    </div>
+    <div class="knowledge-box">
+        <div class="kb-title"><span>💡</span>什么是"收益率曲线平坦化"？</div>
+        <div class="kb-body">
+            <p><strong>收益率曲线</strong>是把同一类债券（如国债）不同期限的收益率连成一条线。正常情况下，期限越长收益率越高（<strong>陡峭化</strong>），因为投资者要求更高的回报来补偿更长的锁定期。</p>
+            <p style="margin-top:6px;">当短期利率上升、或长期利率下降时，短端和长端的利差缩小，曲线就变得<strong>"平坦"</strong>了。</p>
+            <p style="margin-top:6px;"><strong>当前中国市场</strong>正经历收益率曲线平坦化：1年期国债约1.23%，10年期约1.68%，利差仅45bp。这背后反映的是——央行呵护短端流动性使短端利率低位稳定，而市场对长期经济增长预期偏弱、配置需求旺盛，持续压低长端收益率。</p>
+            <p style="margin-top:6px;"><strong>对普通人的影响：</strong>曲线平坦化意味着"长期限产品的收益率优势在缩小"。买3年定期和买5年定期利率差距不大，甚至出现倒挂。这也解释了为什么近期大额存单出现"三年期利率高于五年期"的倒挂现象——银行在告诉你，他们预期未来利率还会更低。</p>
+        </div>
+    </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- 金句 -->
+<div class="quote-box">
+    💬 "当收益率曲线变得平坦，聪明钱不是在追逐更高的收益，而是在锁定当下还能锁定的期限溢价。"
+</div>
+
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+    <div class="brand-name">瑾年财经工作室</div>
+    <div>每个交易日清晨 · 与您一起读懂金融</div>
+    <div style="margin-top:4px;">📧 guoxuncai@bankgz.com</div>
+    <div class="disclaimer">
+        ⚠️ 免责声明：本早报所载信息来源于公开资料，仅供参考，不构成任何投资建议。市场有风险，投资需谨慎。<br>
+        数据来源：Wind、中国人民银行、国家统计局、各券商研报
+    </div>
+</div>
+
+</div>
+</body>
+</html>

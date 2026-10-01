@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经周日刊 | 国庆前最后一周：超级数据周来袭，A股节后行情如何演绎？</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.8;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  /* 封面区 */
+  .cover {
+    padding: 40px 30px 20px;
+    text-align: center;
+  }
+  .cover-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #1a1a2e, #2E75B6, #1a1a2e);
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .cover-date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .cover-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .cover-subtitle {
+    font-size: 15px;
+    color: #666;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .cover-bar-sm {
+    height: 2px;
+    background: #2E75B6;
+    width: 60px;
+    margin: 0 auto 20px;
+    border-radius: 1px;
+  }
+  .cover-intro {
+    font-size: 14px;
+    color: #777;
+    text-align: left;
+    padding: 16px 20px;
+    background: #fafbfc;
+    border-radius: 8px;
+    border-left: 3px solid #2E75B6;
+    margin: 0 30px;
+  }
+  /* 章节 */
+  .section {
+    padding: 10px 30px;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2E75B6;
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8f0f8;
+  }
+  .section-title.orange { color: #E67E22; border-bottom-color: #fef0e0; }
+  .section-title.green { color: #27AE60; border-bottom-color: #e8f8f0; }
+  .section-title.purple { color: #8E44AD; border-bottom-color: #f0e8f8; }
+  .sub-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 18px 0 8px;
+  }
+  /* 表格 */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 12px 0 18px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: #2E75B6;
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  thead th.orange-bg { background: #E67E22; }
+  tbody td {
+    padding: 9px 12px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  tbody tr:nth-child(even) { background: #fafbfc; }
+  .up { color: #CC3333; font-weight: 600; }
+  .down { color: #339933; font-weight: 600; }
+  /* 引用块 */
+  .quote-block {
+    background: #f0f4f8;
+    border-left: 4px solid #2E75B6;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.8;
+  }
+  /* 标签 */
+  .tag {
+    display: inline-block;
+    background: #2E75B6;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .tag.orange { background: #E67E22; }
+  .tag.green { background: #27AE60; }
+  .tag.purple { background: #8E44AD; }
+  .tag.red { background: #CC3333; }
+  /* 提示条 */
+  .alert {
+    background: #fff8f0;
+    border: 1px solid #f0c080;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #996600;
+    font-weight: 500;
+  }
+  /* 焦点列表 */
+  .focus-item {
+    margin: 10px 0;
+    padding-left: 8px;
+  }
+  .focus-item strong {
+    color: #1a1a2e;
+  }
+  /* 机构观点 */
+  .inst-item {
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .inst-item .inst-name {
+    color: #2E75B6;
+    font-weight: 700;
+  }
+  .inst-item .inst-view {
+    color: #666;
+  }
+  /* 策略提示 */
+  .tip-item {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .tip-item .tip-label {
+    color: #27AE60;
+    font-weight: 700;
+  }
+  /* 日历 */
+  .cal-item {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  .cal-item .cal-date {
+    color: #8E44AD;
+    font-weight: 700;
+  }
+  /* 结语 */
+  .ending {
+    text-align: center;
+    padding: 20px 30px 10px;
+  }
+  .ending-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2E75B6;
+    margin: 12px 0;
+  }
+  /* 底部 */
+  .footer {
+    text-align: center;
+    padding: 16px 30px 30px;
+    font-size: 11px;
+    color: #aaa;
+    line-height: 1.8;
+  }
+  .footer-bar {
+    height: 1px;
+    background: #ddd;
+    margin: 0 30px 16px;
+  }
+  /* 分隔线 */
+  .divider {
+    height: 3px;
+    margin: 8px 30px;
+    border-radius: 2px;
+  }
+  .divider.blue { background: linear-gradient(90deg, #2E75B6, transparent); }
+  .divider.orange { background: linear-gradient(90deg, #E67E22, transparent); }
+  .divider.green { background: linear-gradient(90deg, #27AE60, transparent); }
+  .divider.purple { background: linear-gradient(90deg, #8E44AD, transparent); }
+  /* 响应式 */
+  @media (max-width: 480px) {
+    .container { max-width: 100%; }
+    .cover { padding: 30px 16px 16px; }
+    .cover-title { font-size: 24px; }
+    .cover-intro { margin: 0 16px; }
+    .section { padding: 8px 16px; }
+    .section-title { font-size: 18px; }
+    table { font-size: 11px; }
+    thead th, tbody td { padding: 6px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== 封面 ===== -->
+<div class="cover">
+  <div class="cover-bar"></div>
+  <div class="cover-date">2026年9月27日 星期日 ｜ 每周日晚间推送</div>
+  <h1 class="cover-title">财经周日刊</h1>
+  <p class="cover-subtitle">国庆前最后一周：超级数据周来袭，A股节后行情如何演绎？</p>
+  <div class="cover-bar-sm"></div>
+</div>
+
+<div class="cover-intro">
+  各位朋友大家好！本周A股震荡收跌，地产链逆势领涨，外部美债利率走高压制全球风险资产。下周仅3个交易日即进入国庆长假，但海外"超级数据周"来袭——中国PMI、美国PCE和非农三大焦点数据将密集发布，直接影响节后A股开盘方向。一起看看吧！
+</div>
+
+<!-- ===== 一、周末复盘 ===== -->
+<div class="section">
+  <h2 class="section-title">一、周末复盘：三大指数震荡收跌，地产链逆势领涨</h2>
+
+  <h3 class="sub-title">📊 大盘表现</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>指数</th><th>本周涨跌幅</th><th>成交量(亿股)</th><th>备注</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>上证指数</td><td class="up">-0.60%</td><td>1,914亿</td><td>日均成交约1.91万亿</td></tr>
+        <tr><td>深证成指</td><td class="up">-2.37%</td><td>2,389亿</td><td>交投活跃度回升</td></tr>
+        <tr><td>创业板指</td><td class="up">-2.48%</td><td>663亿</td><td>科技成长承压</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-title">🏆 本周行业涨跌幅TOP榜</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>排名</th><th>行业板块</th><th>涨跌幅</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>🥇 1 (领涨)</td><td>房地产服务</td><td class="up">+9.45%</td></tr>
+        <tr><td>🥈 2</td><td>综合消费者服务</td><td class="up">+5.89%</td></tr>
+        <tr><td>🥉 3</td><td>生物科技</td><td class="up">+3.75%</td></tr>
+        <tr><td>4</td><td>居家用品</td><td class="up">+2.75%</td></tr>
+        <tr><td>5</td><td>煤炭</td><td class="up">+2.13%</td></tr>
+        <tr><td>67</td><td>能源设备与服务</td><td class="down">-3.33%</td></tr>
+        <tr><td>68</td><td>互动媒体与服务</td><td class="down">-3.76%</td></tr>
+        <tr><td>69 (领跌)</td><td>贵金属</td><td class="down">-6.20%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-title">🔍 本周市场核心逻辑</h3>
+  <p style="margin:8px 0;font-size:14px;">
+    <span class="tag red">外部压力</span>
+    美欧9月PMI初值全面超预期——美国综合PMI升至<strong>58.4</strong>（2021年7月以来新高），欧元区升至<strong>53.1</strong>（41个月高点）。强劲经济数据强化通胀黏性与加息预期，10月加息概率升至<strong>64%+</strong>，10年期美债收益率一度突破<strong>5%</strong>，压制全球风险资产。
+  </p>
+  <p style="margin:8px 0;font-size:14px;">
+    <span class="tag green">内部亮点</span>
+    中美元首会晤达成八点共识，关税延长两个月，经贸关系边际改善。地产链在政策托底和上海二手房成交创下半年单日新高推动下强势领涨。
+  </p>
+</div>
+
+<!-- ===== 二、下周前瞻 ===== -->
+<div class="divider orange"></div>
+<div class="section">
+  <h2 class="section-title orange">二、下周前瞻："超级数据周"来袭</h2>
+
+  <div class="alert">
+    ⚠️ 下周A股仅<strong>3个交易日</strong>（9/28-9/30），随后国庆长假休市至10/7，10/8恢复交易。但海外重磅数据密集发布，假期期间全球市场并不平静。
+  </div>
+
+  <h3 class="sub-title">📋 下周每日重点关注</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th class="orange-bg">日期</th><th class="orange-bg">重要数据</th><th class="orange-bg">事件与关注</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>周一 9/28</td><td>达拉斯商业活动指数</td><td>国新办央企发布会；英央行讲话</td></tr>
+        <tr><td>周二 9/29</td><td>欧元区工业景气、加拿大GDP、消费者信心</td><td>澳洲联储利率决议；美国房价指数</td></tr>
+        <tr><td>周三 9/30 ⭐</td><td>中国9月PMI 🔥、美国核心PCE 🔥、ADP就业、GDP终值</td><td>美光科技盘后财报；美联储密集讲话</td></tr>
+        <tr><td>周四 10/1 🎌</td><td>美国ISM制造业PMI、初请失业金</td><td>A股休市；欧央行/英央行行长讲话</td></tr>
+        <tr><td>周五 10/2 🎌</td><td>美国9月非农 🔥🔥🔥、欧元区CPI、日本失业率</td><td>A股休市；美联储威廉姆斯讲话</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-title">🎯 下周三大核心焦点</h3>
+  <div class="focus-item">
+    <strong>① 中国9月PMI（周三）：</strong>8月官方制造业PMI为49.8%，仍处收缩区间但边际改善。若9月PMI延续回升并逼近荣枯线，将印证经济低位企稳；反之若再度回落，基本面偏弱对市场信心将形成压制。
+  </div>
+  <div class="focus-item">
+    <strong>② 美国8月核心PCE（周三）：</strong>"美联储最爱通胀指标"。若核心PCE继续高企，10月加息概率将进一步上修，美债收益率和美元可能继续走强，压制全球风险资产。
+  </div>
+  <div class="focus-item">
+    <strong>③ 美国9月非农（周五，假期中）：</strong>10月议息会议前最重要的就业数据。非农就业+失业率+时薪三大读数将直接决定美联储后续利率路径，也是节后A股开盘方向的关键变量。
+  </div>
+
+  <h3 class="sub-title">🏦 机构观点汇总</h3>
+  <div class="inst-item"><span class="inst-name">【国泰海通】</span><span class="inst-view"> 未来1-2个季度市场无大涨也无大跌，四季度核心波动区间3800-4200点，12月至明年一季度才有望迎来偏强震荡。配置推荐国产替代+黄金资源品+大金融高分红。</span></div>
+  <div class="inst-item"><span class="inst-name">【方正证券】</span><span class="inst-view"> 目前仍是积极把握反弹行情的窗口期，进二退一式震荡上行是主基调。科技板块相较于海外明显滞涨，AI叙事升温，反弹空间具备。</span></div>
+  <div class="inst-item"><span class="inst-name">【招商策略】</span><span class="inst-view"> 维持中性至看涨，超配科技大盘股、逐步增配红利资产。美债收益率回落是成长股反弹的最直接催化剂。</span></div>
+  <div class="inst-item"><span class="inst-name">【财信证券】</span><span class="inst-view"> 节前窄幅震荡为主，10-11月顺周期风格可能短暂占优。关注增量政策落地进度。</span></div>
+</div>
+
+<!-- ===== 三、轻干货 ===== -->
+<div class="divider green"></div>
+<div class="section">
+  <h2 class="section-title green">三、轻干货：国庆长假前后，A股历史上怎么走？</h2>
+
+  <h3 class="sub-title">📈 历史规律：节后红包效应显著</h3>
+  <p style="font-size:14px;margin:8px 0;">
+    <strong>过去10年（2016-2025年），国庆后5个交易日上证指数上涨概率高达80%，平均涨幅约1.5%。</strong>
+    这个"节后红包"效应在历史上非常显著。但需注意，最近两年（2023-2024年）日历效应出现逆转——市场开始"提前抢跑"，节前上涨、节后获利了结。
+  </p>
+
+  <h3 class="sub-title">🎯 今年过节策略</h3>
+  <div class="tip-item"><span class="tip-label">▶ 位置尚可：</span>上证指数在3900点附近，前瞻PE约17倍，处于近三年中位数附近，持股过节安全边际尚可。</div>
+  <div class="tip-item"><span class="tip-label">▶ 关注假期海外风险：</span>美国非农、PCE、ISM制造业PMI等重磅数据集中发布，美债收益率处于高位，假期海外波动不可忽视。</div>
+  <div class="tip-item"><span class="tip-label">▶ 仓位建议：</span>保持中性仓位（5-6成）过节，既不错过节后可能的反弹，也留有应对不确定性的余地。</div>
+  <div class="tip-item"><span class="tip-label">▶ 配置方向：</span>适当向红利、消费等防御性板块倾斜，科技仓位适度保留但不过度集中。</div>
+
+  <div class="quote-block">
+    💡 <strong>记住一句话：节前不悲观、节后不追高、中性仓位过节最安心。</strong>
+  </div>
+</div>
+
+<!-- ===== 四、财经日历 ===== -->
+<div class="divider purple"></div>
+<div class="section">
+  <h2 class="section-title purple">四、下周财经日历速览（9/28 - 10/4）</h2>
+
+  <div class="cal-item"><span class="cal-date">📅 周一 9/28：</span>国新办央企高质量发展发布会；美国达拉斯商业活动指数</div>
+  <div class="cal-item"><span class="cal-date">📅 周二 9/29：</span>澳洲联储利率决议；欧元区工业景气；美国消费者信心；加拿大GDP</div>
+  <div class="cal-item"><span class="cal-date">📅 周三 9/30 ⭐：</span>中国9月PMI 🔥；美国PCE 🔥；ADP就业；GDP终值；美光财报</div>
+  <div class="cal-item"><span class="cal-date">🎌 周四 10/1：</span>国庆节休市；海外：ISM制造业PMI、初请、多国央行行长讲话</div>
+  <div class="cal-item"><span class="cal-date">🎌 周五 10/2：</span>国庆节休市；海外：美国非农 🔥🔥🔥、欧元区CPI、日本失业率</div>
+  <div class="cal-item"><span class="cal-date">📅 周日 10/4：</span>OPEC+月度石油会议；澳大利亚开始夏令时</div>
+</div>
+
+<!-- ===== 结语 ===== -->
+<div class="divider blue"></div>
+<div class="section">
+  <h2 class="section-title">结语</h2>
+  <div class="quote-block">
+    本周A股震荡收跌，地产链领涨、贵金属领跌，外部美债利率走高是核心压制。下周"超级数据周"来袭，中国PMI、美国PCE和非农是三大焦点，海外波动将直接影响节后A股开盘。机构普遍认为短期震荡为主，中长期不悲观，配置上建议科技+红利均衡布局。
+  </div>
+  <div class="ending">
+    <p class="ending-text">祝大家国庆快乐，投资顺利！🎉</p>
+  </div>
+</div>
+
+<!-- ===== 底部 ===== -->
+<div class="footer-bar"></div>
+<div class="footer">
+  <p>免责声明：本内容仅供信息参考，不构成任何投资建议。市场有风险，投资需谨慎。</p>
+  <p>数据来源：Wind、华尔街见闻、金十数据、各券商研究报告 ｜ 2026年9月27日</p>
+  <p>📮 每周日晚间推送 ｜ 关注公众号获取更多财经资讯</p>
+</div>
+
+</div>
+</body>
+</html>

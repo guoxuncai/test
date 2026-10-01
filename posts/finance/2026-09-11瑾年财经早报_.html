@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月11日 周五</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.8;
+    font-size: 15px;
+}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+}
+/* 头部 */
+.header {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+    color: #fff;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+}
+.header .date-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+}
+.header .subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 6px;
+    letter-spacing: 1px;
+    position: relative;
+}
+.header .author {
+    font-size: 11px;
+    opacity: 0.65;
+    margin-top: 8px;
+    position: relative;
+}
+/* 快讯条 */
+.flash-bar {
+    background: #fff3e0;
+    border-left: 4px solid #ff6f00;
+    padding: 12px 16px;
+    margin: 0;
+    font-size: 13px;
+    color: #e65100;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.flash-bar .icon { font-size: 16px; flex-shrink: 0; }
+/* 章节 */
+.section {
+    padding: 0 16px 6px;
+}
+.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a237e;
+    padding: 14px 0 8px;
+    border-bottom: 2px solid #e8eaf6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-title .dot {
+    width: 6px; height: 6px;
+    background: #3949ab;
+    border-radius: 50%;
+}
+/* 卡片 */
+.card {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border: 1px solid #f0f0f0;
+}
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #283593;
+    margin-bottom: 8px;
+}
+/* 数据行 */
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dotted #eee;
+    font-size: 13px;
+}
+.data-row:last-child { border-bottom: none; }
+.data-label { color: #666; }
+.data-value { font-weight: 600; }
+.up { color: #d32f2f; }
+.down { color: #388e3c; }
+/* 指数概览 */
+.idx-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.idx-item {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+}
+.idx-name { font-size: 11px; color: #999; }
+.idx-price { font-size: 16px; font-weight: 700; margin: 4px 0; }
+.idx-change { font-size: 12px; }
+/* 板块 */
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+.tag-up { background: #ffebee; color: #c62828; }
+.tag-down { background: #e8f5e9; color: #2e7d32; }
+/* 新闻列表 */
+.news-list { list-style: none; }
+.news-list li {
+    padding: 8px 0;
+    border-bottom: 1px dotted #eee;
+    font-size: 13px;
+    position: relative;
+    padding-left: 14px;
+}
+.news-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px;
+    width: 5px; height: 5px;
+    background: #3949ab;
+    border-radius: 50%;
+}
+.news-list li:last-child { border-bottom: none; }
+/* 知识点 */
+.knowledge-box {
+    background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 10px 0;
+}
+.knowledge-box .k-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.knowledge-box .k-body {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.9;
+}
+.knowledge-box .k-highlight {
+    background: #fff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
+    border-left: 3px solid #3949ab;
+}
+/* 表格 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 8px 0;
+}
+table th {
+    background: #e8eaf6;
+    padding: 6px 4px;
+    font-weight: 600;
+    font-size: 11px;
+    color: #283593;
+}
+table td {
+    padding: 6px 4px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+/* 底部 */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+    font-size: 11px;
+    background: #fafafa;
+}
+.footer .line { width: 40px; height: 2px; background: #c5cae9; margin: 0 auto 10px; }
+/* 分割线 */
+.divider {
+    height: 8px;
+    background: #f0f0f0;
+    margin: 0;
+}
+/* 强调 */
+.highlight-box {
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: #e65100;
+    border: 1px solid #ffe0b2;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ===== 头部 ===== -->
+<div class="header">
+    <div class="date-badge">2026年9月11日 · 周五</div>
+    <h1>📊 瑾年财经早报</h1>
+    <div class="subtitle">Daily Financial Morning Report</div>
+    <div class="author">出品：瑾年 | 视频号：瑾年财经</div>
+</div>
+
+<!-- ===== 市场快讯 ===== -->
+<div class="flash-bar">
+    <span class="icon">⚡</span>
+    <span><b>隔夜要闻：</b>金融强国"十五五"规划正式出台，央行配套发布9份行动方案；国新办发布会详解货币政策改革方向——逐步淡化数量型中介目标，强化利率调控作用。</span>
+</div>
+
+<!-- ===== 一、股市 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>一、A股市场</div>
+    <p style="font-size:13px;color:#888;margin-bottom:4px;">📅 2026年9月10日（周四）收盘数据</p>
+
+    <div class="idx-grid">
+        <div class="idx-item">
+            <div class="idx-name">上证指数</div>
+            <div class="idx-price">3934.40</div>
+            <div class="idx-change down">-0.43%</div>
+        </div>
+        <div class="idx-item">
+            <div class="idx-name">深证成指</div>
+            <div class="idx-price">13617.67</div>
+            <div class="idx-change down">-0.77%</div>
+        </div>
+        <div class="idx-item">
+            <div class="idx-name">创业板指</div>
+            <div class="idx-price">3338.42</div>
+            <div class="idx-change down">-0.49%</div>
+        </div>
+        <div class="idx-item">
+            <div class="idx-name">科创50</div>
+            <div class="idx-price">1569.22</div>
+            <div class="idx-change down">-0.69%</div>
+        </div>
+        <div class="idx-item">
+            <div class="idx-name">沪深300</div>
+            <div class="idx-price">4548.39</div>
+            <div class="idx-change down">-0.53%</div>
+        </div>
+        <div class="idx-item">
+            <div class="idx-name">中证500</div>
+            <div class="idx-price">7717.80</div>
+            <div class="idx-change down">-0.65%</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+        <div class="card-title">📈 市场情绪</div>
+        <div class="data-row">
+            <span class="data-label">成交额合计</span>
+            <span class="data-value">约 1.65 万亿元</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">涨停家数</span>
+            <span class="data-value up">40 家</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">跌停家数</span>
+            <span class="data-value down">14 家</span>
+        </div>
+    </div>
+
+    <div class="card-title" style="margin-top:12px;">🔥 板块涨跌榜</div>
+    <p style="font-size:12px;color:#888;">涨幅前5</p>
+    <div class="tag-list">
+        <span class="tag tag-up">商业银行 +1.54%</span>
+        <span class="tag tag-up">建材 +0.83%</span>
+        <span class="tag tag-up">资本市场 +0.82%</span>
+        <span class="tag tag-up">金融服务 +0.55%</span>
+        <span class="tag tag-up">电力 +0.51%</span>
+    </div>
+    <p style="font-size:12px;color:#888;margin-top:10px;">跌幅前5</p>
+    <div class="tag-list">
+        <span class="tag tag-down">互动媒体 -3.00%</span>
+        <span class="tag tag-down">房地产服务 -2.72%</span>
+        <span class="tag tag-down">农用化工 -2.48%</span>
+        <span class="tag tag-down">能源设备 -2.33%</span>
+        <span class="tag tag-down">多品类零售 -2.32%</span>
+    </div>
+
+    <div class="highlight-box" style="margin-top:12px;">
+        💡 <b>瑾年点评：</b>周四A股全线收跌，但跌幅可控，银行板块逆势大涨1.54%领跑两市，显示资金防御性配置意愿强烈。成交额维持1.65万亿，市场整体交投活跃但结构性分化加剧，成长板块承压而红利资产获青睐。
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 二、资金市场 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>二、资金市场</div>
+    <p style="font-size:13px;color:#888;margin-bottom:4px;">📅 2026年9月10日</p>
+
+    <div class="card">
+        <div class="card-title">🏦 银行间质押式回购（DR）</div>
+        <table>
+            <tr><th>品种</th><th>利率</th><th>变动(BP)</th></tr>
+            <tr><td>DR001</td><td>1.3507%</td><td style="color:#2e7d32;">-2.96</td></tr>
+            <tr><td>DR007</td><td>1.4116%</td><td style="color:#c62828;">+2.10</td></tr>
+            <tr><td>DR014</td><td>1.4149%</td><td style="color:#c62828;">+1.87</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📋 Shibor报价</div>
+        <table>
+            <tr><th>期限</th><th>利率</th></tr>
+            <tr><td>隔夜</td><td>1.404%</td></tr>
+            <tr><td>1周</td><td>1.41%</td></tr>
+            <tr><td>3个月</td><td>1.43%</td></tr>
+        </table>
+    </div>
+
+    <div class="highlight-box">
+        💡 <b>瑾年点评：</b>跨月后资金面整体平稳偏宽松，DR001小幅下行，DR007和DR014微幅上行但仍在低位。Shibor各期限利率稳定，市场流动性充裕，货币政策维持适度宽松基调。
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 三、债市 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>三、债券市场</div>
+    <p style="font-size:13px;color:#888;margin-bottom:4px;">📅 2026年9月10日</p>
+
+    <div class="card">
+        <div class="card-title">📊 关键期限国债收益率</div>
+        <div class="data-row">
+            <span class="data-label">10年期国债</span>
+            <span class="data-value">约 1.677%</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">1年期国债</span>
+            <span class="data-value">约 1.16%</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📈 国债期货主力合约</div>
+        <table>
+            <tr><th>品种</th><th>收盘价</th><th>涨跌幅</th></tr>
+            <tr><td>2年期(TS)</td><td>102.574</td><td style="color:#c62828;">+0.01%</td></tr>
+            <tr><td>5年期(TF)</td><td>106.405</td><td style="color:#2e7d32;">-0.005%</td></tr>
+            <tr><td>10年期(T)</td><td>109.335</td><td style="color:#2e7d32;">-0.005%</td></tr>
+            <tr><td>30年期(TL)</td><td>115.910</td><td style="color:#2e7d32;">-0.21%</td></tr>
+        </table>
+    </div>
+
+    <div class="highlight-box">
+        💡 <b>瑾年点评：</b>债市整体窄幅震荡，短端微涨、长端微跌。30年期国债期货跌幅稍大，反映市场对超长债供给预期及"十五五"财政发力预期的谨慎情绪。10年期国债收益率在1.68%附近窄幅波动，方向待选择。
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 四、期货市场 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>四、商品期货</div>
+    <p style="font-size:13px;color:#888;margin-bottom:4px;">📅 2026年9月10日 · 国内主力合约</p>
+
+    <table>
+        <tr><th>品种</th><th>收盘价</th><th>涨跌幅</th></tr>
+        <tr><td>INE原油</td><td>769.0</td><td style="color:#c62828;font-weight:600;">+6.44% 🔥</td></tr>
+        <tr><td>沪铜</td><td>112,200</td><td style="color:#c62828;">+0.97%</td></tr>
+        <tr><td>SHFE黄金</td><td>957.18</td><td style="color:#c62828;">+0.74%</td></tr>
+        <tr><td>豆粕</td><td>3,402</td><td style="color:#c62828;">+0.15%</td></tr>
+        <tr><td>螺纹钢</td><td>3,146</td><td style="color:#2e7d32;">-0.57%</td></tr>
+        <tr><td>铁矿石</td><td>730.5</td><td style="color:#2e7d32;">-0.95%</td></tr>
+        <tr><td>豆油</td><td>9,064</td><td style="color:#2e7d32;">-0.64%</td></tr>
+    </table>
+
+    <div class="highlight-box" style="margin-top:10px;">
+        💡 <b>瑾年点评：</b>原油期货暴涨6.44%，为当日最大亮点，受中东地缘局势紧张及霍尔木兹海峡风险溢价推动。贵金属延续偏强，黄金小幅收涨。黑色系承压，螺纹钢和铁矿石收跌，反映对地产需求端的担忧。农产品涨跌互现。
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 五、经济要闻 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>五、经济要闻</div>
+    <ul class="news-list">
+        <li><b>🏛️ 金融强国"十五五"规划出台：</b>9月10日国新办发布会，央行副行长陆磊宣布《金融强国建设"十五五"规划》正式出台。央行配套印发改革发展9份行动方案，明确货币政策框架转型、实体经济精准赋能、人民币国际化三大改革路线。</li>
+        <li><b>📉 货币政策框架加速转型：</b>央行表示"十五五"期间将逐步淡化数量型中介目标，强化利率调控作用；健全市场化利率形成、调控和传导机制，增强人民币汇率弹性。</li>
+        <li><b>💼 G20财长会议：</b>央行行长潘功胜在G20会议上指出，中国无意通过汇率贬值获取贸易竞争优势，将继续实施适度宽松的货币政策。</li>
+        <li><b>🏠 房地产新政落地：</b>住建部等多部门联合发文改革商品房销售制度，现房销售正式落地；个人住房贷款最长期限延长至40年。</li>
+        <li><b>📊 8月CPI温和回升：</b>业内预计8月CPI同比涨幅扩大至0.8%左右，PPI同比涨幅小幅回落至约3.8%。</li>
+    </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 六、银行监管与行业动态 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>六、银行监管与行业动态</div>
+    <ul class="news-list">
+        <li><b>📋 银行业资产规模：</b>截至7月末，银行业金融机构资产总额489万亿元，同比增6.6%。大型商业银行资产215.7万亿元，同比增9.2%，占比44.1%。</li>
+        <li><b>💰 六大行集体提分红：</b>2026年中期，六大国有银行首次集体将分红比例从30%提升至31%，合计拟派息超2209亿元，红利属性进一步强化。</li>
+        <li><b>📈 银行中报业绩分化：</b>上市银行26H1营收同比+7.4%，归母净利润+2.9%。国有大行加速、绩优城商行领先（青岛银行+18%、齐鲁银行+16%、宁波银行+12%），股份行整体承压。</li>
+        <li><b>🏦 净息差企稳：</b>得益于高息存款到期重定价，上市银行净息差较2025年全年回升1bp至1.40%，为2020年以来首次企稳回升。</li>
+        <li><b>📱 理财信披新规施行：</b>9月1日起《银行保险机构资管产品信息披露管理办法》正式施行，中国理财网统一信披平台同步上线，32家理财公司全面接入。</li>
+    </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 七、理财市场 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>七、理财市场</div>
+
+    <div class="card">
+        <div class="card-title">📊 理财产品规模（截至9月6日）</div>
+        <table>
+            <tr><th>类型</th><th>规模(万亿)</th><th>周环比</th></tr>
+            <tr><td>全市场</td><td><b>33.76</b></td><td style="color:#c62828;">+0.17%</td></tr>
+            <tr><td>现金管理类</td><td>6.35</td><td style="color:#2e7d32;">-0.16%</td></tr>
+            <tr><td>固定收益类</td><td>26.38</td><td style="color:#c62828;">+0.50%</td></tr>
+            <tr><td>混合类</td><td>0.95</td><td>持平</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📈 收益率表现（上周）</div>
+        <div class="data-row">
+            <span class="data-label">现金管理类（近7日年化）</span>
+            <span class="data-value">1.10%</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">货币基金（近7日年化）</span>
+            <span class="data-value">1.01%</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">破净率</span>
+            <span class="data-value">1.51%（环比-0.01pct）</span>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        💡 <b>瑾年点评：</b>理财规模稳步增长至33.76万亿元，固收类产品仍是主力。8月银行理财平均年化收益率回升至2.59%。上银理财固收类产品领跑，近1月年化收益率最高达3.44%。理财行业信披规范化进入新阶段。
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 八、银行研报观点 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>八、银行研报核心观点</div>
+    <ul class="news-list">
+        <li><b>📝 国泰海通（增持）：</b>银行板块股息率4.14%居全行业第一，较10年国债溢价2.46pct。推荐"业绩+股息"双主线：江苏银行、宁波银行、苏州银行、渝农商行、杭州银行、南京银行。</li>
+        <li><b>📝 中金公司：</b>银行中报最大亮点为息差企稳，净利息收入高增8.4%为2020年下半年以来最高。推荐区域景气度高的中小银行及分红稳健的国有大行。</li>
+        <li><b>📝 兴业证券：</b>银行中报业绩趋势分化，大行提速、绩优城商领先、股份行承压。六大行分红比例提升强化红利属性。</li>
+        <li><b>📝 光大证券：</b>下半年银行净息差和资产质量保持平稳，营收改善趋势有望延续。关注苏州银行、杭州银行。</li>
+        <li><b>📝 国信证券：</b>信用卡不良暴露边际高点或在2026年出现，但处置压力延续至2027年上半年。维持"优于大市"评级。</li>
+    </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 九、每日知识点 ===== -->
+<div class="section">
+    <div class="section-title"><span class="dot"></span>九、📚 每日学一个知识点</div>
+    <div class="knowledge-box">
+        <div class="k-title">🎓 什么是"净息差（NIM）"？</div>
+        <div class="k-body">
+            <b>净息差（Net Interest Margin，NIM）</b>是衡量银行核心盈利能力最关键的指标之一。<br><br>
+            <b>计算公式：</b><br>
+            NIM = （利息收入 - 利息支出）÷ 生息资产平均余额 × 100%<br><br>
+            <b>通俗理解：</b>银行左手吸收存款（付利息），右手发放贷款（收利息），净息差就是这"一进一出"的利润率。好比开一家超市，进货成本2元、售价3元，毛利率33%——银行的"货"就是资金。<br><br>
+            <b>为什么重要？</b>利息净收入占银行营收约70%-80%，净息差每变动1个基点（0.01%），对大行利润影响可达数十亿元。<br><br>
+            <b>当前背景：</b>2026年上半年上市银行净息差为1.40%，较2025年回升1bp，结束了连续多年的下行趋势。背后逻辑是：高息存款集中到期重定价→负债成本下降→息差企稳。这对于银行股的估值修复具有重要信号意义。
+        </div>
+        <div class="k-highlight">
+            💡 <b>一句话记住：</b>净息差就是银行的"毛利率"，NIM企稳回升意味着银行最核心的赚钱能力正在改善。
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 底部 ===== -->
+<div class="footer">
+    <div class="line"></div>
+    <p>📊 瑾年财经早报 · 每个交易日清晨见</p>
+    <p style="margin-top:4px;">数据来源：Wind、中国人民银行、金融监管总局、各券商研报</p>
+    <p style="margin-top:2px;">免责声明：本报告仅供信息参考，不构成投资建议</p>
+    <p style="margin-top:8px;color:#bbb;">© 2026 瑾年财经 | 视频号：瑾年财经</p>
+</div>
+
+</div>
+</body>
+</html>

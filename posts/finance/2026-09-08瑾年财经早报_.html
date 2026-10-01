@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>瑾年财经早报 | 2026年9月8日 星期二</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-text-size-adjust: 100%;
+  }
+  .container { max-width: 680px; margin: 0 auto; background: #fff; }
+  
+  /* 顶部头部 */
+  .header {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 40%, #3949ab 100%);
+    color: #fff;
+    padding: 30px 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ffd54f, #ff8f00, #ffd54f);
+  }
+  .header .brand {
+    font-size: 12px;
+    letter-spacing: 4px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  .header .date-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 4px 16px;
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  
+  /* 内容区 */
+  .content { padding: 0 16px 20px; }
+  
+  /* 数据摘要卡片 */
+  .data-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .data-card {
+    flex: 1 1 calc(50% - 4px);
+    min-width: calc(50% - 4px);
+    background: #f8f9ff;
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+    border-left: 3px solid #3949ab;
+  }
+  .data-card .label { font-size: 11px; color: #888; margin-bottom: 2px; }
+  .data-card .value { font-size: 18px; font-weight: 700; color: #1a237e; }
+  .data-card .change { font-size: 11px; margin-top: 2px; }
+  .up { color: #e53935; }
+  .down { color: #43a047; }
+  
+  /* 章节标题 */
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a237e;
+    margin: 22px 0 12px;
+    padding-left: 12px;
+    border-left: 4px solid #ff8f00;
+    line-height: 1.4;
+  }
+  
+  /* 子标题 */
+  .sub-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #283593;
+    margin: 14px 0 8px;
+  }
+  
+  /* 段落 */
+  p { margin: 6px 0; text-align: justify; font-size: 14px; }
+  
+  /* 列表 */
+  ul { padding-left: 18px; margin: 8px 0; }
+  ul li { margin: 4px 0; font-size: 14px; list-style-type: disc; }
+  
+  /* 高亮框 */
+  .highlight-box {
+    background: #fff8e1;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 12px 0;
+    border-left: 4px solid #ff8f00;
+    font-size: 13px;
+  }
+  
+  /* 数据表格 */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: #e8eaf6;
+    color: #1a237e;
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .data-table td {
+    padding: 7px 6px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+  }
+  .data-table tr:nth-child(even) td { background: #fafafa; }
+  
+  /* 分割线 */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c5cae9, transparent);
+    margin: 18px 0;
+  }
+  
+  /* 知识点卡片 */
+  .knowledge-card {
+    background: linear-gradient(135deg, #e8eaf6, #f3e5f5);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    border: 1px solid #c5cae9;
+  }
+  .knowledge-card .k-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6a1b9a;
+    margin-bottom: 8px;
+  }
+  .knowledge-card .k-body {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.8;
+  }
+  .knowledge-card .k-tag {
+    display: inline-block;
+    background: #6a1b9a;
+    color: #fff;
+    border-radius: 12px;
+    padding: 2px 12px;
+    font-size: 11px;
+    margin-right: 6px;
+  }
+  
+  /* 底部 */
+  .footer {
+    text-align: center;
+    padding: 20px 16px;
+    color: #999;
+    font-size: 11px;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+  }
+  .footer .author {
+    color: #3949ab;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  /* 红涨绿跌 */
+  .red { color: #e53935; }
+  .green { color: #43a047; }
+  .orange { color: #ef6c00; }
+  
+  /* 引言 */
+  .intro {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============ HEADER ============ -->
+<div class="header">
+  <div class="brand">JIN NIAN · FINANCIAL BRIEFING</div>
+  <h1>📰 瑾年财经早报</h1>
+  <div class="subtitle">—— 数据驱动 · 洞察先机 ——</div>
+  <div class="date-badge">2026年9月8日 星期二 · 农历七月廿七</div>
+</div>
+
+<div class="content">
+
+<!-- ============ 引言 ============ -->
+<div class="intro">
+  各位读者早上好！今天是2026年9月8日星期二。昨日A股震荡收高，创业板指大涨3.41%，两市成交近2万亿；财政部3000亿特别国债注资八大央企方案落地；央行连续22个月增持黄金。新的一周，市场迎来多重催化，让我们快速浏览今日要点。
+</div>
+
+<!-- ============ 数据摘要卡片 ============ -->
+<div class="data-cards">
+  <div class="data-card">
+    <div class="label">上证指数</div>
+    <div class="value">3,932.70</div>
+    <div class="change up">+0.07%</div>
+  </div>
+  <div class="data-card">
+    <div class="label">创业板指</div>
+    <div class="value">3,398.68</div>
+    <div class="change up">+3.41% 🔥</div>
+  </div>
+  <div class="data-card">
+    <div class="label">两市成交</div>
+    <div class="value">1.95万亿</div>
+    <div class="change" style="color:#888;">放量活跃</div>
+  </div>
+  <div class="data-card">
+    <div class="label">10年国债</div>
+    <div class="value">1.68%</div>
+    <div class="change green">↓ 收益率下行</div>
+  </div>
+</div>
+
+<!-- ============ 第一章：股市概览 ============ -->
+<div class="section-title">一、📊 股市概览</div>
+
+<div class="sub-title">▎主要指数表现（9月7日收盘）</div>
+<table class="data-table">
+  <tr><th>指数</th><th>收盘点位</th><th>涨跌幅</th></tr>
+  <tr><td>上证指数</td><td>3,932.70</td><td class="red">+0.07%</td></tr>
+  <tr><td>深证成指</td><td>13,774.91</td><td class="red">+1.91%</td></tr>
+  <tr><td>创业板指</td><td>3,398.68</td><td class="red">+3.41%</td></tr>
+  <tr><td>科创50</td><td>1,615.53</td><td class="red">+2.42%</td></tr>
+</table>
+
+<p><strong>盘面特征：</strong>昨日A股震荡收高，科技成长板块全面爆发，创业板指大涨3.41%领跑全市场。两市成交额达1.95万亿元，较前一交易日明显放量。涨停95家，跌停仅2家，市场情绪高涨。</p>
+
+<div class="sub-title">▎行业板块涨跌排行</div>
+<table class="data-table">
+  <tr><th>🔥 涨幅前五</th><th>涨跌幅</th><th>❄️ 跌幅前五</th><th>涨跌幅</th></tr>
+  <tr><td>通信</td><td class="red">+6.17%</td><td>煤炭</td><td class="green">-2.53%</td></tr>
+  <tr><td>电子</td><td class="red">+3.92%</td><td>非银金融</td><td class="green">-1.87%</td></tr>
+  <tr><td>综合</td><td class="red">+2.71%</td><td>石油石化</td><td class="green">-1.53%</td></tr>
+  <tr><td>机械设备</td><td class="red">+2.51%</td><td>银行</td><td class="green">-1.49%</td></tr>
+  <tr><td>农林牧渔</td><td class="red">+1.72%</td><td>钢铁</td><td class="green">-1.19%</td></tr>
+</table>
+
+<div class="highlight-box">
+  <strong>💡 简评：</strong>通信板块以6.17%的涨幅遥遥领先，主要受高盛大幅上调全球光模块市场预测催化，中际旭创大涨超10%。红利板块（煤炭、银行、石油）出现获利回吐，风格切换特征明显。
+</div>
+
+<div class="divider"></div>
+
+<!-- ============ 第二章：资金市场 ============ -->
+<div class="section-title">二、💰 资金市场</div>
+
+<div class="sub-title">▎央行公开市场操作</div>
+<p>央行9月7日以固定利率、数量招标方式开展<strong>5亿元</strong>7天期逆回购操作，操作利率维持<strong>1.40%</strong>不变。当日有50亿元逆回购到期，单日实现<strong>净回笼45亿元</strong>。今日央行将开展5000亿元买断式逆回购操作，期限3个月。</p>
+
+<div class="sub-title">▎资金利率一览（9月7日）</div>
+<table class="data-table">
+  <tr><th>品种</th><th>利率</th><th>变动</th></tr>
+  <tr><td>SHIBOR隔夜</td><td>1.372%</td><td>低位运行</td></tr>
+  <tr><td>SHIBOR 7天</td><td>1.380%</td><td>平稳</td></tr>
+  <tr><td>SHIBOR 1个月</td><td>1.419%</td><td>平稳</td></tr>
+  <tr><td>DR007</td><td>1.377%</td><td>低于政策利率</td></tr>
+</table>
+
+<div class="highlight-box">
+  <strong>💡 简评：</strong>银行间资金面延续宽松格局，DR007持续低于1.40%的政策利率中枢，流动性整体充裕。央行今日启动5000亿买断式逆回购，将进一步巩固资金面平稳。
+</div>
+
+<div class="divider"></div>
+
+<!-- ============ 第三章：债市 ============ -->
+<div class="section-title">三、📈 债券市场</div>
+
+<div class="sub-title">▎国债期货（9月7日收盘）</div>
+<table class="data-table">
+  <tr><th>合约</th><th>品种</th><th>涨跌幅</th></tr>
+  <tr><td>T2612</td><td>10年期国债期货</td><td>0.00%</td></tr>
+  <tr><td>TF2612</td><td>5年期国债期货</td><td class="red">+0.03%</td></tr>
+  <tr><td>TL2612</td><td>30年期国债期货</td><td class="red">+0.06%</td></tr>
+  <tr><td>TS2612</td><td>2年期国债期货</td><td class="red">+0.01%</td></tr>
+</table>
+
+<div class="sub-title">▎关键利率</div>
+<p>10年期国债活跃券（26附息国债10）中债估值收益率<strong>1.676%</strong>，近一周从1.686%小幅下行至1.676%，下行约1bp。10年期国债期货主力合约T2612持平，长端30年期小幅上涨0.06%。</p>
+
+<div class="highlight-box">
+  <strong>💡 简评：</strong>资金面宽松支撑短端，但市场对后续政府债供给放量（注资特别国债+专项债）存在担忧，长端走势纠结。财政部3000亿注资特别国债预计9-10月发行，四季度供给压力需关注。
+</div>
+
+<div class="divider"></div>
+
+<!-- ============ 第四章：期货市场 ============ -->
+<div class="section-title">四、🔮 期货市场</div>
+
+<p>南华商品综合指数昨日上涨<strong class="red">+0.37%</strong>，商品市场整体温和反弹。</p>
+
+<div class="sub-title">▎主要品种主力合约表现（9月7日）</div>
+<table class="data-table">
+  <tr><th>品种</th><th>涨跌幅</th><th>方向</th></tr>
+  <tr><td>INE原油</td><td class="red">+2.37%</td><td>领涨</td></tr>
+  <tr><td>铁矿石</td><td class="red">+1.17%</td><td>上涨</td></tr>
+  <tr><td>豆油</td><td class="red">+0.31%</td><td>微涨</td></tr>
+  <tr><td>沪铜</td><td class="red">+0.28%</td><td>微涨</td></tr>
+  <tr><td>螺纹钢</td><td class="green">-0.22%</td><td>微跌</td></tr>
+  <tr><td>黄金</td><td class="green">-2.06%</td><td>领跌</td></tr>
+</table>
+
+<div class="highlight-box">
+  <strong>💡 简评：</strong>原油受OPEC+维持10月产量不变及中东地缘支撑大涨逾2%；伦铜创历史新高，关税套利引发挤仓效应。黄金大幅回调逾2%，美元反弹施压贵金属。黑色系涨跌互现，铁矿石反弹但螺纹钢偏弱。
+</div>
+
+<div class="divider"></div>
+
+<!-- ============ 第五章：经济要闻 ============ -->
+<div class="section-title">五、📋 经济要闻</div>
+
+<ul>
+  <li><strong>外汇储备与黄金：</strong>8月末中国外汇储备34,383亿美元，环比升195亿美元（+0.57%）。黄金储备7,673万盎司，环比增65万盎司，央行已<strong>连续22个月增持黄金</strong>。</li>
+  <li><strong>财政注资：</strong>财政部将发行3000亿元特别国债，支持工行、农行、进出口银行、中国信保、中国人保、国寿集团、中国太平、中国再保等8家中央金融企业补充核心一级资本，合计增资规模达<strong>3600亿元</strong>。</li>
+  <li><strong>AI司法规则：</strong>最高法发布首部涉人工智能司法裁判规则文件，聚焦AI换脸、大数据杀熟、自动驾驶等关键问题。</li>
+  <li><strong>中美AI对话：</strong>外交部证实中美双方就AI安全问题保持沟通，有报道称双方将于9月中旬举行会谈。</li>
+  <li><strong>乡村振兴：</strong>六部门联合印发乡村振兴投入机制实施方案，明确到2030年建设目标。</li>
+  <li><strong>中金合并：</strong>证监会批复同意中金公司换股吸收合并东兴证券、信达证券，新增发行超31亿股。</li>
+  <li><strong>本周关注：</strong>中国8月CPI/PPI、进出口数据将公布；美国8月CPI数据发布；欧央行利率决议。</li>
+</ul>
+
+<div class="divider"></div>
+
+<!-- ============ 第六章：银行监管与理财 ============ -->
+<div class="section-title">六、🏦 银行监管与理财市场</div>
+
+<div class="sub-title">▎监管动态</div>
+<ul>
+  <li><strong>理财信披新规施行：</strong>《银行保险机构资管产品信息披露管理办法》9月1日起正式施行。理财公司集中修订产品说明书，业绩比较基准加速"换锚"至挂钩指数型，告别单一数值模式。</li>
+  <li><strong>信息披露新规征求意见：</strong>金融监管总局就《银行保险机构信息披露管理办法》征求意见，统一各类型机构信披要求，要求每年4月30日前发布年度报告，官网主页设置置顶信披专栏。</li>
+  <li><strong>保险法大修：</strong>保险法修订草案公开征求意见，拟划定股东/实际控制人八类禁止行为，强化穿透监管与消费者保护。</li>
+  <li><strong>私募募集新规：</strong>证监会就私募投资基金募集监管管理办法征求意见，个人合格投资者门槛提升至家庭金融资产≥500万或净资产≥300万。</li>
+  <li><strong>经营贷收紧：</strong>广深地区个人经营贷实际利率已突破4%，授信审核尺度持续收紧。</li>
+</ul>
+
+<div class="sub-title">▎理财市场</div>
+<ul>
+  <li>36万亿理财资金被限制投资消费贷非标资产，消费贷ABS暂不受影响。</li>
+  <li>摊余成本法债基时隔五年重启审批，15家基金公司已上报，理财资金有望成为重要配置力量。</li>
+  <li>六大国有银行中期分红比例集体提升至31%，合计拟派息超2,209亿元。</li>
+</ul>
+
+<div class="divider"></div>
+
+<!-- ============ 第七章：银行研报观点 ============ -->
+<div class="section-title">七、📝 银行研报观点</div>
+
+<div class="sub-title">▎国泰海通 · 银行业秋季策略</div>
+<p>银行板块股息率4.14%居全行业第一，较10年国债溢价2.46pct，PB仅0.69x。建议关注三大方向：①业绩+股息兼具（江苏银行、宁波银行、杭州银行等）；②可转债转股预期（重庆银行、常熟银行）；③风格切换配置（建行、交行、招行）。</p>
+
+<div class="sub-title">▎中金公司 · 银行中报解读</div>
+<p>银行中报最大亮点是息差企稳，净利息收入同比高增8.4%。但资产质量压力尚存，信用成本或迎来长期拐点。维持"推荐区域景气度高的中小银行+分红稳健的国有大行+基本面改善的头部股份行"。</p>
+
+<div class="sub-title">▎兴业证券 · 半年报总结</div>
+<p>业绩趋势分化明显：大行提速，绩优城商领先，股份行承压。六大行分红率提升至31%超预期，红利属性强化。对公改善、零售承压的资产质量分化延续。</p>
+
+<div class="divider"></div>
+
+<!-- ============ 第八章：每日知识点 ============ -->
+<div class="knowledge-card">
+  <span class="k-tag">每日学一点</span>
+  <div class="k-title">📚 什么是"买断式逆回购"？</div>
+  <div class="k-body">
+    <p><strong>买断式逆回购</strong>是央行向市场投放流动性的货币政策工具之一。与普通逆回购不同，买断式逆回购中，央行买入债券后<strong>债券所有权发生转移</strong>，央行获得债券的完整处置权，可以再卖出或持有到期。</p>
+    <p style="margin-top:6px;"><strong>核心区别：</strong></p>
+    <p>• <strong>质押式逆回购：</strong>债券仅作质押担保，所有权不变，央行到期收回本息归还债券。</p>
+    <p>• <strong>买断式逆回购：</strong>债券所有权转移给央行，央行可灵活处置，到期需归还同品种同面额债券。</p>
+    <p style="margin-top:6px;"><strong>为什么重要？</strong>买断式逆回购不仅投放流动性，还能盘活债券存量、增强央行对收益率曲线的调控能力。今日央行将开展5000亿元买断式逆回购操作（期限3个月），有助于缓解银行体系中长期负债压力，对冲后续政府债供给冲击。</p>
+    <p style="margin-top:6px;"><strong>对市场的影响：</strong>大量买断式逆回购意味着央行向市场注入中长期流动性，有利于稳定资金利率预期，对短端利率形成支撑，同时可缓解银行"资产荒"压力。</p>
+  </div>
+</div>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  <p class="author">瑾年 · 财经早报</p>
+  <p>每日更新 | 数据来源：Wind金融终端</p>
+  <p style="margin-top:4px;">声明：本早报仅供信息参考，不构成投资建议。<br>投资有风险，入市需谨慎。</p>
+  <p style="margin-top:8px; color:#bbb;">© 2026 瑾年财经</p>
+</div>
+
+</div>
+</body>
+</html>
