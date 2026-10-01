@@ -99,7 +99,12 @@ python tools/publish.py --no-push    # 只更新索引在本地看，不推送
 python tools/publish.py --serve      # 更新索引并启动本地预览服务
 python tools/publish.py --draft finance 2026-10-02-早报   # 生成草稿文件
 python tools/publish.py -m "自定义提交信息"
+
+python tools/check-series.py          # 校验「系列导航」：篇号、当前项、互链文件是否存在
 ```
+
+> 系列文章（如半导体学习路径）在每篇底部有 `.series` 导航块。**新增或调整顺序后，
+> 建议先跑一次 `tools/check-series.py`**，确认各篇导航项数一致、当前项正确、互链无死链。
 
 ---
 

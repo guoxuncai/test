@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 01 Oct 2026 19:42:24 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 01 Oct 2026 20:04:49 +0800</lastBuildDate>
     <item>
       <title>芯片设计流程与 EDA 工具链</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</link>
@@ -26,6 +26,13 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片制造工艺流程详解.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从石英砂到成品芯片的完整链路：晶圆制备、光刻、刻蚀、掺杂、薄膜、CMP、铜互连、CP 测试到封装测试，含分辨率公式与良率模型]]></description>
+    </item>
+    <item>
+      <title>硅单晶生长与衬底制备工艺</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-硅单晶生长与衬底制备工艺.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-硅单晶生长与衬底制备工艺.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从石英砂到电子级多晶硅，再到 CZ 直拉/区熔单晶生长、切片研磨抛光、外延与 SOI 衬底的完整工艺链路，含分凝系数、V/G 缺陷判据与硅片关键规格指标]]></description>
     </item>
     <item>
       <title>瑾年财经早报 | 2026年10月1日</title>
