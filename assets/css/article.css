@@ -166,6 +166,103 @@ h1.title {
     margin-bottom: 6px; font-size: .9rem; letter-spacing: .3px;
 }
 
+/* ==========================================================
+   教学组件扩展（自学笔记用）：目录 / 图示 / 公式 / 提示框 /
+   自测题 / 术语表 / 系列导航
+   ========================================================== */
+
+/* 目录 */
+.toc {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; font-size: .9rem;
+}
+.toc-title { font-weight: 700; color: var(--text); margin-bottom: 8px; font-size: .88rem; letter-spacing: .4px; }
+.toc ol { padding-left: 1.3em; margin: 0; }
+.toc li { margin: 3px 0; }
+.toc a { color: var(--text-soft); }
+.toc a:hover { color: var(--accent); }
+
+/* 图示（内联 SVG 容器） */
+.diagram {
+    margin: 1.4em 0; padding: 16px 18px 10px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 12px; text-align: center;
+}
+.diagram svg { width: 100%; height: auto; max-width: 100%; display: block; margin: 0 auto; }
+.diagram figcaption {
+    font-size: .8rem; color: var(--text-mute); margin-top: 10px;
+    padding-top: 8px; border-top: 1px dashed var(--border); text-align: center;
+}
+
+/* 公式块 */
+.formula-block {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-left: 3px solid var(--semi);
+    border-radius: 8px; padding: 12px 16px; margin: 1em 0;
+    font-family: "Cambria Math", "Times New Roman", serif;
+    font-size: 1.02rem; color: var(--text); overflow-x: auto;
+}
+.formula-block .fl { display: block; text-align: center; line-height: 1.9; }
+.formula-block .fnote {
+    display: block; margin-top: 8px; font-family: inherit;
+    font-size: .82rem; color: var(--text-mute); text-align: left; line-height: 1.6;
+}
+
+/* 提示框 */
+.note, .warn, .tip {
+    border-radius: 10px; padding: 13px 18px; margin: 1.1em 0;
+    font-size: .92rem; color: var(--text-soft); background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+.note { border-left: 4px solid var(--semi); }
+.warn { border-left: 4px solid var(--up); }
+.tip  { border-left: 4px solid var(--down); }
+.note b, .warn b, .tip b { color: var(--text); }
+
+/* 自测题 */
+.quiz { margin: 1.2em 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.quiz summary {
+    cursor: pointer; padding: 12px 18px; background: var(--surface-2);
+    font-size: .92rem; font-weight: 600; color: var(--text); list-style: none;
+}
+.quiz summary::-webkit-details-marker { display: none; }
+.quiz summary::before { content: "▸ "; color: var(--semi); font-weight: 700; }
+.quiz[open] summary::before { content: "▾ "; }
+.quiz .answer {
+    padding: 13px 18px; font-size: .9rem; color: var(--text-soft);
+    border-top: 1px dashed var(--border); background: var(--surface);
+}
+
+/* 术语表 */
+.term-table { font-size: .88rem; }
+.term-table td:first-child { font-weight: 650; color: var(--text); white-space: nowrap; }
+
+/* 系列导航 */
+.series {
+    margin-top: 36px; padding: 18px 20px; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--surface-2);
+}
+.series-title {
+    font-size: .78rem; letter-spacing: 1px; color: var(--text-mute);
+    font-weight: 700; margin-bottom: 10px; text-transform: uppercase;
+}
+.series ol { padding-left: 1.3em; margin: 0; font-size: .88rem; }
+.series li { margin: 4px 0; color: var(--text-soft); }
+.series li.current { font-weight: 700; color: var(--accent); list-style: none; margin-left: -1.3em; }
+.series li.current::before { content: "▸ "; }
+
+/* 关键数字 */
+.kv {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px; margin: 1.1em 0;
+}
+.kv div {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px; text-align: center;
+}
+.kv .v { font-size: 1.15rem; font-weight: 800; color: var(--semi); letter-spacing: -.3px; }
+.kv .l { font-size: .74rem; color: var(--text-mute); margin-top: 3px; }
+
 .tagbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--border); }
 .tagbar .chip {
     font-size: .75rem; padding: 3px 10px; border-radius: 999px;

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOSFET 工作原理与特性曲线</title>
+<meta name="description" content="从 MOSFET 结构、阈值电压到三个工作区的电流公式与输出/转移特性曲线，含短沟道效应与版图参数 W/L 的工程含义。">
+<meta name="keywords" content="MOSFET,阈值电压,饱和区,跨导,短沟道效应,CMOS,特性曲线">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 器件</span>
+    <h1 class="title">MOSFET 工作原理与特性曲线</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 3 篇</span><span class="sep"></span>
+      <span>阅读约 14 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        MOSFET 是当代集成电路的绝对主角 —— 一颗手机 SoC 里有几十亿个。
+        这一篇讲清它的结构、为什么会形成沟道、三个工作区的电流公式，以及
+        <em>W/L</em> 这个版图参数如何决定电路性能。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">结构：栅、源、漏、体</a></li>
+          <li><a href="#s2">沟道是怎么形成的</a></li>
+          <li><a href="#s3">阈值电压 V<sub>t</sub> 与体效应</a></li>
+          <li><a href="#s4">三个工作区与电流公式</a></li>
+          <li><a href="#s5">输出特性与转移特性曲线</a></li>
+          <li><a href="#s6">跨导 g<sub>m</sub> 与本征增益</a></li>
+          <li><a href="#s7">短沟道效应：先进节点的麻烦</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 结构：栅、源、漏、体</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NMOS 截面结构">
+          <!-- 衬底 -->
+          <rect x="60" y="140" width="560" height="90" fill="var(--fin)" fill-opacity=".10" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="340" y="200" text-anchor="middle" font-size="13" fill="var(--fin)">P 型衬底（Body / Bulk）</text>
+
+          <!-- 源漏 n+ -->
+          <rect x="80" y="120" width="110" height="30" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="135" y="140" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">N⁺ 源 S</text>
+          <rect x="490" y="120" width="110" height="30" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="545" y="140" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">N⁺ 漏 D</text>
+
+          <!-- 沟道区 -->
+          <rect x="190" y="128" width="300" height="14" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="5 3"/>
+          <text x="340" y="122" text-anchor="middle" font-size="12" fill="var(--accent)">反型沟道（电子）</text>
+
+          <!-- 栅氧 -->
+          <rect x="190" y="106" width="300" height="12" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="340" y="100" text-anchor="middle" font-size="11" fill="var(--text-mute)">栅氧化层 SiO₂（t<sub>ox</sub>）</text>
+
+          <!-- 栅极 -->
+          <rect x="190" y="72" width="300" height="30" fill="var(--text)" fill-opacity=".14" stroke="var(--text)" stroke-width="1.5"/>
+          <text x="340" y="93" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">栅极 Gate（多晶硅 / 金属）</text>
+
+          <!-- L 标注 -->
+          <line x1="190" y1="250" x2="490" y2="250" stroke="var(--up)" stroke-width="1.4"/>
+          <line x1="190" y1="242" x2="190" y2="258" stroke="var(--up)" stroke-width="1.4"/>
+          <line x1="490" y1="242" x2="490" y2="258" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="340" y="268" text-anchor="middle" font-size="13" fill="var(--up)" font-weight="700">L：沟道长度（决定速度）</text>
+
+          <!-- W 提示 -->
+          <text x="30" y="160" font-size="12" fill="var(--text-mute)">W：</text>
+          <text x="30" y="176" font-size="12" fill="var(--text-mute)">沟道宽度</text>
+          <text x="30" y="192" font-size="12" fill="var(--text-mute)">（垂直</text>
+          <text x="30" y="208" font-size="12" fill="var(--text-mute)">纸面）</text>
+        </svg>
+        <figcaption>图 1：N 沟道 MOSFET 截面。<em>L</em> 是源漏间距（沟道长度），决定速度与耐压；<em>W</em> 垂直于纸面，决定电流能力。</figcaption>
+      </figure>
+
+      <table class="term-table">
+        <thead><tr><th>端子</th><th>全称</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td>G</td><td>Gate 栅极</td><td>加电压形成电场，控制沟道是否导通（输入，几乎不取电流）</td></tr>
+          <tr><td>S</td><td>Source 源极</td><td>载流子的来源（NMOS 中接低电位）</td></tr>
+          <tr><td>D</td><td>Drain 漏极</td><td>载流子流出端（NMOS 中接高电位）</td></tr>
+          <tr><td>B</td><td>Body/Bulk 体</td><td>衬底，通常源极短接以避免体效应</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s2">2. 沟道是怎么形成的</h2>
+
+      <p>以 NMOS（P 型衬底）为例，栅极加正电压 V<sub>GS</sub>：</p>
+
+      <ol>
+        <li><strong>耗尽</strong>：正栅压排斥 P 型衬底中的空穴，栅氧下方形成耗尽层；</li>
+        <li><strong>反型</strong>：V<sub>GS</sub> 继续增大，把少子电子吸引到表面；当表面电子浓度超过空穴浓度时，
+        表面由 P 型「反型」成 N 型 —— 这条薄薄的电子层就是<em>导电沟道</em>；</li>
+        <li><strong>导通</strong>：源漏之间有了 N 型通路，加 V<sub>DS</sub> 就有电流。</li>
+      </ol>
+
+      <div class="note">
+        <b>关键洞察：栅极是绝缘的。</b>栅极与沟道之间隔着 SiO₂，直流下几乎没有栅电流（仅极小的栅漏电），
+        所以 MOSFET 是<strong>电压控制器件</strong>，输入功耗极低 —— 这是 CMOS 电路能做到超低功耗、能集成几十亿个管子的根本原因。
+      </div>
+
+      <h2 id="s3">3. 阈值电压与体效应</h2>
+
+      <div class="formula-block">
+        <span class="fl">V<sub>t</sub> = V<sub>FB</sub> + 2φ<sub>F</sub> + γ · √( 2φ<sub>F</sub> + V<sub>SB</sub> )</span>
+        <span class="fnote">V<sub>FB</sub>：平带电压（与栅材料、氧化层电荷有关）；φ<sub>F</sub>：费米势；
+        γ = √(2qε<sub>si</sub>N<sub>A</sub>) / C<sub>ox</sub>：体效应系数；V<sub>SB</sub>：源-体电压。</span>
+      </div>
+
+      <div class="warn">
+        <b>体效应（Body Effect）：</b>当源极电位高于体（V<sub>SB</sub> &gt; 0）时，阈值电压会升高。
+        在电路里表现为"串联在中间的管子变慢"，因此在版图设计中通常把 NMOS 的体接到全芯片最低电位（VSS）、
+        PMOS 的体接到最高电位（VDD），避免体效应。
+      </div>
+
+      <div class="kv">
+        <div><div class="v">0.3~0.7 V</div><div class="l">典型 V<sub>t</sub>（先进节点更低）</div></div>
+        <div><div class="v">C<sub>ox</sub> = ε<sub>ox</sub>/t<sub>ox</sub></div><div class="l">单位面积栅氧电容</div></div>
+        <div><div class="v">60 mV/dec</div><div class="l">亚阈值摆幅理论极限</div></div>
+        <div><div class="v">μ<sub>n</sub> ≈ 2.5 μ<sub>p</sub></div><div class="l">PMOS 需更大 W/L</div></div>
+      </div>
+
+      <h2 id="s4">4. 三个工作区与电流公式</h2>
+
+      <table>
+        <thead><tr><th>工作区</th><th>条件（NMOS）</th><th>漏极电流 I<sub>D</sub></th><th>电路中的角色</th></tr></thead>
+        <tbody>
+          <tr><td>截止区</td><td>V<sub>GS</sub> &lt; V<sub>t</sub></td><td>I<sub>D</sub> ≈ 0（实际为亚阈值漏电流）</td><td>开关「断开」</td></tr>
+          <tr><td>线性区（三极管区）</td><td>V<sub>DS</sub> &lt; V<sub>GS</sub> − V<sub>t</sub></td><td>见下式</td><td>开关「闭合」、电阻、传输门</td></tr>
+          <tr><td>饱和区（恒流区）</td><td>V<sub>DS</sub> ≥ V<sub>GS</sub> − V<sub>t</sub></td><td>见下式</td><td>放大、电流源、有源负载</td></tr>
+        </tbody>
+      </table>
+
+      <div class="formula-block">
+        <span class="fl">线性区：I<sub>D</sub> = μ<sub>n</sub>C<sub>ox</sub>(W/L) [ (V<sub>GS</sub>−V<sub>t</sub>)V<sub>DS</sub> − V<sub>DS</sub>²/2 ]</span>
+        <span class="fl">饱和区：I<sub>D</sub> = ½ μ<sub>n</sub>C<sub>ox</sub>(W/L) (V<sub>GS</sub>−V<sub>t</sub>)² (1 + λV<sub>DS</sub>)</span>
+        <span class="fnote">λ 为沟道长度调制系数，L 越小 λ 越大（输出特性曲线上翘越明显）。
+        注意"饱和"指的是电流对 V<sub>DS</sub> 饱和，不是对 V<sub>GS</sub> 饱和 —— 命名来自沟道在漏端夹断。</span>
+      </div>
+
+      <div class="note">
+        <b>为什么饱和区还能放大？</b>沟道在漏端夹断后，V<sub>DS</sub> 继续增大只会让夹断点向源端移动，
+        额外电压几乎全落在夹断区上，电流基本不变；而 V<sub>GS</sub> 仍能控制沟道导电能力 ——
+        于是得到「电压控制电流源」，这正是放大器与电流镜的物理基础。
+      </div>
+
+      <h2 id="s5">5. 输出特性与转移特性曲线</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MOSFET 输出特性曲线">
+          <line x1="70" y1="225" x2="380" y2="225" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <line x1="70" y1="20" x2="70" y2="225" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <text x="386" y="229" font-size="13" fill="var(--text-mute)">V<tspan dy="2" font-size="9">DS</tspan></text>
+          <text x="76" y="18" font-size="13" fill="var(--text-mute)">I<tspan dy="2" font-size="9">D</tspan></text>
+
+          <!-- 三条曲线 -->
+          <path d="M70 220 L150 150 Q 175 165 200 168 L340 178" fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <path d="M70 220 L140 110 Q 170 128 195 132 L340 143" fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <path d="M70 220 L130 70 Q 165 90 190 95 L340 107" fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <text x="300" y="172" font-size="11" fill="var(--semi)">V<tspan dy="2" font-size="8">GS1</tspan></text>
+          <text x="300" y="137" font-size="11" fill="var(--semi)">V<tspan dy="2" font-size="8">GS2</tspan></text>
+          <text x="300" y="101" font-size="11" fill="var(--semi)">V<tspan dy="2" font-size="8">GS3</tspan></text>
+
+          <!-- 区分界 -->
+          <path d="M125 60 Q 180 165 225 235" fill="none" stroke="var(--up)" stroke-width="1.8" stroke-dasharray="6 4"/>
+          <text x="88" y="86" font-size="12" fill="var(--up)">线性区</text>
+          <text x="240" y="80" font-size="12" fill="var(--down)">饱和区</text>
+          <text x="240" y="98" font-size="11" fill="var(--text-mute)">（恒流 / 放大区）</text>
+          <text x="76" y="245" font-size="11" fill="var(--text-mute)">左：输出特性 I<tspan dy="2" font-size="8">D</tspan>–V<tspan dy="2" font-size="8">DS</tspan></text>
+
+          <!-- 右：转移特性 -->
+          <line x1="440" y1="225" x2="650" y2="225" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <line x1="440" y1="20" x2="440" y2="225" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M440 220 L500 219 Q 520 210 535 175 Q 550 130 570 70 L645 30"
+                fill="none" stroke="var(--accent)" stroke-width="2.8"/>
+          <line x1="500" y1="218" x2="500" y2="232" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="478" y="248" font-size="12" fill="var(--text)">V<tspan dy="2" font-size="8">t</tspan></text>
+          <text x="588" y="60" font-size="12" fill="var(--accent)">I<tspan dy="2" font-size="8">D</tspan> ∝ (V<tspan dy="2" font-size="8">GS</tspan>−V<tspan dy="2" font-size="8">t</tspan>)²</text>
+          <text x="440" y="245" font-size="11" fill="var(--text-mute)">右：转移特性 I<tspan dy="2" font-size="8">D</tspan>–V<tspan dy="2" font-size="8">GS</tspan></text>
+        </svg>
+        <figcaption>图 2：左为输出特性（每条曲线对应一个 V<sub>GS</sub>），右为转移特性，拐点即阈值电压 V<sub>t</sub>。</figcaption>
+      </figure>
+
+      <h2 id="s6">6. 跨导与本征增益</h2>
+
+      <div class="formula-block">
+        <span class="fl">g<sub>m</sub> = ∂I<sub>D</sub>/∂V<sub>GS</sub> = μ<sub>n</sub>C<sub>ox</sub>(W/L)(V<sub>GS</sub>−V<sub>t</sub>) = √( 2μ<sub>n</sub>C<sub>ox</sub>(W/L)·I<sub>D</sub> )</span>
+        <span class="fnote">跨导表示"栅压控制电流的能力"，单位 S（西门子）。它是放大器增益的核心参数。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">r<sub>o</sub> = 1/(λI<sub>D</sub>)　，　本征增益 A<sub>v</sub> = g<sub>m</sub> · r<sub>o</sub></span>
+        <span class="fnote">先进节点下电源电压降低、λ 增大，单管本征增益下降，这也是先进工艺模拟设计越来越难、需要共源共栅（Cascode）结构的原因。</span>
+      </div>
+
+      <div class="tip">
+        <b>设计直觉：</b>想要更大电流 → 加大 <em>W/L</em>；想要更高速度 → 减小 <em>L</em>；
+        想要更大增益 → 加大 <em>L</em>（提高 r<sub>o</sub>）并适当增大电流。三个目标常常互相矛盾，
+        这就是模拟设计里反复权衡的 PPA（性能 / 功耗 / 面积）。
+      </div>
+
+      <h2 id="s7">7. 短沟道效应：先进节点的麻烦</h2>
+
+      <table>
+        <thead><tr><th>效应</th><th>现象</th><th>后果</th></tr></thead>
+        <tbody>
+          <tr><td>阈值滚降 Roll-off</td><td>L 减小后 V<sub>t</sub> 下降</td><td>关断漏电流增大</td></tr>
+          <tr><td>DIBL</td><td>漏极电压升高使 V<sub>t</sub> 进一步降低</td><td>关态漏电（I<sub>off</sub>）恶化，静态功耗上升</td></tr>
+          <tr><td>速度饱和</td><td>横向电场很强时载流子速度不再随电场线性增长</td><td>电流不再按平方律，驱动能力受限</td></tr>
+          <tr><td>热载流子注入 HCI</td><td>高能载流子打入栅氧造成损伤</td><td>V<sub>t</sub> 漂移，长期可靠性下降</td></tr>
+          <tr><td>栅极隧穿漏电</td><td>栅氧仅几个原子层厚，电子直接隧穿</td><td>催生 High-k 金属栅（HKMG）替代 SiO₂/多晶硅</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>所以 FinFET 和 GAA 出现了。</b>当平面器件缩不下去时，把沟道立起来做成鳍（Fin），
+        用栅极三面包围沟道以增强栅控能力、抑制短沟道效应；再到 GAA（环绕栅极纳米片），栅极四面包围。
+        本质都是为了<em>让栅极更好地"管住"沟道</em>。
+      </div>
+
+      <h2 id="s8">8. 易错点与自测</h2>
+
+      <div class="warn">
+        <b>新手最常见的三个错：</b><br>
+        ① 混淆"饱和区"与"截止/放大" —— MOSFET 的饱和区 ≈ 双极管的放大区，名字不同别套错；<br>
+        ② 忘了 PMOS 的 V<sub>GS</sub>、V<sub>t</sub> 都是负值，公式要用 |V<sub>GS</sub>−V<sub>t</sub>|；<br>
+        ③ 以为栅极会取电流 —— 静态下几乎为零，但<strong>充放电栅电容</strong>需要电流，这正是动态功耗的来源（见第 4 篇）。
+      </div>
+
+      <details class="quiz"><summary>自测 1：某 NMOS 的 μ<sub>n</sub>C<sub>ox</sub> = 200 μA/V²，W/L = 10，V<sub>t</sub> = 0.5 V，V<sub>GS</sub> = 1.5 V，求饱和区电流。</summary>
+        <div class="answer">I<sub>D</sub> = ½ × 200 μA/V² × 10 × (1.5 − 0.5)² = ½ × 200 × 10 × 1 = <strong>1000 μA = 1 mA</strong>。
+        忽略沟道长度调制。若 L 减半（W/L = 20），电流翻倍 —— 这就是 W/L 缩放的线性关系。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么反相器中的 PMOS 通常比 NMOS 做得更宽？</summary>
+        <div class="answer">因为空穴迁移率 μ<sub>p</sub> 只有电子 μ<sub>n</sub> 的约 1/2 ~ 1/2.5，
+        相同 W/L 下 PMOS 的驱动电流更小。为了让上拉与下拉能力对称（获得对称的开关阈值和上升/下降时间），
+        PMOS 的 W 通常取 NMOS 的 2 ~ 2.5 倍。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：工艺从 28nm 走到 3nm，为什么单管本征增益反而下降？</summary>
+        <div class="answer">两个原因：① 电源电压 V<sub>DD</sub> 降低，允许的最大 V<sub>GS</sub>−V<sub>t</sub>（过驱动电压）变小，g<sub>m</sub>/I<sub>D</sub> 受限；
+        ② L 缩短使沟道长度调制系数 λ 增大，r<sub>o</sub> = 1/(λI<sub>D</sub>) 下降。
+        二者叠加使 g<sub>m</sub>r<sub>o</sub> 下降，模拟电路必须靠 Cascode、增益提升等技巧补偿。</div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 1 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 2 篇：PN 结原理与特性</a></li>
+          <li class="current">第 3 篇：MOSFET 工作原理与特性曲线</li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 5 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#MOSFET</span>
+      <span class="chip">#阈值电压</span>
+      <span class="chip">#跨导</span>
+      <span class="chip">#短沟道效应</span>
+      <span class="chip">#特性曲线</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

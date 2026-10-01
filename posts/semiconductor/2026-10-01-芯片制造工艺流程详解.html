@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>芯片制造工艺流程详解</title>
+<meta name="description" content="从石英砂到成品芯片的完整链路：晶圆制备、光刻、刻蚀、掺杂、薄膜、CMP、铜互连、CP 测试到封装测试，含分辨率公式与良率模型。">
+<meta name="keywords" content="芯片制造,光刻,刻蚀,离子注入,CMP,晶圆,封装测试,良率,半导体工艺">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 工艺</span>
+    <h1 class="title">芯片制造工艺流程详解</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 5 篇</span><span class="sep"></span>
+      <span>阅读约 15 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        一颗芯片要经历上千道工序、耗时 2~3 个月才能下线。这一篇按<strong>砂子 → 晶圆 → 前道 → 后道 → 封测</strong>的顺序，
+        把每一步"做什么、为什么要做"讲清楚，并解释为什么良率是芯片商业成败的命门。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">总览：芯片是怎么"长"出来的</a></li>
+          <li><a href="#s2">第一步：从石英砂到晶圆</a></li>
+          <li><a href="#s3">光刻：整个工艺的心脏</a></li>
+          <li><a href="#s4">刻蚀：把图形真正刻进材料</a></li>
+          <li><a href="#s5">掺杂：离子注入与退火</a></li>
+          <li><a href="#s6">薄膜沉积与 CMP 平坦化</a></li>
+          <li><a href="#s7">后道：铜互连是怎么搭起来的</a></li>
+          <li><a href="#s8">良率：决定赚钱还是亏钱</a></li>
+          <li><a href="#s9">封测：从晶圆到成品</a></li>
+          <li><a href="#s10">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 总览：芯片是怎么"长"出来的</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="芯片制造总体流程">
+          <!-- 主链 -->
+          <g font-size="12" fill="var(--text)">
+            <rect x="20" y="20" width="100" height="46" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="70" y="48" text-anchor="middle">石英砂 → 硅锭</text>
+
+            <rect x="145" y="20" width="100" height="46" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="195" y="48" text-anchor="middle">拉单晶 / 切片</text>
+
+            <rect x="270" y="20" width="100" height="46" rx="8" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="320" y="48" text-anchor="middle">抛光晶圆</text>
+
+            <rect x="395" y="20" width="100" height="46" rx="8" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="445" y="48" text-anchor="middle">前道 FEOL</text>
+
+            <rect x="520" y="20" width="100" height="46" rx="8" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="570" y="48" text-anchor="middle">后道 BEOL</text>
+
+            <rect x="395" y="110" width="100" height="46" rx="8" fill="var(--up)" fill-opacity=".12" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="445" y="138" text-anchor="middle">CP 晶圆测试</text>
+
+            <rect x="270" y="110" width="100" height="46" rx="8" fill="var(--down)" fill-opacity=".14" stroke="var(--down)" stroke-width="1.4"/>
+            <text x="320" y="138" text-anchor="middle">划片 / 封装</text>
+
+            <rect x="145" y="110" width="100" height="46" rx="8" fill="var(--down)" fill-opacity=".14" stroke="var(--down)" stroke-width="1.4"/>
+            <text x="195" y="138" text-anchor="middle">FT 成品测试</text>
+
+            <rect x="20" y="110" width="100" height="46" rx="8" fill="var(--text)" fill-opacity=".10" stroke="var(--text)" stroke-width="1.4"/>
+            <text x="70" y="138" text-anchor="middle">成品芯片</text>
+          </g>
+
+          <!-- 箭头 -->
+          <g stroke="var(--text-mute)" stroke-width="1.8" fill="none">
+            <path d="M120 43 L140 43" marker-end="url(#ar2)"/>
+            <path d="M245 43 L265 43"/>
+            <path d="M370 43 L390 43"/>
+            <path d="M495 43 L515 43"/>
+            <path d="M570 66 L570 90 Q 570 110 500 125"/>
+            <path d="M395 133 L375 133"/>
+            <path d="M270 133 L250 133"/>
+            <path d="M145 133 L125 133"/>
+          </g>
+
+          <!-- FEOL 细分 -->
+          <rect x="395" y="180" width="225" height="100" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="410" y="200" font-size="12" fill="var(--semi)" font-weight="700">FEOL（做晶体管）</text>
+          <text x="410" y="220" font-size="11" fill="var(--text-soft)">隔离 → 阱/沟道 → 栅氧与栅极</text>
+          <text x="410" y="238" font-size="11" fill="var(--text-soft)">→ 源漏延伸区 → 源漏注入 → 硅化物</text>
+          <text x="410" y="264" font-size="11" fill="var(--accent)">BEOL（做互连）：介质 → 通孔 →</text>
+          <text x="410" y="278" font-size="11" fill="var(--accent)">金属线（铜大马士革）→ 多层重复</text>
+
+          <rect x="20" y="180" width="340" height="100" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="34" y="200" font-size="12" fill="var(--up)" font-weight="700">四大基础工艺（反复循环上百次）</text>
+          <text x="34" y="222" font-size="11" fill="var(--text-soft)">① 光刻 Litho：把图形"印"到光刻胶</text>
+          <text x="34" y="240" font-size="11" fill="var(--text-soft)">② 刻蚀 Etch：把图形"刻"进下层材料</text>
+          <text x="34" y="258" font-size="11" fill="var(--text-soft)">③ 掺杂 Doping：离子注入改变电学性质</text>
+          <text x="34" y="276" font-size="11" fill="var(--text-soft)">④ 薄膜 Deposition：生长/沉积各类材料</text>
+        </svg>
+        <figcaption>图 1：芯片制造全流程。四大基础工艺（光刻/刻蚀/掺杂/薄膜）在前道与后道中循环叠加，最终形成三维结构。</figcaption>
+      </figure>
+
+      <h2 id="s2">2. 第一步：从石英砂到晶圆</h2>
+
+      <ol>
+        <li><strong>提纯</strong>：石英砂（SiO₂）在电弧炉中还原得到冶金级硅（纯度约 98~99%），
+        再经西门子法转化为三氯氢硅并还原、提纯到<em>电子级多晶硅</em>（纯度 99.9999999% 以上，即 9N~11N）；</li>
+        <li><strong>拉单晶</strong>：主流是<strong>直拉法（CZ）</strong>——籽晶插入熔融硅中缓慢旋转提拉，
+        长成一根完整的单晶硅锭；对高品质功率器件常用区熔法（FZ）；</li>
+        <li><strong>切片与抛光</strong>：用线锯切成约 0.7~1 mm 厚的薄片，再经研磨、化学机械抛光（CMP）
+        得到镜面级的<em>抛光片</em>；高端逻辑器件还会用<strong>外延片</strong>（在抛光片上再生长一层单晶硅）。</li>
+      </ol>
+
+      <div class="kv">
+        <div><div class="v">300 mm</div><div class="l">主流晶圆直径（12 英寸）</div></div>
+        <div><div class="v">9N+</div><div class="l">电子级硅纯度</div></div>
+        <div><div class="v">2~3 个月</div><div class="l">单片晶圆加工周期</div></div>
+        <div><div class="v">1000+</div><div class="l">典型工序总数</div></div>
+      </div>
+
+      <h2 id="s3">3. 光刻：整个工艺的心脏</h2>
+
+      <p>光刻的作用是把掩膜版（Mask/Reticle）上的图形转移到硅片表面的光刻胶上。一次典型流程：</p>
+
+      <ol>
+        <li><strong>涂胶</strong>：旋涂光刻胶（厚度几十到几百 nm），前烘去除溶剂；</li>
+        <li><strong>曝光</strong>：光源透过掩膜投影到胶上，发生光化学反应；</li>
+        <li><strong>显影</strong>：正性胶被曝光部分溶解，留下图形；</li>
+        <li><strong>坚膜与检查</strong>：后烘提高抗刻蚀能力，并做套刻（Overlay）与线宽（CD）量测。</li>
+      </ol>
+
+      <div class="formula-block">
+        <span class="fl">R = k₁ · λ / NA　（瑞利判据）</span>
+        <span class="fnote">R 为可分辨的最小特征尺寸，λ 为曝光波长，NA 为投影物镜数值孔径，k₁ 为工艺因子（理论极限 0.25）。
+        要缩小 R，只能<strong>减小波长</strong>或<strong>增大 NA</strong>。</span>
+      </div>
+
+      <table>
+        <thead><tr><th>技术</th><th>波长 / 方式</th><th>应用节点</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>g-line / i-line</td><td>436 / 365 nm</td><td>微米级</td><td>早期工艺、部分封装与 MEMS</td></tr>
+          <tr><td>KrF</td><td>248 nm</td><td>180 nm ~ 130 nm</td><td>深紫外 DUV</td></tr>
+          <tr><td>ArF / 浸没式 ArF-i</td><td>193 nm（+水浸没）</td><td>130 nm ~ 7 nm</td><td>配合多重图形化（SADP/LELE）延伸寿命</td></tr>
+          <tr><td>EUV</td><td>13.5 nm</td><td>7 nm 及以下</td><td>极紫外，需真空、反射式光学、锡液滴光源</td></tr>
+          <tr><td>High-NA EUV</td><td>13.5 nm，NA 0.55</td><td>2 nm 及以下</td><td>设备单价数亿美元，全球装机极少</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>为什么光刻是"卡脖子"环节？</b>① EUV 光刻机全球仅 ASML 能供应，单台超 1.5 亿美元且受限运；
+        ② 多重图形化让 7nm 所需曝光次数成倍增加，设备时长与成本飙升；
+        ③ 掩膜、光刻胶、量测设备同样高度垄断。工艺节点的推进速度，很大程度上被光刻能力锁死。
+      </div>
+
+      <h2 id="s4">4. 刻蚀：把图形真正刻进材料</h2>
+
+      <table>
+        <thead><tr><th>类型</th><th>介质</th><th>方向性</th><th>典型应用</th></tr></thead>
+        <tbody>
+          <tr><td>湿法刻蚀</td><td>化学溶液（HF、KOH 等）</td><td>各向同性（横向钻蚀）</td><td>去除大片膜层、MEMS 释放</td></tr>
+          <tr><td>干法等离子刻蚀</td><td>反应气体 + 等离子体</td><td>可调至强各向异性</td><td>主流：介质孔、沟槽</td></tr>
+          <tr><td>反应离子刻蚀 RIE / ICP</td><td>离子轰击 + 化学反应协同</td><td>高各向异性、高选择比</td><td>高深宽比接触孔、栅极图形化</td></tr>
+          <tr><td>原子层刻蚀 ALE</td><td>逐层自限制反应</td><td>原子级精度</td><td>先进节点的精细修整</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>两个关键指标：</b><strong>选择比</strong>（对被刻材料 vs 光刻胶/下层停止层的速率比，越高越好）与
+        <strong>各向异性</strong>（只往下刻、不横向钻蚀的能力）。先进节点追求高深宽比（HAR）刻蚀，
+        例如 3D NAND 的存储孔深宽比已超过 50:1，是刻蚀工艺的极限挑战之一。
+      </div>
+
+      <h2 id="s5">5. 掺杂：离子注入与退火</h2>
+
+      <ul>
+        <li><strong>离子注入</strong>：把硼、磷、砷等电离后加速轰击硅片。<em>能量</em>决定注入深度，<em>剂量</em>决定浓度；</li>
+        <li><strong>退火</strong>：高温（毫秒级尖峰退火或激光退火）修复晶格损伤，并<em>激活</em>杂质使其电离；</li>
+        <li><strong>扩散（已较少用于精细掺杂）</strong>：高温下杂质自然扩散，方向性差、难以控制浅结。</li>
+      </ul>
+
+      <div class="note">
+        <b>为什么先进节点偏爱尖峰退火？</b>结深要浅、掺杂要陡，但高温会让杂质扩散变深。
+        所以要用"瞬间高温、快速降温"（毫秒级）来在激活杂质与抑制扩散之间取得平衡。
+      </div>
+
+      <h2 id="s6">6. 薄膜沉积与 CMP 平坦化</h2>
+
+      <table class="term-table">
+        <thead><tr><th>工艺</th><th>全称</th><th>特点</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>CVD</td><td>化学气相沉积</td><td>台阶覆盖较好，可批量</td><td>介质层（SiO₂、SiN）、多晶硅</td></tr>
+          <tr><td>PECVD</td><td>等离子增强 CVD</td><td>低温、速率快</td><td>钝化层、层间介质</td></tr>
+          <tr><td>ALD</td><td>原子层沉积</td><td>逐层生长，厚度与覆盖性极佳</td><td>High-k 栅介质、高深宽比结构</td></tr>
+          <tr><td>PVD</td><td>物理气相沉积（溅射）</td><td>金属膜为主</td><td>阻挡层、籽晶层、铝互连</td></tr>
+          <tr><td>CMP</td><td>化学机械抛光</td><td>全局平坦化</td><td>每层金属后的平坦化，光刻的必备前提</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <b>CMP 是多层布线的"隐形功臣"：</b>没有平坦化，表面起伏会让光刻无法对焦，
+        布线层数根本堆不上去。现代逻辑芯片有十几层金属，靠的就是"沉积—光刻—刻蚀—CMP"的反复循环。
+      </div>
+
+      <h2 id="s7">7. 后道：铜互连是怎么搭起来的</h2>
+
+      <p>晶体管做好后，要用金属把它们连成电路。现代工艺用<strong>铜大马士革（Damascene）</strong>工艺：</p>
+
+      <ol>
+        <li>沉积层间介质（低 k 材料，降低寄生电容）；</li>
+        <li>光刻 + 刻蚀出<em>通孔（Via）</em>与<em>沟槽（Trench）</em>；</li>
+        <li>沉积阻挡层（TaN/Ta）+ 铜籽晶层；</li>
+        <li><strong>电镀铜</strong>填充（铜无法用干法刻蚀，所以反过来先挖槽再填）；</li>
+        <li><strong>CMP</strong>去除多余铜，表面重新平坦 → 进入下一层。</li>
+      </ol>
+
+      <div class="note">
+        <b>为什么从铝换成铜？</b>铜电阻率更低（1.7 vs 2.7 μΩ·cm）、抗电迁移能力更强。
+        代价是铜易扩散污染硅，必须做阻挡层，且不能干法刻蚀 —— 于是催生了双大马士革工艺。
+      </div>
+
+      <h2 id="s8">8. 良率：决定赚钱还是亏钱</h2>
+
+      <div class="formula-block">
+        <span class="fl">Y ≈ e<sup>−A·D</sup>　（泊松模型）　，　Y ≈ [ (1 − e<sup>−A·D</sup>) / (A·D) ]² （Murphy 模型）</span>
+        <span class="fnote">A 为芯片面积，D 为缺陷密度（个/cm²）。面积越大、缺陷越多，良率呈指数下降。</span>
+      </div>
+
+      <table>
+        <thead><tr><th>芯片面积</th><th>缺陷密度 D = 0.1 /cm²</th><th>D = 0.05 /cm²</th></tr></thead>
+        <tbody>
+          <tr><td>50 mm²</td><td>≈ 95%</td><td>≈ 97.5%</td></tr>
+          <tr><td>200 mm²</td><td>≈ 82%</td><td>≈ 90%</td></tr>
+          <tr><td>600 mm²（大芯片）</td><td>≈ 55%</td><td>≈ 74%</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>这就是为什么大芯片（GPU、AI 加速器）这么贵。</b>面积越大良率越低，
+        600 mm² 的裸片成本可能是 100 mm² 的十几倍而不仅是 6 倍。
+        这也是<strong>Chiplet（芯粒）</strong>兴起的直接动因：把大芯片拆成小芯粒分别制造再封装，
+        用小面积的高良率换取总体成本优势。
+      </div>
+
+      <h2 id="s9">9. 封测：从晶圆到成品</h2>
+
+      <table>
+        <thead><tr><th>环节</th><th>做什么</th><th>关键指标</th></tr></thead>
+        <tbody>
+          <tr><td>CP（Circuit Probe）</td><td>晶圆级探针测试，筛掉坏die</td><td>探针卡精度、测试覆盖率</td></tr>
+          <tr><td>划片 Dicing</td><td>把晶圆切成单个裸片</td><td>崩边控制</td></tr>
+          <tr><td>贴片与互连</td><td>Die Attach + 引线键合 / 倒装（Flip Chip）</td><td>凸点间距、可靠性</td></tr>
+          <tr><td>封装</td><td>QFN、BGA、FC-BGA、2.5D/3D 先进封装</td><td>散热、翘曲、信号完整性</td></tr>
+          <tr><td>FT（Final Test）</td><td>成品功能与参数测试，分档（Bin）</td><td>测试时间成本</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>先进封装为什么火？</b>摩尔定律放缓后，性能提升越来越多地靠<em>封装</em>而非<em>制程</em>：
+        2.5D（CoWoS，用硅中介层并排放置多个 die）、3D（TSV 垂直堆叠，如 HBM）、
+        Chiplet（UCIe 标准互连）。它们的共同思路是：用"系统集成"替代"单芯片缩放"。
+      </div>
+
+      <h2 id="s10">10. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：瑞利判据 R = k₁λ/NA，若从 ArF-i（193 nm 浸没）换成 EUV（13.5 nm），分辨率理论提升多少倍？</summary>
+        <div class="answer">在 k₁ 与 NA 相同假设下，R 与 λ 成正比：193 / 13.5 ≈ <strong>14 倍</strong>。
+        这就是为什么 EUV 能把多重图形化（四重曝光）简化为单次曝光，显著降低工艺复杂度和成本 —— 尽管设备本身极其昂贵。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么先进工艺要用"低 k 介质"做层间绝缘？</summary>
+        <div class="answer">互连层数多、线间距小，线间寄生电容 C 会导致信号串扰与 RC 延时，并增加动态功耗（P ∝ CV²f）。
+        用介电常数 k 更低的材料（掺氟氧化物、多孔材料，k 从 4.2 降到 2.5 甚至更低）可直接降低耦合电容，
+        代价是机械强度下降、更易在 CMP 与封装中受损。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：同样工艺下，把一颗 600 mm² 的大芯片拆成 3 颗 200 mm² 的芯粒，良率与成本会怎么变？</summary>
+        <div class="answer">按泊松模型（D = 0.1/cm²，即 0.001/mm²）：600 mm² 良率 ≈ e<sup>−0.6</sup> ≈ 55%；
+        单颗 200 mm² 良率 ≈ e<sup>−0.2</sup> ≈ 82%。三颗都好的概率 ≈ 0.82³ ≈ 55% —— 看似接近，
+        但Chiplet 的优势在于：① 坏掉的只是单个小芯粒而非整颗大芯片，可单独替换；② 不同模块可用不同工艺节点分别优化；
+        ③ 芯粒可复用、摊薄设计成本。这就是 Chiplet 的真实价值所在。</div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 1 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 2 篇：PN 结原理与特性</a></li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 3 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li class="current">第 5 篇：芯片制造工艺流程详解</li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#芯片制造</span>
+      <span class="chip">#光刻</span>
+      <span class="chip">#刻蚀</span>
+      <span class="chip">#良率</span>
+      <span class="chip">#先进封装</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

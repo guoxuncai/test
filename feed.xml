@@ -5,13 +5,55 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 01 Oct 2026 16:28:54 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 01 Oct 2026 19:26:00 +0800</lastBuildDate>
+    <item>
+      <title>芯片设计流程与 EDA 工具链</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从需求规格到 GDSII 流片的数字 IC 全流程、模拟 IC 差异、PPA 权衡、DRC/LVS 签核，以及可免费上手的开源 EDA 全栈工具链]]></description>
+    </item>
+    <item>
+      <title>芯片制造工艺流程详解</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片制造工艺流程详解.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片制造工艺流程详解.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从石英砂到成品芯片的完整链路：晶圆制备、光刻、刻蚀、掺杂、薄膜、CMP、铜互连、CP 测试到封装测试，含分辨率公式与良率模型]]></description>
+    </item>
     <item>
       <title>瑾年财经早报 | 2026年10月1日</title>
       <link>https://guoxuncai.github.io/test/posts/finance/2026-10-01瑾年财经早报_.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-10-01瑾年财经早报_.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[9月最后一个交易日，A股涨跌互现： 上证指数收涨0.31% ，深成指微跌0.11%，创业板指跌0.23%，科创50重挫2.51%。两市合计成交超1.8万亿元。]]></description>
+    </item>
+    <item>
+      <title>半导体物理基础 · 能带与载流子</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-半导体物理基础-能带与载流子.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-半导体物理基础-能带与载流子.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从原子能级到能带、本征激发、掺杂与载流子输运，配能带图与核心公式，是理解二极管、MOSFET 与芯片工艺的地基]]></description>
+    </item>
+    <item>
+      <title>PN 结原理与特性</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电]]></description>
+    </item>
+    <item>
+      <title>MOSFET 工作原理与特性曲线</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-MOSFET工作原理与特性曲线.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-MOSFET工作原理与特性曲线.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从 MOSFET 结构、阈值电压到三个工作区的电流公式与输出/转移特性曲线，含短沟道效应与版图参数 W/L 的工程含义]]></description>
+    </item>
+    <item>
+      <title>CMOS 集成电路基础 · 反相器与逻辑门</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMOS集成电路基础-反相器与逻辑门.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMOS集成电路基础-反相器与逻辑门.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从 CMOS 反相器结构、电压传输特性与噪声容限，到功耗组成、组合逻辑门与时序元件建立保持时间，配电路图推导]]></description>
     </item>
     <item>
       <title>瑾年财经早报 | 2026年9月30日 星期三</title>

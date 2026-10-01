@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半导体物理基础 · 能带与载流子</title>
+<meta name="description" content="从原子能级到能带、本征激发、掺杂与载流子输运，配能带图与核心公式，是理解二极管、MOSFET 与芯片工艺的地基。">
+<meta name="keywords" content="半导体,能带理论,载流子,掺杂,PN结基础,半导体物理">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 基础</span>
+    <h1 class="title">半导体物理基础 · 能带与载流子</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 1 篇</span><span class="sep"></span>
+      <span>阅读约 12 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        为什么硅不导电也不绝缘、掺一点杂质导电性就能翻百万倍、为什么芯片怕热 ——
+        答案都在「能带」和「载流子」这两个概念里。这是后面理解 PN 结、MOSFET、工艺和可靠性的共同地基。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">能带是怎么来的</a></li>
+          <li><a href="#s2">常见半导体材料的带隙</a></li>
+          <li><a href="#s3">本征半导体与电子-空穴对</a></li>
+          <li><a href="#s4">掺杂：N 型与 P 型</a></li>
+          <li><a href="#s5">载流子的两种运动：漂移与扩散</a></li>
+          <li><a href="#s6">电阻率与导电性</a></li>
+          <li><a href="#s7">温度为什么决定芯片生死</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 能带是怎么来的</h2>
+
+      <p>单个硅原子的外层电子只能待在分立的能级上。当大量原子按晶格排列成晶体时，原子间距变小、电子波函数相互重叠，
+      原本相同的能级会分裂成极其密集的一堆能级 —— 密集到可以看成连续的「带」。</p>
+
+      <ul>
+        <li><strong>允带</strong>：电子可以存在的能量范围</li>
+        <li><strong>禁带（Band Gap）</strong>：电子不能存在的能量区间，宽度记为 <code>E<sub>g</sub></code></li>
+        <li><strong>价带</strong>：低处、基本被电子填满的允带</li>
+        <li><strong>导带</strong>：高处、基本空着的允带</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="能带示意图">
+          <defs>
+            <linearGradient id="cb" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--semi)" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="var(--semi)" stop-opacity=".15"/>
+            </linearGradient>
+            <linearGradient id="vb" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--fin)" stop-opacity=".18"/>
+              <stop offset="100%" stop-color="var(--fin)" stop-opacity=".5"/>
+            </linearGradient>
+          </defs>
+          <!-- 导带 -->
+          <rect x="60" y="30" width="420" height="58" rx="4" fill="url(#cb)" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="270" y="64" text-anchor="middle" font-size="15" fill="var(--text)" font-weight="600">导带 Conduction Band</text>
+          <!-- 价带 -->
+          <rect x="60" y="162" width="420" height="58" rx="4" fill="url(#vb)" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="270" y="196" text-anchor="middle" font-size="15" fill="var(--text)" font-weight="600">价带 Valence Band</text>
+          <!-- 禁带标注 -->
+          <line x1="510" y1="88" x2="510" y2="162" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="500" y1="88" x2="520" y2="88" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="500" y1="162" x2="520" y2="162" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <path d="M510 90 L510 160" stroke="var(--up)" stroke-width="2" marker-end="url(#ar)"/>
+          <path d="M510 160 L510 90" stroke="var(--up)" stroke-width="2"/>
+          <text x="530" y="130" font-size="14" fill="var(--up)" font-weight="700">E</text>
+          <text x="540" y="137" font-size="11" fill="var(--up)" font-weight="700">g</text>
+          <text x="530" y="152" font-size="12" fill="var(--text-mute)">禁带</text>
+          <!-- Ec Ev -->
+          <text x="66" y="24" font-size="12" fill="var(--text-mute)">E</text>
+          <text x="75" y="27" font-size="9" fill="var(--text-mute)">C</text>
+          <text x="66" y="152" font-size="12" fill="var(--text-mute)">E</text>
+          <text x="75" y="155" font-size="9" fill="var(--text-mute)">V</text>
+          <!-- 电子跃迁 -->
+          <path d="M240 150 L240 96" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 4"/>
+          <circle cx="240" cy="145" r="5" fill="var(--accent)"/>
+          <circle cx="240" cy="101" r="5" fill="var(--accent)"/>
+          <circle cx="246" cy="152" r="5" fill="none" stroke="var(--up)" stroke-width="1.8"/>
+          <text x="258" y="128" font-size="12" fill="var(--accent)">激发</text>
+          <text x="258" y="146" font-size="12" fill="var(--up)">留下空穴</text>
+          <!-- 费米能级 -->
+          <line x1="60" y1="125" x2="480" y2="125" stroke="var(--down)" stroke-width="1.6" stroke-dasharray="8 4"/>
+          <text x="486" y="129" font-size="12" fill="var(--down)">E</text>
+          <text x="495" y="132" font-size="9" fill="var(--down)">F</text>
+          <text x="506" y="129" font-size="12" fill="var(--text-mute)">费米能级</text>
+        </svg>
+        <figcaption>图 1：能带示意。电子获得足够能量后可越过禁带进入导带，同时在价带留下一个带正电的空穴。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>导体 / 半导体 / 绝缘体的唯一区别就是禁带宽度。</b>
+        导体的价带与导带重叠（E<sub>g</sub> ≈ 0）；绝缘体禁带太宽（&gt;5 eV），电子几乎跳不过去；
+        半导体的禁带不宽不窄（1 eV 上下），所以导电性可以被温度、光照、掺杂和电场精确调控 —— 这正是它能做器件的原因。
+      </div>
+
+      <h2 id="s2">2. 常见半导体材料的带隙</h2>
+
+      <table>
+        <thead><tr><th>材料</th><th>禁带宽度 E<sub>g</sub> @300K</th><th>电子迁移率 μ<sub>n</sub> (cm²/V·s)</th><th>典型用途</th></tr></thead>
+        <tbody>
+          <tr><td>硅 Si</td><td>1.12 eV</td><td>≈ 1350</td><td>逻辑芯片、功率器件、图像传感器（绝对主力）</td></tr>
+          <tr><td>锗 Ge</td><td>0.67 eV</td><td>≈ 3900</td><td>红外光学、高频器件、SiGe 异质结</td></tr>
+          <tr><td>砷化镓 GaAs</td><td>1.42 eV</td><td>≈ 8500</td><td>射频功放、激光器、高速器件</td></tr>
+          <tr><td>碳化硅 4H-SiC</td><td>3.26 eV</td><td>≈ 1000</td><td>新能源车主驱、高压快充、光伏逆变</td></tr>
+          <tr><td>氮化镓 GaN</td><td>3.4 eV</td><td>≈ 1500（2DEG 更高）</td><td>快充头、5G 基站功放、雷达</td></tr>
+          <tr><td>二氧化硅 SiO₂</td><td>≈ 9 eV</td><td>—</td><td>栅介质、隔离层、掩蔽层</td></tr>
+        </tbody>
+      </table>
+
+      <div class="kv">
+        <div><div class="v">1.12 eV</div><div class="l">硅的禁带宽度</div></div>
+        <div><div class="v">25.85 mV</div><div class="l">kT/q @300K</div></div>
+        <div><div class="v">1.5×10¹⁰</div><div class="l">硅本征载流子 cm⁻³</div></div>
+        <div><div class="v">1350 / 480</div><div class="l">μ<sub>n</sub> / μ<sub>p</sub> cm²/V·s</div></div>
+      </div>
+
+      <div class="tip">
+        <b>为什么宽禁带（SiC / GaN）能做高压高温器件？</b>
+        禁带越宽，本征激发产生的载流子越少，反向漏电流越小，击穿电场也越高（SiC 约为 Si 的 10 倍）。
+        所以在同样耐压下，SiC 器件可以更薄、更小、更耐高温。
+      </div>
+
+      <h2 id="s3">3. 本征半导体与电子-空穴对</h2>
+
+      <p>完全纯净、无缺陷的半导体叫<strong>本征半导体</strong>。热运动会让少量价电子跃迁到导带，
+      同时产生一个空穴 —— 总是<em>成对出现</em>，这叫本征激发；反过来电子掉回价带与空穴复合，叫<strong>复合</strong>。</p>
+
+      <p>热平衡时，本征载流子浓度由材料与温度决定：</p>
+
+      <div class="formula-block">
+        <span class="fl">n<sub>i</sub> = √(N<sub>C</sub> N<sub>V</sub>) · exp( −E<sub>g</sub> / 2kT )</span>
+        <span class="fnote">N<sub>C</sub>、N<sub>V</sub> 为导带/价带有效态密度；k 为玻尔兹曼常数；T 为绝对温度。硅在 300K 时 n<sub>i</sub> ≈ 1.5×10¹⁰ cm⁻³。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">n₀ · p₀ = n<sub>i</sub>²　（质量作用定律）</span>
+        <span class="fnote">无论怎么掺杂，热平衡下电子浓度与空穴浓度的乘积恒等于 n<sub>i</sub>²。这是后面算少子浓度的万能钥匙。</span>
+      </div>
+
+      <div class="warn">
+        <b>注意数量级的震撼：</b>硅原子密度约 5×10²² cm⁻³，而本征载流子只有 10¹⁰ 量级 —— 差了 12 个数量级。
+        纯净的硅几乎是绝缘体。真正让半导体有用的，是下面这一步：掺杂。
+      </div>
+
+      <h2 id="s4">4. 掺杂：N 型与 P 型</h2>
+
+      <p>在硅晶格中替位掺入少量杂质原子，就能大幅改变导电类型和电阻率：</p>
+
+      <table class="term-table">
+        <thead><tr><th>类型</th><th>掺入杂质</th><th>作用</th><th>多数载流子（多子）</th><th>少数载流子（少子）</th></tr></thead>
+        <tbody>
+          <tr><td>N 型</td><td>Ⅴ 族：磷 P、砷 As、锑 Sb</td><td>施主，贡献一个多余电子</td><td>电子 n₀ ≈ N<sub>D</sub></td><td>空穴 p₀ = n<sub>i</sub>²/N<sub>D</sub></td></tr>
+          <tr><td>P 型</td><td>Ⅲ 族：硼 B、镓 Ga、铟 In</td><td>受主，接受电子产生空穴</td><td>空穴 p₀ ≈ N<sub>A</sub></td><td>电子 n₀ = n<sub>i</sub>²/N<sub>A</sub></td></tr>
+        </tbody>
+      </table>
+
+      <p>掺杂浓度通常在 10¹⁵ ~ 10²⁰ cm⁻³ 之间，只占硅原子的一亿分之一到千分之一，
+      却能把电阻率从 10⁵ Ω·cm 拉到 10⁻³ Ω·cm 级别。</p>
+
+      <div class="formula-block">
+        <span class="fl">n₀ + N<sub>A</sub>⁻ = p₀ + N<sub>D</sub>⁺　（电中性条件）</span>
+        <span class="fnote">与 n₀p₀ = n<sub>i</sub>² 联立，即可解出任意掺杂下的 n₀ 与 p₀。若只掺一种杂质（如 N<sub>D</sub> ≫ n<sub>i</sub>），则 n₀ ≈ N<sub>D</sub>。</span>
+      </div>
+
+      <h2 id="s5">5. 载流子的两种运动：漂移与扩散</h2>
+
+      <p>器件工作靠电流，而电流来自两种机制：</p>
+
+      <table>
+        <thead><tr><th>机制</th><th>驱动力</th><th>公式</th><th>出现在哪里</th></tr></thead>
+        <tbody>
+          <tr><td>漂移 Drift</td><td>电场 E</td><td>J = q(nμ<sub>n</sub> + pμ<sub>p</sub>)E = σE</td><td>加偏压的器件沟道、电阻区</td></tr>
+          <tr><td>扩散 Diffusion</td><td>浓度梯度 dn/dx</td><td>J<sub>n</sub> = qD<sub>n</sub>(dn/dx)，J<sub>p</sub> = −qD<sub>p</sub>(dp/dx)</td><td>PN 结、双极型晶体管</td></tr>
+        </tbody>
+      </table>
+
+      <div class="formula-block">
+        <span class="fl">D/μ = kT/q ≈ 25.85 mV　（爱因斯坦关系，300K）</span>
+        <span class="fnote">扩散系数与迁移率成正比。这个常数在二极管方程、双极晶体管里反复出现，建议直接记住。</span>
+      </div>
+
+      <div class="note">
+        <b>直觉记忆：</b>漂移是「电场推着走」，扩散是「从挤的地方往空的地方挤」。
+        PN 结之所以有单向导电性，就是正偏时扩散电流被放大、反偏时只剩微弱漂移电流的缘故。
+      </div>
+
+      <h2 id="s6">6. 电阻率与导电性</h2>
+
+      <div class="formula-block">
+        <span class="fl">ρ = 1 / [ q ( n μ<sub>n</sub> + p μ<sub>p</sub> ) ]　，　σ = 1/ρ</span>
+      </div>
+
+      <table>
+        <thead><tr><th>掺杂情况</th><th>典型掺杂浓度</th><th>估算电阻率</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>本征硅</td><td>—</td><td>≈ 2.3×10⁵ Ω·cm</td><td>几乎不导电</td></tr>
+          <tr><td>轻掺杂 N 型</td><td>1×10¹⁵ cm⁻³</td><td>≈ 4.6 Ω·cm</td><td>衬底、耐压区</td></tr>
+          <tr><td>中掺杂 N 型</td><td>1×10¹⁷ cm⁻³</td><td>≈ 0.046 Ω·cm</td><td>沟道、阱区</td></tr>
+          <tr><td>重掺杂 N⁺</td><td>1×10²⁰ cm⁻³</td><td>≈ 10⁻³ Ω·cm</td><td>源漏区、欧姆接触</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>为什么源漏要重掺杂到 N⁺？</b>
+        一是降低串联电阻，二是让金属-半导体接触变成<em>欧姆接触</em>（低阻、不整流）而不是肖特基二极管，否则器件根本没法工作。
+      </div>
+
+      <h2 id="s7">7. 温度为什么决定芯片生死</h2>
+
+      <ul>
+        <li>n<sub>i</sub> 随温度<strong>指数增长</strong>：温度每升高约 8~10 ℃，n<sub>i</sub> 大致翻倍。</li>
+        <li>当 n<sub>i</sub> 接近掺杂浓度时，器件进入<strong>本征区</strong>：PN 结失去单向导电性、MOSFET 关不断、漏电流剧增。</li>
+        <li>这也是芯片结温通常限制在 <strong>125~150 ℃</strong> 的物理根源，以及高温下 MOS 管「热失控」的成因。</li>
+        <li>另一面：迁移率 μ 随温度升高而<strong>下降</strong>（晶格散射增强），所以高温下芯片会更慢。</li>
+      </ul>
+
+      <div class="warn">
+        <b>两个相反的趋势要分清：</b>升温 → 载流子变多（想让电流变大）、迁移率变小（想让电流变小）。
+        在器件正常工作的掺杂范围内，后者往往占主导，表现为「高温漏电大、速度变慢、更易失效」。
+      </div>
+
+      <h2 id="s8">8. 易错点与自测</h2>
+
+      <div class="note">
+        <b>新手最容易搞混的三件事：</b><br>
+        ① <b>空穴不是真实粒子</b>，是价带中缺少电子的等效描述，但它带 +q 电荷、有有效质量、会参与导电；<br>
+        ② <b>半导体整体永远是电中性的</b>，N 型里电子多，但施主杂质电离后留下等量的正离子；<br>
+        ③ <b>多子由掺杂决定，少子由 n<sub>i</sub>²/多子 决定</b> —— 少子虽少，却是 PN 结、双极管工作的主角。
+      </div>
+
+      <details class="quiz"><summary>自测 1：硅掺入磷（Ⅴ 族）后，多子和少子分别是什么？少子浓度怎么算？</summary>
+        <div class="answer">多子是电子，n₀ ≈ N<sub>D</sub>；少子是空穴，由质量作用定律得 p₀ = n<sub>i</sub>² / N<sub>D</sub>。
+        若 N<sub>D</sub> = 10¹⁶ cm⁻³、n<sub>i</sub> = 1.5×10¹⁰ cm⁻³，则 p₀ = (1.5×10¹⁰)² / 10¹⁶ = 2.25×10⁴ cm⁻³ —— 比多子少了 12 个数量级。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么 SiO₂ 能做栅介质，而不能用"薄层硅"代替？</summary>
+        <div class="answer">SiO₂ 禁带约 9 eV，是极好的绝缘体，电子几乎无法穿过；硅禁带只有 1.12 eV，做成薄层会直接导通。
+        栅介质需要"绝缘但能被电场穿透"，靠的是极化而非导电。先进节点改用 High-k 材料（如 HfO₂）是为了在等效厚度不变时增加物理厚度、抑制量子隧穿漏电。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：芯片温度从 25 ℃ 升到 125 ℃，漏电流大致会变化多少量级？</summary>
+        <div class="answer">n<sub>i</sub> 每升高 8~10 ℃ 翻倍，100 ℃ 温差约对应 10~12 次翻倍，即漏电流可增大 10³ ~ 10⁴ 倍量级。
+        这正是静态功耗在高温下急剧恶化、以及需要做温度补偿与散热设计的原因。</div>
+      </details>
+
+      <div class="tip">
+        <b>动手建议：</b>用 Python 把 n<sub>i</sub>(T)、ρ(N<sub>D</sub>) 两条曲线画出来（10 行代码），
+        把公式变成图像后理解会牢固很多。也可在 ngspice 里改 .model 参数，观察二极管 I-V 随 Is、N 的变化。
+      </div>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li class="current">第 1 篇：半导体物理基础 · 能带与载流子</li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 2 篇：PN 结原理与特性</a></li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 3 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 5 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#半导体物理</span>
+      <span class="chip">#能带理论</span>
+      <span class="chip">#载流子</span>
+      <span class="chip">#掺杂</span>
+      <span class="chip">#集成电路基础</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

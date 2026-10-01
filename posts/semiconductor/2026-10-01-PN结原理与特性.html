@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PN 结原理与特性</title>
+<meta name="description" content="内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电。">
+<meta name="keywords" content="PN结,内建电势,耗尽层,二极管方程,齐纳击穿,雪崩击穿,半导体">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 器件</span>
+    <h1 class="title">PN 结原理与特性</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 2 篇</span><span class="sep"></span>
+      <span>阅读约 12 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        PN 结是二极管、三极管、MOSFET 源漏、ESD 保护、太阳能电池的共同底座。
+        搞懂它，你就打通了「为什么半导体能整流、能稳压、能发光、能发电」这条主线。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">PN 结是怎么形成的</a></li>
+          <li><a href="#s2">内建电势与耗尽层宽度</a></li>
+          <li><a href="#s3">正向偏置：势垒降低、电流指数增长</a></li>
+          <li><a href="#s4">反向偏置与击穿</a></li>
+          <li><a href="#s5">电容效应</a></li>
+          <li><a href="#s6">从特性到应用</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. PN 结是怎么形成的</h2>
+
+      <p>把 P 型和 N 型半导体做到同一块硅上，交界处会发生三件事：</p>
+
+      <ol>
+        <li><strong>浓度差 → 扩散</strong>：P 区空穴向 N 区扩散，N 区电子向 P 区扩散；</li>
+        <li><strong>留下电离杂质 → 空间电荷区</strong>：N 区侧留下带正电的施主离子，P 区侧留下带负电的受主离子，
+        这个几乎没有可动载流子的区域叫<em>耗尽层（空间电荷区）</em>；</li>
+        <li><strong>建立内建电场 → 阻止扩散</strong>：电场方向由 N 指向 P，产生漂移电流抵消扩散电流，最终达到动态平衡。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PN 结结构与空间电荷区">
+          <rect x="40" y="60" width="230" height="120" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.2"/>
+          <rect x="275" y="60" width="130" height="120" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="6 4"/>
+          <rect x="410" y="60" width="230" height="120" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.2"/>
+
+          <text x="155" y="42" text-anchor="middle" font-size="15" fill="var(--fin)" font-weight="700">P 区</text>
+          <text x="340" y="42" text-anchor="middle" font-size="13" fill="var(--text-mute)" font-weight="600">耗尽层 / 空间电荷区</text>
+          <text x="525" y="42" text-anchor="middle" font-size="15" fill="var(--semi)" font-weight="700">N 区</text>
+
+          <!-- 受主负离子 -->
+          <g fill="var(--fin)">
+            <circle cx="90" cy="100" r="7"/><circle cx="140" cy="130" r="7"/><circle cx="190" cy="95" r="7"/>
+            <circle cx="215" cy="150" r="7"/><circle cx="120" cy="165" r="7"/><circle cx="240" cy="110" r="7"/>
+          </g>
+          <g stroke="var(--fin)" stroke-width="2">
+            <line x1="84" y1="100" x2="96" y2="100"/>
+          </g>
+          <text x="86" y="104" font-size="11" fill="var(--surface)" font-weight="700">−</text>
+
+          <!-- 施主正离子 -->
+          <g fill="var(--semi)">
+            <circle cx="445" cy="105" r="7"/><circle cx="495" cy="135" r="7"/><circle cx="545" cy="100" r="7"/>
+            <circle cx="590" cy="150" r="7"/><circle cx="470" cy="165" r="7"/><circle cx="600" cy="105" r="7"/>
+          </g>
+          <g stroke="var(--semi)" stroke-width="2">
+            <line x1="439" y1="105" x2="451" y2="105"/><line x1="445" y1="99" x2="445" y2="111"/>
+          </g>
+
+          <!-- 电场方向 -->
+          <line x1="300" y1="205" x2="420" y2="205" stroke="var(--up)" stroke-width="2"/>
+          <path d="M420 205 L410 200 M420 205 L410 210" stroke="var(--up)" stroke-width="2" fill="none"/>
+          <text x="360" y="228" text-anchor="middle" font-size="12" fill="var(--up)">内建电场 E（N → P）</text>
+
+          <!-- 耗尽层宽度标注 -->
+          <line x1="275" y1="52" x2="405" y2="52" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="275" y1="46" x2="275" y2="58" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="405" y1="46" x2="405" y2="58" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="340" y="34" text-anchor="middle" font-size="13" fill="var(--text)">W（耗尽层宽度）</text>
+        </svg>
+        <figcaption>图 1：PN 结结构。交界面两侧留下不能移动的电离杂质，形成空间电荷区与内建电场。</figcaption>
+      </figure>
+
+      <h2 id="s2">2. 内建电势与耗尽层宽度</h2>
+
+      <div class="formula-block">
+        <span class="fl">V<sub>bi</sub> = (kT/q) · ln( N<sub>A</sub> N<sub>D</sub> / n<sub>i</sub>² )</span>
+        <span class="fnote">室温下硅 PN 结的 V<sub>bi</sub> 典型值 0.6 ~ 0.8 V。注意：它不是可以用电压表测到的端电压 ——
+        因为金属-半导体接触处还有大小相等方向相反的接触电势，净端电压为零。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">W = √[ (2ε<sub>s</sub> / q) · (1/N<sub>A</sub> + 1/N<sub>D</sub>) · (V<sub>bi</sub> − V<sub>A</sub>) ]</span>
+        <span class="fnote">V<sub>A</sub> 为外加电压（正向取正）。单边突变结（N<sub>A</sub> ≫ N<sub>D</sub>）可简化为
+        W ≈ √[ 2ε<sub>s</sub>(V<sub>bi</sub> − V<sub>A</sub>) / (q N<sub>D</sub>) ]。
+        反偏时 W 变宽、正偏时 W 变窄 —— 这就是结电容随电压变化的原因。</span>
+      </div>
+
+      <div class="kv">
+        <div><div class="v">0.7 V</div><div class="l">硅 PN 结典型 V<sub>bi</sub></div></div>
+        <div><div class="v">0.1~1 μm</div><div class="l">典型耗尽层宽度</div></div>
+        <div><div class="v">≈ 60 mV</div><div class="l">电流增大 10 倍所需 ΔV</div></div>
+        <div><div class="v">11.7 ε₀</div><div class="l">硅的介电常数 ε<sub>s</sub></div></div>
+      </div>
+
+      <h2 id="s3">3. 正向偏置：势垒降低，电流指数增长</h2>
+
+      <p>正向偏置（P 接正、N 接负）时，外电场削弱内建电场 → 势垒从 qV<sub>bi</sub> 降到 q(V<sub>bi</sub> − V<sub>A</sub>) →
+      扩散电流急剧增大，而漂移电流基本不变 → 净电流呈指数增长。</p>
+
+      <div class="formula-block">
+        <span class="fl">I = I<sub>S</sub> [ exp( qV / nkT ) − 1 ]　（理想二极管方程）</span>
+        <span class="fnote">I<sub>S</sub> 为反向饱和电流（硅约 10⁻¹⁵~10⁻¹² A，与结面积、掺杂、温度强相关）；
+        n 为理想因子，理想扩散电流 n=1，复合电流为主时 n=2，实际二极管常在 1~2 之间。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="二极管 I-V 特性曲线">
+          <line x1="80" y1="210" x2="640" y2="210" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <line x1="340" y1="20" x2="340" y2="210" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <text x="650" y="214" font-size="13" fill="var(--text-mute)">V</text>
+          <text x="346" y="20" font-size="13" fill="var(--text-mute)">I</text>
+
+          <!-- 正向曲线 -->
+          <path d="M340 205 C 400 203, 440 190, 462 150 C 480 115, 500 70, 530 30"
+                fill="none" stroke="var(--up)" stroke-width="2.8"/>
+          <text x="470" y="52" font-size="13" fill="var(--up)" font-weight="700">正向导通</text>
+          <text x="470" y="70" font-size="11" fill="var(--up)">指数增长</text>
+
+          <!-- 0.7V 标注 -->
+          <line x1="462" y1="205" x2="462" y2="215" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="440" y="232" font-size="12" fill="var(--text)">≈ 0.7 V</text>
+          <text x="418" y="246" font-size="11" fill="var(--text-mute)">硅管导通压降</text>
+
+          <!-- 反向区 -->
+          <path d="M340 205 C 300 206, 250 208, 200 209 L 130 210" fill="none" stroke="var(--text-mute)" stroke-width="2.2"/>
+          <text x="180" y="196" font-size="12" fill="var(--text-mute)">反向饱和 I<sub>S</sub>（极小）</text>
+
+          <!-- 击穿 -->
+          <path d="M130 210 C 120 190, 112 140, 105 40" fill="none" stroke="var(--down)" stroke-width="2.8"/>
+          <text x="60" y="60" font-size="13" fill="var(--down)" font-weight="700">反向击穿</text>
+          <text x="60" y="78" font-size="11" fill="var(--down)">电流陡增</text>
+          <line x1="122" y1="205" x2="122" y2="215" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="96" y="232" font-size="12" fill="var(--text)">−V<sub>BR</sub></text>
+        </svg>
+        <figcaption>图 2：二极管 I-V 特性。正向呈指数增长、反向仅有微安级饱和电流，超过击穿电压后电流急剧上升。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>60 mV 法则：</b>室温下 kT/q ≈ 25.85 mV，ln10 · kT/q ≈ 59.6 mV。
+        所以硅二极管正向电压每增加约 60 mV，电流就增大 10 倍 —— 这个数量感在估算电路时极其好用。
+      </div>
+
+      <h2 id="s4">4. 反向偏置与击穿</h2>
+
+      <p>反偏时耗尽层变宽、势垒升高，只剩下由少子漂移形成的微小电流 I<sub>S</sub>（理想情况下几乎与电压无关）。
+      但电压加到一定程度会发生<strong>击穿</strong>，两种机制完全不同：</p>
+
+      <table>
+        <thead><tr><th>机制</th><th>发生条件</th><th>物理本质</th><th>温度系数</th><th>典型用途</th></tr></thead>
+        <tbody>
+          <tr><td>齐纳击穿 Zener</td><td>重掺杂，V<sub>BR</sub> &lt; 5 V</td><td>强电场下价电子直接隧穿禁带</td><td>负温度系数</td><td>稳压二极管、基准源</td></tr>
+          <tr><td>雪崩击穿 Avalanche</td><td>轻掺杂，V<sub>BR</sub> &gt; 7 V</td><td>载流子被加速后碰撞电离、链式倍增</td><td>正温度系数</td><td>功率器件耐压、ESD 保护</td></tr>
+          <tr><td>两者混合</td><td>5 ~ 7 V</td><td>两种机制叠加</td><td>温度系数最小</td><td>≈ 6.2 V 的温补基准</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>击穿 ≠ 损坏。</b>只要外部限流把功耗控制在允许范围内，可逆击穿（齐纳/雪崩）是可以长期稳定工作的，稳压管正是利用这一点。
+        真正烧毁器件的是<em>热击穿</em>：功耗使结温升高 → 载流子增多 → 电流更大 → 温度更高，形成正反馈。
+      </div>
+
+      <h2 id="s5">5. 电容效应</h2>
+
+      <table>
+        <thead><tr><th>类型</th><th>公式</th><th>主导条件</th><th>工程意义</th></tr></thead>
+        <tbody>
+          <tr><td>势垒电容 C<sub>j</sub></td><td>C<sub>j</sub> = ε<sub>s</sub>A / W</td><td>反偏为主</td><td>变容二极管、高频调谐；也是二极管反向恢复的根源之一</td></tr>
+          <tr><td>扩散电容 C<sub>d</sub></td><td>C<sub>d</sub> ∝ τ<sub>F</sub> · I / (nkT/q)</td><td>正偏为主</td><td>决定正向导通时的<strong>反向恢复时间</strong>，影响开关电源效率</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>工程提醒：</b>反偏电压越大 → W 越宽 → C<sub>j</sub> 越小。这正是<strong>变容二极管</strong>的工作原理，
+        也是射频电路中用电压调谐频率的基础。
+      </div>
+
+      <h2 id="s6">6. 从特性到应用</h2>
+
+      <table>
+        <thead><tr><th>器件</th><th>利用的特性</th><th>偏置状态</th></tr></thead>
+        <tbody>
+          <tr><td>整流二极管</td><td>单向导电性</td><td>正向导通 / 反向截止</td></tr>
+          <tr><td>稳压二极管（齐纳管）</td><td>反向击穿区电压稳定</td><td>反向击穿区（需限流）</td></tr>
+          <tr><td>肖特基二极管</td><td>金属-半导体势垒，无少子存储</td><td>正向导通，压降仅 0.2~0.4 V</td></tr>
+          <tr><td>发光二极管 LED</td><td>正向注入的载流子复合发光（直接带隙）</td><td>正向偏置</td></tr>
+          <tr><td>光电二极管</td><td>光子产生电子-空穴对</td><td>反偏（光导模式）或零偏（光伏模式）</td></tr>
+          <tr><td>太阳能电池</td><td>光生伏特效应</td><td>零偏，工作在第四象限</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <div class="note">
+        <b>三个高频误区：</b><br>
+        ① 以为"内建电势 0.7 V 所以二极管要 0.7 V 才导通" —— 严格说导通是渐进的，0.7 V 只是<em>大电流下</em>的典型压降；<br>
+        ② 把击穿等同于损坏 —— 区分可逆击穿与热击穿（见上文警告）；<br>
+        ③ 忽略温度 —— I<sub>S</sub> 随温度<strong>显著增大</strong>（约每 10 ℃ 翻倍），
+        而正向压降随温度<strong>下降</strong>约 2 mV/℃，这就是恒流源驱动 LED 的原因。
+      </div>
+
+      <details class="quiz"><summary>自测 1：N<sub>A</sub> = N<sub>D</sub> = 10¹⁶ cm⁻³，n<sub>i</sub> = 1.5×10¹⁰ cm⁻³，估算室温 V<sub>bi</sub>。</summary>
+        <div class="answer">V<sub>bi</sub> = 0.02585 × ln( (10¹⁶ × 10¹⁶) / (1.5×10¹⁰)² ) = 0.02585 × ln(4.44×10¹¹)
+        = 0.02585 × 26.82 ≈ <strong>0.69 V</strong>。与硅管 0.7 V 的经验值吻合。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：反向偏置电压增大时，耗尽层宽度和结电容分别怎么变？</summary>
+        <div class="answer">W 变宽（W ∝ √(V<sub>bi</sub> − V<sub>A</sub>)，反偏时 V<sub>A</sub> 为负，等效于 V<sub>bi</sub> + |V<sub>R</sub>| 增大），
+        C<sub>j</sub> = ε<sub>s</sub>A/W 随之减小。这是变容二极管的基本原理。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：为什么肖特基二极管比普通 PN 结二极管更适合做高频、大电流整流？</summary>
+        <div class="answer">两个原因：① 它是<strong>多数载流子</strong>器件，没有少子存储效应，反向恢复时间极短，开关损耗小；
+        ② 正向压降更低（0.2~0.4 V vs 0.7 V），导通损耗小。代价是反向漏电流较大、耐压较低。</div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 1 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li class="current">第 2 篇：PN 结原理与特性</li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 3 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 5 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#PN结</span>
+      <span class="chip">#二极管</span>
+      <span class="chip">#内建电势</span>
+      <span class="chip">#击穿</span>
+      <span class="chip">#半导体器件</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

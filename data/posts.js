@@ -1,6 +1,40 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-01 16:28:54  共 27 篇 */
+/* 生成时间: 2026-10-01 19:26:00  共 33 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "芯片设计流程与 EDA 工具链",
+    "url": "posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从需求规格到 GDSII 流片的数字 IC 全流程、模拟 IC 差异、PPA 权衡、DRC/LVS 签核，以及可免费上手的开源 EDA 全栈工具链",
+    "tags": [
+      "芯片设计",
+      "EDA",
+      "RTL",
+      "逻辑综合",
+      "布局布线",
+      "DRC"
+    ],
+    "size": 18.3
+  },
+  {
+    "title": "芯片制造工艺流程详解",
+    "url": "posts/semiconductor/2026-10-01-芯片制造工艺流程详解.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从石英砂到成品芯片的完整链路：晶圆制备、光刻、刻蚀、掺杂、薄膜、CMP、铜互连、CP 测试到封装测试，含分辨率公式与良率模型",
+    "tags": [
+      "芯片制造",
+      "光刻",
+      "刻蚀",
+      "离子注入",
+      "CMP",
+      "晶圆"
+    ],
+    "size": 20.0
+  },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
     "url": "posts/finance/2026-10-01瑾年财经早报_.html",
@@ -10,6 +44,74 @@ window.SITE_POSTS = [
     "desc": "9月最后一个交易日，A股涨跌互现： 上证指数收涨0.31% ，深成指微跌0.11%，创业板指跌0.23%，科创50重挫2.51%。两市合计成交超1.8万亿元。",
     "tags": [],
     "size": 17.7
+  },
+  {
+    "title": "半导体物理基础 · 能带与载流子",
+    "url": "posts/semiconductor/2026-10-01-半导体物理基础-能带与载流子.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从原子能级到能带、本征激发、掺杂与载流子输运，配能带图与核心公式，是理解二极管、MOSFET 与芯片工艺的地基",
+    "tags": [
+      "半导体",
+      "能带理论",
+      "载流子",
+      "掺杂",
+      "PN结基础",
+      "半导体物理"
+    ],
+    "size": 18.2
+  },
+  {
+    "title": "PN 结原理与特性",
+    "url": "posts/semiconductor/2026-10-01-PN结原理与特性.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电",
+    "tags": [
+      "PN结",
+      "内建电势",
+      "耗尽层",
+      "二极管方程",
+      "齐纳击穿",
+      "雪崩击穿"
+    ],
+    "size": 16.7
+  },
+  {
+    "title": "MOSFET 工作原理与特性曲线",
+    "url": "posts/semiconductor/2026-10-01-MOSFET工作原理与特性曲线.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从 MOSFET 结构、阈值电压到三个工作区的电流公式与输出/转移特性曲线，含短沟道效应与版图参数 W/L 的工程含义",
+    "tags": [
+      "MOSFET",
+      "阈值电压",
+      "饱和区",
+      "跨导",
+      "短沟道效应",
+      "CMOS"
+    ],
+    "size": 18.9
+  },
+  {
+    "title": "CMOS 集成电路基础 · 反相器与逻辑门",
+    "url": "posts/semiconductor/2026-10-01-CMOS集成电路基础-反相器与逻辑门.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从 CMOS 反相器结构、电压传输特性与噪声容限，到功耗组成、组合逻辑门与时序元件建立保持时间，配电路图推导",
+    "tags": [
+      "CMOS",
+      "反相器",
+      "逻辑门",
+      "噪声容限",
+      "动态功耗",
+      "建立时间"
+    ],
+    "size": 17.6
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -293,13 +395,13 @@ window.SITE_POSTS = [
 
 window.SITE_CATS = [
   {
+    "id": "semiconductor",
+    "label": "半导体",
+    "count": 9
+  },
+  {
     "id": "finance",
     "label": "财经简报",
     "count": 24
-  },
-  {
-    "id": "semiconductor",
-    "label": "半导体",
-    "count": 3
   }
 ];

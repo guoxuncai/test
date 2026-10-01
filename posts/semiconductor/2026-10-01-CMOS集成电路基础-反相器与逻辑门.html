@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CMOS 集成电路基础 · 反相器与逻辑门</title>
+<meta name="description" content="从 CMOS 反相器结构、电压传输特性与噪声容限，到功耗组成、组合逻辑门与时序元件建立保持时间，配电路图推导。">
+<meta name="keywords" content="CMOS,反相器,逻辑门,噪声容限,动态功耗,建立时间,保持时间,数字集成电路">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 电路</span>
+    <h1 class="title">CMOS 集成电路基础 · 反相器与逻辑门</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 4 篇</span><span class="sep"></span>
+      <span>阅读约 14 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        有了 MOSFET，怎么搭出"会算数的电路"？这一篇从最简单的 CMOS 反相器出发，
+        讲清它的电压传输特性、噪声容限、功耗从哪来，以及与非门/或非门/触发器这些积木是怎么拼起来的。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">CMOS 反相器的结构</a></li>
+          <li><a href="#s2">电压传输特性 VTC 与噪声容限</a></li>
+          <li><a href="#s3">功耗：静态、动态与短路</a></li>
+          <li><a href="#s4">传播延时与驱动能力</a></li>
+          <li><a href="#s5">组合逻辑门：NAND / NOR / 传输门</a></li>
+          <li><a href="#s6">时序元件：锁存器与触发器</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. CMOS 反相器的结构</h2>
+
+      <p>CMOS（Complementary MOS）= <strong>PMOS 上拉 + NMOS 下拉</strong>，两个管子栅极接同一个输入、漏极接同一个输出：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMOS 反相器电路图">
+          <!-- VDD -->
+          <line x1="180" y1="40" x2="420" y2="40" stroke="var(--text)" stroke-width="2"/>
+          <text x="300" y="32" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">VDD</text>
+
+          <!-- PMOS -->
+          <line x1="300" y1="40" x2="300" y2="70" stroke="var(--text)" stroke-width="2"/>
+          <rect x="272" y="70" width="56" height="34" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="300" y="92" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">PMOS</text>
+          <text x="248" y="88" font-size="11" fill="var(--text-mute)">上拉</text>
+          <!-- PMOS 栅 -->
+          <line x1="272" y1="80" x2="252" y2="80" stroke="var(--text)" stroke-width="1.6"/>
+          <line x1="252" y1="80" x2="252" y2="150" stroke="var(--text)" stroke-width="1.6"/>
+
+          <!-- 输出节点 -->
+          <line x1="300" y1="104" x2="300" y2="130" stroke="var(--text)" stroke-width="2"/>
+          <circle cx="300" cy="130" r="4" fill="var(--text)"/>
+          <line x1="300" y1="130" x2="420" y2="130" stroke="var(--text)" stroke-width="2"/>
+          <text x="432" y="135" font-size="14" fill="var(--text)" font-weight="700">OUT</text>
+
+          <!-- NMOS -->
+          <rect x="272" y="145" width="56" height="34" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="300" y="167" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">NMOS</text>
+          <text x="248" y="162" font-size="11" fill="var(--text-mute)">下拉</text>
+          <line x1="272" y1="155" x2="252" y2="155" stroke="var(--text)" stroke-width="1.6"/>
+
+          <!-- VSS -->
+          <line x1="300" y1="179" x2="300" y2="215" stroke="var(--text)" stroke-width="2"/>
+          <line x1="180" y1="215" x2="420" y2="215" stroke="var(--text)" stroke-width="2"/>
+          <text x="300" y="233" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">VSS (GND)</text>
+
+          <!-- 输入 -->
+          <line x1="252" y1="150" x2="140" y2="150" stroke="var(--text)" stroke-width="2"/>
+          <text x="120" y="155" font-size="14" fill="var(--text)" font-weight="700">IN</text>
+
+          <!-- 栅极气泡（PMOS 低电平导通） -->
+          <circle cx="256" cy="80" r="5" fill="var(--surface)" stroke="var(--fin)" stroke-width="1.6"/>
+
+          <!-- 真值表 -->
+          <g transform="translate(480,60)">
+            <rect x="0" y="0" width="160" height="96" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="32" x2="160" y2="32" stroke="var(--border)"/>
+            <line x1="0" y1="64" x2="160" y2="64" stroke="var(--border)"/>
+            <line x1="80" y1="0" x2="80" y2="96" stroke="var(--border)"/>
+            <text x="40" y="21" text-anchor="middle" font-size="12" fill="var(--text-mute)">IN</text>
+            <text x="120" y="21" text-anchor="middle" font-size="12" fill="var(--text-mute)">OUT</text>
+            <text x="40" y="53" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="120" y="53" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="40" y="85" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="120" y="85" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+          </g>
+          <text x="560" y="176" text-anchor="middle" font-size="11" fill="var(--text-mute)">真值表</text>
+        </svg>
+        <figcaption>图 1：CMOS 反相器。PMOS 源接 VDD（栅极低电平导通），NMOS 源接 GND（栅极高电平导通）。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>为什么这个结构如此重要？</b>稳态下两个管子<strong>总有一个完全截止</strong>，
+        从 VDD 到 GND 之间没有直流通路，所以静态功耗几乎为零（只剩漏电流）。
+        这是 CMOS 能集成几十亿个晶体管而不过热的根本原因 —— 1970 年代 CMOS 取代 NMOS/双极逻辑，靠的就是这一点。
+      </div>
+
+      <h2 id="s2">2. 电压传输特性 VTC 与噪声容限</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="反相器电压传输特性">
+          <line x1="90" y1="210" x2="620" y2="210" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <line x1="90" y1="20" x2="90" y2="210" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <text x="626" y="214" font-size="13" fill="var(--text-mute)">V<tspan dy="2" font-size="9">IN</tspan></text>
+          <text x="96" y="18" font-size="13" fill="var(--text-mute)">V<tspan dy="2" font-size="9">OUT</tspan></text>
+
+          <!-- VTC 曲线 -->
+          <path d="M90 40 L200 38 Q 240 36 260 60 Q 280 120 300 130 Q 320 140 340 190 Q 360 206 400 208 L600 210"
+                fill="none" stroke="var(--accent)" stroke-width="3"/>
+          <!-- VOH / VOL -->
+          <line x1="90" y1="40" x2="600" y2="40" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="90" y1="208" x2="600" y2="208" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="100" y="34" font-size="12" fill="var(--text-mute)">VOH = VDD</text>
+          <text x="100" y="224" font-size="12" fill="var(--text-mute)">VOL = 0</text>
+
+          <!-- 开关阈值 -->
+          <circle cx="300" cy="130" r="5" fill="var(--up)"/>
+          <line x1="300" y1="130" x2="300" y2="215" stroke="var(--up)" stroke-width="1.2" stroke-dasharray="4 4"/>
+          <text x="278" y="232" font-size="12" fill="var(--up)">V<tspan dy="2" font-size="9">M</tspan> ≈ VDD/2</text>
+
+          <!-- 斜率 -1 点 -->
+          <line x1="240" y1="30" x2="300" y2="180" stroke="var(--down)" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <text x="196" y="70" font-size="11" fill="var(--down)">斜率 −1</text>
+          <text x="352" y="86" font-size="11" fill="var(--text-mute)">V<tspan dy="2" font-size="8">IL</tspan></text>
+          <text x="214" y="176" font-size="11" fill="var(--text-mute)">V<tspan dy="2" font-size="8">IH</tspan></text>
+        </svg>
+        <figcaption>图 2：反相器 VTC。曲线上斜率为 −1 的两点定义 V<sub>IL</sub> 与 V<sub>IH</sub>，二者之间是不确定区。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub>　，　NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub></span>
+        <span class="fnote">噪声容限衡量"能容忍多大的干扰而不误判"。对称设计时 V<sub>M</sub> ≈ VDD/2，高低噪声容限相等且最大。
+        VDD 降低会直接压缩噪声容限 —— 这是低电压设计的主要难点之一。</span>
+      </div>
+
+      <h2 id="s3">3. 功耗：静态、动态与短路</h2>
+
+      <table>
+        <thead><tr><th>类型</th><th>公式 / 成因</th><th>特点</th></tr></thead>
+        <tbody>
+          <tr><td>动态功耗（主项）</td><td>P = α · C<sub>L</sub> · V<sub>DD</sub>² · f</td><td>来自对负载电容充放电；与频率、电压平方成正比</td></tr>
+          <tr><td>短路功耗</td><td>P<sub>sc</sub> ≈ α · t<sub>sc</sub> · V<sub>DD</sub> · I<sub>peak</sub></td><td>翻转瞬间 PMOS/NMOS 短暂同时导通；通常占 10%~20%</td></tr>
+          <tr><td>静态功耗</td><td>P<sub>leak</sub> = V<sub>DD</sub> · I<sub>leak</sub></td><td>亚阈值漏电 + 栅漏电；先进节点下占比快速上升</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>V<sub>DD</sub>² 是功耗优化的杠杆之首。</b>电压降一半，动态功耗降到 1/4（代价是速度变慢）。
+        这就是为什么手机芯片普遍采用 <em>DVFS</em>（动态电压频率调节）：轻负载时同时降频降压，续航显著提升。
+      </div>
+
+      <div class="warn">
+        <b>先进节点的功耗危机：</b>晶体管缩小后，单管漏电流虽小，但数量暴涨（数十亿），
+        静态漏电在总功耗中的占比不断上升，甚至出现"暗硅"（Dark Silicon）现象 ——
+        受功耗预算限制，芯片上永远有一部分区域不能同时满负荷工作。
+      </div>
+
+      <h2 id="s4">4. 传播延时与驱动能力</h2>
+
+      <div class="formula-block">
+        <span class="fl">t<sub>p</sub> ≈ 0.69 · R<sub>eq</sub> · C<sub>L</sub>　，　f<sub>max</sub> ≈ 1 / (2 · t<sub>p</sub> · N<sub>stage</sub>)</span>
+        <span class="fnote">R<sub>eq</sub> 为导通管的等效电阻（∝ 1/(W/L)），C<sub>L</sub> 为负载电容（含本级输出电容、线电容、下级栅电容）。</span>
+      </div>
+
+      <div class="tip">
+        <b>反相器链的经典结论：</b>要用一串反相器驱动大电容，每级尺寸按 <em>e ≈ 2.718</em> 倍递增时总延时最小；
+        实践中常用 3~4 倍（级数少、面积小，延时损失有限）。这就是所谓的"逻辑努力（Logical Effort）"方法。
+      </div>
+
+      <h2 id="s5">5. 组合逻辑门：NAND / NOR / 传输门</h2>
+
+      <table>
+        <thead><tr><th>门</th><th>PMOS 网络</th><th>NMOS 网络</th><th>工程特点</th></tr></thead>
+        <tbody>
+          <tr><td>反相器 INV</td><td>1 个串联</td><td>1 个串联</td><td>最简单、最快</td></tr>
+          <tr><td>与非 NAND</td><td>并联</td><td>串联</td><td><strong>比 NOR 更常用</strong>：串联的是 NMOS（驱动强），速度损失小</td></tr>
+          <tr><td>或非 NOR</td><td>串联</td><td>并联</td><td>串联的是 PMOS（驱动弱），多输入时明显变慢</td></tr>
+          <tr><td>传输门 TG</td><td>与 NMOS 并联互补</td><td>与 PMOS 并联互补</td><td>可无损耗传输全摆幅信号，用于 MUX、异或、锁存器</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>为什么数字标准单元库里 NAND 居多？</b>同样的 2 输入门，NAND 的上拉是并联 PMOS（快）、
+        下拉是串联 NMOS；而 NOR 相反，串联的 PMOS 迁移率低、电阻大，速度更差。
+        所以综合工具更倾向于把逻辑映射成 NAND 形式，也常用"NAND 等效门数"衡量电路规模。
+      </div>
+
+      <h2 id="s6">6. 时序元件：锁存器与触发器</h2>
+
+      <table class="term-table">
+        <thead><tr><th>概念</th><th>含义</th><th>违例后果</th></tr></thead>
+        <tbody>
+          <tr><td>建立时间 t<sub>setup</sub></td><td>时钟沿到来<strong>之前</strong>数据必须稳定的最短时间</td><td>采样到错误数据</td></tr>
+          <tr><td>保持时间 t<sub>hold</sub></td><td>时钟沿到来<strong>之后</strong>数据必须继续保持的最短时间</td><td>新数据提前穿透，破坏状态</td></tr>
+          <tr><td>时钟到输出 t<sub>cq</sub></td><td>时钟沿到输出更新的延时</td><td>影响最高工作频率</td></tr>
+          <tr><td>亚稳态</td><td>违反建立/保持时触发器进入中间电平并需时间恢复</td><td>跨时钟域传输的经典难题（用两级同步器缓解）</td></tr>
+        </tbody>
+      </table>
+
+      <div class="formula-block">
+        <span class="fl">T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>setup</sub> + t<sub>skew</sub>　（建立时间约束）</span>
+        <span class="fnote">决定了芯片能跑多快。这条式子就是静态时序分析（STA）的核心，
+        也是数字后端反复迭代收敛的目标：缩短组合逻辑延时 t<sub>logic</sub>、控制时钟偏斜 t<sub>skew</sub>。</span>
+      </div>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <div class="warn">
+        <b>新手常踩的坑：</b><br>
+        ① 以为 CMOS 静态电流为零所以"不耗电" —— 动态功耗才是大头，且频率越高越耗电；<br>
+        ② 把 PMOS 画在下面 —— 记住口诀：<strong>PMOS 靠电源（上），NMOS 靠地（下）</strong>；<br>
+        ③ 忽略扇出（Fan-out）—— 一个门驱动太多后级会显著变慢，需要插入缓冲器；<br>
+        ④ 认为触发器输出立即变化 —— 是<em>时钟沿</em>触发，且要等 t<sub>cq</sub> 才稳定。
+      </div>
+
+      <details class="quiz"><summary>自测 1：C<sub>L</sub> = 50 fF，V<sub>DD</sub> = 1.0 V，f = 2 GHz，翻转因子 α = 0.2，求动态功耗。</summary>
+        <div class="answer">P = 0.2 × 50×10⁻¹⁵ × 1.0² × 2×10⁹ = <strong>20 μW</strong>。
+        看似很小，但一颗 SoC 有数亿个这样的节点同时翻转 —— 累计起来就是几瓦的功耗预算。
+        若把 V<sub>DD</sub> 降到 0.8 V，功耗降至 0.64 倍（平方关系）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么多输入（如 8 输入）与非门在标准单元库中往往被拆成树状结构？</summary>
+        <div class="answer">串联 NMOS 的等效电阻随串联个数线性增加，8 个串联会使下拉电阻过大、延时急剧恶化，
+        且中间节点的体效应会抬高 V<sub>t</sub>。因此库里一般只提供 2~4 输入门，
+        更多输入由工具拆成多级树（如 4 输入 NAND + 2 输入 NAND），并用缓冲器调整驱动。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：电路最高频率受哪些因素限制？</summary>
+        <div class="answer">由建立时间约束 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>setup</sub> + t<sub>skew</sub> 决定最大的 f。
+        其中 t<sub>logic</sub> 是最长路径（关键路径）延时，受晶体管驱动强度、互连 RC、温度与电压影响。
+        PVT（工艺/电压/温度）最差情况下仍需满足，所以签核要在 SS 慢角、高温低压下做。</div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 1 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 2 篇：PN 结原理与特性</a></li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 3 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li class="current">第 4 篇：CMOS 集成电路基础 · 反相器与逻辑门</li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 5 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 6 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#CMOS</span>
+      <span class="chip">#反相器</span>
+      <span class="chip">#逻辑门</span>
+      <span class="chip">#功耗</span>
+      <span class="chip">#时序分析</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
