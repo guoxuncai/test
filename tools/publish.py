@@ -43,7 +43,42 @@ CATEGORY_LABELS = {
 }
 
 DEFAULT_SITE_URL = "https://guoxuncai.github.io/test/"
-RE_DATE = re.compile(r"(20\d{2})[-_.]?(\d{2})[-_.]?(\d{2})")
+RE_DATE = re.compile(r"(20\d{2})[-_.]?[^\d]?(\d{1,2})[-_.]?[^\d]?(\d{1,2})")
+# 中文日期：2026年9月25日 / 2026年10月1日
+RE_CN_DATE = re.compile(r"(20\d{2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日")
+
+# 摘要清洗：去掉版面装饰性文字（品牌英文名被空格拆开、栏目标题、署名行等）
+_NOISE_PATTERNS = [
+    r"J\s*I\s*N\s*N\s*I\s*A\s*N",
+    r"JINNIAN\s*FINANCE",
+    r"JINNIAN\s*FINANCIAL\s*MORNING\s*BRIEF",
+    r"JINNIAN\s*FINANCE\s*DAILY",
+    r"FINANCIAL\s*DAILY\s*BRIEF",
+    r"瑾年财经早报",
+    r"瑾年财经工作室",
+    r"每日财经早报",
+    r"财经早报",
+    r"财经周报",
+    r"财经周日刊",
+    r"瑾年财经",
+    r"瑾年出品",
+    r"出品人?[：:]\s*\S+",
+    r"作者[：:]\s*\S+",
+    r"主理人[：:]\s*\S+",
+    r"视频号[：:]\s*\S+",
+    r"数据来源[：:]\s*\S+",
+    r"出品[：:]\s*\S+",
+    r"数据驱动\s*·\s*专业解读\s*·\s*银行人自己的早报",
+    r"一手数据\s*·\s*深度解读\s*·\s*银行人专属",
+    r"每日精选\s*·\s*银行人自己的财经早餐",
+    r"银行人自己\w*",
+    r"每日金融市场全景[速纵]览",
+    r"金融资讯\s*·\s*市场数据\s*·\s*深度解读",
+    r"股市\s*·\s*债市\s*·\s*期货\s*·\s*资金市场\s*·\s*银行\s*·\s*理财",
+    r"—\s*每日金融市场全景[速纵]览\s*—",
+    r"·\s*总第\s*\d+\s*期",
+    r"总第\s*\d+\s*期",
+]
 
 
 # ----------------------------- 工具 -----------------------------
@@ -81,15 +116,92 @@ def meta_content(src, *names):
     return ""
 
 
+def clean_summary(s):
+    """去掉摘要开头的版面装饰文字、署名行、重复标题等噪声"""
+    if not s:
+        return s
+    s = s.strip()
+
+    # 1) 只合并"逐字拆开"的短标题（连续单字间空格，如 财 经 早 报），不碰正常词间空格
+    s = re.sub(r"(?:(?<=[\u4e00-\u9fa5])\s+(?=[\u4e00-\u9fa5])){2,}", "", s)
+    # 拆开的英文品牌名：J I N N I A N -> JINNIAN
+    s = re.sub(r"(?:(?<=[A-Z])\s+(?=[A-Z]))+", "", s)
+
+    # 2) 逐条清除版面装饰词
+    for pat in _NOISE_PATTERNS:
+        s = re.sub(pat, " ", s, flags=re.I)
+
+    # 3) 清除符号、表情、分隔符
+    s = re.sub(r"[📊📈📉📅📌🔹🔸💰🛢🏦💼🌍📚🎙✨✦📋⬆⬇🔺🔻▼▲]+", " ", s)
+    s = re.sub(r"[|｜·•✦]{1,}\s*", " ", s)
+    s = re.sub(r"[ \t]{2,}", " ", s)
+
+    # 4) 只裁掉开头的"纯时间/纯标签"片段，且要求后面还有实质内容
+    #    逐次剥离，避免把正文第一个字一起吃进去
+    head_pats = [
+        r"^\s*20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日\s*[（(]?\s*周?[一二三四五六日天]?\s*[)）]?\s*",
+        r"^\s*\d{4}[-/.]\d{1,2}[-/.]\d{1,2}\s*",
+        r"^\s*[（(]?\s*周[一二三四五六日天]\s*[)）]?\s*",
+        r"^\s*(星期|礼拜)[一二三四五六日天]\s*",
+        r"^\s*农历[^\s，,。；;]{0,8}\s*",
+        r"^\s*(上|上一)交易日[：:]\s*[^\s，,。；;]{0,14}\s*",
+        r"^\s*数据[截止来源][：:]\s*[^\s，,。；;]{0,16}\s*",
+        r"^\s*20\d{2}\s*年\s*第?\s*\d*\s*[季度周]\s*",
+        r"^\s*[每]?[周日期]*晚[间上]?推送\s*",
+        r"^\s*[一二三四五六七八九十]+[、.．]\s*",
+        r"^\s*(概览|市场概览|今日市场概览|今日要点|今日核心摘要|今日速览|本期导读|结论摘要|大盘综述|股市概览|股市早参|股市纵览|全球市场概览|A股市场概况|A股市场|市场纵览)\s*[:：、]?\s*",
+        r"^\s*(OVERVIEW|MARKET\s*OVERVIEW)\s*[:：]?\s*",
+        r"^\s*[-—–]{1,}\s*",          # 残留的分隔线
+        r"^\s*[、，,。：:；;]\s*",
+    ]
+    for _ in range(6):
+        before = s
+        for pat in head_pats:
+            s = re.sub(pat, "", s, count=1, flags=re.I)
+        if s == before:
+            break
+
+    s = re.sub(r"[ \t]{2,}", " ", s).strip(" 。，,、|·-—– 　:：")
+    return s
+
+
+def is_poor_summary(s, title=""):
+    """判断摘要质量是否合格：太短、含装饰残留、或与标题/时间标签重复"""
+    if not s or len(s) < 24:
+        return True
+    flat = re.sub(r"\s", "", s)
+    # 英文品牌名残留（含被空格拆开后合并的形态）
+    if re.search(r"(?i)(JINNIAN|FINANCE|FINANCIAL|MORNINGBRIEF|DAILYBRIEF|OVERVIEW)", flat):
+        return True
+    # 栏目标题 / 版面标签残留
+    if re.search(r"(财经早报|财经周报|财经周日刊|今日核心摘要|今日市场概览|今日速览|今日要点|本期导读|市场概览|大盘综述|股市概览|股市早参|股市纵览|全球市场概览|A股复盘|资金市场|债券市场|期货行情|银行监管|理财市场|经济要闻|每日一学)", flat):
+        return True
+    # 与标题核心词高度重合
+    core = re.sub(r"[\s|｜·—–\-_]+", "", title)[:12]
+    if core and len(core) >= 6 and core in flat[:40]:
+        return True
+    # 开头仍是时间/编号/分隔符
+    if re.match(r"^[\s（(]*(\d{4}\s*年|星期|周[一二三四五六日]|礼拜|农历|[一二三四五六七八九十]+、|[-—–]|[、，,。：:；;])", s):
+        return True
+    # 以片段符号开头
+    if re.match(r"^\s*[️🛢📰🏭⚖️]+", s):
+        return True
+    return False
+
+
 def file_date(fname, src, path):
-    """优先文件名日期 -> meta -> 文件修改时间"""
-    m = RE_DATE.search(fname)
+    """优先文件名日期 -> 标题/正文中的中文日期 -> meta -> 文件修改时间"""
+    for text in (fname, meta_content(src, "date", "article:published_time", "publishdate")):
+        if not text:
+            continue
+        m = RE_CN_DATE.search(text) or RE_DATE.search(text)
+        if m:
+            return "%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3)))
+    # 从 <title> 与正文开头（前 3000 字）里找中文日期
+    head = src[:3000]
+    m = RE_CN_DATE.search(head)
     if m:
-        return "%s-%s-%s" % m.groups()
-    d = meta_content(src, "date", "article:published_time", "publishdate")
-    m = RE_DATE.search(d)
-    if m:
-        return "%s-%s-%s" % m.groups()
+        return "%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3)))
     return datetime.date.fromtimestamp(os.path.getmtime(path)).isoformat()
 
 
@@ -112,12 +224,31 @@ def tidy_title(src, fname):
     return t[:80]
 
 
-def build_summary(src, maxlen=120):
+def build_summary(src, maxlen=120, title=""):
     d = meta_content(src, "description", "og:description")
     if d:
-        return d[:maxlen]
+        c = clean_summary(d)
+        if not is_poor_summary(c, title):
+            return c[:maxlen]
+    # 没有 description，或清洗后质量不合格 -> 从正文挑一段干净的句子
     m = re.search(r"(?is)<body[^>]*>(.*)</body>", src)
     body = strip_tags(m.group(1) if m else src)
+    body = clean_summary(body)
+    # 按句切分，取第一句"看起来像摘要"的话（含数字或较长）
+    parts = [x.strip() for x in re.split(r"(?<=[。！？!?])", body) if x.strip()]
+    for i, raw in enumerate(parts[:8]):
+        seg = raw.strip(" 。，,、|·-—–:：")
+        if len(seg) < 18 or is_poor_summary(seg, title):
+            continue
+        tail = ""
+        if i + 1 < len(parts):
+            tail = parts[i + 1].strip()
+        text = seg
+        if not text.endswith(("。", "！", "？", "!", "?")):
+            text += "。"
+        text = (text + tail).strip()
+        text = re.sub(r"[ \t]{2,}", " ", text)
+        return text[:maxlen] + ("…" if len(text) > maxlen else "")
     return body[:maxlen] + ("…" if len(body) > maxlen else "")
 
 
@@ -171,18 +302,32 @@ def scan():
                 continue
             src = read_text(path)
             rel = "posts/%s/%s" % (cat_dir, fn)
+            title = tidy_title(src, fn)
             posts.append({
-                "title": tidy_title(src, fn),
+                "title": title,
                 "url": rel,
                 "date": file_date(fn, src, path),
                 "category": cat_id,
                 "categoryLabel": CATEGORY_LABELS.get(cat_id, cat_dir),
-                "desc": build_summary(src),
+                "desc": build_summary(src, title=title),
                 "tags": build_tags(src),
                 "size": round(os.path.getsize(path) / 1024.0, 1),
             })
     posts.sort(key=lambda p: (p["date"], p["title"]), reverse=True)
     return posts
+
+
+def dedupe(posts):
+    """同一天 + 同标题（忽略空格/标点）视为重复，只保留最新的一个"""
+    seen, out = {}, []
+    for p in posts:
+        key = (p["date"], re.sub(r"[\s|｜·—–\-_（）()]+", "", p["title"]))
+        if key in seen:
+            out[seen[key]] = p   # 后者覆盖（列表已按日期倒序，保留靠前者亦可）
+            continue
+        seen[key] = len(out)
+        out.append(p)
+    return out
 
 
 def categories_of(posts):
@@ -317,7 +462,7 @@ def main():
         if m:
             old_count = int(m.group(1))
 
-    posts = scan()
+    posts = dedupe(scan())
     cats = categories_of(posts)
     if not posts:
         print("! posts/ 下没有找到任何 HTML 文章。")
