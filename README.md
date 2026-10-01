@@ -22,7 +22,7 @@
    ```
    日期必须从文件名开头，脚本靠它排序和归档。
 
-3. 双击项目根目录的 **`发布更新.bat`**
+3. 双击项目根目录的 **`publish.bat`**
    → 自动扫描新文章 → 更新主页索引 → 提交并推送到 GitHub → Pages 约 1–2 分钟上线。
 
 > 不需要碰 `index.html`，也不需要手写任何链接。删文章同理：删掉文件后跑一次脚本，主页链接自动消失。
@@ -31,8 +31,8 @@
 
 | 文件 | 作用 |
 | --- | --- |
-| `新建文章.bat` | 从标准模板生成一篇草稿（自动套好标题、日期、元数据） |
-| `本地预览.bat` | 更新索引并起本地服务，浏览器打开 http://127.0.0.1:8000 预览再发布 |
+| `new-post.bat` | 从标准模板生成一篇草稿（自动套好标题、日期、元数据） |
+| `preview.bat` | 更新索引并起本地服务，浏览器打开 http://127.0.0.1:8000 预览再发布 |
 
 ---
 
@@ -56,9 +56,9 @@
 │   └── template.html       新文章模板（含标准排版组件）
 ├── feed.xml                RSS 订阅源（自动生成）
 ├── sitemap.xml             站点地图（自动生成）
-├── 发布更新.bat            ① 日常发布入口
-├── 本地预览.bat            ② 本地预览
-└── 新建文章.bat            ③ 新建草稿
+├── publish.bat             ① 日常发布入口（扫描+索引+推送）
+├── preview.bat             ② 本地预览服务
+└── new-post.bat            ③ 新建草稿
 ```
 
 **想加新分类？** 直接在 `posts/` 下新建目录（如 `posts/macro/`），把 html 放进去即可，
@@ -68,7 +68,7 @@
 
 ## 三、文章页要写的三个元数据
 
-复制 `tools/template.html` 或双击「新建文章.bat」，改这三个地方即可：
+复制 `tools/template.html` 或双击「new-post.bat」，改这三个地方即可：
 
 ```html
 <title>文章标题</title>
@@ -108,7 +108,8 @@ python tools/publish.py -m "自定义提交信息"
 - `.github/workflows/deploy-pages.yml`：推送到 `main` 分支后自动构建并发布到 GitHub Pages。
 - **首次使用请确认**：仓库 `Settings → Pages → Build and deployment → Source` 选 **GitHub Actions**。
 - 站点根路径为 `/test/`，脚本中的 `sitemap.xml` / `feed.xml` 链接会按该前缀自动生成。
-- 旧文件 `deploy.bat` 已废弃，统一用 `发布更新.bat`。
+- 旧文件 `deploy.bat` 已废弃，统一用 `publish.bat`。
+- 三个 bat 使用英文文件名是刻意为之：cmd 在 `chcp 65001` 下无法正确解析含中文名的批处理文件，会出现莫名报错。
 
 ---
 
@@ -117,7 +118,7 @@ python tools/publish.py -m "自定义提交信息"
 | 现象 | 处理 |
 | --- | --- |
 | 双击 bat 提示「未检测到 Python」 | 安装 Python 并勾选 Add to PATH；安装后重开一个窗口再双击 |
-| 主页列表是空的 | 确认 html 确实在 `posts/` 的某个子目录里，然后跑一次 `发布更新.bat` |
+| 主页列表是空的 | 确认 html 确实在 `posts/` 的某个子目录里，然后跑一次 `publish.bat` |
 | 推送失败（权限/认证） | 确认 SSH key 已加到 GitHub，或用 GitHub Desktop / 手动 `git push` |
-| 列表一片空白 | ① 确认 html 在 `posts/` 的某个子目录里；② 跑一次 `发布更新.bat` 生成索引；③ 若直接双击 html 打开无内容，改用「本地预览.bat」通过 http 访问 |
+| 列表一片空白 | ① 确认 html 在 `posts/` 的某个子目录里；② 跑一次 `publish.bat` 生成索引；③ 若直接双击 html 打开无内容，改用「preview.bat」通过 http 访问 |
 | 想改站点名/简介 | 编辑 `index.html` 里的品牌区与 hero 文案，保存后重新发布 |
