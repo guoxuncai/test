@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>固体物理基础 · 晶格、晶向、晶胞与晶面</title>
+<meta name="description" content="用大量图解讲清半导体晶体学地基：晶格与晶胞、SC/BCC/FCC 堆积、金刚石与闪锌矿结构、晶向族与晶面米勒指数的求法、面密度与悬挂键密度，以及晶向如何决定迁移率、氧化速率与各向异性刻蚀。">
+<meta name="keywords" content="晶体学,晶格,晶胞,晶向,晶面,米勒指数,金刚石结构,面密度,各向异性刻蚀,布拉格衍射">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 固体物理</span>
+    <h1 class="title">固体物理基础 · 晶格、晶向、晶胞与晶面</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 1 篇</span><span class="sep"></span>
+      <span>阅读约 22 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        为什么硅片非要按 <strong>&lt;100&gt;</strong> 晶向切？为什么 KOH 腐蚀液能在硅上刻出规整的金字塔？
+        为什么版图里两个"一模一样"的晶体管必须同方向摆放？答案都不在电路里，而在<strong>原子怎么堆</strong>。
+        这一篇用尽量多的图，把晶体学的四块基石 —— <strong>晶格、晶胞、晶向、晶面</strong> —— 讲透，
+        并建立一条关键认知：<em>晶向不是几何抽象，它直接决定迁移率、氧化速率、刻蚀形貌和器件匹配</em>。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">先建立直觉：有序 vs 无序</a></li>
+          <li><a href="#s2">晶格与晶胞：点阵 + 基元</a></li>
+          <li><a href="#s3">三种立方晶胞：SC / BCC / FCC 与堆积密度</a></li>
+          <li><a href="#s4">半导体主角：金刚石结构与闪锌矿结构</a></li>
+          <li><a href="#s5">晶向 [uvw]：三步求出一个方向</a></li>
+          <li><a href="#s6">晶面 (hkl)：米勒指数怎么来的</a></li>
+          <li><a href="#s7">面密度、线密度与悬挂键：数字背后的物理</a></li>
+          <li><a href="#s8">三种经典晶面：原子是怎么排的</a></li>
+          <li><a href="#s9">晶向如何决定器件性能（本篇重点）</a></li>
+          <li><a href="#s10">各向异性刻蚀：54.74° 与倒金字塔</a></li>
+          <li><a href="#s11">倒格子与布拉格衍射：晶向是怎么测出来的</a></li>
+          <li><a href="#s12">六方晶系与四指数（GaN、SiC）</a></li>
+          <li><a href="#s13">晶向与版图：匹配设计为什么要求同方向</a></li>
+          <li><a href="#s14">常见误区</a></li>
+          <li><a href="#s15">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 先建立直觉：有序 vs 无序</h2>
+
+      <p>同样都是硅原子，排列方式不同，性质天差地别。三类固体要先分清：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="单晶多晶与非晶的原子排列对比">
+          <defs>
+            <g id="atomA"><circle r="4.5" fill="var(--semi)" fill-opacity=".85"/><circle r="1.6" fill="var(--bg, #fff)" fill-opacity=".0"/></g>
+          </defs>
+          <g font-size="11" fill="var(--text)">
+            <!-- 单晶 -->
+            <rect x="14" y="26" width="196" height="180" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="112" y="46" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">单晶 Single Crystal</text>
+            <g fill="var(--semi)" fill-opacity=".85">
+              <circle cx="42" cy="70" r="4.5"/><circle cx="72" cy="70" r="4.5"/><circle cx="102" cy="70" r="4.5"/><circle cx="132" cy="70" r="4.5"/><circle cx="162" cy="70" r="4.5"/><circle cx="192" cy="70" r="4.5"/>
+              <circle cx="42" cy="100" r="4.5"/><circle cx="72" cy="100" r="4.5"/><circle cx="102" cy="100" r="4.5"/><circle cx="132" cy="100" r="4.5"/><circle cx="162" cy="100" r="4.5"/><circle cx="192" cy="100" r="4.5"/>
+              <circle cx="42" cy="130" r="4.5"/><circle cx="72" cy="130" r="4.5"/><circle cx="102" cy="130" r="4.5"/><circle cx="132" cy="130" r="4.5"/><circle cx="162" cy="130" r="4.5"/><circle cx="192" cy="130" r="4.5"/>
+              <circle cx="42" cy="160" r="4.5"/><circle cx="72" cy="160" r="4.5"/><circle cx="102" cy="160" r="4.5"/><circle cx="132" cy="160" r="4.5"/><circle cx="162" cy="160" r="4.5"/><circle cx="192" cy="160" r="4.5"/>
+              <circle cx="42" cy="190" r="4.5"/><circle cx="72" cy="190" r="4.5"/><circle cx="102" cy="190" r="4.5"/><circle cx="132" cy="190" r="4.5"/><circle cx="162" cy="190" r="4.5"/><circle cx="192" cy="190" r="4.5"/>
+            </g>
+            <text x="112" y="212" text-anchor="middle" font-size="10" fill="var(--text-mute)">全片一个取向 · 长程有序</text>
+
+            <!-- 多晶 -->
+            <rect x="242" y="26" width="196" height="180" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="340" y="46" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">多晶 Polycrystal</text>
+            <g fill="var(--accent)" fill-opacity=".8">
+              <circle cx="265" cy="72" r="4"/><circle cx="290" cy="68" r="4"/><circle cx="315" cy="72" r="4"/><circle cx="340" cy="68" r="4"/>
+              <circle cx="265" cy="96" r="4"/><circle cx="290" cy="92" r="4"/><circle cx="315" cy="96" r="4"/><circle cx="340" cy="92" r="4"/>
+              <circle cx="265" cy="120" r="4"/><circle cx="290" cy="116" r="4"/><circle cx="315" cy="120" r="4"/><circle cx="340" cy="116" r="4"/>
+              <circle cx="372" cy="80" r="4"/><circle cx="396" cy="90" r="4"/><circle cx="372" cy="112" r="4"/><circle cx="396" cy="122" r="4"/><circle cx="384" cy="146" r="4"/><circle cx="408" cy="104" r="4"/>
+              <circle cx="265" cy="160" r="4"/><circle cx="290" cy="170" r="4"/><circle cx="315" cy="160" r="4"/><circle cx="340" cy="170" r="4"/><circle cx="290" cy="190" r="4"/><circle cx="315" cy="196" r="4"/>
+              <circle cx="372" cy="176" r="4"/><circle cx="396" cy="186" r="4"/><circle cx="420" cy="176" r="4"/><circle cx="396" cy="206" r="4"/><circle cx="420" cy="196" r="4"/>
+            </g>
+            <path d="M356 56 L356 210" stroke="var(--up)" stroke-width="1.6" stroke-dasharray="5 4"/>
+            <path d="M356 130 L290 130" stroke="var(--up)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="340" y="212" text-anchor="middle" font-size="10" fill="var(--up)">虚线 = 晶界（缺陷、漏电通道）</text>
+
+            <!-- 非晶 -->
+            <rect x="470" y="26" width="196" height="180" rx="10" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="568" y="46" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">非晶 Amorphous</text>
+            <g fill="var(--fin)" fill-opacity=".8">
+              <circle cx="492" cy="66" r="4"/><circle cx="522" cy="80" r="4"/><circle cx="556" cy="66" r="4"/><circle cx="590" cy="82" r="4"/><circle cx="620" cy="64" r="4"/><circle cx="648" cy="88" r="4"/>
+              <circle cx="486" cy="104" r="4"/><circle cx="518" cy="118" r="4"/><circle cx="552" cy="100" r="4"/><circle cx="588" cy="120" r="4"/><circle cx="624" cy="104" r="4"/><circle cx="652" cy="126" r="4"/>
+              <circle cx="494" cy="146" r="4"/><circle cx="526" cy="158" r="4"/><circle cx="560" cy="142" r="4"/><circle cx="596" cy="160" r="4"/><circle cx="630" cy="146" r="4"/><circle cx="652" cy="168" r="4"/>
+              <circle cx="500" cy="190" r="4"/><circle cx="534" cy="196" r="4"/><circle cx="568" cy="182" r="4"/><circle cx="602" cy="198" r="4"/><circle cx="636" cy="188" r="4"/>
+            </g>
+            <text x="568" y="212" text-anchor="middle" font-size="10" fill="var(--text-mute)">短程有序 · 长程无序（如 SiO₂ 玻璃）</text>
+          </g>
+        </svg>
+        <figcaption>图 1：三类固体。半导体器件要的是<strong>单晶</strong>——电子在周期性势场中才能形成干净的能带；晶界是多晶硅的漏电与散射之源。</figcaption>
+      </figure>
+
+      <div class="note">
+        <strong>为什么"周期性"这么重要？</strong>能带理论的前提就是<em>原子排列具有平移周期性</em>。
+        只有在周期势场中，电子的波函数才能写成布洛赫波、能量才会分裂成允带和禁带。
+        一旦出现晶界、位错、杂质团簇，周期性被打破，就会在禁带里引入能级 —— 这正是漏电和复合的来源。
+        所以从晶体学开始学，是理解后面所有内容的唯一正确入口。
+      </div>
+
+      <h2 id="s2">2. 晶格与晶胞：点阵 + 基元</h2>
+
+      <p>晶体学最核心的一个公式（不是数学公式，是构造公式）：</p>
+
+      <div class="formula-block">
+        <span class="fl">晶体结构 = 空间点阵（Lattice）+ 基元（Basis / Motif）</span>
+        <span class="fnote">点阵回答"周期怎么重复"，是纯几何的抽象点阵；基元回答"每个点上放什么"，是具体的原子（可以是一个，也可以是一组）。
+        同一个点阵配不同基元，得到完全不同的物质 —— 这一点在金刚石 vs 闪锌矿上体现得淋漓尽致。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="点阵加基元等于晶体结构">
+          <g font-size="11" fill="var(--text)">
+            <!-- 点阵 -->
+            <rect x="16" y="30" width="170" height="150" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="101" y="52" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">① 空间点阵</text>
+            <g fill="var(--text-mute)">
+              <circle cx="46" cy="80" r="3"/><circle cx="76" cy="80" r="3"/><circle cx="106" cy="80" r="3"/><circle cx="136" cy="80" r="3"/><circle cx="166" cy="80" r="3"/>
+              <circle cx="46" cy="110" r="3"/><circle cx="76" cy="110" r="3"/><circle cx="106" cy="110" r="3"/><circle cx="136" cy="110" r="3"/><circle cx="166" cy="110" r="3"/>
+              <circle cx="46" cy="140" r="3"/><circle cx="76" cy="140" r="3"/><circle cx="106" cy="140" r="3"/><circle cx="136" cy="140" r="3"/><circle cx="166" cy="140" r="3"/>
+              <circle cx="46" cy="170" r="3"/><circle cx="76" cy="170" r="3"/><circle cx="106" cy="170" r="3"/><circle cx="136" cy="170" r="3"/><circle cx="166" cy="170" r="3"/>
+            </g>
+            <text x="101" y="186" text-anchor="middle" font-size="10" fill="var(--text-mute)">只有"位置"，没有内容</text>
+
+            <!-- 加号 -->
+            <text x="216" y="106" font-size="24" text-anchor="middle" fill="var(--semi)" font-weight="700">+</text>
+
+            <!-- 基元 -->
+            <rect x="252" y="30" width="150" height="150" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="327" y="52" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">② 基元</text>
+            <circle cx="327" cy="96" r="9" fill="var(--semi)" fill-opacity=".8"/>
+            <circle cx="327" cy="126" r="9" fill="var(--accent)" fill-opacity=".8"/>
+            <text x="352" y="100" font-size="10" fill="var(--text-soft)">原子 A</text>
+            <text x="352" y="130" font-size="10" fill="var(--text-soft)">原子 B</text>
+            <text x="327" y="186" text-anchor="middle" font-size="10" fill="var(--text-mute)">一套原子及其相对位置</text>
+
+            <!-- 等号 -->
+            <text x="432" y="106" font-size="24" text-anchor="middle" fill="var(--semi)" font-weight="700">=</text>
+
+            <!-- 结果 -->
+            <rect x="470" y="30" width="196" height="150" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="568" y="52" text-anchor="middle" font-size="11.5" fill="var(--semi)" font-weight="700">③ 晶体结构</text>
+            <g>
+              <circle cx="496" cy="142" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="496" cy="168" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="528" cy="142" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="528" cy="168" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="560" cy="142" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="560" cy="168" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="592" cy="142" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="592" cy="168" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="624" cy="142" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="624" cy="168" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="512" cy="116" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="512" cy="90" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="544" cy="116" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="544" cy="90" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="576" cy="116" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="576" cy="90" r="7" fill="var(--accent)" fill-opacity=".8"/>
+              <circle cx="608" cy="116" r="7" fill="var(--semi)" fill-opacity=".8"/><circle cx="608" cy="90" r="7" fill="var(--accent)" fill-opacity=".8"/>
+            </g>
+            <text x="568" y="186" text-anchor="middle" font-size="10" fill="var(--text-mute)">每个点上都"贴"一份基元</text>
+          </g>
+        </svg>
+        <figcaption>图 2：晶体 = 点阵 × 基元。金刚石与闪锌矿的区别，仅仅是基元里两个原子<em>相同</em>还是<em>不同</em>。</figcaption>
+      </figure>
+
+      <h3>2.1 晶胞 vs 原胞</h3>
+      <div class="kv">
+        <div><div class="v">晶胞 Unit Cell</div><div class="l">能反映晶体全部对称性的最小重复单元（惯用晶胞）</div></div>
+        <div><div class="v">原胞 Primitive Cell</div><div class="l">体积最小的重复单元，只含 1 个格点，不保证对称性直观</div></div>
+        <div><div class="v">晶格常数 a</div><div class="l">晶胞棱长，硅 a = 5.431 Å</div></div>
+        <div><div class="v">晶胞原子数 N</div><div class="l">按"角 1/8、棱 1/4、面 1/2、体内 1"加权计数</div></div>
+      </div>
+
+      <h2 id="s3">3. 三种立方晶胞：SC / BCC / FCC 与堆积密度</h2>
+
+      <p>金属和半导体里最常见的是三种立方晶胞。它们的核心差别是<strong>原子在晶胞里放了几个、放在哪</strong>，
+      由此决定了配位数和堆积密度。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SC BCC FCC 三种立方晶胞">
+          <g font-size="11" fill="var(--text)">
+            <!-- SC -->
+            <text x="70" y="26" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">简单立方 SC</text>
+            <g transform="translate(30,40)">
+              <rect x="0" y="0" width="80" height="80" fill="var(--surface-2)" stroke="var(--border)"/>
+              <g fill="var(--semi)" fill-opacity=".8">
+                <circle cx="0" cy="0" r="7"/><circle cx="80" cy="0" r="7"/><circle cx="0" cy="80" r="7"/><circle cx="80" cy="80" r="7"/>
+                <circle cx="0" cy="40" r="7"/><circle cx="40" cy="0" r="7"/><circle cx="80" cy="40" r="7"/><circle cx="40" cy="80" r="7"/>
+                <circle cx="40" cy="40" r="5" fill-opacity=".25"/>
+              </g>
+            </g>
+            <text x="70" y="140" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">8 个角 × 1/8 = 1 个原子</text>
+            <text x="70" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">配位数 6 ｜ 堆积率 52%</text>
+            <text x="70" y="176" text-anchor="middle" font-size="10" fill="var(--text-mute)">实例：钋 Po（唯一金属）</text>
+
+            <!-- BCC -->
+            <text x="300" y="26" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">体心立方 BCC</text>
+            <g transform="translate(260,40)">
+              <rect x="0" y="0" width="80" height="80" fill="var(--surface-2)" stroke="var(--border)"/>
+              <g fill="var(--accent)" fill-opacity=".8">
+                <circle cx="0" cy="0" r="7"/><circle cx="80" cy="0" r="7"/><circle cx="0" cy="80" r="7"/><circle cx="80" cy="80" r="7"/>
+                <circle cx="40" cy="40" r="9"/>
+              </g>
+              <circle cx="0" cy="40" r="4" fill-opacity=".2"/><circle cx="40" cy="0" r="4" fill-opacity=".2"/>
+              <circle cx="80" cy="40" r="4" fill-opacity=".2"/><circle cx="40" cy="80" r="4" fill-opacity=".2"/>
+            </g>
+            <text x="300" y="140" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">8 角×1/8 + 1 体心 = 2 个原子</text>
+            <text x="300" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">配位数 8 ｜ 堆积率 68%</text>
+            <text x="300" y="176" text-anchor="middle" font-size="10" fill="var(--text-mute)">实例：Fe(α)、W、Mo、Ta</text>
+
+            <!-- FCC -->
+            <text x="530" y="26" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">面心立方 FCC</text>
+            <g transform="translate(490,40)">
+              <rect x="0" y="0" width="80" height="80" fill="var(--surface-2)" stroke="var(--border)"/>
+              <g fill="var(--fin)" fill-opacity=".8">
+                <circle cx="0" cy="0" r="7"/><circle cx="80" cy="0" r="7"/><circle cx="0" cy="80" r="7"/><circle cx="80" cy="80" r="7"/>
+                <circle cx="40" cy="0" r="7"/><circle cx="0" cy="40" r="7"/><circle cx="80" cy="40" r="7"/><circle cx="40" cy="80" r="7"/>
+                <circle cx="40" cy="40" r="7"/>
+              </g>
+            </g>
+            <text x="530" y="140" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">8 角×1/8 + 6 面×1/2 = 4 个原子</text>
+            <text x="530" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">配位数 12 ｜ 堆积率 74%</text>
+            <text x="530" y="176" text-anchor="middle" font-size="10" fill="var(--text-mute)">实例：Al、Cu、Au、Ni（芯片互连金属）</text>
+
+            <!-- 说明 -->
+            <rect x="16" y="196" width="648" height="44" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="216" font-size="10.5" fill="var(--text-soft)">配位数 = 最近邻原子数；堆积率 APF = 晶胞内原子总体积 / 晶胞体积。FCC 是最密堆积方式之一（74%），</text>
+            <text x="32" y="232" font-size="10.5" fill="var(--text-soft)">也是金刚石结构的"骨架"—— 硅的点阵正是 FCC。</text>
+          </g>
+        </svg>
+        <figcaption>图 3：三种立方晶胞（此处画的是二维投影，角上原子为 8 个晶胞共享）。注意 FCC 的面心原子才是它的标志。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">APF = N · (4/3)π r³ / a³　（堆积率 = 原子总体积 / 晶胞体积）</span>
+        <span class="fnote">SC：N=1，r=a/2 → π/6 ≈ 52%。BCC：N=2，r=√3a/4 → √3π/8 ≈ 68%。
+        FCC：N=4，r=√2a/4 → √2π/6 ≈ 74%（最密堆积）。金刚石：N=8，r=√3a/8 → √3π/16 ≈ 34%（非常"空"）。</span>
+      </div>
+
+      <div class="tip">
+        <strong>记住金刚石只有 34% 的堆积率</strong> —— 硅晶体内部非常"空旷"，
+        这正是<strong>杂质原子能挤进晶格间隙（间隙式扩散）</strong>、以及<strong>离子注入能把原子塞进去</strong>的物理基础。
+        这个数字在第 7 篇讲掺杂工艺时会再次用到。
+      </div>
+
+      <h2 id="s4">4. 半导体主角：金刚石结构与闪锌矿结构</h2>
+
+      <p>硅的结构可以这样构造：<strong>拿一个 FCC 点阵，在每个格点上放"两个硅原子"作为基元</strong> ——
+      一个在 (0,0,0)，另一个在 (¼,¼,¼)。于是立方晶胞里共有 4×2 = <strong>8 个原子</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="金刚石结构与四面体键合">
+          <g font-size="11" fill="var(--text)">
+            <!-- 左：晶胞 -->
+            <text x="150" y="24" font-size="12" fill="var(--semi)" font-weight="700">金刚石晶胞（Si / Ge / 金刚石 C）</text>
+            <g transform="translate(40,40)">
+              <!-- 立方体线框 -->
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/>
+                <path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/>
+                <path d="M0 180 L45 135 L135 135"/>
+                <path d="M45 135 L45 45"/>
+              </g>
+              <!-- FCC 子晶格 A（角+面心）深色 -->
+              <g fill="var(--semi)" fill-opacity=".9">
+                <circle cx="0" cy="180" r="6"/><circle cx="90" cy="180" r="6"/><circle cx="90" cy="90" r="6"/>
+                <circle cx="45" cy="135" r="6"/><circle cx="135" cy="135" r="6"/><circle cx="135" cy="45" r="6"/><circle cx="45" cy="45" r="6"/>
+                <circle cx="67.5" cy="67.5" r="6"/><circle cx="67.5" cy="157.5" r="6"/><circle cx="112.5" cy="112.5" r="6"/>
+              </g>
+              <!-- 子晶格 B（偏移 1/4,1/4,1/4）浅色 -->
+              <g fill="var(--accent)" fill-opacity=".95">
+                <circle cx="22.5" cy="157.5" r="6"/><circle cx="112.5" cy="157.5" r="6"/>
+                <circle cx="56" cy="124" r="6"/><circle cx="79" cy="101" r="6"/>
+                <circle cx="22.5" cy="67.5" r="6"/><circle cx="112.5" cy="67.5" r="6"/>
+              </g>
+              <!-- 键 -->
+              <g stroke="var(--text-mute)" stroke-width="1.6" opacity=".8">
+                <path d="M22.5 157.5 L0 180"/><path d="M22.5 157.5 L45 135"/><path d="M22.5 157.5 L67.5 157.5"/><path d="M22.5 157.5 L22.5 135"/>
+                <path d="M79 101 L67.5 67.5"/><path d="M79 101 L112.5 112.5"/>
+              </g>
+            </g>
+            <text x="152" y="248" font-size="10.5" fill="var(--semi)">● 子晶格 A（FCC 格点）</text>
+            <text x="152" y="266" font-size="10.5" fill="var(--accent)">● 子晶格 B（整体偏移 ¼,¼,¼）</text>
+            <text x="152" y="284" font-size="10" fill="var(--text-mute)">晶胞内 8 个原子：8×⅛ + 6×½ + 4 = 8</text>
+
+            <!-- 右：四面体 -->
+            <text x="500" y="24" font-size="12" fill="var(--semi)" font-weight="700">四面体键合（sp³ 杂化）</text>
+            <g transform="translate(400,40)">
+              <circle cx="120" cy="110" r="13" fill="var(--semi)"/>
+              <text x="120" y="115" font-size="10" text-anchor="middle" fill="var(--bg-card, #fff)" font-weight="700">Si</text>
+              <g stroke="var(--text-mute)" stroke-width="2">
+                <path d="M120 110 L60 60"/><path d="M120 110 L180 60"/><path d="M120 110 L60 165"/><path d="M120 110 L180 165"/>
+              </g>
+              <g fill="var(--accent)" fill-opacity=".9">
+                <circle cx="60" cy="60" r="11"/><circle cx="180" cy="60" r="11"/><circle cx="60" cy="165" r="11"/><circle cx="180" cy="165" r="11"/>
+              </g>
+              <text x="120" y="200" font-size="10.5" text-anchor="middle" fill="var(--text-soft)">4 个最近邻，键角 109.5°</text>
+              <path d="M120 110 L150 110" stroke="var(--up)" stroke-width="1.2" stroke-dasharray="4 3"/>
+              <path d="M132 110 A 18 18 0 0 1 128 96" stroke="var(--up)" stroke-width="1.2" fill="none"/>
+              <text x="152" y="106" font-size="10" fill="var(--up)">109.5°</text>
+              <text x="120" y="222" font-size="10" text-anchor="middle" fill="var(--text-mute)">最近邻距离 √3a/4 = 2.35 Å</text>
+            </g>
+            <rect x="330" y="248" width="334" height="36" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="344" y="270" font-size="10.5" fill="var(--text-soft)">每个 Si 原子 4 个价电子 → 与 4 个邻居形成 4 个共价键 → 满壳层、无自由电子 → 本征硅不导电。</text>
+          </g>
+        </svg>
+        <figcaption>图 4：金刚石结构 = FCC 点阵 + 双原子基元。每个原子都是正四面体配位，这是硅所有电学与力学性质的结构根源。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div><div class="v">5.431 Å</div><div class="l">硅晶格常数 a（300 K）</div></div>
+        <div><div class="v">8 个</div><div class="l">立方晶胞内原子数</div></div>
+        <div><div class="v">5.0×10²² cm⁻³</div><div class="l">硅原子密度（8/a³）</div></div>
+        <div><div class="v">2.35 Å</div><div class="l">最近邻距离 √3a/4</div></div>
+      </div>
+
+      <h3>4.1 换个基元，就换成另一种材料</h3>
+      <table class="term-table">
+        <thead><tr><th>结构</th><th>点阵</th><th>基元</th><th>典型材料</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td>金刚石</td><td>FCC</td><td>两个<strong>同种</strong>原子：(0,0,0) 与 (¼,¼,¼)</td><td>Si、Ge、C</td><td>有反演中心，非极性</td></tr>
+          <tr><td>闪锌矿<br>（Zincblende）</td><td>FCC</td><td>两个<strong>异种</strong>原子：Ⅲ 族与 Ⅴ 族</td><td>GaAs、GaP、InP、ZnS、CdTe</td><td>无反演中心 → 有<strong>压电性</strong>，极性面 (111)A / (111)B 性质不同</td></tr>
+          <tr><td>纤锌矿<br>（Wurtzite）</td><td>六方 HCP</td><td>两套异种原子</td><td>GaN、AlN、InN、ZnO、SiC 部分多型</td><td>六方，自发极化强 → LED / 功率器件主力</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>一个很容易忽略但很关键的推论：</strong>闪锌矿结构的 GaAs 有两个"不等价"的 (111) 面 ——
+        <em>(111)A（Ga 面）</em> 和 <em>(111)B（As 面）</em>，它们的<strong>刻蚀速率、氧化行为、外延生长完全不同</strong>。
+        硅因为两个子晶格同种原子，不存在这个区别。这就是"基元不同"带来的真实工程后果。
+      </div>
+
+      <h2 id="s5">5. 晶向 [uvw]：三步求出一个方向</h2>
+
+      <p><strong>晶向指数 [uvw]</strong> 用来标记晶体中的方向。求法只有三步：</p>
+
+      <ol>
+        <li><strong>平移</strong>：把待求方向平移到<em>过原点</em>（晶体中平行方向等价，可以随便移）；</li>
+        <li><strong>取点</strong>：在该方向上任取一点，读出它的坐标 (x, y, z)，单位是晶格常数 a；</li>
+        <li><strong>化整</strong>：三个坐标同除以最大公约数，化为<strong>最小整数比</strong>，写成 [u v w]。负值在数字<em>上方加横线</em>。</li>
+      </ol>
+
+      <div class="formula-block">
+        <span class="fl">例：过点 (1, 0, 0) → [100]　｜　过 (1, 1, 0) → [110]　｜　过 (1, 1, 1) → [111]　｜　过 (1, 0, −1) → [10<span style="text-decoration:overline">1</span>]</span>
+        <span class="fnote">负号不能写成 −1，必须写成上划线：<strong>[1̄01] 记为 [10<span style="text-decoration:overline">1</span>]</strong>。这是书写规范，考试和论文都认这个。</span>
+      </div>
+
+      <h3>5.1 晶向族 &lt;uvw&gt;</h3>
+      <p>由于立方晶系的对称性，很多晶向是<strong>完全等价</strong>的（原子排列一模一样），只是方向不同。
+      把它们打包记作尖括号 <strong>&lt;uvw&gt;</strong>：</p>
+
+      <div class="term-table">
+        <table>
+          <tr><td>&lt;100&gt;</td><td>[100] [010] [001] [1̄00] [01̄0] [001̄] —— 共 <strong>6 个</strong>等价方向（±3 个轴）</td></tr>
+          <tr><td>&lt;110&gt;</td><td>[110] [101] [011] [11̄0] … —— 共 <strong>12 个</strong>（面对角线方向）</td></tr>
+          <tr><td>&lt;111&gt;</td><td>[111] [1̄11] [11̄1] [111̄] … —— 共 <strong>8 个</strong>（体对角线方向）</td></tr>
+        </table>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="立方体中的三个重要晶向">
+          <defs>
+            <marker id="arDir" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+              <path d="M0,0 L7,3.2 L0,6.4 Z" fill="var(--semi)"/>
+            </marker>
+          </defs>
+          <g font-size="11" fill="var(--text)">
+            <!-- 立方体 [100] -->
+            <text x="118" y="24" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">[100]</text>
+            <g transform="translate(30,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M0 180 L90 180" stroke="var(--semi)" stroke-width="3.4" marker-end="url(#arDir)"/>
+              <circle cx="0" cy="180" r="4.5" fill="var(--semi)"/>
+              <text x="46" y="200" font-size="10" fill="var(--text-mute)">沿棱边</text>
+            </g>
+
+            <!-- 立方体 [110] -->
+            <text x="338" y="24" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">[110]</text>
+            <g transform="translate(250,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M0 180 L90 90" stroke="var(--semi)" stroke-width="3.4" marker-end="url(#arDir)"/>
+              <circle cx="0" cy="180" r="4.5" fill="var(--semi)"/>
+              <text x="46" y="200" font-size="10" fill="var(--text-mute)">沿面对角线</text>
+            </g>
+
+            <!-- 立方体 [111] -->
+            <text x="558" y="24" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">[111]</text>
+            <g transform="translate(470,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M0 180 L135 135" stroke="var(--semi)" stroke-width="3.4" marker-end="url(#arDir)"/>
+              <circle cx="0" cy="180" r="4.5" fill="var(--semi)"/>
+              <text x="66" y="200" font-size="10" fill="var(--text-mute)">沿体对角线</text>
+            </g>
+          </g>
+          <rect x="16" y="212" width="648" height="22" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="32" y="227" font-size="10.5" fill="var(--text-soft)">箭头都从前左下角（原点）出发。<strong>&lt;100&gt; 是棱、&lt;110&gt; 是面对角线、&lt;111&gt; 是体对角线</strong> —— 这三个要能一眼认出。</text>
+        </svg>
+        <figcaption>图 5：三个最重要的晶向。它们不只是几何方向，而是对应完全不同的原子排列密度与电子性质。</figcaption>
+      </figure>
+
+      <h2 id="s6">6. 晶面 (hkl)：米勒指数怎么来的</h2>
+
+      <p><strong>晶面指数（米勒指数）(hkl)</strong> 标记一族平行的原子平面。求法也是三步，但要<strong>先取截距再取倒数</strong>：</p>
+
+      <ol>
+        <li><strong>求截距</strong>：找出晶面与 x、y、z 三个晶轴的截距，用晶格常数 a 为单位表示（如 1, 1, ∞）；</li>
+        <li><strong>取倒数</strong>：1/截距 → 1/1, 1/1, 1/∞ = 1, 1, 0；</li>
+        <li><strong>化整</strong>：化为最小整数比，写成 (h k l)。<strong>与轴平行 → 截距 ∞ → 指数 0</strong>；负截距 → 数字上加横线。</li>
+      </ol>
+
+      <div class="warn">
+        <strong>为什么非要取倒数？</strong>两个原因：① 让"与轴平行"这种常见情况有简洁表示（0，而不是 ∞）；
+        ② 更深层的原因 —— 米勒指数 (hkl) 的整数，恰恰等于该晶面法向量在<strong>倒格子</strong>基矢下的坐标。
+        所以取倒数不是人为规定，而是为了指数能直接反映晶面的取向与面间距。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三个经典晶面在立方体中的截切">
+          <g font-size="11" fill="var(--text)">
+            <!-- (100) -->
+            <text x="118" y="24" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">(100) 面</text>
+            <g transform="translate(30,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M90 180 L135 135 L135 45 L90 90 Z" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.8"/>
+              <text x="150" y="120" font-size="10.5" fill="var(--semi)">x=1</text>
+              <text x="150" y="136" font-size="10" fill="var(--text-mute)">截距 1,∞,∞</text>
+            </g>
+
+            <!-- (110) -->
+            <text x="338" y="24" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">(110) 面</text>
+            <g transform="translate(250,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M90 180 L0 90 L45 45 L135 135 Z" fill="var(--accent)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1.8"/>
+              <text x="150" y="120" font-size="10.5" fill="var(--accent)">截 1,1，平行 z</text>
+              <text x="150" y="136" font-size="10" fill="var(--text-mute)">截距 1,1,∞</text>
+            </g>
+
+            <!-- (111) -->
+            <text x="558" y="24" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">(111) 面</text>
+            <g transform="translate(470,40)">
+              <g stroke="var(--border)" stroke-width="1.2" fill="none">
+                <path d="M0 90 L90 90 L135 45 L45 45 Z"/>
+                <path d="M0 90 L0 180 L90 180 L90 90"/><path d="M90 90 L135 45"/>
+                <path d="M90 180 L135 135 L135 45"/><path d="M0 180 L45 135 L135 135"/><path d="M45 135 L45 45"/>
+              </g>
+              <path d="M90 180 L0 90 L45 135 Z" fill="var(--fin)" fill-opacity=".32" stroke="var(--fin)" stroke-width="1.8"/>
+              <text x="150" y="120" font-size="10.5" fill="var(--fin)">切掉一个角</text>
+              <text x="150" y="136" font-size="10" fill="var(--text-mute)">截距 1,1,1</text>
+            </g>
+          </g>
+          <rect x="16" y="212" width="648" height="32" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="32" y="227" font-size="10.5" fill="var(--text-soft)">晶面族 {hkl}：如 {100} 包含 (100)(010)(001)(1̄00)(01̄0)(001̄) 共 6 个等价面；{111} 有 8 个；{110} 有 12 个。</text>
+          <text x="32" y="240" font-size="10.5" fill="var(--text-soft)">立方晶系特例：<strong>[hkl] 方向严格垂直于 (hkl) 面</strong> —— 这个结论只在立方晶系成立，其它晶系不成立。</text>
+        </svg>
+        <figcaption>图 6：米勒指数的几何图像。(100) 是一个完整侧面，(110) 是对角切面，(111) 切掉一个角。</figcaption>
+      </figure>
+
+      <h3>6.1 面间距公式</h3>
+      <div class="formula-block">
+        <span class="fl">d<sub>hkl</sub> = a / √(h² + k² + l²)　（仅立方晶系）</span>
+        <span class="fnote">硅（a = 5.431 Å）：d₁₀₀ = 5.431 Å，d₁₁₀ = a/√2 = 3.840 Å，d₁₁₁ = a/√3 = 3.135 Å。
+        注意：<strong>指数越大，面间距越小</strong>，这是 XRD 谱峰位置的基础。</span>
+      </div>
+
+      <h2 id="s7">7. 面密度、线密度与悬挂键：数字背后的物理</h2>
+
+      <p>这三个"密度"是把晶体学和器件物理连起来的桥梁，也是考题与工程判断的常客。</p>
+
+      <div class="term-table">
+        <table>
+          <tr><td>面密度<br>（planar density）</td><td>单位面积上的原子数，atoms/cm²。决定<strong>氧化速率、外延速率、界面态密度</strong></td></tr>
+          <tr><td>线密度<br>（linear density）</td><td>某晶向上单位长度的原子数。决定<strong>位错滑移方向、扩散各向异性</strong></td></tr>
+          <tr><td>悬挂键密度</td><td>晶体被切开后，表面原子未配对的价键数/cm²。决定<strong>表面态与界面质量</strong></td></tr>
+        </table>
+      </div>
+
+      <h3>7.1 硅三个主晶面的面密度（要求会算）</h3>
+
+      <div class="formula-block">
+        <span class="fl">Si(100)：2 / a² = 6.78×10¹⁴ cm⁻²　｜　Si(110)：2√2 / a² = 9.59×10¹⁴ cm⁻²　｜　Si(111)：4 / (√3 a²) = 7.83×10¹⁴ cm⁻²</span>
+        <span class="fnote">取 a = 5.431 Å ⇒ a² = 2.95×10⁻¹⁵ cm²。计算思路：数出晶面在<strong>一个二维重复单元</strong>里有几个原子，除以该单元面积。
+        注意顺序：<strong>(110) &gt; (111) &gt; (100)</strong> —— 面密度最高的是 (110)，不是 (111)。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">理想未重构表面悬挂键密度：(100) 每原子 2 个 → 1.36×10¹⁵；(111) 每原子 1 个 → 7.83×10¹⁴ cm⁻²</span>
+        <span class="fnote">实际 Si(100) 表面会发生 <strong>2×1 重构（二聚化 dimerization）</strong>：相邻两个原子两两配对，
+        悬挂键数减半到 6.78×10¹⁴ cm⁻²。这是表面物理的经典案例 —— 表面会自发"修复"自己以降低能量。</span>
+      </div>
+
+      <div class="note">
+        <strong>这里有个容易记混的反直觉点：</strong>(100) 面的<em>面密度最低</em>（6.78×10¹⁴），
+        但它的<strong>Si/SiO₂ 界面态密度也最低</strong>（约 10¹⁰ cm⁻²·eV⁻¹，比 (111) 低约一个数量级）。
+        原因是界面态密度不只取决于原子数，更取决于<strong>氧化时悬挂键的匹配方式与应变</strong>：
+        (100) 面上每个 Si 有两个悬挂键，氧化时更容易形成完整的 Si–O–Si 桥接网络；
+        而 (111) 面原子排列最密、氧化速率最快，反而容易产生更多未饱和键与应变缺陷。
+        <strong>结论：做 MOS 选 (100)，这是实验事实驱动的选择。</strong>
+      </div>
+
+      <h2 id="s8">8. 三种经典晶面：原子是怎么排的</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三个晶面的原子排列俯视图">
+          <g font-size="11" fill="var(--text)">
+            <!-- (100) 正方 -->
+            <rect x="14" y="26" width="196" height="190" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="112" y="46" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">Si(100) 正方排列</text>
+            <g fill="var(--semi)" fill-opacity=".85">
+              <circle cx="50" cy="76" r="6"/><circle cx="90" cy="76" r="6"/><circle cx="130" cy="76" r="6"/><circle cx="170" cy="76" r="6"/>
+              <circle cx="50" cy="116" r="6"/><circle cx="90" cy="116" r="6"/><circle cx="130" cy="116" r="6"/><circle cx="170" cy="116" r="6"/>
+              <circle cx="50" cy="156" r="6"/><circle cx="90" cy="156" r="6"/><circle cx="130" cy="156" r="6"/><circle cx="170" cy="156" r="6"/>
+              <circle cx="50" cy="196" r="6"/><circle cx="90" cy="196" r="6"/><circle cx="130" cy="196" r="6"/><circle cx="170" cy="196" r="6"/>
+            </g>
+            <path d="M50 76 L90 76 L90 116 L50 116 Z" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-dasharray="3 2"/>
+            <text x="112" y="216" text-anchor="middle" font-size="10" fill="var(--text-mute)">面内周期 a/√2 = 3.84 Å</text>
+
+            <!-- (110) 矩形 -->
+            <rect x="242" y="26" width="196" height="190" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="340" y="46" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">Si(110) 矩形排列</text>
+            <g fill="var(--accent)" fill-opacity=".85">
+              <circle cx="290" cy="72" r="5.5"/><circle cx="330" cy="72" r="5.5"/><circle cx="370" cy="72" r="5.5"/><circle cx="410" cy="72" r="5.5"/>
+              <circle cx="270" cy="104" r="5.5"/><circle cx="310" cy="104" r="5.5"/><circle cx="350" cy="104" r="5.5"/><circle cx="390" cy="104" r="5.5"/><circle cx="430" cy="104" r="5.5"/>
+              <circle cx="290" cy="136" r="5.5"/><circle cx="330" cy="136" r="5.5"/><circle cx="370" cy="136" r="5.5"/><circle cx="410" cy="136" r="5.5"/>
+              <circle cx="270" cy="168" r="5.5"/><circle cx="310" cy="168" r="5.5"/><circle cx="350" cy="168" r="5.5"/><circle cx="390" cy="168" r="5.5"/><circle cx="430" cy="168" r="5.5"/>
+              <circle cx="290" cy="200" r="5.5"/><circle cx="330" cy="200" r="5.5"/><circle cx="370" cy="200" r="5.5"/><circle cx="410" cy="200" r="5.5"/>
+            </g>
+            <text x="340" y="216" text-anchor="middle" font-size="10" fill="var(--text-mute)">两个方向周期不同 → 各向异性最强</text>
+
+            <!-- (111) 六方 -->
+            <rect x="470" y="26" width="196" height="190" rx="10" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1.3"/>
+            <text x="568" y="46" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">Si(111) 六方密排</text>
+            <g fill="var(--fin)" fill-opacity=".85">
+              <circle cx="510" cy="70" r="6"/><circle cx="550" cy="70" r="6"/><circle cx="590" cy="70" r="6"/><circle cx="630" cy="70" r="6"/>
+              <circle cx="530" cy="104" r="6"/><circle cx="570" cy="104" r="6"/><circle cx="610" cy="104" r="6"/><circle cx="650" cy="104" r="6"/>
+              <circle cx="510" cy="138" r="6"/><circle cx="550" cy="138" r="6"/><circle cx="590" cy="138" r="6"/><circle cx="630" cy="138" r="6"/>
+              <circle cx="530" cy="172" r="6"/><circle cx="570" cy="172" r="6"/><circle cx="610" cy="172" r="6"/><circle cx="650" cy="172" r="6"/>
+              <circle cx="510" cy="206" r="6"/><circle cx="550" cy="206" r="6"/><circle cx="590" cy="206" r="6"/><circle cx="630" cy="206" r="6"/>
+            </g>
+            <g stroke="var(--fin)" stroke-width="1" opacity=".5">
+              <path d="M510 70 L530 104 L590 70"/><path d="M590 70 L610 104 L630 70"/>
+            </g>
+            <text x="568" y="216" text-anchor="middle" font-size="10" fill="var(--text-mute)">最密排布 · 面内周期 3.84 Å</text>
+          </g>
+        </svg>
+        <figcaption>图 7：三个晶面的表面原子排列（俯视示意）。(100) 正方、(110) 矩形（两方向不等价）、(111) 六方密排。</figcaption>
+      </figure>
+
+      <h2 id="s9">9. 晶向如何决定器件性能（本篇重点）</h2>
+
+      <p>这是本篇最需要记住的一节 —— 晶向不是考试题，它直接写进工艺规格书。</p>
+
+      <table class="term-table">
+        <thead><tr><th>性质</th><th>与晶向的关系</th><th>工程选择</th></tr></thead>
+        <tbody>
+          <tr><td><strong>界面态密度</strong></td><td>Si(100)/SiO₂ ≈ 10¹⁰ cm⁻²·eV⁻¹，比 (111) 低约一个数量级</td><td><strong>逻辑/存储一律用 (100) 片</strong></td></tr>
+          <tr><td><strong>电子迁移率 μ<sub>n</sub></strong></td><td>(100) 面 / &lt;110&gt; 沟道方向电子迁移率最高（约 1350~1500 cm²/V·s）</td><td>NMOS 用 (100) 表面、&lt;110&gt; 沟道</td></tr>
+          <tr><td><strong>空穴迁移率 μ<sub>p</sub></strong></td><td><strong>(110) 面空穴迁移率最高</strong>，可比 (100) 高约 2 倍</td><td>PMOS 常把沟道放在 (110) 侧壁（FinFET）、或应变工程</td></tr>
+          <tr><td><strong>热氧化速率</strong></td><td>(111) &gt; (110) &gt; (100)，线性速率常数比约 1.68 : 1.25 : 1</td><td>厚氧化层（如功率器件场氧）可用 (111)；薄栅氧用 (100) 便于精确控厚</td></tr>
+          <tr><td><strong>各向异性刻蚀</strong></td><td>KOH/TMAH 对 (111) 刻蚀速率极慢，与 (100) 之比可达 100:1 以上</td><td>MEMS 硅杯、倒金字塔、V 型槽、自停止膜厚控制</td></tr>
+          <tr><td><strong>解理与划片</strong></td><td>硅的<strong>解理面是 {111}</strong>；(100) 片上的解理方向互相垂直</td><td>芯片划片沿解理方向，切口平整、崩边小</td></tr>
+          <tr><td><strong>外延生长</strong></td><td>生长速率与表面形貌随晶向变化；(111) 易出现孪晶与金字塔缺陷</td><td>常规外延选 (100)；(111) 需专门优化</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>一条主线串起来：</strong>因为界面态密度最低 → MOS 用 (100)；
+        因为 (100) 片上解理方向互相垂直 → 划片方便、芯片是方的；
+        因为 (110) 空穴迁移率最高 → PMOS 想办法把沟道做到 (110) 面上；
+        因为 (111) 刻蚀最慢 → 湿法刻蚀自动"停"在 (111) 面，得到规整形貌。
+        <em>整颗芯片的几何与电学，都被这几个晶面支配着。</em>
+      </div>
+
+      <h2 id="s10">10. 各向异性刻蚀：54.74° 与倒金字塔</h2>
+
+      <p>湿法刻蚀里最漂亮的一个例子：用 KOH 溶液刻 (100) 硅片，不会得到圆弧坑，而是得到<strong>四个 (111) 面围成的倒金字塔</strong>。
+      原因是 (111) 面原子密度最高、每个原子可参与反应的键最少，刻蚀速率极慢，成为"自停止面"。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KOH 各向异性刻蚀形成倒金字塔">
+          <g font-size="11" fill="var(--text)">
+            <!-- 掩膜与硅片 -->
+            <rect x="40" y="60" width="460" height="26" fill="var(--text)" fill-opacity=".22" stroke="var(--border)"/>
+            <rect x="40" y="86" width="460" height="110" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="270" y="78" text-anchor="middle" font-size="10.5" fill="var(--text)">SiO₂ / SiN 掩膜（开窗）</text>
+            <text x="270" y="212" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">(100) 硅片</text>
+
+            <!-- 倒金字塔 -->
+            <path d="M220 86 L320 86 L300 196 L240 196 Z" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.8"/>
+            <path d="M220 86 L240 196" stroke="var(--fin)" stroke-width="2.2"/>
+            <path d="M320 86 L300 196" stroke="var(--fin)" stroke-width="2.2"/>
+            <text x="212" y="150" font-size="10.5" fill="var(--fin)" text-anchor="end">(111) 慢刻面</text>
+            <text x="330" y="150" font-size="10.5" fill="var(--fin)">(111) 慢刻面</text>
+
+            <!-- 角度 -->
+            <path d="M240 196 L320 86" stroke="var(--up)" stroke-width="1" stroke-dasharray="4 3"/>
+            <path d="M240 196 A 40 40 0 0 1 254 186" stroke="var(--up)" stroke-width="1.4" fill="none"/>
+            <text x="256" y="182" font-size="11" fill="var(--up)" font-weight="700">54.74°</text>
+
+            <!-- 右侧说明 -->
+            <rect x="522" y="60" width="146" height="140" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="534" y="82" font-size="11" fill="var(--semi)" font-weight="700">角度从哪来</text>
+            <text x="534" y="104" font-size="10" fill="var(--text-soft)">(100) 与 (111) 面夹角 =</text>
+            <text x="534" y="120" font-size="10" fill="var(--text-soft)">arccos(1/√3)</text>
+            <text x="534" y="140" font-size="10" fill="var(--text-soft)">= 54.74°</text>
+            <text x="534" y="164" font-size="10" fill="var(--text-soft)">用法向量点积：</text>
+            <text x="534" y="180" font-size="10" fill="var(--text-soft)">(001)·(111)/|..| = 1/√3</text>
+            <text x="534" y="196" font-size="10" fill="var(--text-mute)">（立方晶系中 [hkl]⊥(hkl)）</text>
+          </g>
+          <rect x="40" y="216" width="628" height="20" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="54" y="230" font-size="10.5" fill="var(--text-soft)">工程用途：MEMS 压力传感器的硅杯、加速度计质量块、V 型槽、硅通孔；也可用刻蚀深度反推膜厚，做"自停止"精密控制。</text>
+        </svg>
+        <figcaption>图 8：KOH 各向异性刻蚀。(111) 面刻蚀最慢成为侧壁，与 (100) 表面夹角固定为 <strong>54.74°</strong> —— 这个角度在 MEMS 里天天用。</figcaption>
+      </figure>
+
+      <h2 id="s11">11. 倒格子与布拉格衍射：晶向是怎么测出来的</h2>
+
+      <p>我们说"这块硅片是 &lt;100&gt;"，这句话是怎么被测出来的？答案是 X 射线衍射（XRD）。
+      背后的原理是<strong>布拉格定律</strong>：把晶面族看成一组间距为 d 的平行反射面，
+      只有相邻面反射的波程差恰好是波长整数倍时才相干加强。</p>
+
+      <div class="formula-block">
+        <span class="fl">2 d<sub>hkl</sub> · sin θ = n λ　（布拉格定律）</span>
+        <span class="fnote">θ 是入射线与<strong>晶面</strong>的夹角（不是与法线的夹角！这是最常见的错点）。
+        固定波长 λ、扫描角度 θ，出现衍射峰的位置就对应某个 d<sub>hkl</sub>，反查即可知晶面族与晶向。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布拉格衍射示意图">
+          <defs>
+            <marker id="arX" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--up)"/>
+            </marker>
+          </defs>
+          <g font-size="11" fill="var(--text)">
+            <!-- 晶面 -->
+            <g stroke="var(--semi)" stroke-width="1.6">
+              <line x1="150" y1="150" x2="500" y2="150"/>
+              <line x1="150" y1="118" x2="500" y2="118"/>
+              <line x1="150" y1="86" x2="500" y2="86"/>
+              <line x1="150" y1="54" x2="500" y2="54"/>
+            </g>
+            <g fill="var(--text-mute)">
+              <circle cx="180" cy="150" r="3.5"/><circle cx="240" cy="150" r="3.5"/><circle cx="300" cy="150" r="3.5"/><circle cx="360" cy="150" r="3.5"/><circle cx="420" cy="150" r="3.5"/><circle cx="480" cy="150" r="3.5"/>
+              <circle cx="180" cy="118" r="3.5"/><circle cx="240" cy="118" r="3.5"/><circle cx="300" cy="118" r="3.5"/><circle cx="360" cy="118" r="3.5"/><circle cx="420" cy="118" r="3.5"/><circle cx="480" cy="118" r="3.5"/>
+              <circle cx="180" cy="86" r="3.5"/><circle cx="240" cy="86" r="3.5"/><circle cx="300" cy="86" r="3.5"/><circle cx="360" cy="86" r="3.5"/><circle cx="420" cy="86" r="3.5"/><circle cx="480" cy="86" r="3.5"/>
+              <circle cx="180" cy="54" r="3.5"/><circle cx="240" cy="54" r="3.5"/><circle cx="300" cy="54" r="3.5"/><circle cx="360" cy="54" r="3.5"/><circle cx="420" cy="54" r="3.5"/><circle cx="480" cy="54" r="3.5"/>
+            </g>
+            <!-- 间距标注 -->
+            <line x1="520" y1="150" x2="520" y2="118" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="528" y="138" font-size="11" fill="var(--up)" font-weight="700">d</text>
+
+            <!-- 入射与反射 -->
+            <path d="M120 74 L300 150" stroke="var(--up)" stroke-width="2.2" fill="none"/>
+            <path d="M300 150 L480 74" stroke="var(--up)" stroke-width="2.2" fill="none" marker-end="url(#arX)"/>
+            <path d="M120 42 L300 118" stroke="var(--up)" stroke-width="1.6" fill="none" opacity=".55"/>
+            <path d="M300 118 L480 42" stroke="var(--up)" stroke-width="1.6" fill="none" opacity=".55"/>
+            <text x="128" y="64" font-size="10.5" fill="var(--up)">入射</text>
+            <text x="446" y="64" font-size="10.5" fill="var(--up)">衍射（相干加强）</text>
+
+            <!-- θ -->
+            <path d="M300 150 L240 150" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <path d="M282 150 A 30 30 0 0 1 288 133" stroke="var(--text-mute)" stroke-width="1.2" fill="none"/>
+            <text x="292" y="132" font-size="11" fill="var(--text-mute)">θ</text>
+          </g>
+          <rect x="40" y="166" width="628" height="28" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="54" y="184" font-size="10.5" fill="var(--text-soft)">实例：Cu Kα（λ = 1.5406 Å）测硅。Si(111)：d = 3.135 Å ⇒ 2θ ≈ 28.4°；Si(400)：d = a/4 = 1.358 Å ⇒ 2θ ≈ 69.1°。</text>
+          <text x="54" y="196" font-size="10.5" fill="var(--text-soft)">产线上就是用这类峰位来<strong>给晶锭定向、确认平边/缺口方向、检查外延层与应变</strong>。</text>
+        </svg>
+        <figcaption>图 9：布拉格衍射。θ 是与晶面的夹角；相邻面反射的波程差 2d·sinθ 等于整数倍波长时才出峰。</figcaption>
+      </figure>
+
+      <div class="note">
+        <strong>顺便建立"倒格子"的直觉：</strong>真实空间的晶面族 (hkl) ↔ 倒格子中的一个点 (hkl) 矢量，
+        该矢量的<strong>方向就是晶面法向、长度等于 1/d<sub>hkl</sub></strong>。
+        所以在倒空间里，"晶面"变成"点"，衍射图样本质上是倒格子的投影 ——
+        这也是为什么米勒指数要取倒数：它天生就是倒空间坐标。
+      </div>
+
+      <h2 id="s12">12. 六方晶系与四指数（GaN、SiC）</h2>
+
+      <p>立方晶系之外，化合物半导体大量使用<strong>六方晶系</strong>（纤锌矿 GaN、4H/6H-SiC）。
+      六方晶系有三条互成 120° 的底轴 a₁、a₂、a₃ 加一条 c 轴，因此用<strong>四指数 (h k i l)</strong> 表示，其中：</p>
+
+      <div class="formula-block">
+        <span class="fl">i = −(h + k)　（四指数约束，三根底轴只有两个独立自由度）</span>
+        <span class="fnote">例：(0001) 是 c 面（极性面，GaN LED 的生长面）；(11<span style="text-decoration:overline">2</span>0) 是 a 面；(1<span style="text-decoration:overline">1</span>00) 是 m 面。
+        晶向也用四指数 [uvtw]，其中 t = −(u+v)。</span>
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>材料</th><th>结构</th><th>晶格常数</th><th>典型应用面</th></tr></thead>
+        <tbody>
+          <tr><td>Si</td><td>金刚石（立方）</td><td>a = 5.431 Å</td><td>(100) 为主，(111) 部分功率器件</td></tr>
+          <tr><td>GaAs</td><td>闪锌矿（立方）</td><td>a = 5.653 Å</td><td>(100) 为主；注意 (111)A / (111)B 不等价</td></tr>
+          <tr><td>GaN</td><td>纤锌矿（六方）</td><td>a = 3.189 Å，c = 5.185 Å</td><td><strong>c 面 (0001)</strong>：LED、HEMT；极性导致量子限制斯塔克效应</td></tr>
+          <tr><td>4H-SiC</td><td>六方多型</td><td>a ≈ 3.073 Å，c ≈ 10.05 Å</td><td>常用 <strong>(0001) 偏 4°</strong> 斜切衬底做外延，抑制台阶聚并</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        GaN 的 LED 为什么长在蓝宝石或 SiC 的 c 面上还要那么费劲？
+        因为纤锌矿结构<strong>沿 c 轴有自发极化</strong>，量子阱里出现强内建电场（量子限制斯塔克效应 QCSE），
+        把电子和空穴的波函数拉开，发光效率下降。这是"晶体结构 → 极化 → 器件效率"的完整因果链。
+      </div>
+
+      <h2 id="s13">13. 晶向与版图：匹配设计为什么要求同方向</h2>
+
+      <p>这一节把晶体学和前面/后面的内容接起来。模拟版图里有条铁律：
+      <strong>需要匹配的两个器件必须同尺寸、同形状、同方向、同环境</strong>。其中"同方向"的根源就是晶向。</p>
+
+      <ol>
+        <li><strong>迁移率各向异性</strong>：电子/空穴迁移率随晶向变化。两个 MOS 管沟道方向差 90°，
+        即使 W/L 完全相同，μ 也不同 → 电流失配；</li>
+        <li><strong>应力各向异性</strong>：STI（浅沟槽隔离）和金属层会带来机械应力，
+        硅的弹性常数是各向异性的 → 压阻效应使不同方向器件受力后迁移率变化不同；</li>
+        <li><strong>工艺微负载</strong>：刻蚀、注入（尤其倾斜注入与<strong>沟道效应</strong>）都随晶向变化。
+        <em>离子注入的沟道效应</em>正是沿低指数晶向（如 &lt;110&gt;、&lt;111&gt;）原子排列"看过去是空的"，离子可以长驱直入；</li>
+        <li><strong>解法</strong>：所有匹配器件<strong>同方向摆放</strong> + 共质心（common-centroid）对称布局 +
+        Dummy 器件保证边缘环境一致（详见<a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 9 篇：版图设计实战</a>）。</li>
+      </ol>
+
+      <div class="note">
+        <strong>离子注入的"沟道效应"值得单独记：</strong>沿 &lt;110&gt; 方向看金刚石结构，
+        原子排列形成一条条"通道"，注入离子如果正好沿通道入射，射程会远大于设计值，导致结深远超预期。
+        工程解法：注入前<strong>把硅片倾斜 7° 左右</strong>，让离子避开通道方向；或先做预非晶化（PAI）层打乱晶格。
+        这是"晶向知识直接决定工艺参数"的典型例子。
+      </div>
+
+      <h2 id="s14">14. 常见误区</h2>
+
+      <div class="warn">
+        <strong>误区 1：认为 [hkl] 一定垂直于 (hkl)。</strong>
+        这只对<strong>立方晶系</strong>成立。六方、四方等晶系中，[hkl] 与 (hkl) 一般不垂直 —— 必须用法向量计算。
+      </div>
+      <div class="warn">
+        <strong>误区 2：把晶面指数当成"坐标"。</strong>
+        (hkl) 描述的是<strong>一族平行平面</strong>，不是单个平面；且指数取的是<em>截距的倒数</em>，
+        (200) 与 (100) 平行但面间距差一半（d₂₀₀ = a/2），XRD 里是两个不同的峰。
+      </div>
+      <div class="warn">
+        <strong>误区 3：以为面密度最高的是 (111)。</strong>
+        硅的顺序是 <strong>(110) 9.59 &gt; (111) 7.83 &gt; (100) 6.78</strong>（×10¹⁴ cm⁻²）。
+        最"密排"的排列是 (111) 的六方密排形式，但单位面积原子数最多的却是 (110)。
+      </div>
+      <div class="warn">
+        <strong>误区 4：认为布拉格定律里的 θ 是入射角（与法线夹角）。</strong>
+        布拉格公式里的 θ 是<strong>入射线与晶面的夹角</strong>（掠射角）。
+        衍射仪报的 2θ 是入射线与衍射线的夹角，对应的正是 2×这个 θ。
+      </div>
+      <div class="warn">
+        <strong>误区 5：把"晶向 &lt;100&gt;"和"晶面 (100)"混为一谈。</strong>
+        硅片说 "(100) 片"指<strong>表面是 (100) 晶面</strong>，其法线方向是 [100]。
+        而沟道方向（源漏连线方向）常取 &lt;110&gt; —— 表面晶向与沟道晶向是两回事，别搞混。
+      </div>
+
+      <h2 id="s15">15. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：求晶面指数 —— 某晶面在 x、y、z 轴的截距分别为 1、1、∞（以 a 为单位），求其米勒指数；另一个晶面截距为 1、1、−1，求指数。</summary>
+        <div class="ans">
+        第一个：截距 (1, 1, ∞) → 取倒数 (1, 1, 0) → 已是最小整数比 → <strong>(110)</strong>。<br><br>
+        第二个：截距 (1, 1, −1) → 取倒数 (1, 1, −1) → 整数化后负号写成上划线 →
+        <strong>(11<span style="text-decoration:overline">1</span>)</strong>，读作 "一一负一"。<br><br>
+        关键提醒：<strong>必须取倒数、必须化到最小整数比、负数必须写成上划线而不是前置负号</strong>。
+        另外 (110) 在立方晶系中共 12 个等价面，构成 {110} 面族。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：已知硅 a = 5.431 Å，分别求 (100)、(110)、(111) 面的面间距 d 与面密度，并指出哪个面面密度最高。</summary>
+        <div class="ans">
+        <strong>面间距</strong>（d<sub>hkl</sub> = a/√(h²+k²+l²)）：<br>
+        · d₁₀₀ = 5.431 / 1 = <strong>5.431 Å</strong><br>
+        · d₁₁₀ = 5.431 / √2 = <strong>3.840 Å</strong><br>
+        · d₁₁₁ = 5.431 / √3 = <strong>3.135 Å</strong><br><br>
+        <strong>面密度</strong>（a² = 2.95×10⁻¹⁵ cm²）：<br>
+        · (100)：2/a² = <strong>6.78×10¹⁴ cm⁻²</strong><br>
+        · (110)：2√2/a² = <strong>9.59×10¹⁴ cm⁻²</strong><br>
+        · (111)：4/(√3a²) = <strong>7.83×10¹⁴ cm⁻²</strong><br><br>
+        <strong>最高的是 (110)</strong>，顺序为 (110) &gt; (111) &gt; (100)。<br><br>
+        易错点：很多人凭"密排"直觉选 (111)，但 (111) 是<em>六方密排的排列方式</em>，
+        (110) 才是单位面积原子数最多的面。可验证：(110) 面的二维重复单元是 a×(a/√2) 的矩形、含 2 个原子 ——
+        面积 a²/√2，密度 2÷(a²/√2) = 2√2/a²，与上式一致。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：为什么 MOS 器件几乎全部做在 (100) 面上，而不是面密度更高的 (110) 或 (111)？请从界面态、氧化速率、迁移率三个角度说明。</summary>
+        <div class="ans">
+        <strong>① 界面态密度（决定性因素）：</strong>Si(100)/SiO₂ 界面态密度约 10¹⁰ cm⁻²·eV⁻¹，
+        比 Si(111) 低约一个数量级。(100) 面每个表面 Si 原子有 2 个悬挂键，氧化时更容易形成完整的 Si–O–Si 桥接网络；
+        (111) 面原子最密、氧化最快，反而留下更多未饱和键与应变缺陷。
+        界面态直接决定阈值电压稳定性、迁移率退化和 1/f 噪声，所以这一条是压倒性的。<br><br>
+        <strong>② 氧化速率可控性：</strong>热氧化线性速率 (111) &gt; (110) &gt; (100)（约 1.68 : 1.25 : 1）。
+        先进节点栅氧只有 1~2 nm，(100) 速率慢反而<strong>便于精确控厚</strong>；
+        (111) 太快，薄氧厚度均匀性和重复性都更难做。<br><br>
+        <strong>③ 迁移率：</strong>电子迁移率在 (100) 面最高，NMOS 受益；
+        空穴迁移率确实在 (110) 面最高（约 2 倍），这是 (100) 的<em>劣势</em>。
+        工程上的补救办法不是换衬底，而是<strong>应变工程</strong>（SiGe 源漏、应力记忆层）
+        或把 PMOS 沟道做在 (110) 晶面上（如 FinFET 的侧壁），从而兼顾 (100) 的界面优势与 (110) 的空穴迁移率。<br><br>
+        结论：<strong>衬底选 (100) 是界面质量优先的全局最优；空穴迁移率的短板用应变与结构创新单独补。</strong>
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：用 KOH 刻蚀 (100) 硅片上的方形窗口，最终得到什么形貌？侧壁晶面是什么？若窗口边长 W，刻蚀深度 D 是多少？</summary>
+        <div class="ans">
+        <strong>形貌：</strong>得到<strong>一个倒金字塔（或 V 型槽）</strong>—— 掩膜窗口处向下刻，
+        四个侧壁自动停在 (111) 面上。(100) 片上的四个 &lt;110&gt; 方向解理/慢刻面围成正四棱锥。<br><br>
+        <strong>侧壁晶面：{111}</strong>。原因是 KOH 对 (111) 的刻蚀速率比 (100) 慢两个数量级（可达 100:1 以上），
+        (111) 成为"自停止面"。<br><br>
+        <strong>深度与角度：</strong>(100) 与 (111) 面的夹角为
+        arccos(1/√3) = <strong>54.74°</strong>（用法向量点积 (001)·(111)/(|..|) = 1/√3 得到）。
+        因此若窗口边长为 W，刻蚀深度
+        <strong>D = (W − W') / 2 × tan54.74° = (W − W') × √2 / 2</strong>，
+        其中 W' 是刻到底部时的底边宽度；若刻穿成完整倒金字塔（尖端收拢），则 D = W × √2 / 2 ≈ 0.707 W。<br><br>
+        工程意义：刻蚀会<strong>自动停在几何确定的深度</strong>，不依赖时间控制，
+        这正是 MEMS 里做硅杯、V 型槽、自停止膜的依据；反过来也可以用它来精确反推膜厚。
+        </div>
+      </details>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 系列导航</div>
+        <ol>
+          <li class="current">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</li>
+          <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+          <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+          <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+          <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+          <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 6 篇：硅单晶生长与衬底制备工艺</a></li>
+          <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 7 篇：芯片制造工艺流程详解</a></li>
+          <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 8 篇：芯片设计流程与 EDA 工具链</a></li>
+          <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 9 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+          <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 10 篇：芯片封装、测试与失效分析</a></li>
+          <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#晶体学</span>
+      <span class="chip">#晶格</span>
+      <span class="chip">#晶胞</span>
+      <span class="chip">#晶向</span>
+      <span class="chip">#米勒指数</span>
+      <span class="chip">#金刚石结构</span>
+      <span class="chip">#面密度</span>
+      <span class="chip">#各向异性刻蚀</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

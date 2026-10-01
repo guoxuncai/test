@@ -1,5 +1,5 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-01 20:04:49  共 36 篇 */
+/* 生成时间: 2026-10-01 21:01:30  共 37 篇 */
 window.SITE_POSTS = [
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -16,7 +16,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 18.7
+    "size": 18.8
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -33,7 +33,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 19.8
+    "size": 20.0
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -50,7 +50,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 20.8
+    "size": 20.9
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -67,7 +67,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 67.2
+    "size": 67.7
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -94,7 +94,24 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 22.5
+    "size": 22.6
+  },
+  {
+    "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
+    "url": "posts/semiconductor/2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "用大量图解讲清半导体晶体学地基：晶格与晶胞、SC/BCC/FCC 堆积、金刚石与闪锌矿结构、晶向族与晶面米勒指数的求法、面密度与悬挂键密度，以及晶向如何决定迁移率、氧化速率与各向异性刻蚀",
+    "tags": [
+      "晶体学",
+      "晶格",
+      "晶胞",
+      "晶向",
+      "晶面",
+      "米勒指数"
+    ],
+    "size": 67.4
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -111,7 +128,7 @@ window.SITE_POSTS = [
       "PN结基础",
       "半导体物理"
     ],
-    "size": 18.6
+    "size": 19.2
   },
   {
     "title": "PN 结原理与特性",
@@ -128,7 +145,7 @@ window.SITE_POSTS = [
       "齐纳击穿",
       "雪崩击穿"
     ],
-    "size": 17.1
+    "size": 17.2
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -145,7 +162,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 19.3
+    "size": 19.5
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -162,7 +179,7 @@ window.SITE_POSTS = [
       "动态功耗",
       "建立时间"
     ],
-    "size": 18.0
+    "size": 18.2
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -448,7 +465,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 12
+    "count": 13
   },
   {
     "id": "finance",
