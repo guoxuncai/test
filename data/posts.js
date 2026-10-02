@@ -1,6 +1,23 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-01 21:01:30  共 37 篇 */
+/* 生成时间: 2026-10-02 13:02:13  共 41 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
+    "url": "posts/semiconductor/2026-10-01-薄膜沉积与掺杂工艺详解.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "讲清薄膜怎么长出来、杂质怎么掺进去。覆盖 CVD 五步反应与 Arrhenius 控制区、ALD 自限制循环、PVD 台阶覆盖、离子注入沟道效应、退火热预算与大马士革互连",
+    "tags": [
+      "薄膜沉积",
+      "CVD",
+      "ALD",
+      "PVD",
+      "PECVD",
+      "离子注入"
+    ],
+    "size": 75.0
+  },
   {
     "title": "芯片设计流程与 EDA 工具链",
     "url": "posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html",
@@ -16,7 +33,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 18.8
+    "size": 19.8
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -33,7 +50,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 20.0
+    "size": 20.9
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -50,7 +67,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 20.9
+    "size": 24.3
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -67,7 +84,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 67.7
+    "size": 69.3
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -94,7 +111,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 22.6
+    "size": 23.6
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -111,7 +128,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 67.4
+    "size": 69.0
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -128,7 +145,41 @@ window.SITE_POSTS = [
       "PN结基础",
       "半导体物理"
     ],
-    "size": 19.2
+    "size": 20.2
+  },
+  {
+    "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
+    "url": "posts/semiconductor/2026-10-01-刻蚀工艺详解-湿法与等离子体.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从湿法到等离子体刻蚀：讲清速率、选择比与各向异性度三大指标，CCP/ICP 反应室与自偏压、氟氯基气体化学与侧壁钝化、Bosch 深硅刻蚀、负载效应与 ARDE、原子层刻蚀",
+    "tags": [
+      "刻蚀",
+      "等离子体",
+      "ICP",
+      "Bosch",
+      "选择比",
+      "各向异性"
+    ],
+    "size": 74.0
+  },
+  {
+    "title": "光刻工艺详解 · 从光学原理到 EUV",
+    "url": "posts/semiconductor/2026-10-01-光刻工艺详解-从光学原理到EUV.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "把芯片里最贵、最难的一步讲透：光刻机光学系统与 NA 的含义、瑞利判据与分辨率/焦深的三角关系、光刻胶化学与完整工序截面、分辨率增强技术 RET、多重图形 LELE/SADP/SAQP，以及 EUV 与 High-NA 的工程挑战",
+    "tags": [
+      "光刻",
+      "Lithography",
+      "瑞利判据",
+      "NA数值孔径",
+      "EUV",
+      "High-NA"
+    ],
+    "size": 58.3
   },
   {
     "title": "PN 结原理与特性",
@@ -145,7 +196,7 @@ window.SITE_POSTS = [
       "齐纳击穿",
       "雪崩击穿"
     ],
-    "size": 17.2
+    "size": 18.2
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -162,7 +213,24 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 19.5
+    "size": 20.4
+  },
+  {
+    "title": "CMP 平坦化、量测与良率控制",
+    "url": "posts/semiconductor/2026-10-01-CMP平坦化量测与良率控制.html",
+    "date": "2026-10-01",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "CMP 是唯一能同时做全局与局部平坦化的量产工艺。本篇讲清抛光原理与 Preston 方程、凹陷侵蚀三大副作用、终点检测与清洗、量测体系与良率模型、以及 APC 闭环",
+    "tags": [
+      "CMP",
+      "化学机械抛光",
+      "Preston方程",
+      "碟形凹陷",
+      "终点检测",
+      "椭偏仪"
+    ],
+    "size": 84.3
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -179,7 +247,7 @@ window.SITE_POSTS = [
       "动态功耗",
       "建立时间"
     ],
-    "size": 18.2
+    "size": 19.1
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -465,7 +533,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 13
+    "count": 17
   },
   {
     "id": "finance",

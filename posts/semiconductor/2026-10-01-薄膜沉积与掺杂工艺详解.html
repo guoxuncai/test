@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火</title>
+<meta name="description" content="讲清薄膜怎么长出来、杂质怎么掺进去。覆盖 CVD 五步反应与 Arrhenius 控制区、ALD 自限制循环、PVD 台阶覆盖、离子注入沟道效应、退火热预算与大马士革互连。">
+<meta name="keywords" content="薄膜沉积,CVD,ALD,PVD,PECVD,离子注入,退火,大马士革互连">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 微纳工艺</span>
+    <h1 class="title">薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 10 篇</span><span class="sep"></span>
+      <span>阅读约 26 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        前面讲的是"怎么把图形画出来"（<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 8 篇光刻</a>）
+        和"怎么把材料挖掉"（<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 9 篇刻蚀</a>）。
+        本篇补上剩下的两件大事：<strong>① 怎么在硅片上"长"出各种薄膜</strong>；
+        <strong>② 怎么把杂质原子精确地放进去</strong> —— 掺杂是唯一能改变硅电学性质的手段。
+        读完你应该能回答：PECVD 凭什么低温沉积？ALD 为什么保形性无敌却又慢？
+        为什么必须用离子注入？退火为什么是"激活"与"扩散"的生死博弈？
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">导言：薄膜在芯片里的五种角色</a></li>
+          <li><a href="#s2">沉积技术家族树：CVD / PVD / ALD / ECD / Epi</a></li>
+          <li><a href="#s3">CVD 五步反应过程与 Arrhenius 控制区</a></li>
+          <li><a href="#s4">PECVD 为什么能低温：等离子体提供活化能</a></li>
+          <li><a href="#s5">ALD 原子层沉积：自限制四步循环</a></li>
+          <li><a href="#s6">PVD：蒸发与磁控溅射，视线传输的宿命</a></li>
+          <li><a href="#s7">台阶覆盖性对比：夹断与空洞</a></li>
+          <li><a href="#s8">常见薄膜速查表：八种材料怎么选</a></li>
+          <li><a href="#s9">外延 Epi：同质、异质、选择性与 SiGe 应变</a></li>
+          <li><a href="#s10">掺杂方法一：热扩散与 Fick 定律</a></li>
+          <li><a href="#s11">掺杂方法二：离子注入与高斯分布</a></li>
+          <li><a href="#s12">退火：激活与扩散的热预算之争</a></li>
+          <li><a href="#s13">大马士革互连：铜为什么不能干法刻蚀</a></li>
+          <li><a href="#s14">常见误区</a></li>
+          <li><a href="#s15">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 导言：薄膜在芯片里的五种角色</h2>
+
+      <p>一颗先进逻辑芯片有<strong>几十层薄膜</strong>，厚度从几个原子层到几百纳米。按功能分五类：</p>
+
+      <div class="kv">
+        <div><div class="v">介质<br>Dielectric</div><div class="l">绝缘隔离：栅介质、层间介质 ILD、侧墙、钝化层。看 <em>k 值与击穿场强</em></div></div>
+        <div><div class="v">导体<br>Conductor</div><div class="l">互连与电极：W plugs、Cu 布线、TiN 栅、多晶硅栅。看 <em>电阻率与填充能力</em></div></div>
+        <div><div class="v">半导体</div><div class="l">有源区本身：外延 Si、应变 SiGe、多晶硅沟道。看 <em>晶体质量与缺陷密度</em></div></div>
+        <div><div class="v">阻挡层<br>Barrier</div><div class="l">阻止互扩散：TaN/TiN 挡 Cu。看 <em>致密性与厚度极限</em></div></div>
+        <div><div class="v">硬掩膜</div><div class="l">光刻胶不够时作转印中介：Si₃N₄、a-C、金属硬掩膜。看 <em>刻蚀选择比</em></div></div>
+        <div><div class="v">掺杂<br>Doping</div><div class="l">唯一能<strong>改变硅本身电学性质</strong>的手段</div></div>
+      </div>
+
+      <div class="note">
+        <strong>为什么掺杂如此特殊？</strong>光刻、刻蚀、沉积都只是<em>改变形状</em>，
+        而掺杂改变的是材料本身的载流子浓度与导电类型 —— 纯硅近乎绝缘，
+        掺入 1e16 cm⁻³ 的磷（约每 500 万个硅原子换掉 1 个）电阻率就能掉到几个 Ω·cm。
+        <strong>没有掺杂就没有 PN 结与 MOSFET。</strong>
+      </div>
+
+      <p>本篇第 2~9 节讲"长膜"，第 10~13 节讲"掺杂与互连"。产线上两者交替进行：
+      沉积 → 光刻 → 刻蚀 → 掺杂 → 退火 → 再沉积……循环几十次。</p>
+
+      <h2 id="s2">2. 沉积技术家族树：CVD / PVD / ALD / ECD / Epi</h2>
+
+      <p>所有薄膜沉积都可以按<strong>成膜机理</strong>分家。看懂这个分类，是读懂任何一份工艺菜单的前提。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="薄膜沉积技术家族树分类">
+          <defs>
+            <marker id="arDep1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <g font-size="10.5" fill="var(--text)">
+            <rect x="250" y="12" width="180" height="30" rx="8" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="340" y="26" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">薄膜沉积 Deposition</text>
+            <text x="340" y="37" text-anchor="middle" font-size="9" fill="var(--text-mute)">按成膜机理分家</text>
+            <g stroke="var(--text-mute)" stroke-width="1.4" fill="none" marker-end="url(#arDep1)">
+              <path d="M300 42 L120 70"/><path d="M330 42 L200 70"/><path d="M362 42 L470 70"/><path d="M392 42 L610 70"/>
+            </g>
+
+            <rect x="16" y="76" width="180" height="70" rx="9" fill="var(--accent)" fill-opacity=".14" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="106" y="94" text-anchor="middle" font-size="11.5" fill="var(--accent)" font-weight="700">CVD 化学气相沉积</text>
+            <text x="106" y="111" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">气体前驱体在表面发生化学反应</text>
+            <text x="106" y="125" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">生成固体产物</text>
+            <text x="106" y="139" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">APCVD / LPCVD / PECVD</text>
+
+            <rect x="16" y="154" width="180" height="70" rx="9" fill="var(--up)" fill-opacity=".13" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="106" y="172" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="700">ALD 原子层沉积</text>
+            <text x="106" y="189" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">两前驱体交替脉冲、中间吹扫</text>
+            <text x="106" y="203" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">自限制表面反应，逐层生长</text>
+            <text x="106" y="217" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">≈0.1 nm/cycle，保形性第一</text>
+
+            <rect x="404" y="76" width="260" height="70" rx="9" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="534" y="94" text-anchor="middle" font-size="11.5" fill="var(--fin)" font-weight="700">PVD 物理气相沉积</text>
+            <text x="534" y="111" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">蒸发 / 溅射：靶材原子被打出来飞到硅片</text>
+            <text x="534" y="125" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">视线传输 → 台阶覆盖差，但纯度高</text>
+            <text x="534" y="139" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">金属化主力：Al/Cu/Ti/TiN/Ta/TaN</text>
+
+            <rect x="404" y="154" width="260" height="70" rx="9" fill="var(--down)" fill-opacity=".13" stroke="var(--down)" stroke-width="1.4"/>
+            <text x="534" y="172" text-anchor="middle" font-size="11.5" fill="var(--down)" font-weight="700">ECD 电镀 / Epi 外延</text>
+            <text x="534" y="189" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">ECD：电化学还原，专攻 Cu 填充</text>
+            <text x="534" y="203" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">Epi：沿衬底晶格长单晶（第 6 篇）</text>
+            <text x="534" y="217" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">补充：旋涂 SOG、流动式 CVD</text>
+
+            <rect x="16" y="230" width="648" height="16" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="241" font-size="9.5" fill="var(--text-soft)">口诀：<strong>化学的会绕弯（保形好），物理的走直线（保形差）；电镀只管填孔，外延只管长单晶。</strong></text>
+          </g>
+        </svg>
+        <figcaption>图 1：沉积技术家族树。CVD 与 ALD 靠化学反应"绕着结构长"，PVD 靠物理输运"直线飞过去" —— 这决定了台阶覆盖能力。</figcaption>
+      </figure>
+
+      <h3>2.1 同一套化学，不同压力</h3>
+
+      <table class="term-table">
+        <thead><tr><th>类型</th><th>压力</th><th>温度</th><th>特点</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>APCVD</td><td>~1 atm</td><td>400~800 °C</td><td>设备简单、速率快，但<strong>气相成核严重、颗粒多</strong></td><td>早期 SiO₂、BPSG</td></tr>
+          <tr><td>LPCVD</td><td>0.1~1 Torr</td><td>600~800 °C</td><td>气相反应被抑制 → <strong>膜质致密、均匀性极好</strong>、可批量装片</td><td>Si₃N₄、多晶硅、TEOS</td></tr>
+          <tr><td>PECVD</td><td>0.5~5 Torr</td><td><strong>200~400 °C</strong></td><td>等离子提供活化能，低温高速；含 H，膜质较疏松</td><td>钝化层、ILD、硬掩膜</td></tr>
+          <tr><td>HDPCVD</td><td>~mTorr</td><td>300~500 °C</td><td>沉积 + 原位溅射同步，<strong>擅长填高深宽比</strong></td><td>STI 填充、PMD</td></tr>
+          <tr><td>SACVD</td><td>~600 Torr</td><td>400~550 °C</td><td>高压促进表面流动，Gap fill 强</td><td>STI、PMD</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>为什么降压能改善膜质？</strong>常压下反应气体在<em>气相中</em>就会碰撞成核，
+        生成纳米粉尘掉在硅片上。抽到低压后分子平均自由程变长，气相成核被抑制，反应只在<strong>硅片表面</strong>发生 —— 膜更致密均匀，还可竖插批量装片。
+      </div>
+
+      <h2 id="s3">3. CVD 五步反应过程与 Arrhenius 控制区</h2>
+
+      <p>不管哪种 CVD，成膜都要走完五步。想清楚这五步，后面关于速率、温度、均匀性的讨论都会变自然。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CVD 五步反应过程与滞流层">
+          <defs>
+            <marker id="arDep2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--up)"/>
+            </marker>
+            <marker id="arDep3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--down)"/>
+            </marker>
+          </defs>
+          <g font-size="10.5" fill="var(--text)">
+            <rect x="16" y="14" width="648" height="44" rx="8" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-dasharray="5 3"/>
+            <text x="30" y="32" font-size="11" fill="var(--semi)" font-weight="700">主流区：反应气体随载气高速流过</text>
+            <text x="30" y="48" font-size="9.5" fill="var(--text-soft)">① 输运 Transport：反应物穿过<strong>滞流层（边界层）</strong>扩散到表面，其厚度 δ 决定"供货速度"上限</text>
+
+            <rect x="16" y="74" width="648" height="26" fill="var(--fin)" fill-opacity=".18" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="340" y="92" text-anchor="middle" font-size="10.5" fill="var(--fin)" font-weight="700">硅 片 表 面（一切反应发生的地方）</text>
+
+            <rect x="16" y="112" width="320" height="112" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="132" font-size="11" fill="var(--up)" font-weight="700">表面上的四个子步骤</text>
+            <text x="32" y="152" font-size="10" fill="var(--text-soft)">② <strong>吸附</strong>：反应物分子吸附到表面</text>
+            <text x="32" y="170" font-size="10" fill="var(--text-soft)">③ <strong>表面反应</strong>：吸附态分解/化合，生成</text>
+            <text x="32" y="184" font-size="10" fill="var(--text-soft)">　　固体产物 + 挥发性副产物</text>
+            <text x="32" y="202" font-size="10" fill="var(--text-soft)">④ <strong>脱附</strong>　⑤ <strong>抽走</strong>：副产物脱附后被泵带走</text>
+            <text x="32" y="218" font-size="9.5" fill="var(--text-mute)">最慢的一步 = 速率控制步</text>
+
+            <rect x="348" y="112" width="316" height="112" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="364" y="132" font-size="11" fill="var(--down)" font-weight="700">两个控制区</text>
+            <text x="364" y="152" font-size="10" fill="var(--text-soft)">· <strong>表面反应控制区</strong>（低温）：③ 慢，速率</text>
+            <text x="364" y="166" font-size="10" fill="var(--text-soft)">　对温度<em>指数敏感</em>，由 Ea 决定</text>
+            <text x="364" y="184" font-size="10" fill="var(--text-soft)">· <strong>质量传输控制区</strong>（高温）：① 慢，</text>
+            <text x="364" y="198" font-size="10" fill="var(--text-soft)">　表面吃不下，供货跟不上</text>
+            <text x="364" y="216" font-size="10" fill="var(--text-soft)">　速率只随 T 弱变化（D ∝ T<sup>1.5</sup>）</text>
+
+            <g stroke="var(--up)" stroke-width="2" fill="none" marker-end="url(#arDep2)">
+              <path d="M120 58 L120 72"/><path d="M300 58 L300 72"/><path d="M480 58 L480 72"/>
+            </g>
+            <g stroke="var(--down)" stroke-width="2" fill="none" marker-end="url(#arDep3)">
+              <path d="M200 100 L200 86"/><path d="M380 100 L380 86"/><path d="M560 100 L560 86"/>
+            </g>
+
+            <rect x="16" y="232" width="648" height="22" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="247" font-size="9.5" fill="var(--text-soft)">典型反应：SiH₄ + O₂ → SiO₂　|　SiH₄ → Si + 2H₂（多晶硅）　|　3SiH₂Cl₂ + 4NH₃ → Si₃N₄ + 6HCl + 6H₂</text>
+          </g>
+        </svg>
+        <figcaption>图 2：CVD 的五个串联步骤。① 供料、②③④ 表面化学、⑤ 排废，最慢的一步决定整体速率。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">Rate ∝ exp(−Ea / kT)　（Arrhenius 关系）</span>
+        <span class="fnote">只对<strong>表面反应控制区</strong>成立：温度越高，能翻过活化能势垒的分子比例按指数增长，
+        速率对温度<em>极其敏感</em> —— 硅片各处温差 5 °C，膜厚就能差出几个百分点。</span>
+      </div>
+
+      <div class="note">
+        <strong>为什么升温到一定程度速率就不涨了？</strong>低温时表面化学反应是瓶颈，
+        升温使更多分子翻过势垒，速率按 <em>exp(−Ea/kT)</em> 暴涨；
+        到某点后瓶颈转移到<strong>穿过滞流层的扩散供料</strong>，
+        而扩散系数对温度只有 T<sup>1.5</sup> 弱依赖 —— 曲线弯成水平平台。
+      </div>
+
+      <h2 id="s4">4. PECVD 为什么能低温：等离子体提供活化能</h2>
+
+      <p>热 CVD 需要 600~800 °C 才能"激活"反应气体。但很多场合受不了：铝互连已做好（Al 熔点 660 °C）、
+      掺杂分布已定型（高温会让杂质乱跑）。这时就要 <strong>PECVD</strong>。</p>
+
+      <div class="kv">
+        <div><div class="v">RF 辉光放电</div><div class="l">13.56 MHz 射频加在平行板间，把气体电离成<em>等离子体</em></div></div>
+        <div><div class="v">电子温度<br>≠ 气体温度</div><div class="l">电子温度 1~10 eV（相当于数万度），<strong>气体与硅片仍只 200~400 °C</strong> —— 非平衡态是关键</div></div>
+        <div><div class="v">自由基主导</div><div class="l">高能电子撞断分子键产生活性自由基，无需高温即可在表面反应</div></div>
+        <div><div class="v">离子轰击</div><div class="l">同时轰击表面使膜层致密化（HDPCVD 就是强化这一项）</div></div>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">热 CVD 的 Ea 由"热量"提供（kT）　→　PECVD 由"电子碰撞"提供（1~10 eV ≫ kT）</span>
+        <span class="fnote">1 eV ≈ 11600 K，几 eV 的电子足以在 300 °C 下完成原本需要 800 °C 的反应 —— 不是降低反应难度，而是<strong>换了能量注入方式</strong>。</span>
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>对比项</th><th>LPCVD</th><th>PECVD</th></tr></thead>
+        <tbody>
+          <tr><td>温度</td><td>600~800 °C（<strong>高</strong>）</td><td>200~400 °C（<strong>低</strong>）</td></tr>
+          <tr><td>膜质致密性</td><td><strong>优</strong>：接近热氧化质量</td><td>一般：含 H，多孔易吸潮</td></tr>
+          <tr><td>台阶覆盖</td><td><strong>优秀</strong>（保形）</td><td>中等，有顶部悬垂倾向</td></tr>
+          <tr><td>沉积速率</td><td>较慢（几十 nm/min）</td><td><strong>快</strong>（数百 nm/min）</td></tr>
+          <tr><td>应力 / 损伤</td><td>应力较大（Si₃N₄ 可达 1 GPa 级）；无等离子损伤</td><td>应力可控；<strong>有</strong>电荷积累与 UV 损伤</td></tr>
+          <tr><td>颗粒</td><td>少（无气相成核）</td><td>较多（等离子中会成核）</td></tr>
+          <tr><td>用途</td><td>栅侧墙、多晶硅栅、刻蚀停止层</td><td>钝化层、ILD/IMD、硬掩膜</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <strong>PECVD 的氮化硅不是"真正的"Si₃N₄：</strong>它含 10~30 at.% 氢，更接近 SiN<sub>x</sub>H<sub>y</sub>。
+        后果：① 密度低（2.4~2.8 vs 3.0 g/cm³），阻挡水汽与 Na⁺ 能力差；
+        ② 氢在后续高温步骤释放，导致<em>膜层收缩、开裂或剥离</em>。
+        所以<strong>钝化层用 PECVD，栅侧墙与刻蚀停止层用 LPCVD</strong>。
+      </div>
+
+      <h2 id="s5">5. ALD 原子层沉积：自限制四步循环</h2>
+
+      <p>如果 CVD 是"连续下雨"，<strong>ALD</strong> 就是"一层一层贴瓷砖"：
+      <em>把一次完整反应拆成两个互不重叠的半反应，中间用吹扫隔开</em>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ALD 自限制四步循环">
+          <defs>
+            <marker id="arDep4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="340" y="14" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="700">ALD 一个循环 = 4 步　（Al₂O₃：TMA + H₂O）</text>
+
+            <text x="92" y="34" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">① 前驱体 A 脉冲</text>
+            <rect x="26" y="44" width="132" height="50" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <g fill="var(--semi)" fill-opacity=".7"><circle cx="48" cy="62" r="5"/><circle cx="70" cy="56" r="5"/><circle cx="94" cy="60" r="5"/><circle cx="118" cy="54" r="5"/><circle cx="140" cy="62" r="5"/></g>
+            <g fill="var(--accent)" fill-opacity=".8"><circle cx="48" cy="80" r="3.5"/><circle cx="70" cy="80" r="3.5"/><circle cx="94" cy="80" r="3.5"/><circle cx="118" cy="80" r="3.5"/><circle cx="140" cy="80" r="3.5"/></g>
+            <text x="92" y="106" text-anchor="middle" font-size="9" fill="var(--text-soft)">TMA 吸附到 —OH 位点</text>
+            <text x="92" y="119" text-anchor="middle" font-size="9" fill="var(--text-mute)">表面饱和即自动停止</text>
+
+            <text x="256" y="34" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">② 惰性气体吹扫</text>
+            <rect x="190" y="44" width="132" height="50" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <g fill="var(--accent)" fill-opacity=".8"><circle cx="212" cy="80" r="3.5"/><circle cx="234" cy="80" r="3.5"/><circle cx="258" cy="80" r="3.5"/><circle cx="282" cy="80" r="3.5"/><circle cx="304" cy="80" r="3.5"/></g>
+            <g stroke="var(--text-mute)" stroke-width="1.3" fill="none" marker-end="url(#arDep4)"><path d="M212 58 L232 42"/><path d="M258 58 L278 42"/><path d="M304 58 L324 42"/></g>
+            <text x="256" y="106" text-anchor="middle" font-size="9" fill="var(--text-soft)">多余 A + 副产物被吹走</text>
+            <text x="256" y="119" text-anchor="middle" font-size="9" fill="var(--text-mute)">气相中不允许 A、B 相遇</text>
+
+            <text x="420" y="34" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">③ 前驱体 B 脉冲</text>
+            <rect x="354" y="44" width="132" height="50" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <g fill="var(--up)" fill-opacity=".7"><circle cx="376" cy="58" r="5"/><circle cx="398" cy="52" r="5"/><circle cx="422" cy="58" r="5"/><circle cx="446" cy="52" r="5"/><circle cx="468" cy="58" r="5"/></g>
+            <g fill="var(--semi)" fill-opacity=".5"><circle cx="376" cy="70" r="2.5"/><circle cx="398" cy="70" r="2.5"/><circle cx="422" cy="70" r="2.5"/><circle cx="446" cy="70" r="2.5"/><circle cx="468" cy="70" r="2.5"/></g>
+            <g fill="var(--accent)" fill-opacity=".8"><circle cx="376" cy="80" r="3.5"/><circle cx="398" cy="80" r="3.5"/><circle cx="422" cy="80" r="3.5"/><circle cx="446" cy="80" r="3.5"/><circle cx="468" cy="80" r="3.5"/></g>
+            <text x="420" y="106" text-anchor="middle" font-size="9" fill="var(--text-soft)">H₂O 与吸附 TMA 反应</text>
+            <text x="420" y="119" text-anchor="middle" font-size="9" fill="var(--text-mute)">生成一个 Al–O 单层</text>
+
+            <text x="584" y="34" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">④ 再吹扫 → 循环</text>
+            <rect x="518" y="44" width="132" height="50" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <g fill="var(--semi)" fill-opacity=".5"><circle cx="540" cy="70" r="2.5"/><circle cx="562" cy="70" r="2.5"/><circle cx="586" cy="70" r="2.5"/><circle cx="610" cy="70" r="2.5"/><circle cx="632" cy="70" r="2.5"/></g>
+            <g fill="var(--accent)" fill-opacity=".8"><circle cx="540" cy="80" r="3.5"/><circle cx="562" cy="80" r="3.5"/><circle cx="586" cy="80" r="3.5"/><circle cx="610" cy="80" r="3.5"/><circle cx="632" cy="80" r="3.5"/></g>
+            <g stroke="var(--text-mute)" stroke-width="1.3" fill="none" marker-end="url(#arDep4)"><path d="M540 58 L560 42"/><path d="M586 58 L606 42"/><path d="M632 58 L652 42"/></g>
+            <text x="584" y="106" text-anchor="middle" font-size="9" fill="var(--text-soft)">回到初始 —OH 表面</text>
+            <text x="584" y="119" text-anchor="middle" font-size="9" fill="var(--text-mute)">与①前一致 → 可无限重复</text>
+
+            <g stroke="var(--text-mute)" stroke-width="1.6" fill="none" marker-end="url(#arDep4)">
+              <path d="M162 68 L184 68"/><path d="M326 68 L348 68"/><path d="M490 68 L512 68"/>
+            </g>
+
+            <rect x="16" y="132" width="648" height="94" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="152" font-size="11" fill="var(--up)" font-weight="700">自限制的后果：厚度只由循环次数决定</text>
+            <text x="32" y="172" font-size="9.5" fill="var(--text-soft)">每循环生长量恒定，与流量、时间（只要够饱和）无关 → 厚度均匀性可到埃级、保形性近乎完美。</text>
+            <text x="32" y="188" font-size="9.5" fill="var(--text-soft)">典型 GPC：Al₂O₃ ≈ <strong>0.11 nm/cycle</strong>、HfO₂ ≈ <strong>0.10 nm/cycle</strong>、TiN ≈ 0.02~0.05 nm/cycle。</text>
+            <text x="32" y="206" font-size="9.5" fill="var(--text-mute)">GPC 常小于一个单层：前驱体分子体积大、表面位点有位阻。</text>
+          </g>
+        </svg>
+        <figcaption>图 3：ALD 的自限制四步循环。每步"反应到饱和就停"，生长量只取决于循环次数 —— 这是厚度精度与保形性的物理根源。</figcaption>
+      </figure>
+
+      <div class="note">
+        <strong>ALD 保形性为什么无敌？</strong>CVD 速率取决于表面附近反应物浓度，深孔底部浓度天然低于孔口，
+        所以底部长得薄。ALD 只要前驱体<em>能扩散进去</em>，孔底与孔口都会<strong>各自长满一个饱和单层</strong> —— 生长量由表面位点数决定，<em>而非局部浓度</em>。所以深宽比 50:1 甚至 100:1 的结构里顶部与底部膜厚几乎相同（SC ≈ 100%）。
+      </div>
+
+      <div class="kv">
+        <div><div class="v">High-k 栅介质</div><div class="l">HfO₂ 仅 2~3 nm，要覆盖数十亿晶体管且波动 &lt;5% —— 只有 ALD 能做到</div></div>
+        <div><div class="v">高深宽比</div><div class="l">3D NAND 深沟道孔、DRAM 电容、GAA 纳米片间隙</div></div>
+        <div><div class="v">SADP 侧墙</div><div class="l">第 8 篇双重图形，侧墙厚度需埃级精确</div></div>
+        <div><div class="v">阻挡层</div><div class="l">先进互连 TaN 仅 1~2 nm，PVD 无法连续覆盖</div></div>
+      </div>
+
+      <div class="warn">
+        <strong>ALD 什么时候不能用：</strong>速率只有 <strong>2~12 nm/min</strong>，
+        几百纳米的 ILD、钝化层绝不能用 —— 产能上不可行。
+        产业界解法是"能 CVD 就 CVD，不能才 ALD"，以及<strong>空间 ALD</strong>：
+        让硅片在不同气体区域间<em>移动</em>，把"时间上分开"改成"空间上分开"，速率可提高一到两个数量级。
+      </div>
+
+      <h2 id="s6">6. PVD：蒸发与磁控溅射，视线传输的宿命</h2>
+
+      <p>PVD 是"物理派"：不靠化学反应，而是把固态靶材原子弄出来飞到硅片上凝结。</p>
+
+      <div class="kv">
+        <div><div class="v">蒸发<br>Evaporation</div><div class="l">真空 10⁻⁶ Torr 级，电阻或电子束加热使靶材汽化，分子直线飞到硅片。<em>纯度高、速率快</em>；但合金组分难控、台阶覆盖最差</div></div>
+        <div><div class="v">磁控溅射<br>Sputtering</div><div class="l">Ar⁺ 轰击靶材，靠动量交换溅出靶原子；<strong>磁场约束电子</strong>提高等离子体密度。<em>合金组分保真、附着力好</em>，是金属化主力</div></div>
+      </div>
+
+      <div class="warn">
+        <strong>台阶覆盖差的根因：视线传输（line-of-sight）。</strong>
+        溅射/蒸发出来的原子在低压下<em>几乎直线飞行</em>，不会像气体分子那样"绕进"深孔。
+        被直接"看"到的地方沉积快，被遮挡处几乎收不到材料 —— 孔口越堆越厚最终<strong>封死</strong>，里面留下空洞。这是 PVD 的物理宿命，调参治不了。
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>补救手段</th><th>做法</th><th>代价 / 局限</th></tr></thead>
+        <tbody>
+          <tr><td>提高压力</td><td>提高 Ar 压力，让溅出原子碰撞散射、方向性变差</td><td>速率下降、膜质疏松、颗粒增多</td></tr>
+          <tr><td>准直器</td><td>靶与硅片间加蜂窝格栅，只放行近垂直原子</td><td>覆盖改善，但<strong>速率掉到 1/3 以下</strong></td></tr>
+          <tr><td>电离化 PVD</td><td>把溅出金属原子电离，用<strong>偏压</strong>拉进深孔</td><td>设备昂贵，但 90 nm 后阻挡层/籽晶层的主流</td></tr>
+          <tr><td>改用 CVD/ALD</td><td>化学前驱体靠扩散进孔，天然保形</td><td>金属前驱体昂贵，纯度与电阻率常不如 PVD</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>阻挡层与籽晶层为什么是 PVD 的极限挑战：</strong>铜会<em>极快地在硅与 SiO₂ 中扩散</em>
+        （Cu 是深能级杂质，进入器件区即致命复合中心），所以必须有<strong>阻挡层 TaN/TiN</strong>；
+        电镀铜又需要导电起始层，即<strong>籽晶层 Cu</strong>。这两层在先进节点只有 1~3 nm，
+        却要连续无孔地盖住深宽比 5:1 以上的通孔侧壁 —— 这正是 IMP 存在的理由（见第 13 节）。
+      </div>
+
+      <h2 id="s7">7. 台阶覆盖性对比：夹断与空洞</h2>
+
+      <div class="formula-block">
+        <span class="fl">Step Coverage（台阶覆盖率）= 侧壁/底部最薄处厚度 ÷ 顶部平面厚度</span>
+        <span class="fnote">理想值 = 1（完全保形）。PVD 在高深宽比结构里可能只有 0.1 甚至更低，ALD 可做到 &gt;0.95。
+        工程中还常区分"底部覆盖率"与"侧壁覆盖率"两个子指标。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四种沉积方法在沟槽中的台阶覆盖对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="340" y="14" text-anchor="middle" font-size="11.5" fill="var(--semi)" font-weight="700">同一个高深宽比沟槽（AR ≈ 5:1）里的四种沉积形貌</text>
+
+            <text x="91" y="32" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">LPCVD（保形）</text>
+            <path d="M24,90 L57,90 L57,180 L125,180 L125,90 L158,90 L158,200 L24,200 Z" fill="var(--text)" fill-opacity=".12" stroke="var(--border)"/>
+            <path d="M24,80 L47,80 L47,171 L135,171 L135,80 L158,80" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linejoin="miter"/>
+            <text x="91" y="214" text-anchor="middle" font-size="9" fill="var(--accent)">SC ≈ 0.9~1.0 ✓</text>
+            <text x="91" y="227" text-anchor="middle" font-size="9" fill="var(--text-mute)">侧壁/底部与顶部同厚</text>
+
+            <text x="257" y="32" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">PECVD（中等）</text>
+            <path d="M190,90 L223,90 L223,180 L291,180 L291,90 L324,90 L324,200 L190,200 Z" fill="var(--text)" fill-opacity=".12" stroke="var(--border)"/>
+            <rect x="190" y="70" width="134" height="10" fill="var(--semi)"/>
+            <path d="M190,80 L229,80 L229,174 L285,174 L285,80 L324,80" fill="none" stroke="var(--semi)" stroke-width="5" stroke-linejoin="miter"/>
+            <text x="257" y="214" text-anchor="middle" font-size="9" fill="var(--semi)">SC ≈ 0.5~0.8</text>
+            <text x="257" y="227" text-anchor="middle" font-size="9" fill="var(--text-mute)">顶部略厚，轻微悬垂</text>
+
+            <text x="423" y="32" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">ALD（完美保形）</text>
+            <path d="M356,90 L389,90 L389,180 L457,180 L457,90 L490,90 L490,200 L356,200 Z" fill="var(--text)" fill-opacity=".12" stroke="var(--border)"/>
+            <path d="M356,80 L379,80 L379,171 L467,171 L467,80 L490,80" fill="none" stroke="var(--up)" stroke-width="10" stroke-linejoin="miter"/>
+            <text x="423" y="214" text-anchor="middle" font-size="9" fill="var(--up)">SC ≈ 0.95~1.0 ★</text>
+            <text x="423" y="227" text-anchor="middle" font-size="9" fill="var(--text-mute)">任意深宽比都成立</text>
+
+            <text x="589" y="32" text-anchor="middle" font-size="10.5" fill="var(--down)" font-weight="700">PVD（最差）</text>
+            <path d="M522,90 L555,90 L555,180 L623,180 L623,90 L656,90 L656,200 L522,200 Z" fill="var(--text)" fill-opacity=".12" stroke="var(--border)"/>
+            <rect x="522" y="64" width="134" height="16" fill="var(--down)" fill-opacity=".7"/>
+            <polygon points="555,80 579,80 579,104 555,114" fill="var(--down)" fill-opacity=".7"/>
+            <polygon points="623,80 599,80 599,104 623,114" fill="var(--down)" fill-opacity=".7"/>
+            <path d="M555,114 L555,175 L623,175 L623,114" fill="none" stroke="var(--down)" stroke-width="2" opacity=".55"/>
+            <ellipse cx="589" cy="146" rx="15" ry="22" fill="var(--down)" fill-opacity=".28" stroke="var(--down)" stroke-dasharray="4 3"/>
+            <text x="589" y="149" text-anchor="middle" font-size="8.5" fill="var(--down)">空洞</text>
+            <text x="589" y="214" text-anchor="middle" font-size="9" fill="var(--down)">SC ≈ 0.1~0.3 ✗</text>
+            <text x="589" y="227" text-anchor="middle" font-size="9" fill="var(--text-mute)">顶部夹断 pinch-off</text>
+
+            <rect x="16" y="236" width="648" height="20" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="250" font-size="10" fill="var(--text-soft)"><strong>失效机理：</strong>PVD 悬垂在孔口不断加厚 → 封死开口（夹断）→ 内部未填空间变成空洞 void → 电阻升高、电迁移加剧。</text>
+          </g>
+        </svg>
+        <figcaption>图 4：四种沉积方法在高深宽比沟槽中的形貌对比。ALD 与 LPCVD 保形，PECVD 中等，PVD 顶部夹断并留下空洞。</figcaption>
+      </figure>
+
+      <p>"覆盖"之外还有"填充"：很多时候要把沟槽<strong>完全填满不留缝</strong>。
+      路线有三条：保形沉积 + 回刻（慢但可靠）、<strong>HDP CVD</strong>（沉积同时用 Ar⁺ 溅掉悬垂，STI 填充主流）、
+      流动式 CVD（先流进缝底再固化）；铜互连则用<strong>自下而上的电镀超填充</strong>（第 13 节）。</p>
+
+      <h2 id="s8">8. 常见薄膜速查表：八种材料怎么选</h2>
+
+      <p>产线最常用的八种薄膜，建议横向对比记忆：<em>谁用什么方法长、长在多少度、干什么用</em>。</p>
+
+      <table class="term-table">
+        <thead><tr><th>材料</th><th>类别</th><th>主流沉积方法</th><th>典型温度</th><th>主要用途</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SiO₂</strong></td><td>介质 k≈3.9</td><td>热氧化、LPCVD TEOS、PECVD、HDP</td><td>热氧化 900~1100 °C<br>PECVD 300~400 °C</td><td>栅介质（传统）、侧墙、ILD、STI 填充</td></tr>
+          <tr><td><strong>Si₃N₄</strong></td><td>介质 k≈7</td><td>LPCVD（致密）/ PECVD（含 H）</td><td>700~800 °C<br>300~400 °C</td><td>刻蚀停止层、栅侧墙、钝化层、硬掩膜</td></tr>
+          <tr><td><strong>多晶硅</strong></td><td>半导体</td><td>LPCVD（SiH₄ 分解）</td><td>580~650 °C<br>（非晶→多晶 ~575 °C）</td><td>栅电极、局部互连、DRAM 电容电极</td></tr>
+          <tr><td><strong>HfO₂</strong></td><td>High-k k≈20~25</td><td><strong>ALD</strong>（必需）+ 氮化退火</td><td>250~350 °C</td><td>45 nm 后<strong>栅介质</strong>、DRAM 电容介质</td></tr>
+          <tr><td><strong>TiN</strong></td><td>导体/阻挡层</td><td>ALD / CVD（TiCl₄+NH₃）/ PVD</td><td>300~400 °C<br>PVD 室温~300 °C</td><td>金属栅功函数层、阻挡层、粘附层</td></tr>
+          <tr><td><strong>W</strong></td><td>导体</td><td>CVD（WF₆ + SiH₄/H₂ 还原），<strong>填充力极强</strong></td><td>350~450 °C</td><td>接触孔/通孔 plugs、字线栅极</td></tr>
+          <tr><td><strong>Cu</strong></td><td>导体 ρ≈1.7 μΩ·cm</td><td><strong>ECD 电镀</strong> + PVD 籽晶层 + ALD 阻挡层</td><td>电镀室温</td><td>后端互连 BEOL 主线（替代 Al）</td></tr>
+          <tr><td><strong>Low-k</strong></td><td>介质 k≈2.4~3.0</td><td>PECVD（掺 C / 致孔剂）+ UV 固化</td><td>300~400 °C</td><td>层间介质 IMD，降低<strong>RC 延迟</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>为什么用 High-k 替代 SiO₂？</strong>栅介质越薄栅控越强，但 SiO₂ 薄到 ~1.2 nm 时<strong>量子隧穿漏电已不可接受</strong>。
+        换成 k 更高的材料，可用<em>更厚的物理厚度</em>实现同样的等效电容（EOT 不变），漏电按厚度指数下降。
+        HfO₂ 的 k≈25 约为 SiO₂ 的 6 倍，物理厚度可做到 6 倍而保持同样栅控 —— 这么薄的膜必须精确到埃，<strong>只有 ALD 胜任</strong>。
+      </div>
+
+      <div class="warn">
+        <strong>Low-k 的"脆弱"代价：</strong>为把 k 从 3.9 降到 2.4，要在 SiO₂ 中掺碳并造出纳米孔洞
+        （孔洞率 20~30%）。代价是机械强度暴跌、<em>导热性变差</em>、易吸潮，
+        且<strong>CMP 时极易被压裂或与铜剥离</strong> ——
+        这是第 11 篇<a href="2026-10-01-CMP平坦化量测与良率控制.html">CMP</a>的核心难题。
+      </div>
+
+      <h2 id="s9">9. 外延 Epi：同质、异质、选择性与 SiGe 应变</h2>
+
+      <p>外延是唯一能长出<strong>单晶薄膜</strong>的沉积方式 —— 原子不是随便堆，
+      而是<em>严格延续衬底的晶格排列</em>。这与第 1 篇
+      <a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">晶体学</a>直接相关：
+      外延层晶向必须与衬底一致，硅通常取 (100) 面。</p>
+
+      <div class="kv">
+        <div><div class="v">同质外延</div><div class="l">Si 上长 Si。做低缺陷器件层（epi wafer：低阻衬底 + 高阻外延层）</div></div>
+        <div><div class="v">异质外延</div><div class="l">Si 上长 SiGe、GaN、GaAs。晶格常数不同 → 产生<strong>应变或位错</strong></div></div>
+        <div><div class="v">选择性外延<br>SEG</div><div class="l">只在<em>裸露单晶硅</em>上生长，介质上不长。靠 Cl 系气体原位刻蚀实现</div></div>
+        <div><div class="v">气相外延<br>VPE</div><div class="l">主流：SiH₄ / SiH₂Cl₂ 在 600~1100 °C 分解；还有 MBE（极慢）</div></div>
+      </div>
+
+      <div class="tip">
+        <strong>SiGe 源漏应变工程 —— 外延最有价值的应用。</strong>
+        Ge 的晶格常数（5.658 Å）比 Si（5.431 Å）大约 4.2%。在 PMOS 源漏<strong>选择性外延 SiGe</strong>，
+        它被周围 Si 挤压而在沟道方向产生<strong>压应变</strong>，
+        <em>降低空穴有效质量、提升空穴迁移率</em>（可达 30~50%），是 90 nm 后 PMOS 提性能的关键手段。<br>
+        同理 NMOS 用<strong>拉应变</strong>：靠 Si₃N₄ 覆盖层（CESL）的本征拉应力，或源漏外延 SiC（C 比 Si 小）。
+        <em>应变工程是"不缩小尺寸也能提性能"的典范。</em>
+      </div>
+
+      <div class="warn">
+        <strong>异质外延的临界厚度问题：</strong>晶格失配会在界面积累应变能，
+        厚度超过<strong>临界厚度</strong>后应变会通过<em>失配位错</em>释放 ——
+        位错贯穿器件区就是致命漏电通道（SiGe 含 Ge 25% 时临界厚度仅十几纳米），所以必须精确控制 Ge 组分与厚度，是"要应变但不要位错"的走钢丝。
+      </div>
+
+      <h2 id="s10">10. 掺杂方法一：热扩散与 Fick 定律</h2>
+
+      <p>最早的掺杂方法就是热扩散：硅片放进高温炉通杂质气体，杂质靠热运动"渗"进去。
+      它简单便宜无损伤，但在先进节点已基本被淘汰 —— 理解它为什么被淘汰，才懂离子注入的价值。</p>
+
+      <div class="kv">
+        <div><div class="v">替位扩散</div><div class="l">杂质<em>占据晶格位置</em>，靠与空位交换位置移动。<strong>B、P、As 属此类</strong>，慢</div></div>
+        <div><div class="v">间隙扩散</div><div class="l">杂质<em>挤在晶格间隙</em>移动，不需要空位。<strong>快得多</strong>（Cu、Fe、Ni 等），这正是它们污染危害大的原因</div></div>
+        <div><div class="v">扩散系数 D</div><div class="l">D = D₀·exp(−Ea/kT)。B 在 1000 °C 时 D ≈ 1e-13 cm²/s 量级</div></div>
+        <div><div class="v">固溶度</div><div class="l">杂质在硅中最大溶解量上限，预沉积表面浓度由它决定</div></div>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">∂N/∂t = D · ∂²N/∂x²　（Fick 第二定律）</span>
+        <span class="fnote">它的特征解给出一个极其好用的量：<strong>扩散长度 L = √(D·t)</strong> ——
+        杂质在 t 时间内"跑"的典型距离。判断退火会不会把结推深，第一件事就是算 L。</span>
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>工艺</th><th>边界条件</th><th>浓度分布解</th><th>目的</th></tr></thead>
+        <tbody>
+          <tr><td><strong>预沉积</strong><br>恒定源</td><td>表面浓度 N<sub>s</sub> 恒定（由固溶度决定）</td><td>N(x,t) = N<sub>s</sub> · erfc( x / (2√(Dt)) )</td><td>引入固定总量 Q = (2/√π)·N<sub>s</sub>√(Dt)</td></tr>
+          <tr><td><strong>推进</strong><br>限定源</td><td>杂质总量 Q 恒定（表面已封闭）</td><td>N(x,t) = ( Q / √(πDt) ) · exp( −x² / (4Dt) )</td><td>把结<strong>推深</strong>、降低表面浓度</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>为什么要分两步？</strong>预沉积的表面浓度被固溶度锁死（太高），结太浅太陡。
+        标准做法是<em>先用恒定源引入精确总量 Q，再去掉源做限定源推进</em> ——
+        结深由推进的 √(Dt) 控制，表面浓度由 Q 与 √(Dt) 共同决定。
+      </div>
+
+      <div class="warn">
+        <strong>热扩散为什么被淘汰？</strong>① <strong>高温</strong>（900~1100 °C，几十分钟）
+        会让已有掺杂分布重新"跑一遍"；② <strong>各向同性</strong>，横向扩散与纵向同量级，吃掉器件尺寸；
+        ③ <strong>无法精确控浅结</strong>，剂量由温度、时间与固溶度间接决定；
+        ④ 做不了倒退型阱与超浅延伸区。
+      </div>
+
+      <h2 id="s11">11. 掺杂方法二：离子注入与高斯分布</h2>
+
+      <p>离子注入的思路是"暴力美学"：<em>把杂质原子电离、加速到几十~几百 keV，当子弹打进硅片</em>。
+      它的三大优势精确对应热扩散的三大缺陷：<strong>低温（可室温）、方向可控、剂量可精确计量</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="离子注入机结构示意图">
+          <defs>
+            <marker id="arDep5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--up)"/>
+            </marker>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="66" y="16" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">① 离子源</text>
+            <rect x="20" y="26" width="92" height="52" rx="8" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="66" y="46" text-anchor="middle" font-size="9" fill="var(--semi)">BF₃ / PH₃ / AsH₃</text>
+            <text x="66" y="60" text-anchor="middle" font-size="9" fill="var(--text-soft)">电弧或射频电离</text>
+            <text x="66" y="72" text-anchor="middle" font-size="9" fill="var(--text-mute)">引出电极抽出离子</text>
+
+            <text x="212" y="16" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">② 质量分析磁体</text>
+            <path d="M140 36 L212 26 L284 36 L284 70 L212 80 L140 70 Z" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="212" y="54" text-anchor="middle" font-size="9.5" fill="var(--accent)">Analyzer Magnet</text>
+            <text x="212" y="66" text-anchor="middle" font-size="9" fill="var(--text-soft)">按 m/q 选 species</text>
+            <text x="212" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">只放行需要的离子，其余撞墙</text>
+
+            <text x="376" y="16" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">③ 加速管</text>
+            <rect x="308" y="36" width="136" height="32" rx="6" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="376" y="50" text-anchor="middle" font-size="9.5" fill="var(--up)">Acceleration Column</text>
+            <text x="376" y="63" text-anchor="middle" font-size="9" fill="var(--text-soft)">高压 10 keV ~ 数 MeV</text>
+            <text x="376" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">能量 E 决定<strong>射程 Rp</strong></text>
+
+            <text x="516" y="16" text-anchor="middle" font-size="10.5" fill="var(--fin)" font-weight="700">④ 扫描系统</text>
+            <rect x="466" y="36" width="100" height="32" rx="6" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="516" y="50" text-anchor="middle" font-size="9.5" fill="var(--fin)">静电/机械扫描</text>
+            <text x="516" y="63" text-anchor="middle" font-size="9" fill="var(--text-soft)">保证全片均匀</text>
+            <text x="516" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">束流 I 决定<strong>剂量 Q</strong></text>
+
+            <text x="616" y="114" text-anchor="middle" font-size="10.5" fill="var(--down)" font-weight="700">⑤ 靶室</text>
+            <rect x="580" y="122" width="72" height="48" rx="6" fill="var(--down)" fill-opacity=".14" stroke="var(--down)" stroke-width="1.4"/>
+            <rect x="592" y="146" width="48" height="14" fill="var(--text)" fill-opacity=".25" stroke="var(--border)"/>
+            <text x="616" y="140" text-anchor="middle" font-size="9" fill="var(--down)">硅片</text>
+            <text x="616" y="184" text-anchor="middle" font-size="9" fill="var(--text-mute)">倾斜 7° 防沟道</text>
+
+            <g stroke="var(--up)" stroke-width="2" fill="none" marker-end="url(#arDep5)">
+              <path d="M116 52 L136 48"/><path d="M288 52 L304 52"/><path d="M448 52 L462 52"/>
+            </g>
+            <path d="M566 52 Q 604 52 604 120" stroke="var(--up)" stroke-width="2" fill="none" marker-end="url(#arDep5)"/>
+
+            <rect x="16" y="104" width="330" height="114" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="124" font-size="11" fill="var(--up)" font-weight="700">剂量与能量：两个独立旋钮</text>
+            <text x="32" y="144" font-size="9.5" fill="var(--text-soft)"><strong>剂量 Q（cm⁻²）</strong>：单位面积打入的离子总数，</text>
+            <text x="32" y="158" font-size="9.5" fill="var(--text-soft)">　= ∫I·dt /(q·A)，靠<strong>积分束流</strong>计量</text>
+            <text x="32" y="176" font-size="9.5" fill="var(--text-soft)"><strong>能量 E（keV）</strong>：决定打入多深（→ Rp）</text>
+            <text x="32" y="192" font-size="9.5" fill="var(--text-soft)">两者<strong>完全独立可调</strong>，精度可达 ±1%</text>
+            <text x="32" y="210" font-size="9.5" fill="var(--text-mute)">量程 1e11~1e16 cm⁻²</text>
+
+            <rect x="358" y="104" width="170" height="114" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="374" y="124" font-size="11" fill="var(--semi)" font-weight="700">典型剂量档位</text>
+            <text x="374" y="144" font-size="9.5" fill="var(--text-soft)">源漏 S/D：~<strong>1e15</strong> cm⁻²</text>
+            <text x="374" y="160" font-size="9.5" fill="var(--text-soft)">LDD 延伸区：1e13~1e14</text>
+            <text x="374" y="176" font-size="9.5" fill="var(--text-soft)">阈值调整 V<sub>t</sub>：1e12~1e13</text>
+            <text x="374" y="192" font-size="9.5" fill="var(--text-soft)">沟道截止 / 阱：1e12~1e13</text>
+          </g>
+        </svg>
+        <figcaption>图 5：离子注入机五大模块。<strong>磁体选种类、加速管定深度、扫描定均匀性、束流积算定剂量</strong>。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">N(x) = ( Q / (√(2π)·ΔR<sub>p</sub>) ) · exp[ −(x − R<sub>p</sub>)² / (2·ΔR<sub>p</sub>²) ]</span>
+        <span class="fnote">
+        <strong>R<sub>p</sub> 投影射程</strong>：分布峰值的深度，主要由<em>能量</em>决定 —— 近似与能量成正比，
+        <strong>B 30 keV 时 R<sub>p</sub> ≈ 100 nm 量级</strong>，重离子（As）的 Rp 明显小于轻离子（B）；<br>
+        <strong>ΔR<sub>p</sub> 离散</strong>：分布宽度，代表不确定性；<br>
+        <strong>Q 剂量</strong>：曲线下面积 ∫N dx = Q，与能量无关；
+        峰值浓度 N<sub>p</sub> = Q/(√(2π)·ΔR<sub>p</sub>) ≈ <strong>0.4·Q/ΔR<sub>p</sub></strong>。<br>
+        实际分布并非完美高斯：轻离子（如 B）有明显拖尾，常用 Pearson-IV 描述。
+        </span>
+      </div>
+
+      <div class="warn">
+        <strong>沟道效应（Channeling）与 7° 倾斜：</strong>如果离子正好沿晶体的<em>低指数晶向</em>射入
+        （如 (100) 硅的 [100] 方向，或〈110〉这类原子排列稀疏的"通道"），
+        它与原子核的碰撞概率大幅降低，一路飞到远超 Rp 的深度，在分布尾部留下长长的"拖尾"，导致<em>结深失控</em>。<br>
+        解法（呼应第 1 篇晶体学）：① 把硅片<strong>倾斜约 7°</strong>（再加 22~30° 扭转角）让离子束偏离主晶轴；
+        ② <strong>非晶化预注入</strong>（Si、Ge 大剂量）把表层打成非晶；
+        ③ 生长一层薄 <em>screening oxide</em> 让离子先被散射。
+      </div>
+
+      <div class="kv">
+        <div><div class="v">~1e15 cm⁻²</div><div class="l">室温下使硅表层<strong>非晶化</strong>的剂量量级（重离子更低，轻离子更高）</div></div>
+        <div><div class="v">空位-间隙对</div><div class="l">每个离子可产生成百上千个 Frenkel 缺陷，它们也会扩散、聚集</div></div>
+        <div><div class="v">损伤后果</div><div class="l">迁移率下降、漏电剧增、杂质<strong>未被激活</strong>（不在晶格位点上就不贡献载流子）</div></div>
+        <div><div class="v">非晶层的<br>"好处"</div><div class="l">无晶向 → <strong>天然消除沟道效应</strong>；固相外延再结晶时杂质直接入位，激活率高</div></div>
+      </div>
+
+      <div class="note">
+        <strong>注入损伤的两个隐性副作用：</strong>
+        ① <strong>瞬时增强扩散 TED</strong>：大量间隙原子与 B 等杂质结合并带着它跑，
+        使退火初期扩散系数比正常值高几个数量级 —— 这是浅结做不浅的头号敌人；
+        ② 未修复的缺陷是深能级复合中心，造成结漏电与栅可靠性下降。所以<em>注入后必须退火</em>。 
+      </div>
+
+      <h2 id="s12">12. 退火：激活与扩散的热预算之争</h2>
+
+      <p>注入完成后硅片"又伤又不导电"：晶格被打烂，杂质大多卡在间隙位（不提供载流子）。
+      退火要做两件<strong>互相矛盾</strong>的事：</p>
+
+      <div class="kv">
+        <div><div class="v">① 修复损伤</div><div class="l">让硅原子回到晶格位置。非晶层通过<strong>固相外延 SPE</strong> 从单晶界面向上再结晶</div></div>
+        <div><div class="v">② 激活杂质</div><div class="l">让杂质从间隙位<em>移到替位</em>，成为真正的施主/受主。激活率要求 &gt;90%</div></div>
+        <div><div class="v">矛盾：扩散</div><div class="l">两者都要高温，但<strong>高温必然让杂质扩散</strong>，把浅结推深 —— 这是死结</div></div>
+        <div><div class="v">热预算<br>Thermal Budget</div><div class="l">衡量"硅片总共吃了多少热"，工程上常写作 <strong>D·t</strong> 的累积效果</div></div>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">激活需要高温（Ea 高）　vs　扩散同样被高温放大（L = √(Dt)）</span>
+        <span class="fnote">关键洞察：<strong>激活的活化能高于扩散的活化能</strong>。
+        所以"更高温度、更短时间"能在同等激活程度下显著减少扩散 ——
+        这就是炉退火 → RTA → 毫秒退火这条演进线的全部物理依据。</span>
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>方式</th><th>温度 / 时间</th><th>升温速率</th><th>优点</th><th>缺点 / 挑战</th></tr></thead>
+        <tbody>
+          <tr><td><strong>炉退火</strong></td><td>800~950 °C<br>15~60 min</td><td>~10 °C/min</td><td>温度均匀、批量、无热冲击、便宜</td><td><strong>热预算太大</strong>，浅结守不住</td></tr>
+          <tr><td><strong>RTA / 尖峰</strong></td><td><strong>~1050 °C</strong><br>1~30 s（尖峰无保温）</td><td>50~250 °C/s</td><td>热预算小得多，激活率高，<strong>主流</strong></td><td>片内温度均匀性难，测温控制要求极高</td></tr>
+          <tr><td><strong>毫秒/激光</strong></td><td><strong>可达 ~1300 °C</strong><br>0.1~10 ms</td><td>10⁶~10⁷ °C/s</td><td>扩散<strong>几乎可忽略</strong>，激活率仍高</td><td>只加热表层，图形密度效应极强</td></tr>
+          <tr><td><strong>闪灯退火</strong></td><td>~1200~1300 °C<br>~1 ms</td><td>极高（预热 + 闪光）</td><td>先预热到 600~800 °C 再闪表层</td><td>窗口极窄，热应力可致翘曲/滑移</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>先进节点为什么必须用毫秒级退火？</strong>结深要求做到 10~20 nm 时，
+        允许的扩散长度 L = √(Dt) 只有几纳米；而 RTA（1050 °C / 数秒）下 B 的 L 已与结深同量级 —— <em>退火本身就会把结毁掉</em>。
+        毫秒退火把时间压到毫秒，Dt 缩小几个数量级，L 随之可忽略；同时温度可达 1300 °C，<strong>固相外延与杂质激活又快又彻底</strong>。
+      </div>
+
+      <div class="warn">
+        <strong>毫秒退火的"图形密度效应"陷阱：</strong>激光/闪灯只加热表层几微米，
+        而密集线条区与空旷区的热容与反射率不同，会导致<strong>同一片硅片不同位置峰值温度差几十甚至上百度</strong>，直接造成器件参数片内离散。解法：① 先用炉/RTA 把整片预热到 600~800 °C 作"底温"；
+        ② 加吸收层；③ 用 <em>dummy pattern</em> 把图形密度填均匀。
+      </div>
+
+      <h2 id="s13">13. 大马士革互连：铜为什么不能干法刻蚀</h2>
+
+      <p>铝互连时代顺序是"先沉积整层 Al，再刻蚀出线条"（与第 9 篇
+      <a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">刻蚀</a>一致）。换成铜后这条路走不通：</p>
+
+      <div class="warn">
+        <strong>铜为什么不能干法刻蚀？</strong>等离子刻蚀要求产物<em>必须挥发</em>才能被泵抽走，
+        而铜的卤化物（CuCl<sub>x</sub>、CuF<sub>x</sub>）<strong>挥发性极差</strong>，
+        在常规刻蚀温度（&lt;200 °C）下几乎不挥发；要让它挥发需 250 °C 以上，光刻胶与 low-k 都受不了。<br>
+        于是换个思路：<strong>既然刻不动，干脆不刻</strong> ——
+        先在介质里刻出沟槽和通孔，再把铜"填"进去，最后把多余铜磨掉。
+        这就是<strong>大马士革工艺（Damascene）</strong>。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="铜大马士革互连工艺流程截面">
+          <defs>
+            <marker id="arDep6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="66" y="14" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">① 介质沉积</text>
+            <rect x="20" y="24" width="92" height="62" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)"/>
+            <rect x="20" y="76" width="92" height="10" fill="var(--text)" fill-opacity=".28"/>
+            <text x="66" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">Low-k / SiO₂</text>
+
+            <text x="196" y="14" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">② 刻沟槽+通孔</text>
+            <rect x="150" y="24" width="92" height="62" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M170 24 L170 54 L182 54 L182 66 L210 66 L210 54 L222 54 L222 24 Z" fill="var(--text)" fill-opacity=".06" stroke="var(--border)" stroke-dasharray="3 2"/>
+            <rect x="150" y="76" width="92" height="10" fill="var(--text)" fill-opacity=".28"/>
+            <text x="196" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">双大马士革</text>
+
+            <text x="326" y="14" text-anchor="middle" font-size="10" fill="var(--accent)" font-weight="700">③ 阻挡层+籽晶层</text>
+            <rect x="280" y="24" width="92" height="62" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M300 24 L300 54 L312 54 L312 66 L340 66 L340 54 L352 54 L352 24" fill="none" stroke="var(--accent)" stroke-width="4"/>
+            <rect x="280" y="76" width="92" height="10" fill="var(--text)" fill-opacity=".28"/>
+            <text x="326" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">TaN + Cu seed</text>
+
+            <text x="456" y="14" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">④ 电镀 Cu 填充</text>
+            <rect x="410" y="24" width="92" height="62" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M430 24 L430 54 L442 54 L442 66 L470 66 L470 54 L482 54 L482 24 Z" fill="var(--up)" fill-opacity=".55"/>
+            <rect x="410" y="16" width="92" height="10" fill="var(--up)" fill-opacity=".55"/>
+            <rect x="410" y="76" width="92" height="10" fill="var(--text)" fill-opacity=".28"/>
+            <text x="456" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">ECD 超填充</text>
+
+            <text x="586" y="14" text-anchor="middle" font-size="10" fill="var(--fin)" font-weight="700">⑤ CMP 去除多余</text>
+            <rect x="540" y="24" width="92" height="62" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M560 24 L560 54 L572 54 L572 66 L600 66 L600 54 L612 54 L612 24 Z" fill="var(--up)" fill-opacity=".55"/>
+            <rect x="540" y="76" width="92" height="10" fill="var(--text)" fill-opacity=".28"/>
+            <line x1="536" y1="24" x2="636" y2="24" stroke="var(--fin)" stroke-width="2.4"/>
+            <text x="586" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">见第 11 篇 CMP</text>
+
+            <g stroke="var(--text-mute)" stroke-width="1.6" fill="none" marker-end="url(#arDep6)">
+              <path d="M118 58 L144 58"/><path d="M248 58 L274 58"/><path d="M378 58 L404 58"/><path d="M508 58 L534 58"/>
+            </g>
+
+            <rect x="16" y="114" width="320" height="124" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="134" font-size="11" fill="var(--accent)" font-weight="700">阻挡层 TaN 的三重职责</text>
+            <text x="32" y="154" font-size="9.5" fill="var(--text-soft)">· <strong>阻挡扩散</strong>：Cu 在 Si/SiO₂ 中扩散极快，</text>
+            <text x="32" y="168" font-size="9.5" fill="var(--text-soft)">　进入器件区就是致命的深能级复合中心</text>
+            <text x="32" y="184" font-size="9.5" fill="var(--text-soft)">· <strong>粘附</strong>：Cu 与 SiO₂/low-k 粘附差，TaN 当"胶水"</text>
+            <text x="32" y="200" font-size="9.5" fill="var(--text-soft)">· <strong>导电</strong>：本身有电阻率，太厚会挤占 Cu 截面</text>
+            <text x="32" y="214" font-size="9.5" fill="var(--text-soft)">　→ <strong>必须做薄（1~2 nm）</strong></text>
+            <text x="32" y="230" font-size="9.5" fill="var(--text-mute)">矛盾：越薄越难连续无孔 → 逼出 ALD 与 IMP-PVD</text>
+
+            <rect x="348" y="114" width="316" height="124" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="364" y="134" font-size="11" fill="var(--up)" font-weight="700">籽晶层 Cu 与超填充</text>
+            <text x="364" y="154" font-size="9.5" fill="var(--text-soft)">· ECD 电镀需要<strong>导电起始层</strong>才能通电还原</text>
+            <text x="364" y="170" font-size="9.5" fill="var(--text-soft)">· 籽晶层由 PVD 溅射，须连续覆盖通孔侧壁</text>
+            <text x="364" y="188" font-size="9.5" fill="var(--text-soft)">· <strong>超填充 Superfill</strong>：抑制剂在孔口富集、</text>
+            <text x="364" y="202" font-size="9.5" fill="var(--text-soft)">　加速剂在孔底富集 → 自下而上填满无空洞</text>
+            <text x="364" y="220" font-size="9.5" fill="var(--text-mute)">籽晶层在孔口断开 → 电镀无法启动 → 空洞</text>
+          </g>
+        </svg>
+        <figcaption>图 6：铜双大马士革互连五步。核心是<strong>先刻、后填、再磨平</strong>，把"刻不动的铜"变成"填进去的铜"。</figcaption>
+      </figure>
+
+      <table class="term-table">
+        <thead><tr><th>方式</th><th>做法</th><th>优势</th><th>难点</th></tr></thead>
+        <tbody>
+          <tr><td>单大马士革</td><td>每次只做一层（沟槽或通孔），逐层填充</td><td>工序简单，对准容易</td><td>层间多出界面（电阻↑、电迁移风险↑）</td></tr>
+          <tr><td>双大马士革</td><td><strong>一次刻出通孔 + 沟槽，一次电镀填满</strong></td><td>少一层阻挡/籽晶界面，<strong>可靠性更好</strong>，绝对主流</td><td>一次打出两种深度，形貌控制难</td></tr>
+          <tr><td>via-first<br>trench-first</td><td>通孔优先 / 沟槽优先两种刻蚀顺序</td><td>各自有一项深度或形貌好控制</td><td>另一种结构易被过刻或对准困难</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>为什么铜还是取代了铝？</strong>尽管大马士革比"沉积+刻蚀"复杂得多，铜仍赢了：
+      ① <strong>电阻率更低</strong>（Cu 1.7 vs Al 2.7 μΩ·cm）；
+      ② <strong>抗电迁移能力强得多</strong>，寿命高一到两个数量级；③ 配合 Low-k 介质，互连延迟才能真正压下来。</p>
+
+      <h2 id="s14">14. 常见误区</h2>
+
+      <div class="warn">
+        <strong>误区 1：把 CVD、PECVD、ALD 当成"三种差不多的方法"。</strong>
+        差别是<em>机理级别</em>的：CVD 是连续气相反应（速率 ∝ 浓度，覆盖中等）；
+        PECVD 用等离子体代替热提供活化能（低温高速但含 H）；
+        ALD 把反应拆成两个自限制半反应（速率 ∝ 循环次数，覆盖近乎完美但极慢）。
+        混为一谈会选错工艺 —— 比如用 PECVD 做 2 nm 栅介质、用 ALD 做 500 nm 钝化层。
+      </div>
+
+      <div class="warn">
+        <strong>误区 2：以为 CVD 温度越高越好、速率越快越好。</strong>
+        升温先让速率<em>指数增长</em>，越过拐点后进入平台，再升温毫无收益，
+        反而带来热预算超标、杂质再分布、应力增大。
+        且在<strong>表面反应控制区</strong>速率对温度指数敏感，温差 5 °C 就造成百分之几的膜厚差 —— 要<em>精确控温而不是一味升温</em>。
+      </div>
+
+      <div class="warn">
+        <strong>误区 3：认为"注入深度 = 射程 Rp"。</strong>
+        Rp 只是分布的<strong>峰值位置</strong>，实际还有宽度 ΔRp 与向深处延伸的拖尾（尤其沟道效应长尾）。
+        结深 x<sub>j</sub> 取决于浓度降到背景处的深度，通常明显大于 Rp，退火还会进一步展宽 —— <em>"注入的 Rp"与"最终的结深"是两回事</em>。
+      </div>
+
+      <div class="warn">
+        <strong>误区 4：把退火简单理解成"加热修补一下"。</strong>
+        退火是全流程最难权衡的一步：<strong>激活与扩散同源、同步、无法解耦</strong>，
+        得到多少激活就必然付出多少扩散。先进退火（RTA / spike / 激光 / 闪灯）
+        本质都是利用"激活的活化能高于扩散的活化能"，用<em>更高温 + 更短时间</em>换更好的激活/扩散比。
+      </div>
+
+      <div class="warn">
+        <strong>误区 5：以为台阶覆盖差只是"薄一点"的小问题。</strong>
+        后果是<strong>非线性</strong>的：一旦顶部悬垂封死开口（pinch-off），
+        内部就形成<em>封闭空洞 void</em>，此后无论再沉积多久都填不进去。
+        空洞造成局部电阻飙升、电流拥挤、电迁移失效 —— 所以不能只看平均覆盖率，<strong>最薄处（尤其孔口以下侧壁）才是生死线</strong>。
+      </div>
+
+      <h2 id="s15">15. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：硼注入，Q = 1e13 cm⁻²，Rp = 60 nm、ΔRp = 30 nm；衬底 p 型，背景 N<sub>A</sub> = 1e16 cm⁻³。求峰值浓度 N<sub>p</sub> 与结深 x<sub>j</sub>（忽略退火扩散与拖尾）。</summary>
+        <div class="ans">
+        <strong>峰值浓度：</strong>N<sub>p</sub> = Q/(√(2π)·ΔR<sub>p</sub>)，ΔR<sub>p</sub> = 3.0e-6 cm、√(2π) = 2.5066
+        → N<sub>p</sub> = 1e13/(2.5066 × 3.0e-6) ≈ <strong>1.33e18 cm⁻³</strong>（经验式 0.4Q/ΔR<sub>p</sub> 一致）。<br><br>
+        <strong>结深：</strong>令 N(x<sub>j</sub>) = 1e16：(x<sub>j</sub>−60)²/1800 = ln(133) ≈ 4.89
+        → (x<sub>j</sub>−60)² ≈ 8802 nm² → x<sub>j</sub> ≈ 60 + 93.8 ≈ <strong>154 nm</strong>。<br><br>
+        <strong>结论：</strong>结深是 Rp 的 <strong>2.5 倍以上</strong>（误区 3 的要点）：
+        N<sub>p</sub>/N<sub>A</sub> 每提高 e²≈7.4 倍，结深就多推 2ΔR<sub>p</sub>。
+        实际还要加拖尾与退火扩散，理论值只给量级，<em>最终以 SIMS 实测为准</em>。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：深宽比 50:1、开口 10 nm 的沟槽内壁用 ALD 沉积 6 nm HfO₂（GPC = 0.10 nm/cycle），单循环 1.2 s。求循环数与时间；若改用 PECVD（200 nm/min）会有什么问题？</summary>
+        <div class="ans">
+        <strong>ALD：</strong>循环数 = 6/0.10 = <strong>60 个</strong>；时间 = 60 × 1.2 = <strong>72 s</strong>。<br><br>
+        <strong>关键前提：</strong>高深宽比结构里前驱体必须有足够时间扩散到沟底，
+        50:1 深孔中单循环可能需数秒到十几秒。<em>ALD 的慢不只来自循环数，更来自被迫延长的脉冲/吹扫时间。</em><br><br>
+        <strong>改用 PECVD（3.33 nm/s）：</strong>名义只需 1.8 s，但三个致命问题：
+        ① <strong>覆盖不足</strong>：50:1 深孔中覆盖率可能只有 0.3~0.5，底部膜厚仅 2~3 nm，
+        <em>介质/阻挡层局部过薄就直接击穿</em>；
+        ② <strong>顶部夹断</strong>：PECVD 有悬垂倾向，10 nm 开口易被封住形成空洞；
+        ③ <strong>厚度精度不够</strong>：1.8 s 内停在 6 nm，稳定性要求过于苛刻。<br><br>
+        <strong>结论：</strong>薄 + 高深宽比 + 精度极高的膜，<strong>ALD 是唯一可行方案</strong>；
+        ILD、钝化层才是 PECVD 主场。<em>看厚度与深宽比选方法，而不是看速率选方法。</em>
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：某 LPCVD 在 550 °C 时温度 +10 °C 速率 +12%，在 700 °C 时 +10 °C 速率只 +2%。判断两个温度各处于什么控制区；若要改善片内膜厚均匀性，应优先调什么？</summary>
+        <div class="ans">
+        <strong>判断：</strong>由 Rate ∝ exp(−Ea/kT) 得 d(lnR)/dT = Ea/(kT²)。
+        550 °C（823 K）：Ea ≈ 0.012 × 8.617e-5 × 823² ≈ <strong>0.70 eV</strong>，
+        属典型<strong>表面化学反应活化能</strong>（0.5~2 eV）→ <strong>表面反应控制区</strong>。
+        700 °C：敏感度降为 1/6，等效 Ea ≈ <strong>0.12 eV</strong> →
+        <strong>质量传输控制区</strong>，瓶颈是气体穿过滞流层的输运（D ∝ T<sup>1.5</sup>，与观察吻合）。<br><br>
+        <strong>优先做什么：</strong>膜厚差主要来自<strong>表面温度分布不均</strong>。
+        ① <strong>温度均匀性</strong>（第一位）：多区控温、炉口炉尾补偿 ——
+        温差从 10 °C 压到 2 °C，膜厚差就从 12% 降到约 2.4%；
+        ② 若在传输控制区则改调<strong>气流与压力</strong>；
+        ③ <strong>负载效应</strong>：装片数量改变消耗速率，需做 load size 补偿。<br><br>
+        <em>先判断自己站在 Arrhenius 曲线的哪一段，再决定"控温"还是"控气"。</em>
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：比较两种退火的热预算。A：炉退火 900 °C / 30 min；B：RTA 1050 °C / 10 s。设硼扩散 Ea = 3.0 eV。B 相对 A 的扩散量 D·t 是多少？扩散长度 L 之比是多少？说明了什么？</summary>
+        <div class="ans">
+        <strong>扩散系数之比：</strong>D<sub>B</sub>/D<sub>A</sub> = exp[(Ea/k)(1/T<sub>A</sub> − 1/T<sub>B</sub>)]，
+        T<sub>A</sub> = 1173 K、T<sub>B</sub> = 1323 K、k = 8.617e-5 eV/K。
+        1/1173 − 1/1323 = 9.66e-5 K⁻¹，Ea/k = 3.481e4 K → 指数 ≈ <strong>3.36</strong>
+        → D<sub>B</sub>/D<sub>A</sub> = e<sup>3.36</sup> ≈ <strong>28.8</strong>。<br><br>
+        <strong>热预算之比：</strong>(D·t)<sub>B</sub>/(D·t)<sub>A</sub> = 28.8 × (10/1800) ≈ <strong>0.16</strong>，
+        即 RTA 的总扩散量只有炉退火的约 <strong>1/6</strong>；扩散长度 L = √(Dt) 之比 ≈ <strong>0.40</strong>
+        （炉退火 L = 130 nm 时，RTA 只有约 52 nm —— 对 20 nm 浅结，前者是灾难、后者可接受）。<br><br>
+        <strong>说明什么：</strong>① <strong>高温 + 短时确实占便宜</strong>：温度升 150 °C 让 D 涨 29 倍、时间缩短 180 倍，
+        净效果扩散被压到 1/6 —— 因为<em>激活与再结晶的活化能高于扩散的活化能</em>；
+        ② 这解释了退火演进方向（炉 → RTA → spike → 激光/闪灯）；
+        ③ <em>热预算是累积量而非只看最高温度</em>，一次长时间 CVD、一次回流全都计入。
+        </div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 6 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 7 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 8 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 9 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li class="current">第 10 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 11 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 12 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 13 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 14 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#薄膜沉积</span>
+      <span class="chip">#CVD</span>
+      <span class="chip">#ALD</span>
+      <span class="chip">#PVD</span>
+      <span class="chip">#PECVD</span>
+      <span class="chip">#台阶覆盖</span>
+      <span class="chip">#离子注入</span>
+      <span class="chip">#退火</span>
+      <span class="chip">#大马士革</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

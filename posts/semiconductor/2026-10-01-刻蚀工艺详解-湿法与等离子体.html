@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</title>
+<meta name="description" content="从湿法到等离子体刻蚀：讲清速率、选择比与各向异性度三大指标，CCP/ICP 反应室与自偏压、氟氯基气体化学与侧壁钝化、Bosch 深硅刻蚀、负载效应与 ARDE、原子层刻蚀。">
+<meta name="keywords" content="刻蚀,等离子体,ICP,Bosch,选择比,各向异性,深硅刻蚀,原子层刻蚀">
+<meta name="date" content="2026-10-01">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../../index.html">← 返回主页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 微纳工艺</span>
+    <h1 class="title">刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</h1>
+    <div class="meta">
+      <span>2026-10-01</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 9 篇</span><span class="sep"></span>
+      <span>阅读约 26 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        <a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 8 篇</a>讲的光刻，得到的只是一层<strong>光刻胶上的暂时图形</strong>——
+        那是模具，不是芯片本身。真正把图形刻进材料的是刻蚀。本篇从"湿法为什么会横向钻蚀"出发，讲清
+        <strong>等离子体为什么必须有、纯化学/纯物理/离子辅助协同三种机制的分野、CCP 与 ICP 的结构差别、
+        氟基与氯基气体化学、侧壁钝化为什么是各向异性的关键、Bosch 深硅刻蚀与扇贝纹、负载效应与 ARDE，
+        以及原子层刻蚀 ALE</strong>。
+        读完你应该能回答：为什么干法能刻出垂直侧壁？深宽比越大为什么刻得越慢？3D NAND 的深孔为什么非用 Bosch 不可？
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">刻蚀在做什么：分工、方向性与三个核心指标</a></li>
+          <li><a href="#s2">湿法刻蚀：各向同性、化学体系与侧向钻蚀</a></li>
+          <li><a href="#s3">为什么必须有等离子体：非平衡才是关键</a></li>
+          <li><a href="#s4">刻蚀的四个基本过程</a></li>
+          <li><a href="#s5">三种刻蚀机制：纯化学、纯物理、离子辅助协同</a></li>
+          <li><a href="#s6">反应室结构：CCP 与 ICP，自偏压怎么来的</a></li>
+          <li><a href="#s7">气体化学与侧壁钝化</a></li>
+          <li><a href="#s8">六大评价指标：速率、选择比、均匀性、方向性、负载、ARDE</a></li>
+          <li><a href="#s9">Bosch 深硅刻蚀：循环、扇贝纹与低温工艺</a></li>
+          <li><a href="#s10">形貌缺陷图谱：弓形、缺口、底切、残留与粗糙</a></li>
+          <li><a href="#s11">终点检测 EPD 与过刻的代价</a></li>
+          <li><a href="#s12">先进节点：原子层刻蚀 ALE、超高选择比与低损伤</a></li>
+          <li><a href="#s13">常见误区</a></li>
+          <li><a href="#s14">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 刻蚀在做什么：分工、方向性与三个核心指标</h2>
+
+      <p>整个图形转移分三步：光刻在光刻胶上"印"出二维图形（<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 8 篇</a>），
+      刻蚀把它真正转移到下层材料，最后去胶得到永久图形。一颗先进逻辑芯片要经历 <strong>100 次以上</strong>的刻蚀与去除步骤。</p>
+
+      <div class="note">
+        <strong>一句话定位：</strong>光刻决定"能画多小"，刻蚀决定"能多忠实地复制下去"。
+        最终量到的 CD = 光刻的 CD 误差 + 刻蚀 bias（刻蚀后相对胶上线宽的偏移）。
+        先进节点里光刻胶越来越薄（EUV 胶常在 20~40 nm），<strong>留给刻蚀的预算反而越来越少</strong>，
+        这直接推高了对选择比的要求。
+      </div>
+
+      <p>评价任何一道刻蚀，先问三个问题：刻得多快？只刻该刻的吗？刻得直吗？</p>
+
+      <div class="formula-block">
+        <span class="fl">刻蚀速率 Rate = 去除厚度 / 时间　（nm/min 或 Å/s）</span>
+        <span class="fnote">决定产能。太慢拖累产出，太快则终点难控、均匀性与形貌容易失控。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">选择比 S = Rate（目标材料） / Rate（掩膜或下层材料）</span>
+        <span class="fnote">S = 20 表示刻掉 20 nm 目标层只损失 1 nm 掩膜。<strong>选择比决定"能刻多深"</strong>——胶有多厚、能损失多少，就是深度的天花板。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">各向异性度 A = 1 −（横向刻蚀量 / 纵向刻蚀量）</span>
+        <span class="fnote">A = 1 是完美垂直；A = 0 是完全各向同性（横向 = 纵向，剖面呈半圆）。先进节点要求 A 接近 0.95~0.99。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="各向同性刻蚀与各向异性刻蚀剖面对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="176" y="20" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">A = 0　各向同性（湿法）</text>
+            <rect x="46" y="32" width="260" height="104" fill="var(--fin)" fill-opacity=".16" stroke="var(--border)"/>
+            <rect x="46" y="32" width="86" height="20" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="226" y="32" width="80" height="20" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M132 52 A 94 94 0 0 0 226 52 Z" fill="var(--down)" fill-opacity=".18" stroke="var(--down)" stroke-width="1.4"/>
+            <path d="M176 52 L176 132" stroke="var(--semi)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <path d="M226 52 L226 130" stroke="var(--down)" stroke-width="1.6"/>
+            <text x="182" y="98" font-size="9.5" fill="var(--semi)">深度 D</text>
+            <text x="232" y="108" font-size="9.5" fill="var(--down)">侧向 U</text>
+            <text x="176" y="152" text-anchor="middle" font-size="10" fill="var(--down)">U ≈ D，线宽守不住</text>
+            <text x="504" y="20" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">A → 1　各向异性（干法）</text>
+            <rect x="374" y="32" width="260" height="104" fill="var(--fin)" fill-opacity=".16" stroke="var(--border)"/>
+            <path d="M374 32h86v20h-86z M548 32h86v20h-86z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="460" y="52" width="88" height="84" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="504" y="100" text-anchor="middle" font-size="9.5" fill="var(--up)">U ≈ 0</text>
+            <text x="504" y="152" text-anchor="middle" font-size="10" fill="var(--up)">忠实复制胶上的 CD</text>
+            <rect x="16" y="168" width="648" height="36" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="186" font-size="10.5" fill="var(--text-soft)">左图：横向损失 U 与深度 D 同量级；右图：横向被侧壁保护层挡住。</text>
+            <text x="32" y="200" font-size="10.5" fill="var(--text-soft)">刻蚀的工程努力，就是在不牺牲速率与选择比的前提下把 A 推向 1。</text>
+          </g>
+        </svg>
+        <figcaption>图 1：各向同性 vs 各向异性刻蚀剖面。湿法天然是左图，干法追求右图。</figcaption>
+      </figure>
+
+      <h2 id="s2">2. 湿法刻蚀：各向同性、化学体系与侧向钻蚀</h2>
+
+      <p>湿法就是把片子泡进药液，本质是<strong>纯化学反应</strong>：氧化剂先把表面氧化，酸或碱再把氧化物溶解掉，
+      产物溶于液体被带走。因为液体从各个方向同等接触表面，<strong>横向与纵向速率几乎相同——这就是各向同性的来源</strong>。</p>
+
+      <table class="term-table">
+        <thead><tr><th>体系</th><th>配方</th><th>刻蚀对象</th><th>特点</th></tr></thead>
+        <tbody>
+          <tr><td>BOE / BHF</td><td>HF + NH₄F 缓冲</td><td>SiO₂</td><td>速率可控、对胶友好、对 Si 选择比高</td></tr>
+          <tr><td>稀 HF</td><td>HF:H₂O = 1:50~1:100</td><td>SiO₂ 自然氧化层</td><td>极快，几十秒去几 nm，难精确控制</td></tr>
+          <tr><td>HNA</td><td>HF + HNO₃ + CH₃COOH</td><td>单晶硅 / 多晶硅</td><td>硝酸氧化、HF 溶解、醋酸缓冲；用于减薄与抛光</td></tr>
+          <tr><td>KOH</td><td>KOH 水溶液，60~90 °C</td><td>单晶硅</td><td><strong>晶向依赖</strong>：(100)/(111) 速率比可达 100:1 以上</td></tr>
+          <tr><td>TMAH</td><td>四甲基氢氧化铵，~25%，80~90 °C</td><td>单晶硅</td><td>无碱金属离子污染，与 CMOS 线兼容，MEMS 主流</td></tr>
+          <tr><td>热磷酸</td><td>H₃PO₄ ~85%，160 °C</td><td>Si₃N₄</td><td>对 SiO₂ 高选择比，去氮化硅的标准工艺</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>KOH / TMAH 的"各向异性"是另一回事。</strong>它们对不同晶面的速率差别极大（(100) 面远快于 (111) 面），
+        能刻出规则的斜面槽，这是<em>晶向各向异性</em>；而干法靠离子方向性实现的是<em>形貌各向异性</em>。
+        前者只能刻出由晶格决定的固定角度（硅是 54.7°），后者才能刻出任意垂直墙。别混为一谈。
+      </div>
+
+      <p>侧向钻蚀（undercut）的量级是这样的：要刻 100 nm 深，横向就吃掉约 100 nm。
+      对一个 100 nm 宽的线条来说，<strong>它被横向彻底掏空</strong>。这就是湿法退出纳米图形化的根本原因。</p>
+
+      <div class="note">
+        <strong>湿法今天还在用的地方：</strong>
+        ① <strong>清洗</strong>（RCA、稀 HF 去自然氧化层、去胶液）；② <strong>整面去除</strong>（热磷酸去氮化硅、BOE 去氧化层）；
+        ③ <strong>MEMS 体硅加工</strong>（KOH/TMAH 做硅杯、膜片、V 槽）；④ <strong>牺牲层释放</strong>（液体或 HF 蒸汽掏空 SiO₂）；
+        ⑤ <strong>微米级器件</strong>（功率器件、显示面板、光伏）。判断法则很简单：
+        <em>特征尺寸 &gt; 3 μm 或不需要精细图形复制，湿法往往更便宜、更快、选择比更高</em>。
+      </div>
+
+      <h2 id="s3">3. 为什么必须有等离子体：非平衡才是关键</h2>
+
+      <p>干法用气体代替液体。但如果只把 CF₄ 通进腔体，它和硅在室温下几乎不反应——
+      CF₄ 分子极其稳定。<strong>等离子体的作用就是把稳定分子打碎成高活性的自由基与离子。</strong>
+      典型的等离子体是这样的：低压气体（10 mTorr ~ 几 Torr）加上 13.56 MHz 的射频电场，
+      少数自由电子被加速，与分子碰撞产生电离与解离，形成含电子、离子、自由基、激发态分子的混合体。</p>
+
+      <div class="kv">
+        <div><div class="v">10⁻⁶ ~ 10⁻⁴</div><div class="l">电离度：百万分之一到万分之一，属弱电离等离子体</div></div>
+        <div><div class="v">1 ~ 10 eV</div><div class="l">电子温度 Tₑ（1 eV ≈ 11600 K），足以打断化学键</div></div>
+        <div><div class="v">300~600 K</div><div class="l">离子与中性气体温度，仅比室温高几十度</div></div>
+        <div><div class="v">13.56 MHz</div><div class="l">工业标准射频频率（ISM 频段），亦有 27.12 / 40.68 MHz</div></div>
+      </div>
+
+      <div class="note">
+        <strong>最关键的一句话：等离子体是非平衡的。</strong>电子很"热"（几 eV）而气体很"冷"（接近室温）。
+        正因为如此，我们才能在<em>不加热硅片</em>的前提下获得足以打断 Si–Si、Si–O 键的高活性粒子。
+        这是刻蚀、PECVD 能在低温下进行的根本原因。若等离子体是热平衡的，上千度会把光刻胶直接烧掉，
+        那就什么都做不成了。可以用一个简单的柱状对比来记：电子 ≈ 1~10 eV（折合 1 万~10 万 K），
+        离子 ≈ 0.05 eV、中性气体 ≈ 0.03 eV（都在室温附近）——相差三四个数量级。
+      </div>
+
+      <div class="warn">
+        <strong>等离子体不等于"很烫"。</strong>新手最常把它想象成一团火。刻蚀用的是<em>非平衡低温等离子体</em>：
+        气体温度只比室温高几十度，硅片还要用静电吸盘（ESC）加背面氦气主动控温（常见 20~80 °C）。
+        真正"热"的只有电子——而电子质量太小，携带总热量极低。
+      </div>
+
+      <h2 id="s4">4. 刻蚀的四个基本过程</h2>
+
+      <p>不管气体化学多复杂，任何一道等离子体刻蚀都可拆成串联的<strong>四步</strong>。
+      这是分析速率、选择比、ARDE、负载效应的统一框架。</p>
+
+      <table class="term-table">
+        <thead><tr><th>步骤</th><th>发生了什么</th><th>受什么控制</th></tr></thead>
+        <tbody>
+          <tr><td>① 产生活性种</td><td>电子碰撞使气体解离电离：CF₄ + e⁻ → CF₃· + F· + e⁻</td><td>源功率、气压、气体配比（电子温度决定解离度）</td></tr>
+          <tr><td>② 输运到表面</td><td>自由基靠扩散（角度随机）、离子靠鞘层电场加速（近乎垂直）</td><td>气压、平均自由程、深宽比</td></tr>
+          <tr><td>③ 吸附与反应</td><td>F· 吸附到 Si 表面生成 SiF₄；离子轰击打断键、清除钝化层、提供活化能</td><td>表面温度、离子能量、钝化层厚度</td></tr>
+          <tr><td>④ 脱附并被抽走</td><td>产物必须挥发，否则停在表面变成残留或钝化层</td><td>晶圆温度、真空泵抽速</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>把四步想成串联的水管，最细的那段决定总流量。</strong>
+        · <strong>反应受限</strong>：速率对温度敏感、对流量不敏感，各向同性倾向强；
+        · <strong>输运受限</strong>：速率对流量、气压、孔径敏感 → 出现 ARDE 与负载效应；
+        · <strong>离子通量受限</strong>：速率对偏置功率敏感，方向性强但选择比下降。
+        判断工艺处在哪个受限区，是调机和排障的第一动作。
+      </div>
+
+      <div class="note">
+        <strong>第 ④ 步常被忽略，但它决定了某些材料的命运。</strong>
+        铜的氟化物、氯化物在工艺温度下几乎不挥发，所以铜<strong>无法用等离子体刻蚀做图形化</strong>。
+        产业界彻底绕开它：先用大马士革（Damascene）工艺刻好介质沟槽，再电镀填满铜，最后用 CMP 磨平
+        （见<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 11 篇</a>）。
+        这就是"铜连线是沉积出来的，不是刻出来的"的由来。
+      </div>
+
+      <h2 id="s5">5. 三种刻蚀机制：纯化学、纯物理、离子辅助协同</h2>
+
+      <p>这是理解干法刻蚀<strong>最关键的一节</strong>。同样在等离子体里，主导机制不同会给出截然不同的剖面。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 236" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="纯化学、纯物理与离子辅助协同三种刻蚀机制对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="112" y="18" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">纯化学刻蚀</text>
+            <rect x="26" y="26" width="172" height="198" rx="10" fill="var(--surface-2)" stroke="var(--down)" stroke-width="1.3"/>
+            <rect x="46" y="44" width="132" height="62" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M46 44h40v14h-40z M138 44h40v14h-40z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M86 58 A 52 52 0 0 0 138 58 Z" fill="var(--down)" fill-opacity=".18" stroke="var(--down)" stroke-width="1.3"/>
+            <g fill="var(--accent)"><circle cx="70" cy="80" r="2.6"/><circle cx="98" cy="72" r="2.6"/><circle cx="126" cy="82" r="2.6"/><circle cx="112" cy="96" r="2.6"/></g>
+            <text x="112" y="124" text-anchor="middle" font-size="9" fill="var(--accent)">自由基从各方向来</text>
+            <text x="112" y="150" text-anchor="middle" font-size="9.5">速率高 · 选择比高</text>
+            <text x="112" y="170" text-anchor="middle" font-size="9.5" fill="var(--down)">方向性差 A ≈ 0</text>
+            <text x="112" y="190" text-anchor="middle" font-size="9.5">损伤很小</text>
+            <text x="112" y="212" text-anchor="middle" font-size="9" fill="var(--text-mute)">去胶 O₂、XeF₂ 气相刻蚀</text>
+            <text x="340" y="18" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">纯物理（溅射 / 离子铣）</text>
+            <rect x="254" y="26" width="172" height="198" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.3"/>
+            <rect x="274" y="44" width="132" height="62" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M274 44h40v14h-40z M366 44h40v14h-40z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="314" y="58" width="52" height="48" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)" stroke-width="1.3"/>
+            <g stroke="var(--accent)" stroke-width="1.5"><path d="M300 32 L306 56"/><path d="M330 32 L332 56"/><path d="M360 32 L356 56"/></g>
+            <text x="340" y="124" text-anchor="middle" font-size="9" fill="var(--accent)">高能离子垂直轰击</text>
+            <text x="340" y="150" text-anchor="middle" font-size="9.5" fill="var(--down)">速率低 · 选择比≈1:1</text>
+            <text x="340" y="170" text-anchor="middle" font-size="9.5" fill="var(--up)">方向性好</text>
+            <text x="340" y="190" text-anchor="middle" font-size="9.5" fill="var(--down)">损伤重、有再沉积</text>
+            <text x="340" y="212" text-anchor="middle" font-size="9" fill="var(--text-mute)">Ar⁺ 离子铣，特殊场合</text>
+            <text x="568" y="18" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">离子辅助协同（RIE）</text>
+            <rect x="482" y="26" width="182" height="198" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.5"/>
+            <rect x="502" y="44" width="142" height="62" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M502 44h42v14h-42z M602 44h42v14h-42z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="544" y="58" width="58" height="48" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.5"/>
+            <g fill="var(--accent)"><circle cx="536" cy="72" r="2.6"/><circle cx="612" cy="78" r="2.6"/></g>
+            <g stroke="var(--up)" stroke-width="1.6"><path d="M556 32 L560 56"/><path d="M573 32 L573 56"/><path d="M590 32 L586 56"/></g>
+            <text x="568" y="124" text-anchor="middle" font-size="9" fill="var(--up)">离子打底部，侧壁被钝化</text>
+            <text x="568" y="150" text-anchor="middle" font-size="9.5" fill="var(--up)">速率最高（可快十倍）</text>
+            <text x="568" y="170" text-anchor="middle" font-size="9.5" fill="var(--up)">选择比高 · 方向性好</text>
+            <text x="568" y="190" text-anchor="middle" font-size="9.5">损伤中等、可控</text>
+            <text x="568" y="212" text-anchor="middle" font-size="9" fill="var(--text-mute)">CF₄/CHF₃ + 偏置 = RIE</text>
+          </g>
+        </svg>
+        <figcaption>图 2：三种刻蚀机制的剖面与指标对比。只有协同机制才能同时拿到高速率、高选择比与各向异性。</figcaption>
+      </figure>
+
+      <div class="formula-block">
+        <span class="fl">协同产额 Y(协同) ≫ Y(纯化学) + Y(纯物理)　（超线性增强）</span>
+        <span class="fnote">物理解释：离子轰击在表面制造悬挂键与晶格损伤，降低反应活化能，并清除表面钝化层让自由基接触新鲜表面；
+        反过来，自由基形成的弱吸附层削弱了表层原子结合能，使离子溅射产额大幅提高。</span>
+      </div>
+
+      <div class="tip">
+        <strong>为什么纯物理的选择比这么差？</strong>溅射本质是"高能球撞台球的动量交换"，
+        它几乎不区分被撞的是什么原子——掩膜、目标层、下层一起被撞掉，不同材料的溅射产额通常只差几倍，
+        达不到刻蚀需要的几十倍。<strong>高选择比只能靠化学专一性，方向性只能靠离子的方向性</strong>，
+        所以必须让两者协同，各出一份力。
+      </div>
+
+      <h2 id="s6">6. 反应室结构：CCP 与 ICP，自偏压怎么来的</h2>
+
+      <p>刻蚀机最核心的硬件问题是：<strong>能不能把"等离子体密度"和"离子能量"分开控制</strong>。
+      密度决定活性种与离子数量（速率），离子能量决定轰击强度（方向性、选择比、损伤）。
+      两者若耦合，调一个就动另一个，工艺窗口会非常窄。</p>
+
+      <p><strong>CCP（电容耦合，也称平行板 RIE）</strong>结构最简单：两块平行电极，射频加在一块上，气体在极板间击穿放电。
+      射频功率既要维持等离子体又要建立鞘层电场，<strong>密度与能量强耦合</strong>，这是它的根本限制。
+      <strong>ICP（电感耦合）</strong>则在腔体上方放一个<strong>线圈</strong>，射频电流的磁场感应出涡旋电场来加热电子维持等离子体；
+      下电极另接一路独立的偏置射频建立鞘层。<strong>源功率控密度、偏置功率控离子能量，两者解耦。</strong></p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CCP 电容耦合与 ICP 电感耦合反应室结构对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="176" y="16" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">CCP 电容耦合（平行板 RIE）</text>
+            <rect x="26" y="24" width="300" height="156" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
+            <rect x="56" y="36" width="240" height="14" rx="3" fill="var(--text)" fill-opacity=".3"/>
+            <text x="176" y="47" text-anchor="middle" font-size="9.5">上电极（接地）</text>
+            <rect x="56" y="156" width="240" height="14" rx="3" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)"/>
+            <text x="176" y="167" text-anchor="middle" font-size="9.5">下电极（射频 13.56 MHz）＋ 晶圆</text>
+            <rect x="56" y="132" width="240" height="18" fill="none" stroke="var(--border)" stroke-dasharray="3 2"/>
+            <text x="176" y="145" text-anchor="middle" font-size="9" fill="var(--text-mute)">鞘层 sheath（强电场区）</text>
+            <g stroke="var(--up)" stroke-width="1.5"><path d="M110 64 L110 124"/><path d="M176 58 L176 124"/><path d="M242 64 L242 124"/></g>
+            <g fill="var(--accent)"><circle cx="130" cy="88" r="3"/><circle cx="200" cy="82" r="3"/></g>
+            <text x="176" y="190" text-anchor="middle" font-size="9.5" fill="var(--down)">密度与离子能量强耦合</text>
+            <text x="176" y="206" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">密度 ~10⁹~10¹⁰ cm⁻³，结构最简单</text>
+            <text x="504" y="16" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">ICP 电感耦合（高密度）</text>
+            <rect x="342" y="24" width="322" height="156" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.3"/>
+            <g stroke="var(--up)" stroke-width="2" fill="none">
+              <path d="M382 36 a 12 8 0 1 1 24 0"/><path d="M418 36 a 12 8 0 1 1 24 0"/><path d="M454 36 a 12 8 0 1 1 24 0"/>
+              <path d="M490 36 a 12 8 0 1 1 24 0"/><path d="M526 36 a 12 8 0 1 1 24 0"/><path d="M562 36 a 12 8 0 1 1 24 0"/>
+              <path d="M598 36 a 12 8 0 1 1 24 0"/>
+            </g>
+            <text x="503" y="74" text-anchor="middle" font-size="9.5" fill="var(--up)">射频线圈（源功率 · 控密度）</text>
+            <rect x="372" y="82" width="262" height="10" rx="3" fill="var(--border)" fill-opacity=".5"/>
+            <g fill="var(--accent)"><circle cx="410" cy="118" r="3"/><circle cx="460" cy="112" r="3"/><circle cx="510" cy="120" r="3"/><circle cx="560" cy="114" r="3"/></g>
+            <text x="503" y="140" text-anchor="middle" font-size="9.5" fill="var(--accent)">高密度等离子体区</text>
+            <rect x="372" y="148" width="262" height="12" fill="none" stroke="var(--border)" stroke-dasharray="3 2"/>
+            <text x="503" y="170" text-anchor="middle" font-size="9" fill="var(--text-mute)">鞘层（由偏置射频控制）</text>
+            <rect x="396" y="176" width="214" height="14" rx="3" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)"/>
+            <text x="503" y="187" text-anchor="middle" font-size="9.5">下电极（偏置射频）＋ 晶圆</text>
+            <text x="503" y="202" text-anchor="middle" font-size="9.5" fill="var(--up)">密度与离子能量解耦，密度 ~10¹¹~10¹² cm⁻³</text>
+          </g>
+        </svg>
+        <figcaption>图 3：CCP 与 ICP 的结构差别。ICP 用线圈感应产生高密度等离子体，再用独立偏置射频控制离子能量。</figcaption>
+      </figure>
+
+      <div class="note">
+        <strong>自偏压的完整逻辑：</strong>① 电子质量只有离子的万分之一量级，迁移率高得多；
+        ② 射频周期中电子率先冲向电极与器壁，使它们相对等离子体带<strong>负电</strong>；
+        ③ 负电位排斥后续电子、吸引正离子，形成稳定的<strong>鞘层</strong>与直流自偏压 V<sub>dc</sub>；
+        ④ 正离子穿过鞘层被加速，以接近垂直的角度轰击晶圆——<strong>方向性就来自这一过程</strong>。
+        所以偏置功率越大 → V<sub>dc</sub> 越负 → 离子能量越高 → 方向性越好，但掩膜损耗与损伤也越大。
+        <em>这就是为什么"各向异性"和"高选择比"天生矛盾。</em>
+      </div>
+
+      <div class="tip">
+        <strong>另外两类值得知道：</strong>TCP（变压器耦合，用平面螺旋线圈，原理近 ICP）；
+        ECR 电子回旋共振与螺旋波源——用微波加磁场实现更高密度（10¹² cm⁻³ 以上），
+        密度更高、气压更低、损伤更小，但设备复杂昂贵，量产占比很小。
+      </div>
+
+      <h2 id="s7">7. 气体化学与侧壁钝化</h2>
+
+      <p>选气体第一条原则：<strong>反应产物必须挥发</strong>。第二条原则：<strong>必须能在侧壁形成保护层</strong>——
+      这才是各向异性的真正来源。</p>
+
+      <table class="term-table">
+        <thead><tr><th>材料</th><th>主流气体</th><th>挥发性产物</th><th>要点</th></tr></thead>
+        <tbody>
+          <tr><td>Si / 多晶硅</td><td>SF₆、CF₄、NF₃、Cl₂/HBr</td><td>SiF₄、SiCl₄</td><td>SF₆ 最快但各向同性倾向强；HBr/O₂ 侧壁钝化好，栅极刻蚀主流</td></tr>
+          <tr><td>SiO₂</td><td>CF₄、CHF₃、C₄F₈、C₅F₈ + Ar/O₂</td><td>SiF₄、CO、CO₂</td><td>靠<strong>富碳</strong>生成聚合物侧壁，同时对 Si 取得高选择比</td></tr>
+          <tr><td>Si₃N₄</td><td>CHF₃/O₂、CF₄/O₂</td><td>SiF₄、N₂</td><td>与氧化物化学相近，靠 F/C 比与偏置切换选择比对象</td></tr>
+          <tr><td>Al 及铝合金</td><td>Cl₂、BCl₃、SiCl₄</td><td>AlCl₃</td><td><strong>BCl₃ 负责清除天然氧化层与残水</strong>；需加热晶圆提高挥发性</td></tr>
+          <tr><td>W / TiN</td><td>SF₆、NF₃、Cl₂</td><td>WF₆、TiCl₄</td><td>W 极易刻；TiN 硬掩膜要求高选择比与低损伤</td></tr>
+          <tr><td>光刻胶 / 有机物</td><td>O₂（灰化）、O₂/CF₄</td><td>CO、CO₂、H₂O</td><td>灰化去胶；也可做"胶回刻"以缩小 CD</td></tr>
+          <tr><td>低 k 介质</td><td>C₄F₈/N₂/Ar、NF₃</td><td>挥发氟化物</td><td>多孔 low-k 易被损伤（碳耗尽、吸水），刻后需修复</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="侧壁钝化层实现各向异性刻蚀的机制">
+          <g font-size="10" fill="var(--text)">
+            <text x="16" y="16" font-size="11" fill="var(--semi)" font-weight="700">钝化层动态平衡：底部被离子打掉、侧壁保留 → 只向下刻</text>
+            <rect x="40" y="26" width="300" height="148" fill="var(--fin)" fill-opacity=".16" stroke="var(--border)"/>
+            <path d="M40 26h90v18h-90z M250 26h90v18h-90z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="130" y="44" width="120" height="120" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.2"/>
+            <path d="M130 44h10v120h-10z M240 44h10v120h-10z" fill="var(--accent)" fill-opacity=".6"/>
+            <g stroke="var(--up)" stroke-width="1.6"><path d="M160 24 L162 154"/><path d="M190 24 L190 158"/><path d="M220 24 L218 154"/></g>
+            <text x="190" y="106" text-anchor="middle" font-size="9.5" fill="var(--semi)">刻蚀中的沟槽</text>
+            <text x="104" y="20" font-size="9.5" fill="var(--up)">离子垂直入射</text>
+            <text x="352" y="52" font-size="9.5" fill="var(--accent)">侧壁钝化层 CFₓ</text>
+            <text x="352" y="68" font-size="9.5" fill="var(--text-mute)">离子掠射不到，聚合物在此堆积</text>
+            <text x="352" y="90" font-size="9.5" fill="var(--up)">底部钝化层被垂直离子清除</text>
+            <text x="352" y="106" font-size="9.5" fill="var(--text-mute)">→ 新鲜表面暴露 → 继续向下刻</text>
+            <text x="352" y="124" font-size="9.5" fill="var(--text-mute)">侧壁离子通量≈0 → 横向被挡住</text>
+            <text x="352" y="140" font-size="9.5" fill="var(--text-soft)">净效果：A → 1，垂直侧壁</text>
+            <text x="352" y="156" font-size="9.5" fill="var(--text-mute)">钝化不足 → 弓形；过量 → 停刻</text>
+            <rect x="16" y="182" width="648" height="22" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="197" font-size="10.5" fill="var(--text-soft)">一句话：没有聚合物就没有垂直侧壁。刻氧化物时必须故意长出侧壁聚合物，事后再用湿法或 O₂ 灰化清掉。</text>
+          </g>
+        </svg>
+        <figcaption>图 4：侧壁钝化机制。底部聚合物被离子清除、侧壁聚合物保留，横向反应被阻断，从而得到各向异性。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <strong>钝化层是"动态平衡"不是永久涂层。</strong>它一边被离子溅射、一边被自由基沉积。
+        离子能量太高 → 侧壁也被打掉，出现弓形与底切；聚合物沉积太快 → 底部也清不掉，
+        出现停刻（etch stop）与厚残留。<strong>所有配方调试的核心，就是让这个平衡落在"侧壁有、底部无"的窄窗口里。</strong>
+        F/C 比是最常用的旋钮：加 O₂ 与 CFₓ 反应生成 CO/CO₂，消耗碳使 F/C 升高，偏向纯化学、各向同性；
+        加 H₂ 夺 F 生成 HF，使 F/C 降低，聚合物变厚、选择比上升。
+      </div>
+
+      <h2 id="s8">8. 六大评价指标：速率、选择比、均匀性、方向性、负载、ARDE</h2>
+
+      <p>实验室里刻一片漂亮片子不难，难的是<strong>整片、整批、整月都一致</strong>。下面是量产工艺的体检表。</p>
+
+      <table class="term-table">
+        <thead><tr><th>指标</th><th>定义</th><th>典型要求</th><th>失控后果</th></tr></thead>
+        <tbody>
+          <tr><td>刻蚀速率</td><td>Rate = Δd / t</td><td>几十~几百 nm/min；深硅可达 μm/min</td><td>产能波动；终点窗口变窄</td></tr>
+          <tr><td>选择比</td><td>S = Rate(目标) / Rate(掩膜或下层)</td><td>对胶 3~10；对停止层常需 &gt;20~50</td><td>掩膜吃穿 → 图形丢失；下层刻穿 → 器件失效</td></tr>
+          <tr><td>均匀性</td><td>片内 WIW / 片间 WTW，用 1σ 表示</td><td>WIW ≤ ±2~3%（1σ）</td><td>边缘与中心器件性能不一致，良率下降</td></tr>
+          <tr><td>方向性</td><td>A = 1 − 横向 / 纵向</td><td>A ≥ 0.95，先进节点更严</td><td>CD 偏移、线宽守不住、相邻线条桥连</td></tr>
+          <tr><td>负载效应</td><td>速率随被刻面积增大而下降</td><td>宏观与微观都要评估</td><td>密集区与孤立区深度不一致</td></tr>
+          <tr><td>ARDE</td><td>速率随深宽比增大而下降</td><td>3D 结构尤为致命</td><td>大孔刻穿时小孔还没到底 → 必须大幅过刻</td></tr>
+        </tbody>
+      </table>
+
+      <h3>8.1 负载效应 loading effect</h3>
+
+      <div class="formula-block">
+        <span class="fl">被刻面积 ↑ → 活性种消耗 ↑ → 稳态自由基浓度 ↓ → 刻蚀速率 ↓</span>
+        <span class="fnote">本质是<strong>物料平衡</strong>：活性种的产生速率由功率与流量决定、基本固定，
+        而消耗速率与被暴露的面积成正比。面积越大，单位面积分到的活性种越少。</span>
+      </div>
+
+      <ul>
+        <li><strong>宏观负载</strong>：整片图形密度（开口率）不同导致整片平均速率变化。5% 与 50% 开口率的两片，速率可能差 20~40%。</li>
+        <li><strong>微观负载</strong>：同一片内密集区比孤立区刻得浅，也称 <strong>iso-dense bias</strong>。
+        解法包括调节气压与流量、优化偏置，以及在<em>版图阶段加 dummy 图形让密度均匀</em>。</li>
+      </ul>
+
+      <div class="note">
+        <strong>注意"反向负载"：</strong>某些工艺里速率反而随面积<em>上升</em>，
+        因为产物本身会参与二次反应，或掩膜释放的物种改变了表面化学。
+        <strong>负载效应的方向必须靠实验确定，不能想当然。</strong>
+      </div>
+
+      <h3>8.2 ARDE / RIE lag</h3>
+
+      <div class="formula-block">
+        <span class="fl">Rate ∝ 1 / f(AR)，AR = 深度 / 宽度</span>
+        <span class="fnote">AR 越大 → 中性自由基的 Knudsen 扩散越难、深入底部的离子通量因散射与充电而衰减、产物排出受阻 → 底部速率越低。
+        行业也称 <strong>RIE lag</strong>：小孔"落后"于大孔。</span>
+      </div>
+
+      <p>直观地说：同样刻一段时间，宽而浅的大孔已经到底，窄而深的小孔还在半路，
+      密度更高的结构传质更困难、竞争性消耗更强，所以底部速率更低。</p>
+
+      <div class="tip">
+        <strong>怎么缓解 ARDE？</strong>
+        ① <strong>降低气压</strong>：平均自由程变长，扩散改善，方向性也更好；
+        ② <strong>提高源功率与流量</strong>：让传质不再是瓶颈；
+        ③ <strong>脉冲等离子体</strong>：调节聚合物平衡并缓解充电；
+        ④ 接受它并做设计补偿：把不同尺寸结构分开曝光刻蚀，或在版图上避免极端密度差。
+      </div>
+
+      <h2 id="s9">9. Bosch 深硅刻蚀：循环、扇贝纹与低温工艺</h2>
+
+      <p>高深宽比硅刻蚀是刻蚀里最硬的一块，也是 MEMS 与 3D NAND 的命脉。
+      1990 年代由 Robert Bosch 公司产品化的<strong>Bosch 工艺</strong>用"钝化—刻蚀"两步交替，
+      把深宽比从十几一举推到几十甚至上百。</p>
+
+      <ul>
+        <li><strong>钝化步</strong>：通入 <strong>C₄F₈</strong>，聚合成一层<strong>类特氟龙的 CF 聚合物</strong>，
+        保形覆盖侧壁与底部。典型 5~10 s。</li>
+        <li><strong>刻蚀步</strong>：切换成 <strong>SF₆</strong>（常加 O₂）并<strong>施加偏置射频</strong>。
+        垂直离子把<em>底部</em>的聚合物打掉并活化表面；侧壁因离子几乎垂直入射、通量极低，聚合物完好保留 → 只有底部被刻。典型 5~10 s。</li>
+        <li>两步构成一个循环，<strong>周期在秒级（常见 5~15 s）</strong>，每循环向下推进几十到几百 nm，
+        重复几十到几百个循环就得到几百 μm 深的槽。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bosch 工艺钝化与刻蚀交替循环及扇贝纹来源">
+          <g font-size="10" fill="var(--text)">
+            <text x="16" y="16" font-size="11" fill="var(--semi)" font-weight="700">一个循环 = 钝化步（C₄F₈）+ 刻蚀步（SF₆），反复交替</text>
+            <text x="86" y="40" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">① 钝化 C₄F₈</text>
+            <rect x="26" y="48" width="120" height="104" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M26 48h36v12h-36z M110 48h36v12h-36z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="62" y="60" width="48" height="42" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1.2"/>
+            <path d="M62 60h6v42h-6z M104 60h6v42h-6z M62 96h48v6h-48z" fill="var(--accent)" fill-opacity=".65"/>
+            <text x="86" y="164" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">侧壁与底部都被盖住</text>
+            <text x="248" y="40" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">② 刻蚀 SF₆ + 偏置</text>
+            <rect x="188" y="48" width="120" height="104" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M188 48h36v12h-36z M272 48h36v12h-36z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="224" y="60" width="48" height="72" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M224 60h6v72h-6z M266 60h6v72h-6z" fill="var(--accent)" fill-opacity=".65"/>
+            <g stroke="var(--up)" stroke-width="1.6"><path d="M236 46 L236 128"/><path d="M248 46 L248 128"/><path d="M260 46 L260 128"/></g>
+            <text x="248" y="164" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">离子打掉底部，侧壁保留</text>
+            <text x="410" y="40" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">③ 下一个循环</text>
+            <rect x="350" y="48" width="120" height="104" fill="var(--fin)" fill-opacity=".18" stroke="var(--border)"/>
+            <path d="M350 48h36v12h-36z M434 48h36v12h-36z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M386 60 L386 118 Q 410 128 434 118 L434 60" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M386 60h6v58h-6z M428 60h6v58h-6z" fill="var(--accent)" fill-opacity=".6"/>
+            <text x="410" y="164" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">每循环推进几十~几百 nm</text>
+            <g stroke="var(--text-mute)" stroke-width="1.5" fill="none"><path d="M152 100 L184 100"/><path d="M314 100 L346 100"/></g>
+            <rect x="486" y="48" width="178" height="104" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.3"/>
+            <text x="502" y="68" font-size="10.5" fill="var(--up)" font-weight="700">扇贝纹 Scallop</text>
+            <path d="M506 86 q 14 12 28 0 q 14 12 28 0 q 14 12 28 0 q 14 12 28 0" fill="none" stroke="var(--up)" stroke-width="2"/>
+            <text x="502" y="116" font-size="9.5" fill="var(--text-soft)">每个刻蚀步留下一个弧坑</text>
+            <text x="502" y="132" font-size="9.5" fill="var(--text-soft)">尺寸 ≈ 单循环推进量</text>
+            <text x="502" y="146" font-size="9.5" fill="var(--text-soft)">典型 50~500 nm</text>
+          </g>
+        </svg>
+        <figcaption>图 5：Bosch 工艺的钝化/刻蚀交替循环。扇贝纹是每个刻蚀步留下的弧坑，尺寸约等于单循环推进量。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div><div class="v">循环秒级</div><div class="l">钝化 5~10 s + 刻蚀 5~10 s；速率常见 2~10 μm/min</div></div>
+        <div><div class="v">3D NAND</div><div class="l">深沟道孔要一次穿几十上百层堆叠，普通 RIE 传质跟不上</div></div>
+        <div><div class="v">TSV 硅通孔</div><div class="l">直径 5~50 μm、深度 50~200 μm，2.5D/3D 封装与 CIS 的垂直互连</div></div>
+        <div><div class="v">&gt;60:1</div><div class="l">量产深宽比常规 &gt;30:1，对胶选择比可达 50:1、对 SiO₂ 可 &gt;100:1</div></div>
+      </div>
+
+      <h3>9.1 低温深硅刻蚀 Cryo 与连续工艺</h3>
+
+      <p>Bosch 不是唯一解。<strong>低温深硅刻蚀</strong>把晶圆冷到 <strong>−100 °C ~ −150 °C</strong>（常用约 −110 °C，
+      靠低温机与静电吸盘背面氦气），只用 <strong>SF₆ + O₂ 的连续工艺</strong>不做循环。
+      低温下 SiF₄ 与 O 在侧壁生成一层稳定的 <strong>SiOₓFᵧ 钝化层</strong>抑制横向刻蚀，
+      底部则因离子轰击持续清除钝化层而继续向下刻。
+      结果是<strong>侧壁光滑无扇贝纹、速率高、无氟碳污染</strong>；
+      代价是温度均匀性要求极高（几度偏差就改变剖面）、掩膜附着与开裂风险、低温硬件门槛。</p>
+
+      <div class="note">
+        <strong>中间路线是连续混合气（pseudo-Bosch）：</strong>同时通入 SF₆ 与 C₄F₈，
+        靠配比与偏置维持"边沉积边清除"的动态平衡，得到扇贝纹很小的准连续刻蚀，
+        速率与侧壁质量介于 Bosch 与 Cryo 之间，是很多量产线的折中选择。
+        此外 Bosch 本身也有三个固有代价：扇贝纹会增加侧壁粗糙并恶化后续薄膜台阶覆盖，
+        循环切换要花时间（有效占空比打折），厚氟碳聚合物必须靠后续 O₂ 灰化加湿法清洗清干净。
+      </div>
+
+      <h2 id="s10">10. 形貌缺陷图谱：弓形、缺口、底切、残留与粗糙</h2>
+
+      <p>刻蚀的失败往往不是"没刻掉"，而是"刻出了不该有的形状"。
+      排障口诀是：<strong>先定位异常发生在哪个高度，再反推是哪一步物理出了问题</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="六种常见刻蚀形貌缺陷剖面">
+          <g font-size="9.5" fill="var(--text)">
+            <rect x="16" y="24" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--down)" stroke-width="1.2"/>
+            <text x="30" y="40" font-size="10" fill="var(--down)" font-weight="700">① Bowing 弓形</text>
+            <rect x="30" y="48" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M30 48h52v10H30z M154 48h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M82 58 Q 118 94 118 102 Q 118 94 154 58" fill="none" stroke="var(--down)" stroke-width="2"/>
+            <rect x="238" y="24" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="252" y="40" font-size="10" fill="var(--accent)" font-weight="700">② Notching 缺口</text>
+            <rect x="252" y="48" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M252 48h52v10h-52z M376 48h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <rect x="316" y="84" width="48" height="18" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)"/>
+            <path d="M310 92 q -8 6 0 10 q 8 4 6 -4 M370 92 q 8 6 0 10 q -8 4 -6 -4" fill="var(--accent)" fill-opacity=".6" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="460" y="24" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="474" y="40" font-size="10" fill="var(--up)" font-weight="700">③ Trenching 底切</text>
+            <rect x="474" y="48" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M474 48h52v10h-52z M598 48h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M526 58h12v36l-12 6z M598 58h-12v36l12 6z" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1.4"/>
+            <rect x="16" y="120" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="30" y="136" font-size="10" fill="var(--semi)" font-weight="700">④ Micro-trenching 微沟</text>
+            <rect x="30" y="144" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M30 144h52v10H30z M154 144h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M82 154v38 M154 154v38" stroke="var(--semi)" stroke-width="1.6"/>
+            <path d="M88 192v6h6v-6 M148 192v6h-6v-6" fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <rect x="238" y="120" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="252" y="136" font-size="10" fill="var(--accent)" font-weight="700">⑤ Residue 残留</text>
+            <rect x="252" y="144" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M252 144h52v10h-52z M376 144h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M304 154v38 M376 154v38" stroke="var(--accent)" stroke-width="1.4"/>
+            <g fill="var(--accent)" fill-opacity=".55"><circle cx="308" cy="190" r="3"/><circle cx="318" cy="192" r="2.6"/><circle cx="366" cy="191" r="3"/><circle cx="352" cy="192" r="2.4"/></g>
+            <rect x="460" y="120" width="204" height="86" rx="9" fill="var(--surface-2)" stroke="var(--down)" stroke-width="1.2"/>
+            <text x="474" y="136" font-size="10" fill="var(--down)" font-weight="700">⑥ Roughness 侧壁粗糙</text>
+            <rect x="474" y="144" width="176" height="54" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <path d="M474 144h52v10h-52z M598 144h52v10h-52z" fill="var(--accent)" fill-opacity=".5"/>
+            <path d="M526 154 q 6 4 0 8 q -6 4 0 8 q 6 4 0 8 q -6 4 0 8" fill="none" stroke="var(--down)" stroke-width="1.8"/>
+            <path d="M598 154 q -6 4 0 8 q 6 4 0 8 q -6 4 0 8 q 6 4 0 8" fill="none" stroke="var(--down)" stroke-width="1.8"/>
+          </g>
+        </svg>
+        <figcaption>图 6：六种常见刻蚀形貌缺陷。诊断口诀：上部外凸查钝化、界面掏空查充电、底部加深查离子反射、底部有渣查产物挥发。</figcaption>
+      </figure>
+
+      <table class="term-table">
+        <thead><tr><th>缺陷</th><th>直接成因</th><th>常用对策</th></tr></thead>
+        <tbody>
+          <tr><td>Bowing 弓形</td><td>侧壁钝化层太薄或被散射粒子破坏；离子角分布展宽</td><td>提高钝化气体比例、降低偏置功率与气压、降温</td></tr>
+          <tr><td>Notching 缺口</td><td><strong>充电效应</strong>：刻到绝缘层时电荷积累使电场把离子推歪</td><td>脉冲等离子体（余辉期泄放电荷）、降离子能量、提高气压</td></tr>
+          <tr><td>Footing 底脚</td><td>底部聚合物堆积 + 离子侧壁反射导致底部外扩</td><td>调整钝化/刻蚀时间比、提高离子能量清底部</td></tr>
+          <tr><td>Trenching 底切</td><td>离子在倾斜侧壁发生镜面反射，能量集中到沟槽底角</td><td>降低离子能量、提高气压打断反射、优化侧壁角度</td></tr>
+          <tr><td>Micro-trenching</td><td>同上但区域更窄，常与掠射离子和充电叠加</td><td>脉冲偏置、降低 V<sub>dc</sub>、加强钝化</td></tr>
+          <tr><td>Residue 残留</td><td>产物不挥发、聚合物未清、掩膜溅射物再沉积</td><td>提高晶圆温度促脱附、后段 O₂ 灰化 + 湿法清洗</td></tr>
+          <tr><td>Sidewall roughness</td><td>Bosch 扇贝纹、胶的 LER 传递、掩膜刻面化</td><td>缩短循环时间、改用 Cryo、改善胶 LER、加硬掩膜</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>充电效应是深孔刻蚀的头号敌人。</strong>电子各向同性、离子各向异性，
+        进入深孔后电子更容易沉积在孔口与绝缘表面，形成局部电场把后续离子<em>推歪</em>。
+        这解释了 notching 为什么总出现在"导体/绝缘体界面"——那里电荷最容易积累却无法导走。
+        工程上最有效的解法是<strong>脉冲等离子体</strong>：在射频关断的余辉期（afterglow）
+        电子与离子迅速复合、电荷得以泄放，同时聚合物还能继续沉积。
+      </div>
+
+      <h2 id="s11">11. 终点检测 EPD 与过刻的代价</h2>
+
+      <p>刻蚀必须恰到好处地停在正确深度：刻不够 → 残留膜没去干净；刻过头 → 下层被损伤。
+      判断何时停止的技术叫 <strong>EPD（终点检测）</strong>。</p>
+
+      <table class="term-table">
+        <thead><tr><th>方法</th><th>原理</th><th>优点</th><th>局限</th></tr></thead>
+        <tbody>
+          <tr><td>OES 发射光谱</td><td>监测等离子体特定物种的特征发射谱线，刻穿后产物谱线骤降或新层产物谱线出现</td><td>非侵入、装机率最高、响应快</td><td>开孔率太小时信号变化被背景淹没</td></tr>
+          <tr><td>激光干涉仪</td><td>单色光照射透明膜，反射光因膜厚变化产生干涉振荡，条纹数 ∝ 刻蚀厚度</td><td>可实时算速率与已刻深度，精度到 nm</td><td>要求膜透明且表面平整</td></tr>
+          <tr><td>质谱 RGA / QMS</td><td>采样腔体气体监测挥发性产物分压变化</td><td>化学信息最直接，可分辨多产物</td><td>响应有延迟、取样口易被污染</td></tr>
+          <tr><td>阻抗 / 电压监测</td><td>监测 V<sub>dc</sub>、射频阻抗随膜层变化的漂移</td><td>无需光学窗口</td><td>灵敏度低，通常只作辅助</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <strong>OES 常用监测波长：</strong>F 原子 703.7 nm、CO 483 nm（刻氧化物，刻穿后信号下降）、
+        CN 387 nm（刻氮化硅）、SiF 440 nm、Cl 725 nm。
+        实际工艺通常同时看<strong>一条下降线与一条上升线的交叉点</strong>，比只看单条曲线可靠得多。
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">过刻量 = 过刻时间 × 速率　通常取总刻蚀时间的 10% ~ 50%</span>
+        <span class="fnote">因为片内均匀性、负载效应与 ARDE，最快的区域先刻完、最慢的区域后刻完。
+        要保证最慢处也刻干净，必须在 EPD 触发后继续刻一段时间。深孔工艺的过刻比例远高于浅层刻蚀。</span>
+      </div>
+
+      <div class="warn">
+        <strong>过刻的代价一清二楚：</strong>① 停止层被一并消耗；② 掩膜继续变薄、
+        边缘被削成斜面（刻面化 faceting），反过来恶化 CD；③ 底部 trenching、footing、micro-trenching 都主要发生在过刻阶段；
+        ④ 等离子体暴露越久，电荷损伤与真空紫外损伤越多。
+        <strong>提高选择比和均匀性，本质上是在买"过刻预算"</strong>——这直接转化为良率。
+      </div>
+
+      <h2 id="s12">12. 先进节点：原子层刻蚀 ALE、超高选择比与低损伤</h2>
+
+      <p>当要刻的厚度只有几纳米、而要保留的相邻材料只差一两个原子层时，
+      连续刻蚀的"速率 × 时间"模式就不够用了——时间控制再准也扛不住速率漂移。
+      <strong>原子层刻蚀 ALE</strong> 把"刻多少"从<em>时间</em>编码改成<em>循环数</em>编码。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="原子层刻蚀 ALE 的改性与去除两步自限制循环">
+          <g font-size="10" fill="var(--text)">
+            <text x="16" y="16" font-size="11" fill="var(--semi)" font-weight="700">ALE = 改性（自限制）→ 吹扫 → 去除（自限制）→ 吹扫 → 重复</text>
+            <text x="112" y="42" text-anchor="middle" font-size="10.5" fill="var(--semi)" font-weight="700">① 改性 Modification</text>
+            <rect x="26" y="50" width="172" height="116" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
+            <rect x="50" y="64" width="124" height="58" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <rect x="50" y="56" width="124" height="10" fill="var(--semi)" fill-opacity=".6" stroke="var(--semi)"/>
+            <g stroke="var(--semi)" stroke-width="1.5"><path d="M76 46 L76 60"/><path d="M112 46 L112 60"/><path d="M148 46 L148 60"/></g>
+            <text x="112" y="140" text-anchor="middle" font-size="9.5" fill="var(--semi)">表面被氯化 / 氧化 / 氟化</text>
+            <text x="112" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">只改最外层，饱和即停</text>
+            <text x="340" y="42" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">② 去除 Removal</text>
+            <rect x="254" y="50" width="172" height="116" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.3"/>
+            <rect x="278" y="64" width="124" height="58" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)"/>
+            <rect x="278" y="56" width="124" height="10" fill="var(--text)" fill-opacity=".25"/>
+            <g fill="var(--up)" fill-opacity=".5"><circle cx="300" cy="44" r="3"/><circle cx="330" cy="38" r="3"/><circle cx="366" cy="44" r="3"/></g>
+            <g stroke="var(--up)" stroke-width="1.6"><path d="M300 32 L300 54"/><path d="M330 32 L330 54"/><path d="M366 32 L366 54"/></g>
+            <text x="340" y="140" text-anchor="middle" font-size="9.5" fill="var(--up)">低能 Ar⁺ 整层打掉改性层</text>
+            <text x="340" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">打到原生层就自动停</text>
+            <rect x="440" y="50" width="224" height="116" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="456" y="72" font-size="10.5" fill="var(--accent)" font-weight="700">每循环去除量 EPC</text>
+            <text x="456" y="96" font-size="9.5" fill="var(--text-soft)">典型 0.1 ~ 0.3 nm/cycle</text>
+            <text x="456" y="114" font-size="9.5" fill="var(--text-soft)">≈ 一个原子单层，埃级精度</text>
+            <text x="456" y="136" font-size="9.5" fill="var(--text-soft)">刻 10 nm 约需 30~100 循环</text>
+            <text x="456" y="154" font-size="9.5" fill="var(--text-mute)">深度 = 循环数 × EPC，与时间无关</text>
+            <rect x="16" y="174" width="648" height="26" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="32" y="191" font-size="10" fill="var(--text-soft)">成立条件：① 每步必须自限制（饱和），多通一会儿也不会多刻；② 两步之间必须吹扫，否则退化成连续刻蚀。</text>
+          </g>
+        </svg>
+        <figcaption>图 7：ALE 的"改性 + 去除"两步循环。深度由循环数决定，而不是由时间决定。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div><div class="v">0.1~0.3 nm/cycle</div><div class="l">单循环去除量 EPC，约一个原子单层</div></div>
+        <div><div class="v">埃级</div><div class="l">深度精度，与<a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 10 篇</a>的 ALD 互为逆过程</div></div>
+        <div><div class="v">&gt;100:1</div><div class="l">ALE 可实现的超高选择比（无自发刻蚀组分）</div></div>
+        <div><div class="v">&lt; 20 eV</div><div class="l">去除步离子能量，远低于常规 RIE 的几百 eV</div></div>
+      </div>
+
+      <h3>12.1 ALE 解决了什么</h3>
+
+      <ul>
+        <li><strong>消除 ARDE</strong>：改性步是饱和吸附，只要气体进得去就能饱和，与传质通量无关
+        （气体分子进深孔比离子容易得多），所以深孔底部与顶部速率一致。</li>
+        <li><strong>消除自发刻蚀</strong>：传统 RIE 里"自由基单独也能刻"的各向同性组分在 ALE 里被彻底去除，
+        因为去除步能量被设计成低于未改性材料的溅射阈值。</li>
+        <li><strong>超高选择比与极低损伤</strong>：既然没有自发刻蚀，相邻材料只要改性效率不同就能获得极高选择比；
+        去除步离子能量可压到十几 eV，几乎不产生晶格损伤与电荷注入。</li>
+        <li><strong>代价</strong>：循环时间长、气体切换与吹扫开销大，<strong>吞吐量是最大产业化障碍</strong>。
+        因此 ALE 目前只用于最关键的少数步骤（栅极凹槽、接触孔底部清理、Fin 修整），并不全面替代连续刻蚀。</li>
+      </ul>
+
+      <h3>12.2 低损伤：等离子体带来的副作用</h3>
+
+      <table class="term-table">
+        <thead><tr><th>损伤类型</th><th>来源</th><th>后果</th><th>缓解手段</th></tr></thead>
+        <tbody>
+          <tr><td>PID 等离子体诱导损伤</td><td>电子/离子通量不均，电荷在导体上积累并穿过薄栅氧放电</td><td>栅氧击穿、Vt 漂移、可靠性退化</td><td>降低离子能量、脉冲等离子体</td></tr>
+          <tr><td>天线效应</td><td>大面积金属连线在刻蚀中收集电荷，通过栅极放电</td><td>栅氧被击穿</td><td>版图加跳线/二极管（见第 13 篇）；工艺上降充电</td></tr>
+          <tr><td>VUV / UV 光子损伤</td><td>等离子体发射的真空紫外光子在介质中产生缺陷态</td><td>低 k 介质碳耗尽、吸水、k 值升高</td><td>降低源功率、加保护钝化层、后处理修复</td></tr>
+          <tr><td>物理晶格损伤</td><td>高能离子轰击使表层非晶化并注入杂质</td><td>迁移率下降、界面态增加</td><td>降低偏置功率、改用 ALE、后退火修复</td></tr>
+          <tr><td>残留腐蚀</td><td>氟/氯残留吸潮形成 HF/HCl 腐蚀金属</td><td>铝/铜腐蚀、接触电阻升高</td><td>刻后及时湿法清洗与钝化、避免暴露大气</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>与前后的呼应：</strong>第 8 篇讲过 EUV 光刻胶越来越薄，导致<strong>刻蚀选择比预算紧张</strong>，
+        产业界的解法是引入<strong>硬掩膜</strong>——用一层较厚的 SOC/SOG 或金属硬掩膜先承接图形，
+        再用它对下层刻蚀，把"薄胶刻厚层"变成"厚膜刻厚层"。
+        而下一阶段要讲的薄膜与掺杂（<a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 10 篇</a>）中，
+        <strong>ALD 正是 ALE 的逆过程</strong>：一个把材料一层层加上去，一个一层层拿掉，
+        共用同一套"自限制表面反应 + 吹扫"的思想——这也是精通 ALD 的设备商做 ALE 最有优势的原因。
+      </div>
+
+      <h2 id="s13">13. 常见误区</h2>
+
+      <div class="warn">
+        <strong>误区 1：以为"干法刻蚀 = 各向异性"。</strong>
+        干法只是<em>有可能</em>各向异性。纯化学的干法（只用 SF₆ 不加偏置、或用 XeF₂ 气相刻蚀）
+        剖面和湿法一样是半圆。<strong>各向异性来自"离子方向性 + 侧壁钝化"的组合</strong>，
+        不是"干法"这个标签自带的。
+      </div>
+      <div class="warn">
+        <strong>误区 2：认为 KOH/TMAH 的各向异性和等离子体的各向异性是一回事。</strong>
+        前者是<strong>晶向依赖</strong>，只能刻出由晶格决定的固定 54.7° 斜面；
+        后者是<strong>形貌各向异性</strong>，能刻出任意垂直墙。混用会得出荒谬结论，
+        比如以为 KOH 能做 10 nm 的垂直栅极。
+      </div>
+      <div class="warn">
+        <strong>误区 3：以为选择比越高越好。</strong>
+        超高选择比通常依赖厚钝化层或低离子能量，会让速率下降、方向性变差，并带来残留与弓形。
+        工程上要的是"够用就好"——<strong>选择比、速率、方向性、损伤是一个四角权衡</strong>，
+        再往上堆选择比往往是牺牲产能换指标。
+      </div>
+      <div class="warn">
+        <strong>误区 4：把等离子体想成高温火焰。</strong>
+        刻蚀用的是非平衡低温等离子体：电子温度几 eV（对应上万度），离子与中性气体只比室温高几十度。
+        正因为"电子热、气体冷"，才能在低温下获得高活性粒子而不烧毁光刻胶。
+      </div>
+      <div class="warn">
+        <strong>误区 5：认为 ALE 只是"慢一点的刻蚀"。</strong>
+        ALE 的本质区别是<strong>自限制</strong>：每步都饱和，深度由<em>循环数</em>决定而非<em>时间</em>决定，
+        因此不受速率漂移、ARDE 与均匀性影响。把它理解成慢速 RIE 就抓错了重点。
+      </div>
+
+      <h2 id="s14">14. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：某工艺对光刻胶的选择比 S = 8，胶厚 200 nm，目标膜厚 600 nm，片内速率不均匀度 ±5%。为保证全片刻透需要多少过刻？胶够不够用？</summary>
+        <div class="ans">
+        <strong>① 平均胶耗：</strong>目标层刻掉 600 nm，胶的速率是目标层的 1/S，
+        平均消耗胶 = 600 / 8 = <strong>75 nm</strong>。<br><br>
+        <strong>② 过刻量：</strong>片内速率不均匀 ±5% 表示最慢处比平均慢约 5%，
+        要让最慢处也刻透，所需时间 = 平均时间 / 0.95 ≈ 1.053 倍，即过刻约 <strong>5.3%</strong>，
+        对应多刻目标层 600 × 0.053 ≈ <strong>32 nm</strong>，额外消耗胶 32 / 8 = <strong>4 nm</strong>。<br><br>
+        <strong>③ 总胶耗：</strong>75 + 4 ≈ <strong>79 nm</strong>，远小于 200 nm 胶厚，
+        <strong>结论：够用，余量很大</strong>（只消耗约 40%）。<br><br>
+        <strong>两个容易被忽略的点：</strong><br>
+        · 上面假设均匀性误差全部靠过刻吸收。实际还要叠加 ARDE 与负载效应带来的深度差，
+        深孔工艺的过刻常达 30%~50%，此时胶耗会再上升约 20~40 nm，需要复核；<br>
+        · 胶在刻蚀中不只是变薄，还会<strong>刻面化（faceting）</strong>——边缘被削成斜面，
+        实际起保护作用的厚度小于"平均剩余厚度"。工程上一般要求刻完至少保留 30%~50% 的胶作为安全边际，
+        本题保留约 60%，属于健康范围。<br><br>
+        <strong>延伸：</strong>若目标层 600 nm 而胶只有 60 nm，就必须引入硬掩膜（SOC/SOG 或 TiN）——
+        这正是 EUV 薄胶时代的标准做法。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：工艺甲 D = 400 nm、横向 U = 20 nm；工艺乙 D = 400 nm、U = 400 nm。求各向异性度 A，判断机制，并说明能否用于先进节点。</summary>
+        <div class="ans">
+        <strong>计算：</strong>A = 1 − U/D。<br>
+        甲：A = 1 − 20/400 = <strong>0.95</strong>；乙：A = 1 − 400/400 = <strong>0</strong>。<br><br>
+        <strong>机制判断：</strong><br>
+        · 甲（0.95）：横向只占纵向 5%，说明<strong>侧壁钝化 + 离子方向性</strong>起了作用，
+        属于典型的<strong>离子辅助协同刻蚀（RIE）</strong>，是量产干法的正常工作点；<br>
+        · 乙（0）：横向等于纵向，剖面是完美半圆，属<strong>纯化学刻蚀</strong>
+        （湿法、或只用自由基不加偏置的干法，如 XeF₂ 气相刻蚀、O₂ 去胶）。<br><br>
+        <strong>能否用于先进节点：</strong><br>
+        · 乙完全不能：横向钻蚀 400 nm 会吞掉任何纳米级图形。<br>
+        · 甲要小心：假设刻的是 20 nm 宽的线，A = 0.95 意味着横向损失 = 0.05 × 400 = 20 nm，
+        <strong>已经等于线宽本身，线条被彻底掏空</strong>。<br><br>
+        <strong>关键结论：</strong>A 的绝对值没有意义，必须和"横向损失相对 CD 的比例"一起看。
+        先进节点要求横向损失 &lt; CD 的 10%，即 20 nm 线条的横向损失要 &lt; 2 nm，
+        对应 A = 1 − 2/400 = <strong>0.995</strong>。
+        刻得越深、CD 越小，对 A 的要求越苛刻——这就是 3D NAND 深孔、DRAM 深槽
+        必须靠 Bosch 或 Cryo 这类把 A 推到接近 1 的专门工艺的原因。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：Bosch 工艺刻 60 μm 深的 TSV，目标速率 5 μm/min，单循环总时间 12 s（钝化 6 s + 刻蚀 6 s），扇贝纹 200 nm。求总时间、总循环数与单循环推进量；若要把扇贝纹压到 50 nm，会发生什么？</summary>
+        <div class="ans">
+        <strong>① 总时间：</strong>60 μm ÷ 5 μm/min = <strong>12 min</strong>（720 s）。<br>
+        <strong>② 总循环数：</strong>720 s ÷ 12 s/循环 = <strong>60 个循环</strong>。<br>
+        <strong>③ 单循环推进量：</strong>60 μm ÷ 60 = <strong>1 μm/循环</strong>（1000 nm）。<br><br>
+        <strong>④ 先解释一个矛盾：</strong>扇贝纹通常近似等于单循环推进量，
+        这里给出 200 nm 而推进量是 1000 nm，说明并非各向同性自由刻蚀——
+        很可能刻蚀步内部分了段，或气体切换延迟使有效刻蚀时间短于名义值，
+        或侧壁聚合物在刻蚀步持续补充抑制了横向扩展。
+        无论如何，<strong>"扇贝纹 ≈ 单循环推进量"这个数量级关系始终成立</strong>，它才是控制侧壁质量的旋钮。<br><br>
+        <strong>⑤ 压到 50 nm：</strong>缩小到 1/4 → 单循环推进量也要降到 250 nm，
+        循环数涨到 60 μm ÷ 250 nm = <strong>240 个</strong>（4 倍）；
+        若总速率不变，总时间仍为 12 min，但循环周期须压缩到 720 s ÷ 240 = <strong>3 s</strong>。<br><br>
+        <strong>⑥ 现实代价：</strong><br>
+        · 3 s 周期对<strong>气体切换速度</strong>是极大挑战——C₄F₈ 与 SF₆ 切换需腔压重建与稳定时间，
+        每次通常要 0.5~1 s，有效时间占比大幅下降，<strong>实际速率会掉</strong>，总时间远不止 12 min；<br>
+        · 循环数从 60 涨到 240，任何一次循环异常都会留在侧壁上，稳定性风险上升；<br>
+        · 钝化时间变短意味着钝化层更薄，容易出现 bowing 或局部钻蚀。<br><br>
+        <strong>工程结论：</strong>如果侧壁光滑度是硬指标（MEMS 谐振器、TSV 绝缘层可靠性），
+        与其硬压 Bosch 的循环时间，不如直接改用<strong>低温 Cryo 深硅刻蚀</strong>——
+        它天然没有扇贝纹，代价是低温硬件与温度均匀性门槛。这是"换机制"优于"极限调参"的典型例子。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：为什么纯物理溅射方向性好却几乎无法用于量产图形化？从选择比、再沉积、损伤三个角度推导，并说明产业界如何绕开。</summary>
+        <div class="ans">
+        <strong>① 选择比为什么差：</strong>溅射的本质是<strong>动量传递</strong>——入射离子（几百到上千 eV）
+        撞进表层，通过碰撞级联把能量传给表层原子。这个过程几乎不区分"这个原子属于掩膜、目标层还是下层"，
+        只取决于质量匹配与表面结合能，不同材料的溅射产额通常只差<strong>几倍</strong>。
+        而量产需要的选择比是 <strong>20:1 到 100:1</strong>。
+        用溅射刻 400 nm 目标层，掩膜可能同时损失 100 nm 以上，胶直接被吃穿。<br><br>
+        <strong>② 再沉积为什么致命：</strong>被溅出的原子带着几个 eV 飞出，
+        相当一部分会<strong>撞到侧壁重新沉积</strong>。深宽比越高，飞出角度越容易被侧壁拦截。
+        后果：一是深孔底部被"回填"，越刻越浅甚至堵死；二是侧壁长出不规则再沉积层，
+        成为短路通道与污染源。这让溅射在高深宽比结构中彻底失效。<br><br>
+        <strong>③ 损伤为什么不可接受：</strong>几百 eV 离子轰击会在表层几 nm 内造成
+        <strong>非晶化、位错、杂质注入</strong>，并在薄栅氧中注入电荷。
+        先进器件栅氧只有 1~2 nm，这直接改变阈值电压、增加界面态、降低迁移率。
+        而溅射为维持可用速率必须提高离子能量——<strong>速率与损伤直接绑定，无解</strong>。<br><br>
+        <strong>④ 产业界怎么绕开：</strong><br>
+        · <strong>主流答案：离子辅助协同刻蚀（RIE）</strong>——用化学自由基完成绝大部分材料去除（保证选择比），
+        离子只承担活化表面与清除钝化层的辅助角色（保证方向性），能量大幅降低，损伤随之下降；<br>
+        · <strong>材料不能形成挥发产物时换路线</strong>：铜的卤化物不挥发，无法等离子体刻蚀，
+        于是用<strong>大马士革工艺</strong>先刻介质沟槽、再电镀填铜、最后 CMP 磨平
+        （<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 11 篇</a>）。铜是沉积出来的，不是刻出来的；<br>
+        · <strong>确需物理机制时只用于特殊场景</strong>：离子束修整、TEM 样品减薄，
+        以及 ALE 的去除步——但 ALE 会把离子能量压到 <strong>20 eV 以下</strong>，
+        且只打已被化学改性的那一单层，从而规避了上述三个问题。<br><br>
+        <strong>一句话总结：</strong>溅射有方向性没选择性，纯化学有选择性没方向性，
+        <strong>把两者协同起来才是唯一的量产解</strong>——这正是第 5 节对比图要表达的全部内容。
+        </div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 6 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 7 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 8 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li class="current">第 9 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 10 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 11 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 12 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 13 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 14 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#刻蚀</span>
+      <span class="chip">#等离子体</span>
+      <span class="chip">#ICP</span>
+      <span class="chip">#Bosch</span>
+      <span class="chip">#选择比</span>
+      <span class="chip">#各向异性</span>
+      <span class="chip">#深硅刻蚀</span>
+      <span class="chip">#ALE</span>
+      <span class="chip">#ARDE</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

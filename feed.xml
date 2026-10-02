@@ -5,7 +5,14 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 01 Oct 2026 21:01:30 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2026 13:02:13 +0800</lastBuildDate>
+    <item>
+      <title>薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-薄膜沉积与掺杂工艺详解.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-薄膜沉积与掺杂工艺详解.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[讲清薄膜怎么长出来、杂质怎么掺进去。覆盖 CVD 五步反应与 Arrhenius 控制区、ALD 自限制循环、PVD 台阶覆盖、离子注入沟道效应、退火热预算与大马士革互连]]></description>
+    </item>
     <item>
       <title>芯片设计流程与 EDA 工具链</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-芯片设计与EDA工具链.html</link>
@@ -63,6 +70,20 @@
       <description><![CDATA[从原子能级到能带、本征激发、掺杂与载流子输运，配能带图与核心公式，是理解二极管、MOSFET 与芯片工艺的地基]]></description>
     </item>
     <item>
+      <title>刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-刻蚀工艺详解-湿法与等离子体.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-刻蚀工艺详解-湿法与等离子体.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从湿法到等离子体刻蚀：讲清速率、选择比与各向异性度三大指标，CCP/ICP 反应室与自偏压、氟氯基气体化学与侧壁钝化、Bosch 深硅刻蚀、负载效应与 ARDE、原子层刻蚀]]></description>
+    </item>
+    <item>
+      <title>光刻工艺详解 · 从光学原理到 EUV</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-光刻工艺详解-从光学原理到EUV.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-光刻工艺详解-从光学原理到EUV.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[把芯片里最贵、最难的一步讲透：光刻机光学系统与 NA 的含义、瑞利判据与分辨率/焦深的三角关系、光刻胶化学与完整工序截面、分辨率增强技术 RET、多重图形 LELE/SADP/SAQP，以及 EUV 与 High-NA 的工程挑战]]></description>
+    </item>
+    <item>
       <title>PN 结原理与特性</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</guid>
@@ -75,6 +96,13 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-MOSFET工作原理与特性曲线.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从 MOSFET 结构、阈值电压到三个工作区的电流公式与输出/转移特性曲线，含短沟道效应与版图参数 W/L 的工程含义]]></description>
+    </item>
+    <item>
+      <title>CMP 平坦化、量测与良率控制</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMP平坦化量测与良率控制.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMP平坦化量测与良率控制.html</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[CMP 是唯一能同时做全局与局部平坦化的量产工艺。本篇讲清抛光原理与 Preston 方程、凹陷侵蚀三大副作用、终点检测与清洗、量测体系与良率模型、以及 APC 闭环]]></description>
     </item>
     <item>
       <title>CMOS 集成电路基础 · 反相器与逻辑门</title>
@@ -257,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-06-01-半导体器件新手路径地图.html</guid>
       <pubDate>Mon, 01 Jun 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从理论学习、软件安装、仿真练习到版图设计、MPW 流片与实验测试的完整行动清单，含每月可执行步骤与资源工具]]></description>
-    </item>
-    <item>
-      <title>集成电路半导体器件 · 考前复习精要</title>
-      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html</guid>
-      <pubDate>Thu, 21 May 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[重点梳理 PN 结、能带理论、MOSFET 核心参数与物理机制，含二极管原理、单向导电性与典型考题推导]]></description>
     </item>
   </channel>
 </rss>
