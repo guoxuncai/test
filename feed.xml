@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 02 Oct 2026 18:48:57 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2026 22:06:06 +0800</lastBuildDate>
     <item>
       <title>摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html</link>
@@ -19,6 +19,13 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-存储器原理-DRAM-NAND与新型存储.html</guid>
       <pubDate>Fri, 02 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[存储器占半导体市场近三分之一。本篇讲清 SRAM 6T 单元、DRAM 1T1C 与 64ms 刷新、NAND 浮栅隧穿与 3D 堆叠、NOR 的 XIP、MRAM/PCM/RRAM/FRAM 四种新型存储，以及存储层级金字塔与存算一体的新]]></description>
+    </item>
+    <item>
+      <title>半导体设备与产业链 · 核心装备全景</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-半导体设备与产业链-核心装备全景.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-半导体设备与产业链-核心装备全景.html</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从光刻机、刻蚀机到薄膜、注入、CMP、量测与后道测试，讲清每台核心装备的技术内核、解决什么问题、谁在做、卡在哪，以及设备如何决定整个产业的节奏]]></description>
     </item>
     <item>
       <title>半导体材料全景 · Si、SiC、GaN 与宽禁带</title>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-10daily_finance_report_.html</guid>
       <pubDate>Thu, 10 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[海上运输板块受中东局势升级带动大涨近5%，煤炭、贵金属等避险资产同步走强。房地产服务板块继续承压，跌超5%。]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月9日 星期三</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-09瑾年财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-09瑾年财经早报_.html</guid>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[一 览 金 融 市 场 把 握 投 资 先 机 ⚠️ 投资有风险，入市需谨慎。本早报仅供参考，不构成投资建议。]]></description>
     </item>
   </channel>
 </rss>

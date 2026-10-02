@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半导体设备与产业链 · 核心装备全景</title>
+<meta name="description" content="从光刻机、刻蚀机到薄膜、注入、CMP、量测与后道测试，讲清每台核心装备的技术内核、解决什么问题、谁在做、卡在哪，以及设备如何决定整个产业的节奏。">
+<meta name="keywords" content="半导体设备,光刻机,刻蚀机,薄膜沉积,离子注入,CMP,量测检测,ASML,应用材料,泛林,东京电子,KLA,后道测试设备,厂务,国产化,卡脖子">
+<meta name="date" content="2026-10-02">
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a class="back" href="../../index.html">← 返回主页</a><span class="crumb">半导体 · 集成电路学习笔记</span><div class="topbar-spacer"></div></div></div>
+<main class="article"><div class="article-inner">
+<span class="cat-badge semi">半导体 · 设备与产业</span>
+<h1 class="title">半导体设备与产业链 · 核心装备全景</h1>
+<div class="meta"><span>2026-10-02</span><span class="sep"></span><span>集成电路学习路径 · 第 15 篇</span><span class="sep"></span><span>阅读约 25 分钟</span></div>
+<div class="content">
+
+<div class="box">
+  <span class="box-title">这一篇要解决什么</span>
+  前面四篇我们一直在讲"工艺"：怎么画图形（<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇</a>）、
+  怎么刻进材料（<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇</a>）、
+  怎么长膜与掺杂（<a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇</a>）、
+  怎么磨平与看清楚（<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇</a>）。
+  但工艺从来不是悬空存在的——<strong>工艺 = 设备 + 配方（recipe）+ 材料</strong>，
+  而设备是三者里最硬的那一个：它决定了工艺的物理上限，也决定了产业的实际节奏。
+  本篇换一个视角，回答四个问题：<strong>这些工艺是谁的机器干出来的？机器的核心技术是什么？
+  它到底解决了什么问题？产业格局与卡脖子在哪？</strong>
+  读完你应该能回答：为什么 ASML 能一家独大？为什么刻蚀机比光刻机更容易被"部分替代"？
+  为什么国产设备最难的环节不是光刻而是量测与零部件生态？为什么说"买一台 EUV 就能造 3 nm"是外行话？
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">为什么设备必须单独成章：设备是工艺的物理上限</a></li>
+    <li><a href="#s2">设备全景地图：一条产线上到底有哪些机器</a></li>
+    <li><a href="#s3">光刻机：ASML 为什么会一家独大</a></li>
+    <li><a href="#s4">刻蚀机：Lam、AMAT、TEL 的三家格局与技术内核</a></li>
+    <li><a href="#s5">薄膜与掺杂设备：CVD/ALD/PVD、注入机与外延炉</a></li>
+    <li><a href="#s6">CMP 设备：把"磨平"做成可控的产业</a></li>
+    <li><a href="#s7">量测与检测设备：KLA 的统治地位从哪来</a></li>
+    <li><a href="#s8">清洗设备：占比暴涨的隐形工序</a></li>
+    <li><a href="#s9">后道设备：测试机、封装设备与 AI 时代的暴涨品类</a></li>
+    <li><a href="#s10">厂务与配套：真正决定"能不能建厂"的部分</a></li>
+    <li><a href="#s11">产业格局与"卖铲人"商业模式</a></li>
+    <li><a href="#s12">国产设备进展与卡脖子：按环节拆解</a></li>
+    <li><a href="#s13">设备如何决定产业节奏</a></li>
+    <li><a href="#s14">常见误区</a></li>
+    <li><a href="#s15">自测</a></li>
+  </ol>
+</div>
+
+<h2 id="s1">1. 为什么设备必须单独成章：设备是工艺的物理上限</h2>
+
+<p>先给一个数字建立量级感：<strong>一座晶圆厂的资本开支（CapEx）里，设备大约占 70%~80%</strong>，
+剩下的才是厂房土建、洁净室、厂务系统与安装调试。也就是说，
+当我们说"台积电一年资本开支 300 亿美元"时，其中<em>两百多亿美元是在买机器</em>。
+这个比例在过去二十年相当稳定，先进节点甚至更高——因为工艺步骤变多、单机变贵。</p>
+
+<p>再给第二个量级：一条月产能 5 万片（50k wpm）的 12 英寸先进逻辑产线，
+总投资是<strong>百亿美元量级</strong>（成熟节点数十亿美元，最先进节点更高）。
+其中单类设备占比最大的通常是<strong>光刻，约占设备投资的 20%~25%</strong>；
+刻蚀与薄膜沉积各占接近两成；量测检测占 10%~15% 且比例随节点推进持续上升。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="晶圆厂资本开支构成示意图">
+    <defs>
+      <marker id="ar15-1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">晶圆厂资本开支构成（典型口径，示意）</text>
+
+      <text x="20" y="46" fill="var(--text-soft)">光刻设备</text>
+      <rect x="118" y="34" width="76" height="16" rx="3" fill="var(--semi)" fill-opacity=".85" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="46" fill="var(--text)">约 20%</text>
+
+      <text x="20" y="70" fill="var(--text-soft)">刻蚀设备</text>
+      <rect x="118" y="58" width="65" height="16" rx="3" fill="var(--semi)" fill-opacity=".7" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="70" fill="var(--text)">约 17%</text>
+
+      <text x="20" y="94" fill="var(--text-soft)">薄膜沉积</text>
+      <rect x="118" y="82" width="57" height="16" rx="3" fill="var(--semi)" fill-opacity=".6" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="94" fill="var(--text)">约 15%</text>
+
+      <text x="20" y="118" fill="var(--text-soft)">量测与检测</text>
+      <rect x="118" y="106" width="42" height="16" rx="3" fill="var(--semi)" fill-opacity=".5" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="118" fill="var(--text)">约 11%（先进节点更高）</text>
+
+      <text x="20" y="142" fill="var(--text-soft)">其他工艺设备</text>
+      <rect x="118" y="130" width="61" height="16" rx="3" fill="var(--semi)" fill-opacity=".38" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="142" fill="var(--text)">约 16%（清洗/CMP/注入/热处理）</text>
+
+      <text x="20" y="166" fill="var(--text-soft)">厂务与洁净室</text>
+      <rect x="118" y="154" width="53" height="16" rx="3" fill="var(--text-mute)" fill-opacity=".45" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="166" fill="var(--text)">约 14%</text>
+
+      <text x="20" y="190" fill="var(--text-soft)">土建与安装</text>
+      <rect x="118" y="178" width="27" height="16" rx="3" fill="var(--text-mute)" fill-opacity=".3" stroke="var(--border)" stroke-width="1"/>
+      <text x="200" y="190" fill="var(--text)">约 7%</text>
+
+      <line x1="118" y1="206" x2="179" y2="206" stroke="var(--semi)" stroke-width="1.4"/>
+      <line x1="118" y1="200" x2="118" y2="212" stroke="var(--semi)" stroke-width="1.4"/>
+      <line x1="179" y1="200" x2="179" y2="212" stroke="var(--semi)" stroke-width="1.4"/>
+      <line x1="179" y1="206" x2="270" y2="206" stroke="var(--semi)" stroke-width="1.4" marker-end="url(#ar15-1)"/>
+      <text x="280" y="210" fill="var(--semi)" font-weight="700">工艺设备合计约 75%~80%</text>
+
+      <rect x="20" y="224" width="640" height="20" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="30" y="238" fill="var(--text-soft)">口径提示：不同机构统计口径不同（是否含后道、是否含测试设备、是否含厂务），以上为"前道晶圆厂"的典型量级，数值用于建立直觉而非精确引用。</text>
+    </g>
+  </svg>
+  <figcaption>图 1：晶圆厂资本开支构成。设备占大头，而设备里光刻又占最大单类份额。</figcaption>
+</figure>
+
+<p>第三个角度更重要：<strong>设备决定工艺的上限</strong>。这不是修辞。
+193 nm 浸没式光刻配合多重曝光（LELE、SADP、SAQP）理论上可以把图形做到 10 nm 量级，
+但代价是<em>掩膜层数与工艺步骤数暴涨</em>——同一层图形要曝光三四次、刻蚀三四次，
+良率、周期时间（cycle time）与成本全部崩掉。
+7 nm 之所以在经济上成立，是因为 <strong>EUV 把"四次曝光"变回"一次曝光"</strong>。
+换句话说：<em>没有 EUV 就没有经济可行的 7 nm 及以下量产</em>，
+这句话的物理含义就是"设备定义了工艺窗口"。</p>
+
+<p>第四个角度是时间。一台先进设备的交期（lead time）通常是<strong>12~24 个月</strong>，
+最复杂的 EUV 更长；设备安装后还要经历装机、调试、工艺验证、爬坡，
+从下单到跑满产能常常要<strong>两三年</strong>。
+这就是为什么"芯片产能紧缺"无法在几个月内解决——你没法在半年内变出一台 EUV，
+也没法在半年内建好一片能做 EUV 的洁净室。<strong>设备交期与设备产能，是产业节奏的实际约束条件</strong>，
+而不是市场需求本身。</p>
+
+<div class="kv">
+  <div><div class="v">70%~80%</div><div class="l">设备占晶圆厂资本开支比例</div></div>
+  <div><div class="v">百亿美元</div><div class="l">5 万片/月先进逻辑产线的总投资量级</div></div>
+  <div><div class="v">20%~25%</div><div class="l">光刻在设备投资中的占比（最大单类）</div></div>
+  <div><div class="v">1~2 年</div><div class="l">先进设备典型交期（EUV 更长）</div></div>
+</div>
+
+<div class="note">
+  <b>本篇的行文方式：</b>每一类设备我都按同一个框架讲——
+  ①它要解决什么工艺问题；②核心技术是哪些（不是罗列名词，而是讲"为什么难"）；
+  ③关键数字与量级；④谁在做、格局如何；⑤卡在哪、为什么难替代。
+  建议你带着"这台机器的不可替代性来自什么"这个问题往下读。
+</div>
+
+<h2 id="s2">2. 设备全景地图：一条产线上到底有哪些机器</h2>
+
+<p>先把地图铺开。按<a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇</a>的制造总览，
+晶圆在产线里要循环几十次，每次循环大致是"长膜 → 涂胶 → 曝光 → 显影 → 刻蚀 → 去胶清洗 →（掺杂）→ 量测"，
+中间穿插 CMP 与退火。下面这张图把<strong>设备按工序动线排布</strong>，你可以对着它建立空间直觉。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="晶圆厂产线设备动线示意图">
+    <defs>
+      <marker id="ar15-2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+      </marker>
+      <marker id="ar15-2b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">前道产线动线（一次典型循环）</text>
+
+      <rect x="34" y="42" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="80" y="58" fill="var(--text)" text-anchor="middle">清洗机</text>
+      <text x="80" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">单片 / 槽式</text>
+
+      <rect x="138" y="42" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="184" y="58" fill="var(--text)" text-anchor="middle">薄膜沉积</text>
+      <text x="184" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">CVD/ALD/PVD</text>
+
+      <rect x="242" y="42" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="288" y="58" fill="var(--text)" text-anchor="middle">涂胶显影</text>
+      <text x="288" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">Track</text>
+
+      <rect x="346" y="42" width="92" height="34" rx="6" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.4"/>
+      <text x="392" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">光刻机</text>
+      <text x="392" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">Scanner</text>
+
+      <rect x="450" y="42" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="496" y="58" fill="var(--text)" text-anchor="middle">刻蚀机</text>
+      <text x="496" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">ICP / CCP</text>
+
+      <rect x="554" y="42" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="600" y="58" fill="var(--text)" text-anchor="middle">去胶清洗</text>
+      <text x="600" y="70" fill="var(--text-mute)" text-anchor="middle" font-size="9">Asher / Strip</text>
+
+      <line x1="126" y1="59" x2="136" y2="59" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="230" y1="59" x2="240" y2="59" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="334" y1="59" x2="344" y2="59" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="438" y1="59" x2="448" y2="59" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="542" y1="59" x2="552" y2="59" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+
+      <path d="M646,59 L664,59 L664,110" fill="none" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+
+      <rect x="34" y="140" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="80" y="156" fill="var(--text)" text-anchor="middle">离子注入</text>
+      <text x="80" y="168" fill="var(--text-mute)" text-anchor="middle" font-size="9">Implanter</text>
+
+      <rect x="138" y="140" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="184" y="156" fill="var(--text)" text-anchor="middle">退火</text>
+      <text x="184" y="168" fill="var(--text-mute)" text-anchor="middle" font-size="9">RTA / 炉管</text>
+
+      <rect x="242" y="140" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="288" y="156" fill="var(--text)" text-anchor="middle">CMP</text>
+      <text x="288" y="168" fill="var(--text-mute)" text-anchor="middle" font-size="9">Polisher</text>
+
+      <rect x="346" y="140" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="392" y="156" fill="var(--text)" text-anchor="middle">量测检测</text>
+      <text x="392" y="168" fill="var(--text-mute)" text-anchor="middle" font-size="9">Inspect/Metro</text>
+
+      <rect x="450" y="140" width="92" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="496" y="156" fill="var(--text)" text-anchor="middle">外延</text>
+      <text x="496" y="168" fill="var(--text-mute)" text-anchor="middle" font-size="9">Epi（源漏/衬底）</text>
+
+      <line x1="664" y1="110" x2="560" y2="110" stroke="var(--text-mute)" stroke-width="1.4"/>
+      <line x1="560" y1="110" x2="560" y2="140" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="126" y1="157" x2="136" y2="157" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="230" y1="157" x2="240" y2="157" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="334" y1="157" x2="344" y2="157" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+      <line x1="438" y1="157" x2="448" y2="157" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-2)"/>
+
+      <path d="M34,174 L20,174 L20,196 L120,196" fill="none" stroke="var(--semi)" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <line x1="120" y1="196" x2="184" y2="128" fill="none" stroke="var(--semi)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ar15-2b)"/>
+      <text x="30" y="212" fill="var(--semi)" font-size="9.5">循环 40~60 次：每层图形都要重跑一遍</text>
+
+      <rect x="34" y="224" width="612" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="44" y="241" fill="var(--text-soft)" font-size="9.5">配套：洁净室 · 超纯水 · 特气与化学品输送 · 真空与尾气处理 · 电力与恒温恒湿 · 振动控制（贯穿全厂，见第 10 节）</text>
+    </g>
+  </svg>
+  <figcaption>图 2：前道产线设备动线。一次"长膜—曝光—刻蚀—量测"循环大约要跑几十次，才堆出一枚芯片。</figcaption>
+</figure>
+
+<p>按产业惯例，设备分成三大块：<strong>前道（Front-End，晶圆制造）、后道（Back-End，封装测试）、厂务配套（Facility）</strong>。
+前道通常再细分为八大类，这也是 SEMI 与各家财报常用的分类口径：</p>
+
+<table class="term-table">
+  <thead><tr><th>大类</th><th>代表设备</th><th>核心工艺目的</th><th>本篇对应</th></tr></thead>
+  <tbody>
+    <tr><td>光刻 Lithography</td><td>Scanner / Stepper、Track（涂胶显影）</td><td>把版图转移到光刻胶</td><td>第 3 节</td></tr>
+    <tr><td>刻蚀 Etch</td><td>介质刻蚀、导体刻蚀、深硅刻蚀</td><td>把胶上的图形转移到薄膜/硅</td><td>第 4 节</td></tr>
+    <tr><td>薄膜沉积 Deposition</td><td>CVD、PECVD、ALD、PVD、外延</td><td>生长介质、金属、半导体层</td><td>第 5 节</td></tr>
+    <tr><td>掺杂 Doping</td><td>离子注入机、扩散炉、退火设备</td><td>改变局部导电类型与浓度</td><td>第 5 节</td></tr>
+    <tr><td>热处理 Thermal</td><td>立式炉管、RTA、激光/闪速退火</td><td>激活杂质、修复损伤、致密化</td><td>第 5 节</td></tr>
+    <tr><td>CMP</td><td>抛光机 + 清洗单元</td><td>全局平坦化</td><td>第 6 节</td></tr>
+    <tr><td>清洗 Clean</td><td>单片清洗、槽式清洗、去胶机</td><td>去除颗粒、有机物、金属污染</td><td>第 8 节</td></tr>
+    <tr><td>量测与检测 Metro/Inspection</td><td>明场/暗场、EBI、CD-SEM、OCD、Overlay</td><td>发现缺陷、量测尺寸与套刻</td><td>第 7 节</td></tr>
+  </tbody>
+</table>
+
+<p>后道（也叫 ATP，Assembly &amp; Test &amp; Packaging）主要是<strong>测试机、探针台、分选机</strong>与
+<strong>划片、贴片、键合、塑封</strong>设备；厂务则是洁净室、超纯水、特气化学品、真空与尾气处理等"看不见但缺一不可"的系统。
+后道与厂务在很多科普里被忽略，但它们恰好是<em>今天产业瓶颈迁移的方向</em>——第 9 节会讲为什么 AI 把瓶颈推到了封装设备上。</p>
+
+<div class="tip">
+  <b>一个有用的分类直觉：</b>前道设备卖的是"物理极限"，所以越先进的机器越贵、越少、越不可替代；
+  后道设备卖的是"吞吐与精度性价比"，所以更拼成本与稼动率；
+  厂务卖的是"可靠性与规模"，是典型的工程与项目能力生意。
+  三类设备的商业模式差别，决定了它们各自的竞争格局。
+</div>
+
+<h2 id="s3">3. 光刻机：ASML 为什么会一家独大</h2>
+
+<p><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇</a>讲过光刻的光学原理，
+这里讲<strong>机器本身</strong>。先看格局：ASML 在光刻设备整体份额约<strong>八成量级</strong>，
+在最尖端的浸没式与 EUV 上接近<strong>垄断</strong>；日本尼康（Nikon）与佳能（Canon）已基本退守
+KrF、i-line 等成熟节点，以及封装、显示、部分特殊应用。
+这个格局不是营销策略造成的，而是<em>技术路径 + 供应链组织方式</em>共同的结果。</p>
+
+<h3>3.1 EUV 光刻机到底难在哪</h3>
+
+<p>一句话概括 EUV 的难：<strong>13.5 nm 的极紫外光会被几乎所有材料吸收，所以不能用透镜，只能用多层膜反射镜；
+而每一次反射都要损失一部分光，你还必须反射十几次。</strong>
+光从光源出发，经过收集镜、照明系统若干反射镜、掩膜、投影物镜若干反射镜，最后打到晶圆上，
+整条光路能量利用率只有<em>百分之几</em>。这意味着光源必须极其强大，才谈得上产能。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EUV 光刻机核心子系统拆解示意图">
+    <defs>
+      <marker id="ar15-3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+      <marker id="ar15-3b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">EUV 光刻机：核心子系统与光路</text>
+
+      <rect x="20" y="40" width="112" height="52" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="76" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">CO₂ 激光</text>
+      <text x="76" y="72" fill="var(--text-mute)" text-anchor="middle" font-size="9">脉冲突发 · 数十 kW 级</text>
+      <text x="76" y="85" fill="var(--text-mute)" text-anchor="middle" font-size="9">（Cymer，美国）</text>
+
+      <rect x="150" y="40" width="112" height="52" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="206" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">锡液滴靶</text>
+      <text x="206" y="72" fill="var(--text-mute)" text-anchor="middle" font-size="9">约 5 万滴/秒</text>
+      <text x="206" y="85" fill="var(--text-mute)" text-anchor="middle" font-size="9">LPP 等离子体</text>
+
+      <rect x="280" y="40" width="112" height="52" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="336" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">收集镜</text>
+      <text x="336" y="72" fill="var(--text-mute)" text-anchor="middle" font-size="9">掠入射多层膜</text>
+      <text x="336" y="85" fill="var(--text-mute)" text-anchor="middle" font-size="9">碎屑防护</text>
+
+      <rect x="410" y="40" width="112" height="52" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="466" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">照明系统</text>
+      <text x="466" y="72" fill="var(--text-mute)" text-anchor="middle" font-size="9">均匀化 + 光瞳整形</text>
+      <text x="466" y="85" fill="var(--text-mute)" text-anchor="middle" font-size="9">多层反射镜组</text>
+
+      <rect x="540" y="40" width="120" height="52" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="600" y="58" fill="var(--text)" text-anchor="middle" font-weight="700">掩膜台</text>
+      <text x="600" y="72" fill="var(--text-mute)" text-anchor="middle" font-size="9">反射式掩膜 + pellicle</text>
+      <text x="600" y="85" fill="var(--text-mute)" text-anchor="middle" font-size="9">真空内高速扫描</text>
+
+      <line x1="132" y1="66" x2="148" y2="66" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+      <line x1="262" y1="66" x2="278" y2="66" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+      <line x1="392" y1="66" x2="408" y2="66" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+      <line x1="522" y1="66" x2="538" y2="66" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+      <path d="M600,92 L600,112 L360,112 L360,128" fill="none" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+
+      <rect x="270" y="130" width="180" height="48" rx="6" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.4"/>
+      <text x="360" y="148" fill="var(--text)" text-anchor="middle" font-weight="700">投影物镜（NA 0.33 / 0.55）</text>
+      <text x="360" y="162" fill="var(--text-mute)" text-anchor="middle" font-size="9">蔡司多层膜反射镜，面型亚纳米级</text>
+      <text x="360" y="174" fill="var(--text-mute)" text-anchor="middle" font-size="9">单面反射率约 70%，整链仅剩百分之几</text>
+
+      <path d="M360,178 L360,196" fill="none" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-3)"/>
+
+      <rect x="230" y="198" width="260" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="360" y="216" fill="var(--text)" text-anchor="middle" font-weight="700">双工件台（Twin Stage）</text>
+      <text x="360" y="230" fill="var(--text-mute)" text-anchor="middle" font-size="9">一台曝光、一台对准/上下片，交换后无缝接续</text>
+      <text x="360" y="241" fill="var(--text-mute)" text-anchor="middle" font-size="9">对准与同步精度要求亚纳米量级</text>
+
+      <rect x="20" y="130" width="230" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="34" y="148" fill="var(--text-soft)" font-size="9.5">真空腔：EUV 在空气里走不了几毫米</text>
+      <text x="34" y="162" fill="var(--text-soft)" font-size="9.5">污染控制：锡碎屑、碳沉积、镜面寿命</text>
+      <text x="34" y="172" fill="var(--text-soft)" font-size="9.5">整机重量数百吨，运输需数十个集装箱</text>
+
+      <rect x="510" y="130" width="150" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="524" y="148" fill="var(--text-soft)" font-size="9.5">产能约 100~200 片/小时</text>
+      <text x="524" y="162" fill="var(--text-soft)" font-size="9.5">单价约 2 亿美元级</text>
+      <text x="524" y="172" fill="var(--text-soft)" font-size="9.5">High-NA 更高（3 亿+ 美元级）</text>
+
+      <line x1="250" y1="153" x2="268" y2="153" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar15-3b)"/>
+      <line x1="512" y1="153" x2="452" y2="153" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar15-3b)"/>
+    </g>
+  </svg>
+  <figcaption>图 3：EUV 光刻机的核心子系统。光源、光学、工件台三大块，恰好处在三个不同的国家与产业生态里。</figcaption>
+</figure>
+
+<h3>3.2 光源：把锡打成等离子体的艺术</h3>
+
+<p>ASML 用的方案叫 <strong>LPP（Laser Produced Plasma，激光产生等离子体）</strong>，
+由 2013 年收购的美国 Cymer 提供。原理说起来简单：
+<em>让直径约几十微米的锡液滴以约 5 万滴/秒的频率落下，先用一束预脉冲激光把它压成薄饼，
+再用一束高功率 CO₂ 激光把它打成等离子体</em>，锡等离子体在合适温度下会辐射出 13.5 nm 附近的极紫外光。</p>
+
+<p>难点在"合适温度"和"效率"。整个过程的<strong>转换效率（CE）只有几个百分点</strong>，
+也就是说输入的激光功率有 95% 以上变成了热与杂散辐射，必须靠极其复杂的热管理与碎屑（debris）防护来处理。
+业界衡量 EUV 光源的核心指标是<strong>可用 EUV 功率</strong>：从早期的几十瓦，
+到量产的<strong>250 W 级</strong>，再到新机型的 500 W 以上目标。
+<em>光源功率直接决定产能</em>——功率翻倍，曝光时间减半，每小时能跑的晶圆数就接近翻倍。
+这就是光源团队与整机团队永远在吵架的原因：一边要功率，一边要稳定性与镜面寿命。</p>
+
+<h3>3.3 光学：蔡司的镜子为什么造不出来</h3>
+
+<p>EUV 不能用透镜（材料全部吸收），只能用<strong>多层膜反射镜</strong>：
+在超光滑的基底上交替镀几十对钼（Mo）与硅（Si）薄膜，每层厚度只有几个纳米，
+靠布拉格反射把 13.5 nm 的光"堆"出来。单面反射率理论上限约 <strong>70% 量级</strong>，
+实际略低。整条光路要反射十几次，<em>0.7 的十几次方只剩余百分之几</em>——这就是光源必须做到几百瓦的原因。</p>
+
+<p>更狠的是面型精度。投影物镜的镜面误差按<strong>亚纳米 RMS（均方根）量级</strong>控制，
+直观地说：<em>如果把这个反射镜放大到德国国土那么大，表面的起伏不能超过几毫米</em>。
+这种精度需要超低膨胀玻璃陶瓷基底、离子束修形（IBF）抛光、以及原子层级的镀膜工艺，
+再配上一整套干涉测量手段来验证。全球能稳定供应该等级镜组的厂商屈指可数，
+蔡司（Carl Zeiss SMT）是 EUV 时代的事实标准供应商，ASML 也早已通过入股锁定了这层关系。</p>
+
+<p><strong>镜组产能本身就是瓶颈</strong>：一台 EUV 要用十几面大尺寸反射镜，
+而高端光学产能的扩张需要的是精密制造能力 + 十几年经验的技师，不是多盖两栋厂房就能解决的。
+这是"卡脖子"里最容易被低估的一环——大家盯着光源，但光学产能同样卡着整机产出。</p>
+
+<h3>3.4 工件台与浸没式：产能是怎么被抠出来的</h3>
+
+<p>光刻机的产能公式近似为：<em>每小时片数 ≈ 3600 /（单片曝光时间 + 交换与对准时间）</em>。
+ASML 的<strong>双工件台（Twin Stage）</strong>设计就是为后者服务：
+一个工件台在曝光的同时，另一个在对准测量与上下片，两者交换后无缝接续。
+这把非曝光时间压到极低，代价是机械与控制难度暴涨——
+工件台要在真空里以几个 g 的加速度移动，同时保持<strong>亚纳米级的定位与同步精度</strong>。</p>
+
+<div class="formula-block">
+  <span class="fl">CD = k₁ · λ / NA</span>
+  <span class="fl">DOF = k₂ · λ / NA²</span>
+  <span class="fnote">瑞利判据（第 11 篇）：提高分辨率有两条路——缩短波长 λ，或增大数值孔径 NA。
+  ArF 浸没式把 NA 从干式的 0.93 提到 <b>1.35</b>（水的折射率约 1.44）；
+  EUV 把 λ 从 193 nm 一步砍到 <b>13.5 nm</b>；High-NA 再把 NA 从 0.33 提到 <b>0.55</b>。</span>
+</div>
+
+<p>顺带说清<strong>浸没式（Immersion）</strong>：在镜头与晶圆之间注入超纯水，
+利用水的折射率把 NA 从 0.93 提到 1.35，等效分辨率提升约 30%~40%。
+这个想法在 2000 年代初被多方提出，<em>最终是 ASML 与台积电合作把它做成量产</em>，
+而尼康在这条路线上慢了半步——这就是格局反转的技术起点之一。
+浸没式的工程难点在于<em>水滴不能残留、不能有气泡、不能把光刻胶泡坏</em>，
+属于典型的"想法简单、工程极难"。</p>
+
+<h3>3.5 NA 0.33 → High-NA 0.55：为什么要半场曝光</h3>
+
+<p>High-NA（EXE 系列）把 NA 从 0.33 提到 0.55，分辨率按瑞利判据提升约 <strong>1.7 倍</strong>，
+单次曝光就能做到过去需要多次曝光才能实现的图形。但代价有两条：</p>
+
+<ul>
+  <li><strong>半场曝光（Half-field）</strong>：由于光学设计限制，High-NA 的曝光场面积只有原来的一半，
+    大芯片（尤其是接近光罩极限的大面积 GPU 裸片）需要<em>两次曝光再拼接</em>。
+    拼接（stitching）会引入额外的套刻误差与产能损失，因此 High-NA 并非"全面替代"，
+    而是与 0.33 NA 机型长期共存、按需分工。</li>
+  <li><strong>价格与体积</strong>：High-NA 单价是 <strong>3 亿美元以上量级</strong>（公开口径），
+    整机更重、光学更大、对厂房（层高、地基、吊装）的要求更高，
+    意味着晶圆厂要么新建、要么大改造，进一步拉长了导入周期。</li>
+</ul>
+
+<div class="kv">
+  <div><div class="v">约 2 亿美元</div><div class="l">主流 EUV（NA 0.33）单台价格量级</div></div>
+  <div><div class="v">100~200 wph</div><div class="l">EUV 产能（片/小时）量级，随光源功率演进</div></div>
+  <div><div class="v">13.5 nm</div><div class="l">EUV 波长，约为 ArF 的 1/14</div></div>
+  <div><div class="v">0.33 → 0.55</div><div class="l">NA 演进：分辨率提升约 1.7 倍，代价是半场曝光</div></div>
+</div>
+
+<h3>3.6 尼康与佳能：为什么退守，以及纳米压印这条路</h3>
+
+<p>尼康与佳能并非技术能力差，而是在<em>浸没式与 EUV 两个转折点上同时失去了主导权</em>。
+EUV 的研发是一个耗资巨大、周期以十年计、且需要光源/光学/整机协同的工程，
+一旦掉队就很难追回——因为客户不会等你，台积电、三星、英特尔的产线规划会整体倒向领先者，
+形成<strong>生态正反馈</strong>：装机越多 → 数据越多 → 改进越快 → 装机更多。</p>
+
+<p>两家现在的策略是<em>避开正面战场</em>：
+尼康主攻 ArF/KrF 浸没式的存量市场、以及封装与显示光刻；
+佳能则押注 <strong>纳米压印（NIL，Nanoimprint Lithography）</strong>——
+不用光学成像，而是把模板像盖章一样压到光刻胶上。
+NIL 的优势是<em>分辨率不受衍射限制、设备便宜、能耗低</em>；
+致命弱点是<strong>缺陷率与模板寿命</strong>：压印时任何一颗颗粒都会在模板上留下一个"永久缺陷源"，
+而先进逻辑芯片对缺陷密度的容忍度极低。
+因此 NIL 目前更现实的落点是<strong>存储（尤其是 3D NAND）</strong>这类对缺陷相对宽容、图形高度重复的场景，
+而不是逻辑芯片。这个判断本身就是很好的"工程取舍"教材。</p>
+
+<h3>3.7 光刻机解决什么问题，卡在哪</h3>
+
+<p>把光刻机的问题归纳成一句：<strong>在纳米尺度上，以每小时一两百片的速度，把图形稳定地、可重复地、
+少缺陷地印到硅片上</strong>。要同时满足"细、快、稳、净"四个字，这才是最难的地方——
+实验室里做出 5 nm 图形不稀奇，稀奇的是<em>每小时 150 片、连跑三个月、片间误差不超过 1 nm</em>。</p>
+
+<table class="term-table">
+  <thead><tr><th>卡点</th><th>具体难点</th><th>为什么难绕开</th></tr></thead>
+  <tbody>
+    <tr><td>光源功率</td><td>几百瓦级 EUV、数十 kW CO₂ 激光、热与碎屑管理</td><td>决定产能，且是系统级工程而非单点突破</td></tr>
+    <tr><td>光学镜组</td><td>亚纳米面型、多层膜镀膜、产能受限</td><td>工艺 know-how + 产能瓶颈，无法靠图纸复制</td></tr>
+    <tr><td>掩膜与保护膜</td><td>反射式掩膜缺陷率、pellicle 透光率与耐热</td><td>掩膜本身是另一条独立的高壁垒产业链</td></tr>
+    <tr><td>光刻胶</td><td>灵敏度/线宽粗糙度/缺陷（RLS 三角权衡，见第 11 篇）</td><td>材料配方依赖长期实验数据库与供应商生态</td></tr>
+    <tr><td>污染控制</td><td>锡碎屑、碳沉积、真空腔洁净度、镜面寿命</td><td>直接决定稼动率与运维成本</td></tr>
+  </tbody>
+</table>
+
+<div class="warn">
+  <b>关于"买台光刻机就能生产"：</b>光刻机需要与涂胶显影机（Track）联机、
+  需要掩膜、需要光刻胶与配套工艺、需要周边的刻蚀/量测设备形成闭环，
+  还需要一整套厂务（超纯水、特气、恒温恒湿、微振动控制）支持。
+  单独的机器只是一台机器；<em>能跑出良率的是一条完整工艺链</em>。这一点在第 14 节还会展开。
+</div>
+
+<h2 id="s4">4. 刻蚀机：Lam、AMAT、TEL 的三家格局与技术内核</h2>
+
+<p><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇</a>讲了刻蚀的物理化学，
+这里讲机器。刻蚀设备的全球格局大致是<strong>Lam Research（泛林）份额最高（约四成量级）、
+Applied Materials（应用材料）次之、Tokyo Electron（东京电子）第三</strong>，
+三家合计占据绝大部分市场。格局比光刻"分散"得多，原因很实在：
+刻蚀的<em>工艺场景极其碎片化</em>——介质、金属、硅、硬掩膜、深硅、高深宽比通孔，
+每种场景的机台设计与配方都不一样，一家公司很难在所有细分上都做到最优。</p>
+
+<h3>4.1 等离子体的两种产生方式：ICP 与 CCP</h3>
+
+<p>刻蚀机的心脏是等离子体源。主流有两种：</p>
+
+<ul>
+  <li><strong>CCP（Capacitively Coupled Plasma，电容耦合）</strong>：上下电极像电容两极，
+    射频加在电极之间。<em>离子能量高、方向性好</em>，适合需要强各向异性的介质刻蚀；
+    缺点是等离子体密度相对低，且密度与能量耦合在一起，调节自由度小。</li>
+  <li><strong>ICP（Inductively Coupled Plasma，电感耦合）</strong>：用顶部线圈感应产生高密度等离子体，
+    另用一路偏置射频控制离子能量。<em>密度与能量解耦</em>——可以在低离子能量下维持高密度，
+    从而减少损伤。这是先进节点刻蚀越来越依赖 ICP 的原因。</li>
+</ul>
+
+<p>工程实现上还有一堆细节：射频频率（常见的 13.56 MHz，以及 2/27/60 MHz 等多频组合）、
+<strong>阻抗匹配网络</strong>（把反射功率压到 1% 以下，否则功率打不进等离子体且会损坏电源）、
+以及多频叠加对离子能量分布（IEDF）的整形。
+这些听起来像"电源工程师的事"，但它直接决定了<em>刻蚀速率、选择比与损伤</em>。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="刻蚀机腔体结构示意图">
+    <defs>
+      <marker id="ar15-4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+      <marker id="ar15-4b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">刻蚀腔室：ICP 源 + ESC 卡盘 + 气体与真空</text>
+
+      <rect x="180" y="46" width="320" height="150" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.6"/>
+      <text x="500" y="60" fill="var(--text-mute)" font-size="9">腔壁涂层：Y₂O₃ / Al₂O₃ / SiC 抗腐蚀</text>
+
+      <path d="M220,60 C240,48 280,48 300,60 C320,48 360,48 380,60 C400,48 440,48 460,60" fill="none" stroke="var(--semi)" stroke-width="2"/>
+      <text x="340" y="44" fill="var(--text)" text-anchor="middle" font-weight="700">ICP 线圈（顶部感应耦合）</text>
+
+      <rect x="230" y="78" width="220" height="16" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="340" y="90" fill="var(--text-soft)" text-anchor="middle" font-size="9">气体分配（Showerhead，中心/边缘分区）</text>
+
+      <rect x="250" y="106" width="180" height="42" rx="4" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1.3"/>
+      <text x="340" y="122" fill="var(--text)" text-anchor="middle" font-weight="700">等离子体</text>
+      <text x="340" y="136" fill="var(--text-mute)" text-anchor="middle" font-size="9">密度 10¹¹~10¹² cm⁻³ 量级</text>
+
+      <path d="M300,148 L300,158" stroke="var(--text-mute)" stroke-width="1.3" marker-end="url(#ar15-4b)"/>
+      <path d="M340,148 L340,158" stroke="var(--text-mute)" stroke-width="1.3" marker-end="url(#ar15-4b)"/>
+      <path d="M380,148 L380,158" stroke="var(--text-mute)" stroke-width="1.3" marker-end="url(#ar15-4b)"/>
+
+      <rect x="248" y="160" width="184" height="14" rx="3" fill="var(--text)" fill-opacity=".1" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="340" y="171" fill="var(--text)" text-anchor="middle" font-size="9">晶圆 Wafer</text>
+
+      <rect x="240" y="176" width="200" height="18" rx="3" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
+      <text x="340" y="189" fill="var(--text)" text-anchor="middle" font-size="9">ESC 静电吸盘（库仑型 / JR 型）</text>
+
+      <text x="240" y="208" fill="var(--text-mute)" font-size="9">He 背冷：5~30 Torr，桥导热传导</text>
+
+      <rect x="60" y="86" width="104" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="112" y="103" fill="var(--text)" text-anchor="middle" font-size="9.5" font-weight="700">射频电源</text>
+      <text x="112" y="116" fill="var(--text-mute)" text-anchor="middle" font-size="9">13.56 MHz + 偏置</text>
+      <text x="112" y="127" fill="var(--text-mute)" text-anchor="middle" font-size="9">阻抗匹配网络</text>
+
+      <line x1="164" y1="109" x2="178" y2="109" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-4b)"/>
+
+      <rect x="60" y="146" width="104" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="112" y="162" fill="var(--text)" text-anchor="middle" font-size="9.5" font-weight="700">气体输送</text>
+      <text x="112" y="175" fill="var(--text-mute)" text-anchor="middle" font-size="9">MFC + 阀件</text>
+      <text x="112" y="185" fill="var(--text-mute)" text-anchor="middle" font-size="9">CF₄/SF₆/Cl₂/HBr/O₂…</text>
+
+      <line x1="164" y1="167" x2="228" y2="167" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-4b)"/>
+      <line x1="228" y1="167" x2="228" y2="90" stroke="var(--text-mute)" stroke-width="1.4"/>
+      <line x1="228" y1="90" x2="240" y2="90" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-4b)"/>
+
+      <rect x="516" y="120" width="144" height="46" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="588" y="137" fill="var(--text)" text-anchor="middle" font-size="9.5" font-weight="700">真空与尾气</text>
+      <text x="588" y="150" fill="var(--text-mute)" text-anchor="middle" font-size="9">涡轮泵 + 干泵</text>
+      <text x="588" y="160" fill="var(--text-mute)" text-anchor="middle" font-size="9">Abatement 处理</text>
+
+      <line x1="500" y1="143" x2="514" y2="143" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar15-4b)"/>
+
+      <rect x="20" y="214" width="640" height="38" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="32" y="229" fill="var(--text-soft)" font-size="9.5">三个必须同时满足：<b>必须各向异性</b>（侧向不能吃）、<b>必须选择比高</b>（只吃该吃的层）、<b>必须均匀</b>（片内/片间/批间）</text>
+      <text x="32" y="243" fill="var(--text-mute)" font-size="9.5">三者互相冲突：提高离子能量 → 各向异性变好但选择比变差；提高压力 → 速率变快但方向性变差</text>
+    </g>
+  </svg>
+  <figcaption>图 4：刻蚀腔室结构。看似简单的"打等离子体"，实际是射频、气体、热、真空、材料五个子系统的耦合。</figcaption>
+</figure>
+
+<h3>4.2 静电吸盘 ESC 与氦背冷：热管理是被低估的核心</h3>
+
+<p>等离子体环境下不能用机械夹具固定晶圆（会污染、会遮挡、会磨损），
+所以必须用<strong>静电吸盘（ESC，Electrostatic Chuck）</strong>：靠静电引力把晶圆牢牢吸在卡盘上。
+ESC 分两类：<em>库仑型（Coulomb，吸附力较小但脱附干净）与 Johnsen-Rahbek 型（吸附力大、低温下更有效）</em>。</p>
+
+<p>但吸附只是第一步，真正的关键问题是<strong>散热</strong>。真空中没有空气对流，
+晶圆被等离子体加热后如果不导走，温度会失控——而温度直接决定刻蚀速率、聚合物沉积与选择比。
+解决方案是<strong>氦背冷（He Backside Cooling）</strong>：
+在晶圆背面与卡盘之间充入<em>几个到几十 Torr 的氦气</em>，靠气体分子导热把热量带到卡盘里的冷却液回路。
+氦气被选中是因为它导热好、化学惰性、分子小（能渗进微小间隙）。
+这套系统的设计难点在于：<em>既要导热好，又不能让氦漏到腔室里破坏真空，还要保证晶圆不因受力变形</em>。</p>
+
+<h3>4.3 腔体材料与腐蚀控制：Y₂O₃ 为什么值钱</h3>
+
+<p>含氟等离子体（CF₄、SF₆、CHF₃ 等）对腔壁和内部零件的腐蚀非常严重。
+腐蚀产物会变成颗粒掉到晶圆上（良率杀手），也会让腔室壁的"记忆效应"漂移（工艺不稳）。
+对策是<strong>涂层与材料替换</strong>：阳极氧化铝、Al₂O₃ 或 Y₂O₃（氧化钇）陶瓷涂层、SiC 或石英内衬等。
+其中 <strong>Y₂O₃ 涂层的抗氟等离子体腐蚀能力突出</strong>，是先进刻蚀腔室的关键耗材/零件之一，
+价格昂贵且供应集中。这也是"零部件卡脖子"清单里的常客（第 12 节会再提）。</p>
+
+<h3>4.4 Bosch 深硅刻蚀与 ALE：两条不同的精度路线</h3>
+
+<p>深硅刻蚀（DRIE）最经典的工艺是 <strong>Bosch 工艺</strong>：
+在"刻蚀（SF₆）"与"钝化（C₄F₈ 沉积聚合物保护侧壁）"两个步骤之间高频切换，
+每个循环只有<strong>一到几秒</strong>，于是侧壁被反复保护、底部被反复刻掉，
+最终形成深度可达几百微米、侧壁近乎垂直的深槽。</p>
+
+<p>它的代价是侧壁会留下周期性的扇贝纹（scallop），尺寸在<strong>几十纳米量级</strong>——
+对 MEMS、TSV、功率器件通常无所谓，但对某些高精度光学或器件结构就是问题。
+所以还有一条"低温刻蚀"路线：把晶圆降到 <strong>−40 ℃ 甚至 −70 ℃ 以下</strong>，
+让钝化层在低温下自然形成，从而无需循环切换，得到光滑侧壁。
+代价是设备要加低温 ESC、冷媒系统，成本与复杂度上升。
+<em>这就是典型的工程取舍：用更贵的设备换更好的形貌。</em></p>
+
+<p><strong>ALE（Atomic Layer Etching，原子层刻蚀）</strong>是另一条精度路线：
+把刻蚀拆成两个自限制步骤——先"改性"（如用氯等离子体在表面形成一层改性层），
+再"去除"（用低能离子把这层打掉，且打不到更深处）。
+每个循环只去掉<strong>零点几到一两个纳米</strong>，速率慢得可怜，
+但换来的是<em>原子级的精度、极高的均匀性与几乎为零的损伤</em>。
+在 GAA 环栅、鳍片释放、极浅结等对"刻多少、刻到哪"要求苛刻的场合，ALE 是必需品。
+这也解释了为什么先进节点刻蚀步骤数会暴涨——<em>每一次要求更精细，就得用更慢的工艺</em>。</p>
+
+<h3>4.5 先进节点的三个难点：高深宽比、损伤、充电</h3>
+
+<p>3D NAND 是最极端的例子：存储单元的通孔深宽比已经做到 <strong>40:1 以上、向 60:1 甚至更高演进</strong>，
+相当于在指甲盖上打一口"深井"。此时的问题全部出现在孔底：</p>
+
+<ul>
+  <li><strong>传输限制</strong>：反应气体进不去、副产物出不来，刻蚀速率随深度衰减，甚至停止。</li>
+  <li><strong>形貌缺陷</strong>：bowing（孔腰鼓出）、twisting（扭曲）、necking（颈部收缩）、
+    底部圆化，任何一种都会改变单元的电学特性。</li>
+  <li><strong>充电损伤（charging damage）</strong>：高能电子与离子在绝缘结构里积累电荷，
+    造成局部电场畸变，严重时直接击穿栅介质。这是等离子体工艺特有的"隐形杀手"。</li>
+</ul>
+
+<p>对应的工程手段包括：提高等离子体密度与离子方向性、低温刻蚀、脉冲射频（占空比调节以让电荷泄放）、
+更高的腔室压力与气体化学优化、以及用<em>更硬的硬掩膜</em>（如碳基硬掩膜）来撑住深孔。
+这里每一项都是一个独立的工艺开发课题——这就是刻蚀 know-how 的真正形态。</p>
+
+<div class="note">
+  <b>为什么刻蚀比光刻"更容易被部分替代"：</b>
+  光刻的壁垒集中在<em>极少数不可替代的供应链节点</em>（光源、顶级光学），且只有一条技术路线通向最先进节点；
+  刻蚀的壁垒分散在<em>成百上千条配方与场景</em>里，一台机器只要在某个细分场景做到够好，
+  就能拿到订单。因此国产刻蚀设备能先在成熟节点和特定场景（介质刻蚀、深硅）切进去，
+  再逐步往上爬。这是"集中型壁垒"与"分散型壁垒"的差别，第 12 节会再用这个框架分析国产化率。
+</div>
+
+<h2 id="s5">5. 薄膜与掺杂设备：CVD/ALD/PVD、注入机与外延炉</h2>
+
+<p><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇</a>讲过原理，这里讲机型与产业。
+薄膜沉积设备的主力玩家是 <strong>Applied Materials、Lam Research、Tokyo Electron、ASM International</strong>，
+另外 Kokusai（原日立国际电气）在批处理炉管上有强项，ASML 不在这个赛道。</p>
+
+<h3>5.1 ALD 为什么会成为先进节点的刚需</h3>
+
+<p>逻辑很简单：<strong>当结构变成三维（FinFET 的鳍、GAA 的纳米片、3D NAND 的深孔），
+"覆盖均匀性"就取代"沉积速率"成为第一指标。</strong>
+台阶覆盖率（step coverage）要求接近 100%，
+而传统 CVD/PVD 在深孔里的覆盖是"上厚下薄"的。
+<strong>ALD（Atomic Layer Deposition，原子层沉积）</strong>的做法是：
+两种前驱体<em>交替脉冲通入、中间用惰性气体吹扫</em>，
+每个循环只在表面化学吸附一层，因此厚度只取决于循环次数，与形状几乎无关。</p>
+
+<p>ALD 与 <strong>High-k 栅介质</strong>是共生关系：45 nm 节点引入 HfO₂ 高 k 栅，
+厚度只有几个纳米，只有 ALD 能做到这种厚度控制与均匀性。
+此后 ALD 又扩散到间隔层（spacer）、阻挡层、钨 nucleation layer、3D NAND 的电荷陷阱层等场景。
+代价是<em>慢</em>——一个循环通常只有 0.1 nm 左右，长 10 nm 膜要上百个循环。
+业界因此发展出 <strong>空间型 ALD（Spatial ALD）</strong>（晶圆在不同区域间移动而非等待气体切换）、
+以及"批式 ALD 炉管"来补产能。</p>
+
+<h3>5.2 Batch 炉管 vs 单片：产能与均匀性的永恒权衡</h3>
+
+<p>薄膜设备有一个贯穿始终的架构选择：</p>
+
+<table class="term-table">
+  <thead><tr><th>架构</th><th>一次处理</th><th>优点</th><th>缺点</th><th>典型场景</th></tr></thead>
+  <tbody>
+    <tr><td>批处理炉管（Batch Furnace）</td><td>25~150 片</td><td>产能极高、单片成本低、膜质量好</td><td>热预算大、颗粒控制难、无法做超薄膜</td><td>氧化、扩散、LPCVD、退火、成熟节点薄膜</td></tr>
+    <tr><td>单片（Single Wafer）</td><td>1 片</td><td>控制精细、热预算小、颗粒少、可做超薄</td><td>产能低、设备台数多、占地大</td><td>ALD、先进节点 CVD、快速热工艺</td></tr>
+  </tbody>
+</table>
+
+<p>判断标准其实很清晰：<em>如果你的工艺对"热预算"和"厚度精度"敏感，就必须单片；
+如果工艺本身很"皮实"、且量大，就上炉管。</em>
+先进节点的薄膜越来越薄、越来越讲究界面，所以单片比例持续上升——
+这也是为什么先进 fab 的设备台数会随节点推进显著增加。</p>
+
+<h3>5.3 PVD：从溅射到离子化</h3>
+
+<p><strong>PVD（Physical Vapor Deposition，物理气相沉积）</strong>主要用于金属化：
+扩散阻挡层（TiN、TaN）、籽晶层（Cu seed）、以及部分金属栅。
+主力机型是 AMAT 的 Endura 平台，用<strong>磁控溅射（magnetron sputtering）</strong>：
+氩离子轰击靶材，把靶材原子"敲"出来飞到晶圆上。</p>
+
+<p>问题在于普通溅射的方向性强、台阶覆盖差，到了高深宽比的通孔/沟槽里会"口部先夹断"（overhang）。
+解决方案是<strong>离子化 PVD（Ionized PVD）</strong>：
+用额外的射频线圈把溅射出来的金属原子电离，再用晶圆偏压把它们"拉"进孔底。
+此外还有 <strong>reflow（回流）</strong>工艺：把铜籽晶层加热让它流动填补，
+以及后来被 ALD 取代一部分的趋势。<em>PVD 的靶材本身也是一门生意</em>——
+高纯金属与陶瓷靶材的纯度、晶粒、致密度都直接影响膜质与颗粒。</p>
+
+<h3>5.4 离子注入机：束线架构与三种机型</h3>
+
+<p>离子注入机是掺杂的主力，格局是 <strong>Applied Materials 与 Axcelis</strong> 两家为主，
+此外还有日本的 Nissin、住友重工（在部分细分与高能机型）。
+它的原理看似"把离子加速后砸进硅片"，工程上则是<em>一整条束线（beamline）的精密控制</em>。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="离子注入机束线架构示意图">
+    <defs>
+      <marker id="ar15-5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">离子注入机：束线架构与关键参数</text>
+
+      <rect x="20" y="46" width="96" height="44" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="68" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">离子源</text>
+      <text x="68" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">BF₃ / AsH₃ / PH₃</text>
+      <text x="68" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">电弧放电电离</text>
+
+      <rect x="128" y="46" width="88" height="44" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="172" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">萃取与加速</text>
+      <text x="172" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">电压决定能量</text>
+      <text x="172" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">200 eV ~ 数 MeV</text>
+
+      <rect x="228" y="46" width="100" height="44" rx="6" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.3"/>
+      <text x="278" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">质量分析磁体</text>
+      <text x="278" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">按 m/q 筛选离子</text>
+      <text x="278" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">去掉 B⁺⁺、碎片离子</text>
+
+      <rect x="340" y="46" width="88" height="44" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="384" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">加速/减速</text>
+      <text x="384" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">末端能量整形</text>
+      <text x="384" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">抑制能量污染</text>
+
+      <rect x="440" y="46" width="96" height="44" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="488" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">扫描系统</text>
+      <text x="488" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">静电/机械/混合</text>
+      <text x="488" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">均匀性 &lt; 1%</text>
+
+      <rect x="548" y="46" width="112" height="44" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.3"/>
+      <text x="604" y="63" fill="var(--text)" text-anchor="middle" font-weight="700">工艺腔</text>
+      <text x="604" y="77" fill="var(--text-mute)" text-anchor="middle" font-size="9">晶圆盘 / 单次单片</text>
+      <text x="604" y="87" fill="var(--text-mute)" text-anchor="middle" font-size="9">剂量 10¹¹~10¹⁶ cm⁻²</text>
+
+      <line x1="116" y1="68" x2="126" y2="68" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-5)"/>
+      <line x1="216" y1="68" x2="226" y2="68" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-5)"/>
+      <line x1="328" y1="68" x2="338" y2="68" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-5)"/>
+      <line x1="428" y1="68" x2="438" y2="68" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-5)"/>
+      <line x1="536" y1="68" x2="546" y2="68" stroke="var(--semi)" stroke-width="1.6" marker-end="url(#ar15-5)"/>
+
+      <rect x="20" y="110" width="196" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="32" y="127" fill="var(--text)" font-size="9.5" font-weight="700">三种主力机型</text>
+      <text x="32" y="141" fill="var(--text-soft)" font-size="9">① 中低能大束流（源漏、高剂量）</text>
+      <text x="32" y="153" fill="var(--text-soft)" font-size="9">② 高能（阱、埋层，MeV 级）</text>
+      <text x="32" y="162" fill="var(--text-soft)" font-size="9">③ 高剂量/超浅结（低能大束流）</text>
+
+      <rect x="228" y="110" width="216" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="240" y="127" fill="var(--text)" font-size="9.5" font-weight="700">注入后必须退火的原因</text>
+      <text x="240" y="141" fill="var(--text-soft)" font-size="9">高能离子把晶格撞得千疮百孔（非晶化）</text>
+      <text x="240" y="153" fill="var(--text-soft)" font-size="9">注入的杂质大多处在间隙位，不导电</text>
+      <text x="240" y="162" fill="var(--text-soft)" font-size="9">退火 = 修复晶格 + 激活杂质（第 13 篇）</text>
+
+      <rect x="456" y="110" width="204" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="468" y="127" fill="var(--text)" font-size="9.5" font-weight="700">现代注入机的硬指标</text>
+      <text x="468" y="141" fill="var(--text-soft)" font-size="9">角度精度（防沟道效应）</text>
+      <text x="468" y="153" fill="var(--text-soft)" font-size="9">晶圆温度控制（低温注入/自 anneal）</text>
+      <text x="468" y="162" fill="var(--text-soft)" font-size="9">金属污染与颗粒控制</text>
+
+      <rect x="20" y="182" width="640" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="32" y="199" fill="var(--text)" font-size="9.5" font-weight="700">为什么"注入后必须退火"是理解掺杂设备的钥匙</text>
+      <text x="32" y="213" fill="var(--text-soft)" font-size="9">注入只是"把原子放进去"，退火才让它"替位到晶格上并电离出载流子"。但退火会让杂质扩散，</text>
+      <text x="32" y="226" fill="var(--text-soft)" font-size="9">浅结要求"快速升温、极短保温、快速降温"——这正是 RTA / 激光退火 / 闪速退火存在的全部理由。</text>
+      <text x="32" y="236" fill="var(--text-mute)" font-size="9">瞬态增强扩散（TED）：损伤驱动的异常扩散，是退火工艺里最麻烦的二阶效应之一。</text>
+    </g>
+  </svg>
+  <figcaption>图 5：离子注入机的束线架构。从离子源到晶圆，每一步都在控制"能量、剂量、角度、均匀性"四个变量。</figcaption>
+</figure>
+
+<p>这里有几个容易被忽略但很关键的点：</p>
+
+<ul>
+  <li><strong>为什么要质量分析</strong>：离子源里出来的不是纯净的一种离子，会有 B¹¹/B¹⁰ 同位素、
+    双电荷离子、分子碎片。不同质荷比在同一磁场下偏转不同，磁体就是"筛子"。
+    如果不筛，你注入的就不是你想要的离子，结深与浓度全乱。</li>
+  <li><strong>为什么能量跨度这么大</strong>：源漏扩展区需要<em>低能浅结</em>（几十 keV 甚至更低，
+    对应几十纳米结深），而深阱、埋层需要<em>MeV 级高能</em>（结深微米级）。
+    这两种需求物理上冲突，所以分成不同机型。</li>
+  <li><strong>为什么要倾斜注入</strong>：如果离子正对晶格方向射入，会沿着晶格通道"滑"进去（沟道效应），
+    结深远超设计值。所以注入时通常把晶圆倾斜 <strong>7° 左右</strong>，
+    并用"四象限旋转"来消除倾角带来的阴影不对称。</li>
+  <li><strong>为什么要控温</strong>：注入功率会把晶圆加热到几百摄氏度，
+    高温下会自发退火、改变损伤分布。因此高端机台配<em>静电吸盘 + 背冷</em>做精确温控，
+    甚至做<strong>低温注入</strong>（cryo implant）来强化非晶化、抑制沟道效应。</li>
+</ul>
+
+<h3>5.5 退火设备：为什么"快"是唯一的方向</h3>
+
+<p>注入后的退火必须在"修复晶格 + 激活杂质"与"抑制扩散"之间找平衡。
+传统炉管退火要几十分钟，扩散太多，早就淘汰于先进节点。
+现在的三条路线共性只有一个字——<strong>快</strong>：</p>
+
+<ul>
+  <li><strong>RTA（Rapid Thermal Annealing，快速热退火）</strong>：用卤素灯或电弧灯加热，
+    升温速率<em>几十到几百 ℃/s</em>，保温几秒，典型峰值 1000~1100 ℃。</li>
+  <li><strong>尖峰退火（Spike Anneal）</strong>：几乎没有保温阶段，冲到峰值立刻降温，
+    把热预算压到极限，用于超浅结。</li>
+  <li><strong>激光退火 / 闪速退火（Laser / Flash Anneal）</strong>：
+    毫秒甚至微秒级加热，只把表层几十到几百纳米熔化再重结晶，
+    几乎不引起深层扩散，是"极限浅结 + 高激活率"的方案。
+    代价是<em>热应力、图形依赖的局部过热（pattern effect）、以及设备产能</em>。</li>
+</ul>
+
+<div class="tip">
+  <b>设备视角的关键洞察：</b>退火设备的价值不在"能不能达到 1050 ℃"
+  （炉管早就做到了），而在<em>在极短时间内让整片晶圆温度均匀一致</em>。
+  片内温度差几度，结深与激活率就不一样，直接变成器件参数离散。
+  所以退火机的核心技术是<strong>加热源的空间整形 + 温度测量与闭环 + 晶圆的热应力控制</strong>。
+</div>
+
+<h3>5.6 外延炉：从 Si/SiGe 到 SiC、GaN</h3>
+
+<p><strong>外延（Epitaxy）</strong>是在单晶衬底上再长一层单晶，与衬底晶格连续对接。
+它是第 <a href="2026-10-01-硅单晶生长与衬底制备工艺.html">9 篇</a>硅单晶与第
+<a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">8 篇</a>材料的交会点。</p>
+
+<ul>
+  <li><strong>Si / SiGe 外延</strong>：主力是 ASM 与 AMAT，应用在源漏区（SiGe 给 PMOS 施加压应变，
+    是 90 nm 以后应变工程的经典手法）、抬升源漏、以及衬底外延层。
+    关键是<em>选择性外延</em>——只在裸露的硅上长，不在氮化硅/氧化物上长。</li>
+  <li><strong>SiC 外延</strong>：温度高达 <strong>1500~1650 ℃</strong>，
+    生长速率慢（每小时几微米到十几微米），且要控制<em>台阶流生长</em>与缺陷（如三角形缺陷、掉落物）。
+    <a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇</a>讲过 SiC 器件耐压靠外延层厚度，
+    所以外延炉的产能与缺陷密度直接决定 SiC 器件的成本。</li>
+  <li><strong>GaN 外延（MOCVD）</strong>：主流是 AIXTRON 与 Veeco 的设备，
+    用于蓝宝石/硅/碳化硅衬底上的 GaN 功率与射频器件、以及 LED。
+    核心是<em>金属有机源与氨气的输运、温度的极致均匀性、以及应力管理</em>——
+    GaN 与衬底的热膨胀失配会造成翘曲甚至裂纹。</li>
+</ul>
+
+<h2 id="s6">6. CMP 设备：把"磨平"做成可控的产业</h2>
+
+<p><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇</a>讲过 Preston 方程与平坦化原理，
+这里补上机器视角。CMP 设备格局是 <strong>Applied Materials（Reflexion 系列）份额最高
+（约六到七成量级的公开口径），日本荏原（Ebara）次之</strong>，
+两家占据绝大部分市场；国内则是华海清科等厂商在推进。</p>
+
+<h3>6.1 抛光头的多分区压力：为什么"压得均匀"这么难</h3>
+
+<p>回想 Preston 方程 <em>RR = k·P·V</em>：去除速率正比于压力 P。
+那么要让整片晶圆磨得均匀，最简单粗暴的办法是让压力处处相同——
+但现实是，晶圆边缘的线速度 V 与中心不同（相对运动轨迹不同），
+边缘的抛光液供给也不同，<em>只靠均匀压力反而会得到不均匀的结果</em>。</p>
+
+<p>解决方案是<strong>多分区压力抛光头</strong>：把晶圆背面分成<em>三到五个（甚至更多）同心圆环分区</em>，
+每个分区用独立的气室施加不同压力。于是"边缘压力补偿"可以通过调边缘区压力实现，
+再配合<strong>保持环（retaining ring）</strong>控制晶圆边缘的"卷边"效应。
+高端机型的分区数、压力分辨率、以及压力动态调节能力，就是 CMP 设备的核心卖点。</p>
+
+<h3>6.2 终点检测：怎么知道"磨够了"</h3>
+
+<p>CMP 最怕两件事：<em>磨不够（残留短路）与磨过头（凹陷、侵蚀、过薄）</em>。
+所以必须做<strong>终点检测（End Point Detection，EPD）</strong>。主流手段有四类，各有适用面：</p>
+
+<table class="term-table">
+  <thead><tr><th>手段</th><th>物理量</th><th>适用</th><th>局限</th></tr></thead>
+  <tbody>
+    <tr><td>电机电流/扭矩</td><td>抛光头或转盘电机的负载变化</td><td>通用、便宜、几乎必配</td><td>信噪比低，对薄层不敏感</td></tr>
+    <tr><td>光学干涉/反射</td><td>薄膜干涉信号随厚度变化</td><td>介质层（氧化物）极好用</td><td>金属不透光，需光路改造</td></tr>
+    <tr><td>涡流（Eddy Current）</td><td>金属膜厚引起的涡流变化</td><td>铜、钨等金属膜层</td><td>只适用于导电层</td></tr>
+    <tr><td>声发射/摩擦</td><td>摩擦状态变化</td><td>辅助手段</td><td>稳定性一般</td></tr>
+  </tbody>
+</table>
+
+<p>先进机台通常是<em>多信号融合 + 模型预测</em>：
+把电流、光学、涡流信号一起喂给算法，实时判断速率并动态调整压力与终点。
+这里的 know-how 在于：<strong>不同产品、不同膜层堆叠，EPD 算法都要重新标定</strong>，
+而这需要大量实验数据——又是一个"积累型壁垒"。</p>
+
+<h3>6.3 清洗干燥与耗材：CMP 是典型的"剃须刀—刀片"生意</h3>
+
+<p>CMP 后晶圆表面全是抛光液残渣与磨料颗粒，必须<em>就地清洗并干燥</em>（第 8 节会讲清洗技术本身）。
+现代 CMP 机台因此是<strong>"抛光单元 + 清洗单元"一体化</strong>，
+用兆声波清洗、滚刷刷洗、Marangoni 干燥等组合把颗粒去掉。
+机台价值的一半以上其实在"抛完之后怎么弄干净"。</p>
+
+<p>更重要的商业特征是<strong>耗材的持续性收入</strong>：
+<em>抛光液（slurry）、抛光垫（pad）、修整盘（conditioner disk）</em>都是消耗品。
+抛光垫每磨若干片就要用修整盘"修面"以恢复粗糙度和多孔结构，
+几千片后整张垫子报废；抛光液按流量持续消耗。
+于是 CMP 厂商的收入结构是<em>卖设备（一次性）+ 卖耗材与服务（持续）</em>，
+这与第 11 节讲的 installed base 商业模式完全吻合。</p>
+
+<div class="note">
+  <b>为什么 CMP 是光刻的前提：</b>
+  <a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇</a>算过，
+  浸没式光刻可用焦深约 100 nm、EUV 约 50 nm。
+  如果表面不平，光刻根本无从谈起——<em>不是"图形画不出来"，而是"同一张图上有的地方清晰有的地方糊"</em>。
+  所以 CMP 在产业里的定位不是辅助工序，而是<strong>光刻的使能工序</strong>。
+  设备角度看，这意味着 CMP 的精度需求会随光刻波长与 NA 的演进同步收紧，
+  它的技术难度是被光刻"拖着走"的。
+</div>
+
+<h2 id="s7">7. 量测与检测设备：KLA 的统治地位从哪来</h2>
+
+<p>这一节讲的设备不做任何"加工"，只做"看"。但正因为它不做加工，
+它的价值反而是<em>随节点推进指数上升</em>的——<strong>看不见，就做不出来</strong>。</p>
+
+<p>格局上，<strong>KLA（科磊）在量测检测（Process Control）领域的份额超过一半</strong>，
+是这一赛道毫无争议的王者；其余玩家包括 AMAT、Hitachi High-Tech、ASML（HMI 电子束）、
+Nova、Onto Innovation 等，各自守住细分。KLA 的地位来自两点：
+<em>产品线覆盖最全（检测 + 量测 + 数据分析），以及几十年的缺陷数据库与算法积累</em>。</p>
+
+<h3>7.1 按"测什么"分类，而不是按"机器叫什么"</h3>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="量测与检测设备分类及检测对象示意图">
+    <defs>
+      <marker id="ar15-6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--semi)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="20" fill="var(--text)" font-size="11" font-weight="700">量测与检测：按"测什么"分类</text>
+
+      <text x="20" y="42" fill="var(--semi)" font-size="10" font-weight="700">检测 Inspection —— 找"有没有缺陷"</text>
+
+      <rect x="20" y="52" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="32" y="68" fill="var(--text)" font-size="9.5" font-weight="700">明场图形检测</text>
+      <text x="32" y="81" fill="var(--text-mute)" font-size="9">宽带/深紫外照明，与参考图形比对</text>
+      <text x="32" y="90" fill="var(--text-mute)" font-size="9">速度快，适合在线全检</text>
+
+      <rect x="228" y="52" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="240" y="68" fill="var(--text)" font-size="9.5" font-weight="700">暗场图形检测</text>
+      <text x="240" y="81" fill="var(--text-mute)" font-size="9">只收集散射光，颗粒/划伤灵敏</text>
+      <text x="240" y="90" fill="var(--text-mute)" font-size="9">灵敏度高、吞吐更快</text>
+
+      <rect x="436" y="52" width="224" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="448" y="68" fill="var(--text)" font-size="9.5" font-weight="700">无图形表面检测</text>
+      <text x="448" y="81" fill="var(--text-mute)" font-size="9">裸片/薄膜表面颗粒，几十 nm 级</text>
+      <text x="448" y="90" fill="var(--text-mute)" font-size="9">来料与关键工序后的"把关"</text>
+
+      <rect x="20" y="102" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="32" y="118" fill="var(--text)" font-size="9.5" font-weight="700">电子束检测 EBI</text>
+      <text x="32" y="131" fill="var(--text-mute)" font-size="9">多电子束并行，分辨率最高</text>
+      <text x="32" y="140" fill="var(--text-mute)" font-size="9">慢 → 只抽检关键区域</text>
+
+      <rect x="228" y="102" width="196" height="42" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="240" y="118" fill="var(--text)" font-size="9.5" font-weight="700">缺陷复检 Review</text>
+      <text x="240" y="131" fill="var(--text-mute)" font-size="9">SEM/光学复检并对缺陷分类</text>
+      <text x="240" y="140" fill="var(--text-mute)" font-size="9">把"缺陷"变成"可归因的问题"</text>
+
+      <text x="20" y="166" fill="var(--semi)" font-size="10" font-weight="700">量测 Metrology —— 量"具体是多少"</text>
+
+      <rect x="20" y="176" width="152" height="48" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="32" y="192" fill="var(--text)" font-size="9.5" font-weight="700">CD-SEM</text>
+      <text x="32" y="205" fill="var(--text-mute)" font-size="9">直接测关键尺寸</text>
+      <text x="32" y="215" fill="var(--text-mute)" font-size="9">重复性亚纳米量级</text>
+      <text x="32" y="223" fill="var(--text-mute)" font-size="9">慢，抽检测量点</text>
+
+      <rect x="184" y="176" width="152" height="48" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="196" y="192" fill="var(--text)" font-size="9.5" font-weight="700">OCD 散射测量</text>
+      <text x="196" y="205" fill="var(--text-mute)" font-size="9">光谱反演三维形貌</text>
+      <text x="196" y="215" fill="var(--text-mute)" font-size="9">能测侧壁角/深度</text>
+      <text x="196" y="223" fill="var(--text-mute)" font-size="9">依赖建模库</text>
+
+      <rect x="348" y="176" width="152" height="48" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="360" y="192" fill="var(--text)" font-size="9.5" font-weight="700">Overlay 套刻量测</text>
+      <text x="360" y="205" fill="var(--text-mute)" font-size="9">层与层的对准误差</text>
+      <text x="360" y="215" fill="var(--text-mute)" font-size="9">先进节点 3σ 需压到 nm 级</text>
+      <text x="360" y="223" fill="var(--text-mute)" font-size="9">直接决定良率窗口</text>
+
+      <rect x="512" y="176" width="148" height="48" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+      <text x="524" y="192" fill="var(--text)" font-size="9.5" font-weight="700">椭偏仪 / 膜厚</text>
+      <text x="524" y="205" fill="var(--text-mute)" font-size="9">偏振态变化反演 n、k、d</text>
+      <text x="524" y="215" fill="var(--text-mute)" font-size="9">薄膜厚度与光学常数</text>
+      <text x="524" y="223" fill="var(--text-mute)" font-size="9">最快、最基础的量测</text>
+
+      <rect x="20" y="236" width="640" height="22" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+      <text x="32" y="251" fill="var(--text-soft)" font-size="9.5">共同趋势：检测要"快而全"，量测要"准而稳"；两者数据汇入良率系统做归因与 APC 闭环（第 14 篇）。</text>
+    </g>
+  </svg>
+  <figcaption>图 6：量测检测设备分类。记住分类逻辑是"找缺陷（Inspection）"与"量尺寸（Metrology）"两条线。</figcaption>
+</figure>
+
+<h3>7.2 为什么量测的价值随节点推进指数上升</h3>
+
+<p>三个理由，一层比一层深：</p>
+
+<ul>
+  <li><strong>缺陷尺寸的门槛越来越低</strong>：能杀死一颗 28 nm 芯片的颗粒可能是 30 nm，
+    到 3 nm 节点可能就变成个位数纳米。<em>检测灵敏度必须跟着提升，而灵敏度提升的代价是指数级的</em>——
+    光学检测要用更短波长、更亮的源、更好的物镜；光学不够用了就得上电子束，而电子束慢得要命。</li>
+  <li><strong>工艺步骤数暴涨</strong>：几十次光刻、上百次薄膜与刻蚀，
+    每一步都可能引入缺陷。<em>检测点数量随步骤数线性增加，随灵敏度要求超线性增加</em>。</li>
+  <li><strong>工艺窗口越来越窄</strong>：套刻误差预算可能只有两三个纳米，
+    这意味着量测本身的<em>重复性与准确性</em>必须好一个数量级（第 14 篇讲过的 10:1 法则）。
+    量测设备因此被迫采用极其昂贵的方案（多光束电子束、高精度干涉平台、复杂建模）。</li>
+</ul>
+
+<p>结果就是：<strong>量测检测在设备投资中的占比从成熟节点的几个百分点，
+上升到先进节点的一成以上、并持续走高</strong>（公开口径多在 10%~15% 区间，随节点与客户策略波动）。
+这也是为什么 KLA 能在不生产加工设备的情况下，成为全球前五大半导体设备公司。</p>
+
+<h3>7.3 电子束检测：慢，但不可替代</h3>
+
+<p>光学检测的分辨率受衍射限制，而缺陷尺寸已经小到几十纳米以下，
+光学"看得见但分不清"。<strong>EBI（E-Beam Inspection，电子束检测）</strong>用电子束扫描，
+分辨率可达纳米量级，但<em>单束扫描一片 300 mm 晶圆要几十小时</em>，完全不可量产。
+出路是<strong>多束（Multi-beam）</strong>：把一个大电子束分成几十上百个小束并行扫描，
+把时间压到小时级。多束系统的难点在于电子光学设计（束间串扰、均匀性、合束/分束器件）与数据处理——
+这又是一个"卡脖子"清单上的品类。</p>
+
+<div class="warn">
+  <b>一个常被误解的点：</b>量测设备贵，不只是因为"精度高"，
+  更因为<em>它必须在极短时间内给出可重复的结果，并把结果转化为可执行的工艺修正</em>。
+  一台测得很准但每小时只能测 2 片的机器，在量产里毫无意义。
+  <strong>吞吐（throughput）与灵敏度是一对永恒矛盾</strong>，量测设备的价格曲线基本就是这条矛盾的体现。
+</div>
+
+<h2 id="s8">8. 清洗设备：占比暴涨的隐形工序</h2>
+
+<p>清洗听起来最没技术含量，实际上它是<strong>良率的生命线</strong>。
+业界有一句被广泛引用的经验：<em>先进逻辑芯片制造流程中，清洗相关步骤可占到全部工艺步骤的相当大比例
+（公开口径常在 20%~30% 量级）</em>。为什么？因为每做一步都可能留下颗粒、残留物与金属污染，
+而下一层图形又对表面状态极其敏感。</p>
+
+<h3>8.1 单片 vs 槽式：两条路线各有场景</h3>
+
+<table class="term-table">
+  <thead><tr><th>类型</th><th>做法</th><th>优点</th><th>缺点</th><th>典型应用</th></tr></thead>
+  <tbody>
+    <tr><td>槽式（Batch Wet Bench）</td><td>一批晶圆浸在药液槽里</td><td>产能高、药液成本低</td><td>交叉污染风险、颗粒再沉积、干燥难</td><td>成熟节点、去胶、部分清洗</td></tr>
+    <tr><td>单片（Single Wafer Spin）</td><td>单片旋转喷淋药液</td><td>颗粒控制好、无交叉污染、干燥可控</td><td>产能低、药液消耗大</td><td>先进节点关键清洗、CMP 后清洗</td></tr>
+  </tbody>
+</table>
+
+<p>先进节点几乎全面转向单片，原因很直接：
+<em>槽式清洗的"药液共用"本身就是污染源</em>——前一批留下的东西会沾到后一批上，
+而槽内的流体状态也容易让已剥离的颗粒重新沉积。单片清洗虽然慢，
+但每片都是新鲜药液、独立环境，颗粒控制能力高一个档次。</p>
+
+<h3>8.2 经典化学：SC1、SC2 与稀释 HF</h3>
+
+<p>湿法清洗的几套"祖传配方"必须认识，它们分工明确：</p>
+
+<ul>
+  <li><strong>SC1（APM，NH₄OH / H₂O₂ / H₂O）</strong>：靠<em>轻微腐蚀 + 氧化</em>把颗粒"顶"下来，
+    同时靠双电层排斥防止再沉积。对颗粒最有效，但会轻微粗糙化表面。</li>
+  <li><strong>SC2（HPM，HCl / H₂O₂ / H₂O）</strong>：<em>专门去除金属污染</em>，
+    氯离子与金属形成可溶性络合物。</li>
+  <li><strong>DHF（稀释 HF）</strong>：<em>去除自然氧化层</em>，同时让表面变成氢终止（疏水），
+    顺便带走氧化层里的金属杂质。副作用是会让表面变粗糙、并可能引起"水印"。</li>
+  <li><strong>SPM（H₂SO₄ / H₂O₂）</strong>：强氧化性，<em>去除有机物与光刻胶残留</em>，
+    是去胶（ashing）后的常用步骤。</li>
+</ul>
+
+<h3>8.3 兆声波与干燥：物理作用与最后一道关</h3>
+
+<p>当颗粒小到几十纳米，纯化学方法要么去不掉、要么会伤到图形（图形坍塌是经典问题）。
+于是引入<strong>兆声波（Megasonic）</strong>：频率在 <em>~1 MHz 量级</em>的声波在液体里产生声流与微空化，
+用物理力把颗粒从表面剥离。难点是<em>空化既能去颗粒也能打坏脆弱的图形</em>（尤其是高深宽比结构），
+所以兆声波的功率、频率与波形必须精细调校——这就是"工艺窗口"的典型例子。</p>
+
+<p>清洗最后一步是干燥，而干燥本身是个坑：如果让水自然蒸发，
+水的表面张力会把微小结构拉塌（<strong>图案坍塌，pattern collapse</strong>），
+也会留下水印（watermark）。主流方案有两种：</p>
+
+<ul>
+  <li><strong>IPA 干燥</strong>：用异丙醇置换水，靠降低表面张力减少拉塌。</li>
+  <li><strong>Marangoni 干燥</strong>：利用<em>表面张力梯度</em>产生的马兰戈尼流，
+    让晶圆在缓慢提拉时表面被"拉"干净，几乎零接触、零水印。
+    这是先进节点的主流干燥方式之一，也是清洗设备厂商的核心技术点。</li>
+</ul>
+
+<div class="tip">
+  <b>颗粒为什么是良率生命线：</b>
+  <a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇</a>的良率模型告诉我们，
+  缺陷密度 D₀ 与芯片面积 A 共同决定良率（泊松模型 Y ≈ e<sup>−A·D₀</sup>）。
+  一颗 30 nm 的颗粒落在栅极上，就是一个器件失效；
+  <em>颗粒数减少一半，良率提升可能就是几个百分点，而几个百分点在先进节点就是几十亿美元的差别</em>。
+  这就是为什么"最不起眼"的清洗设备，反而是各家必争之地。
+</div>
+
+<h2 id="s9">9. 后道设备：测试机、封装设备与 AI 时代的暴涨品类</h2>
+
+<p>晶圆做完之后是<strong>CP 测试（Circuit Probe，中测）</strong>——用探针卡扎在每颗裸片上做电性筛选；
+然后是划片、贴片、键合、塑封、<strong>FT 测试（Final Test，成品测试）</strong>与分选。
+这部分详细流程见<a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇</a>，
+这里只讲设备与产业。</p>
+
+<h3>9.1 测试机：按 pin 数与频率计价</h3>
+
+<p>格局是 <strong>Advantest（爱德万）与 Teradyne（泰瑞达）双寡头</strong>，
+两家在 SoC 测试机上合计占据绝大部分份额；存储测试机则由 Advantest、Teradyne 以及部分中国厂商参与。</p>
+
+<p>测试机的商业模式很有意思：<strong>价格主要由通道数（pin 数）与最高频率决定</strong>，
+一台高端 SoC 测试机（如 Advantest V93000 / T2000 系列、Teradyne UltraFLEX 系列）
+可配置到数千个数字通道、数 GHz 的速率，售价可达<em>百万美元量级甚至更高</em>。
+此外还有一堆配套耗材与配件：</p>
+
+<ul>
+  <li><strong>测试头（Test Head）</strong>与 <strong>Load Board</strong>（承载 DUT 的专用电路板）：
+    按产品定制，一颗新芯片往往要新开一块 load board。</li>
+  <li><strong>探针卡（Probe Card）</strong>：CP 测试用的"针板"，
+    高端垂直探针卡（如 FormFactor、Technoprobe、MJC）价格可达<em>数万到数十万美元</em>，
+    且是消耗品（扎几十万次后要更换/维修）。</li>
+  <li><strong>探针台（Prober）</strong>与<strong>分选机（Handler）</strong>：
+    前者负责把晶圆送到探针卡下并对准（东京精密等），
+    后者负责把封装好的芯片按测试结果分拣（Cohu、SPEA 等），还要控温（高温/低温测试）。</li>
+</ul>
+
+<h3>9.2 SLT：AI 时代冒出来的新品类</h3>
+
+<p>传统 ATE（自动测试设备）按"结构测试 + 功能测试"的思路做，
+但先进 AI 芯片的<em>功耗、发热与软失效</em>让传统测试不够用。
+于是<strong>SLT（System Level Test，系统级测试）</strong>兴起：
+把芯片装到接近真实应用的板卡上，跑真实的负载与软件栈，做长时间老练与筛选。
+SLT 设备本质上是"高度自动化的服务器产线"，
+它的增长直接绑在<em>高端 AI 芯片的出货量</em>上，是过去几年增长最快的测试品类之一。</p>
+
+<h3>9.3 封装设备：从引线键合到混合键合</h3>
+
+<p>传统封装设备链条是：<strong>划片（Dicing）→ 贴片（Die Bonder）→ 键合 → 塑封（Molding）→ 激光打标</strong>。
+代表厂商：DISCO 与东京精密在划片/研磨上很强，
+ASMPT、BESI、K&amp;S（Kulicke &amp; Soffa）在贴片与键合上占据主导，
+K&amp;S 是引线键合（Wire Bonder）的老牌龙头。
+塑封设备则有 TOWA、Yamada 等。</p>
+
+<p>真正的变化发生在<strong>先进封装</strong>。AI 芯片需要把 HBM 与逻辑裸片高密度地集成在一起，
+这把瓶颈从"晶圆厂"推向了"封装厂"：</p>
+
+<ul>
+  <li><strong>TC Bonder（热压键合机）</strong>：用于把带微凸块（μ-bump）的裸片热压键合到基板或中介层上，
+    要求极高的<em>贴装精度（亚微米量级）与键合压力/温度控制</em>。
+    CoWoS 类工艺的核心设备之一，过去两年严重供不应求。</li>
+  <li><strong>Hybrid Bonder（混合键合机）</strong>：
+    不做凸块，而是把<em>介质面（SiO₂）与金属面（Cu）同时直接键合</em>，
+    要求键合前的表面平坦度达到<strong>纳米级</strong>、洁净度近乎苛刻，
+    键合对准精度进入<em>亚百纳米</em>量级。
+    BESI、EVG、SUSS 等是主力玩家。这是<a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇</a>的技术底座。</li>
+  <li><strong>临时键合/解键合（TBDB）</strong>与<strong>晶圆减薄（Grinding）</strong>：
+    3D 堆叠要把晶圆减到几十微米，必须临时粘在载片上，
+    于是这一整套设备被 HBM 与 3D IC 拉动。</li>
+</ul>
+
+<div class="note">
+  <b>值得记住的产业判断：</b>
+  摩尔定律在前道放缓之后，<em>系统性能的提升越来越多地来自封装</em>。
+  因此过去"先进 = 先进制程"的等式，正在部分改写为"先进 = 先进制程 + 先进封装"。
+  对应地，设备投资的增量也在从光刻/刻蚀，部分转移到<strong>键合机、减薄机、混合键合机</strong>这些过去不起眼的品类。
+  这是理解"AI 把瓶颈搬到后道"这句话的具体含义。
+</div>
+
+<h2 id="s10">10. 厂务与配套：真正决定"能不能建厂"的部分</h2>
+
+<p>如果说前道设备是"心脏"，厂务就是"血管与呼吸系统"。
+它占 fab 总投资约 <strong>10%~20%</strong>（含洁净室与土建则更高），
+而且它决定了<em>建厂周期为什么是 2~3 年</em>。这部分在很多科普里被完全跳过，
+但它恰恰解释了"为什么有钱也变不出产能"。</p>
+
+<h3>10.1 洁净室：ISO 1~5 与"人是最脏的东西"</h3>
+
+<p>洁净室等级按 ISO 14644 标准：<strong>ISO 1~5 对应传统说法的 Class 1~100 量级</strong>
+（即每立方米空气中 ≥0.1 μm 颗粒数的上限）。
+先进 fab 的光刻区、关键工艺区通常在 ISO 3~5 量级，设备内部的局部环境（mini-environment）更严。
+维持方式是<strong>FFU（风机过滤单元）+ 垂直层流 + 正压梯度</strong>，
+外区洁净度低、内区高，人与物料都要经过风淋与洁净通道。</p>
+
+<p>一个反直觉的事实：<em>洁净室里最大的颗粒来源是人</em>。
+所以先进 fab 高度自动化（AMHS 天车搬运 FOUP，晶圆几乎不落地、不接触人），
+人员占比很低。这也是为什么设备要配<strong>标准机械接口（SMIF / FOUP / EFEM）</strong>与自动化传送模块——
+它不只是效率问题，更是颗粒控制问题。<strong>机械手与传送模块</strong>因此成为设备里一个价值不低、且高度集中的子系统。</p>
+
+<h3>10.2 超纯水 UPW：18.2 MΩ·cm 意味着什么</h3>
+
+<p>清洗要用<strong>超纯水（UPW，Ultrapure Water）</strong>，指标是电阻率 <strong>18.2 MΩ·cm</strong>
+（这是 25 ℃ 下纯水的理论极限，意味着离子被除到近乎没有），
+同时还要控制 TOC（总有机碳，常要求 ppb 级以下）、溶解氧、颗粒与细菌。
+一座大型 12 英寸 fab 的 UPW 用量是<em>每天数千立方米量级</em>，
+所以 UPW 系统是一整套"小型水厂"：预处理、RO、EDI、UV 氧化、脱气、抛光混床、循环管网，
+且管网必须<em>不停循环</em>防止细菌滋生。</p>
+
+<h3>10.3 特气、化学品与真空/尾气</h3>
+
+<ul>
+  <li><strong>特气（Specialty Gas）</strong>：SiH₄、NF₃、WF₆、Cl₂、HBr、各种氟碳气体，
+    多数<em>有毒、易燃或腐蚀性</em>。需要气瓶柜（Gas Cabinet）、VMB 分配盘、
+    双层管路、泄漏侦测与自动切断，还要考虑气体纯度对工艺的影响。</li>
+  <li><strong>化学品输送（Chemical Delivery）</strong>：酸碱与溶剂从罐区经 CDM（化学品分配模块）
+    输送到机台，纯度与颗粒控制是核心，常用"日罐 + 循环 + 过滤"。</li>
+  <li><strong>真空系统</strong>：干泵、涡轮泵、低温泵在各机台下常年运转，
+    其可靠性直接决定稼动率。<strong>真空泵</strong>（Edwards、Ebara 等）是设备零部件里最典型的"隐形冠军"品类之一。</li>
+  <li><strong>尾气处理（Abatement）</strong>：含氟温室气体（如 NF₃、SF₆，GWP 极高）
+    必须经燃烧/等离子/洗涤处理后排放，环保合规是硬约束。</li>
+</ul>
+
+<h3>10.4 电力、振动与温湿度：EUV 的"娇气"是有道理的</h3>
+
+<p>一座先进 fab 的用电是<strong>数十 MW 到百 MW 量级</strong>，
+且要求极高的供电质量（电压暂降会让整线停摆）。
+此外还有三类"看不见"的要求：</p>
+
+<ul>
+  <li><strong>微振动控制</strong>：光刻机对振动极其敏感，
+    厂房要选低振动地块、做独立基础、甚至主动隔振；周边道路与地铁都要评估。</li>
+  <li><strong>温湿度控制</strong>：温度波动会影响光学与机械尺寸，
+    先进区域常要求 <em>±0.1 ℃ 量级</em>的恒温。</li>
+  <li><strong>AMC（气态分子污染物）</strong>：空气中的微量酸碱/有机物会污染光学表面，
+    因此需要化学过滤器，这是 EUV 时代被高度重视的一类污染。</li>
+</ul>
+
+<div class="kv">
+  <div><div class="v">ISO 1~5</div><div class="l">先进 fab 关键区洁净度（Class 1~100 量级）</div></div>
+  <div><div class="v">18.2 MΩ·cm</div><div class="l">超纯水电阻率（25 ℃ 理论极限）</div></div>
+  <div><div class="v">10%~20%</div><div class="l">厂务系统占 fab 总投资比例</div></div>
+  <div><div class="v">2~3 年</div><div class="l">从破土到量产的典型建厂周期</div></div>
+</div>
+
+<div class="warn">
+  <b>为什么这些"配套"会变成卡脖子：</b>
+  厂务能力不是"有钱买设备"就能解决的。它需要<em>工程公司、设备商、业主三方长期磨合的项目能力</em>，
+  以及一套与当地法规、供应链、气候条件绑定的经验体系。
+  这也是为什么新建 fab 会优先选择已有产业聚集区——
+  <strong>厂务 know-how 会沉淀在区域里，而不写在图纸上</strong>。
+</div>
+
+<h2 id="s11">11. 产业格局与"卖铲人"商业模式</h2>
+
+<p>淘金热里最稳的生意是卖铲子。半导体产业的"卖铲人"就是设备厂商。
+先把量级摆出来（以下为公开财报与行业统计的<em>量级口径</em>，不同年份波动较大，只用于建立直觉）：</p>
+
+<table class="term-table">
+  <thead><tr><th>公司</th><th>主打赛道</th><th>营收量级（年）</th><th>竞争位置</th></tr></thead>
+  <tbody>
+    <tr><td>Applied Materials（美国）</td><td>薄膜、注入、CMP、量测、外延</td><td>250 亿美元量级</td><td>品类最全的平台型巨头</td></tr>
+    <tr><td>ASML（荷兰）</td><td>光刻（浸没式 + EUV）</td><td>250~300 亿欧元量级</td><td>高端光刻近乎独家</td></tr>
+    <tr><td>Lam Research（美国）</td><td>刻蚀、沉积、清洗</td><td>150 亿美元量级</td><td>刻蚀份额最高，存储链强势</td></tr>
+    <tr><td>Tokyo Electron（日本）</td><td>涂胶显影、刻蚀、沉积、清洗</td><td>2 万亿日元量级</td><td>涂胶显影近乎垄断，品类均衡</td></tr>
+    <tr><td>KLA（美国）</td><td>量测与检测</td><td>100 亿美元量级</td><td>过程控制份额过半</td></tr>
+    <tr><td>Advantest / Teradyne</td><td>后道测试机</td><td>数十亿美元量级</td><td>测试机双寡头</td></tr>
+  </tbody>
+</table>
+
+<p>全球半导体设备市场规模大致在<strong>千亿美元/年量级</strong>波动（景气年份会明显更高），
+其中<strong>中国大陆长期是全球最大的单一设备市场，占全球需求的三成以上</strong>
+（公开口径在部分年份更高）。这个"最大买家"的位置，既是国产设备的机会，也是被管制的理由。</p>
+
+<h3>11.1 收入结构：新机只是入口</h3>
+
+<p>设备公司的收入通常有四块，理解这四块才算看懂这门生意：</p>
+
+<ul>
+  <li><strong>新机销售（System）</strong>：最大的一块，但<em>周期性极强</em>——
+    晶圆厂景气时一拥而上，低谷时砍单毫不手软。</li>
+  <li><strong>服务（Service）</strong>：装机后的维护、升级、软件、工艺支持。
+    毛利率高、周期波动小，是"压舱石"。</li>
+  <li><strong>零部件与耗材（Spare &amp; Consumable）</strong>：
+    ESC、射频电源备件、泵、阀、抛光垫、抛光液、探针卡……
+    这部分随<em>装机存量与稼动率</em>走，跟宏观经济关系较弱。</li>
+  <li><strong>升级改造（Upgrade）</strong>：把已装机的设备通过加装模块提升性能，
+    对客户而言比买新机便宜，对厂商而言毛利率可观。</li>
+</ul>
+
+<h3>11.2 装机存量（Installed Base）：最深的护城河</h3>
+
+<p>设备行业真正的护城河不是图纸，而是<strong>装机存量</strong>，它带来四重锁定：</p>
+
+<ul>
+  <li><strong>数据锁定</strong>：机器跑了几万片之后积累的工艺数据与故障模式，
+    是新进入者拿不到的。</li>
+  <li><strong>切换成本高</strong>：换供应商意味着<em>重新验证工艺、重做配方、重训工程师</em>，
+    对量产中的产品线来说风险极高。</li>
+  <li><strong>服务黏性</strong>：客户买了你的服务合同，你的工程师就常驻在产线上，
+    需求第一时间被听到。</li>
+  <li><strong>生态正反馈</strong>：装机多 → 口碑与数据多 → 下一代产品更贴合需求 → 装机更多。</li>
+</ul>
+
+<p>另一条护城河是<strong>验证周期</strong>。一台新设备进入量产线，
+通常要经历<em>机台验证（1 年左右）→ 工艺开发（1 年左右）→ 小批量 → 爬坡</em>，
+前后 <strong>1~2 年是常态</strong>；一旦通过并上量，除非出现重大问题，客户不会轻易换供应商。
+这解释了两个现象：<em>为什么国产设备"卖进去"比"造出来"还难，
+以及为什么一旦卖进去，后续的份额提升会比较快。</em></p>
+
+<div class="tip">
+  <b>怎么读一家设备公司的财报：</b>
+  重点看三个指标——<strong>新增订单（Bookings）</strong>（景气度的领先指标）、
+  <strong> backlog（在手订单）</strong>（未来 1~2 年收入的能见度）、
+  <strong>服务收入占比</strong>（抗周期能力）。
+  只看营收会误判，因为营收是"过去 6~12 个月订单"的兑现。
+</div>
+
+<h2 id="s12">12. 国产设备进展与卡脖子：按环节拆解</h2>
+
+<p>这一节必须谨慎：国产化率<em>没有统一口径</em>（按金额还是台数？按全部节点还是成熟节点？
+是否含外资厂在中国的采购？），不同机构给出的数字差异很大。
+下面给的是<strong>基于公开口径的量级判断</strong>，用于建立"哪些环节难、哪些环节相对好走"的直觉，
+不作为精确引用。</p>
+
+<figure class="diagram">
+  <svg viewBox="0 0 680 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="各环节国产设备进展与海外主导厂商对比示意图">
+    <defs>
+      <marker id="ar15-7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+      </marker>
+    </defs>
+    <g font-size="10" fill="var(--text)">
+      <text x="20" y="18" fill="var(--text)" font-size="11" font-weight="700">国产设备：按环节的国产化率量级（公开口径，示意）与海外主导者</text>
+
+      <text x="20" y="34" fill="var(--text-mute)" font-size="9">环节</text>
+      <text x="136" y="34" fill="var(--text-mute)" font-size="9">国产化率量级（示意）</text>
+      <text x="470" y="34" fill="var(--text-mute)" font-size="9">海外主导</text>
+
+      <text x="20" y="52" fill="var(--text-soft)">清洗 / 去胶</text>
+      <rect x="136" y="41" width="175" height="15" rx="3" fill="var(--semi)" fill-opacity=".8" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="52" fill="var(--text)" font-size="9">中（约三成量级）</text>
+      <text x="470" y="52" fill="var(--text-mute)" font-size="9">SCREEN、Lam、TEL</text>
+
+      <text x="20" y="74" fill="var(--text-soft)">热处理 / 扩散</text>
+      <rect x="136" y="63" width="150" height="15" rx="3" fill="var(--semi)" fill-opacity=".72" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="74" fill="var(--text)" font-size="9">中（约三成量级）</text>
+      <text x="470" y="74" fill="var(--text-mute)" font-size="9">AMAT、Kokusai、TEL</text>
+
+      <text x="20" y="96" fill="var(--text-soft)">CMP</text>
+      <rect x="136" y="85" width="175" height="15" rx="3" fill="var(--semi)" fill-opacity=".72" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="96" fill="var(--text)" font-size="9">中（三成上下）</text>
+      <text x="470" y="96" fill="var(--text-mute)" font-size="9">AMAT、Ebara</text>
+
+      <text x="20" y="118" fill="var(--text-soft)">刻蚀</text>
+      <rect x="136" y="107" width="125" height="15" rx="3" fill="var(--semi)" fill-opacity=".6" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="118" fill="var(--text)" font-size="9">中（两成量级）</text>
+      <text x="470" y="118" fill="var(--text-mute)" font-size="9">Lam、AMAT、TEL</text>
+
+      <text x="20" y="140" fill="var(--text-soft)">薄膜沉积</text>
+      <rect x="136" y="129" width="100" height="15" rx="3" fill="var(--semi)" fill-opacity=".5" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="140" fill="var(--text)" font-size="9">中低（一两成）</text>
+      <text x="470" y="140" fill="var(--text-mute)" font-size="9">AMAT、Lam、TEL、ASM</text>
+
+      <text x="20" y="162" fill="var(--text-soft)">涂胶显影 Track</text>
+      <rect x="136" y="151" width="75" height="15" rx="3" fill="var(--semi)" fill-opacity=".4" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="162" fill="var(--text)" font-size="9">低（一成上下）</text>
+      <text x="470" y="162" fill="var(--text-mute)" font-size="9">TEL（近乎垄断）、SCREEN</text>
+
+      <text x="20" y="184" fill="var(--text-soft)">量测与检测</text>
+      <rect x="136" y="173" width="40" height="15" rx="3" fill="var(--semi)" fill-opacity=".3" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="184" fill="var(--text)" font-size="9">低（约一成或更低）</text>
+      <text x="470" y="184" fill="var(--text-mute)" font-size="9">KLA、AMAT、Hitachi</text>
+
+      <text x="20" y="206" fill="var(--text-soft)">离子注入</text>
+      <rect x="136" y="195" width="40" height="15" rx="3" fill="var(--semi)" fill-opacity=".28" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="206" fill="var(--text)" font-size="9">低（个位数~一成）</text>
+      <text x="470" y="206" fill="var(--text-mute)" font-size="9">AMAT、Axcelis</text>
+
+      <text x="20" y="228" fill="var(--text-soft)">光刻</text>
+      <rect x="136" y="217" width="15" height="15" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+      <text x="320" y="228" fill="var(--text)" font-size="9">极低（成熟节点为主）</text>
+      <text x="470" y="228" fill="var(--text-mute)" font-size="9">ASML（EUV 独家）</text>
+
+      <line x1="136" y1="242" x2="436" y2="242" stroke="var(--text-mute)" stroke-width="1" marker-end="url(#ar15-7)"/>
+      <text x="140" y="256" fill="var(--text-mute)" font-size="9">条长约等于国产化率的量级示意，不代表任何机构的精确统计</text>
+    </g>
+  </svg>
+  <figcaption>图 7：国产设备的"环节差异"极大。越靠近左上的环节越容易切进去，越靠近右下的越难。</figcaption>
+</figure>
+
+<h3>12.1 为什么差异这么大：集中型壁垒 vs 分散型壁垒</h3>
+
+<p>我在第 4 节末尾埋了一个框架，这里展开。壁垒有两种形态：</p>
+
+<ul>
+  <li><strong>分散型壁垒（刻蚀、清洗、薄膜）</strong>：
+    难点是"场景多、配方多"，可以逐个攻破。
+    我先在成熟节点的某个具体场景做到够好（比如介质刻蚀、单片清洗、PECVD 介质膜），
+    拿到验证机会，再一点点往更先进、更多场景扩展。
+    <em>进展呈"稳步爬坡"形态</em>。</li>
+  <li><strong>集中型壁垒（光刻，尤其是 EUV）</strong>：
+    难点集中在<em>极少数不可替代的节点</em>上（光源、顶级光学、精密工件台），
+    且这些节点各自又依赖更上游的产业生态（超精密加工、镀膜、材料）。
+    你无法靠"做好一个场景"切入，必须整条链同时达标。
+    <em>进展呈"阶跃"形态——要么过，要么不过</em>。</li>
+</ul>
+
+<p>按这个框架你就明白为什么"国产化率"这个单一数字没有意义：
+<em>同样是"三成"，清洗的三成和光刻的三成，含金量完全不同</em>。</p>
+
+<h3>12.2 零部件：真正卡脖子的往往是"小东西"</h3>
+
+<p>整机做出来只是第一步。一台先进设备由上万个零件组成，其中一批是<strong>高度集中的"隐形冠军"产品</strong>：</p>
+
+<table class="term-table">
+  <thead><tr><th>零部件</th><th>作用</th><th>难点</th><th>典型供应格局</th></tr></thead>
+  <tbody>
+    <tr><td>真空泵</td><td>建立与维持工艺真空</td><td>耐腐蚀、无油、可靠性与寿命</td><td>Edwards（英）、Ebara（日）等为主</td></tr>
+    <tr><td>射频电源与匹配器</td><td>产生并耦合等离子体功率</td><td>频率稳定、反射功率控制、寿命</td><td>MKS、Advanced Energy（美）等</td></tr>
+    <tr><td>静电吸盘 ESC</td><td>吸附与温控晶圆</td><td>陶瓷烧结、电极埋入、氦微孔、寿命</td><td>日本陶瓷系厂商强（NTK、新光电气等）</td></tr>
+    <tr><td>阀件与管件</td><td>气液输送与切断</td><td>超高纯、无颗粒、耐蚀、零泄漏</td><td>Swagelok、Fujikin 等高度集中</td></tr>
+    <tr><td>光学镜头与镀膜</td><td>成像、照明、检测</td><td>亚纳米面型、多层膜、批量一致性</td><td>蔡司（德）、尼康/佳能（日）等</td></tr>
+    <tr><td>机械手与传送模块</td><td>晶圆搬运（EFEM/真空手）</td><td>无颗粒、高可靠、高节拍</td><td>Brooks（美）、Rorze/大福（日）等</td></tr>
+    <tr><td>精密加工件与密封</td><td>腔体、电极、密封</td><td>材料纯度、表面处理、尺寸稳定</td><td>日本、欧洲一批中小"隐形冠军"</td></tr>
+  </tbody>
+</table>
+
+<p>这些供应商的共同特征是：<strong>规模不大、份额很高、经验沉淀极深</strong>。
+它们往往是几十年只做一件事的家族企业或专业厂商，
+产品性能靠一代代试错积累，而不是靠图纸可以复制。
+这就是为什么"整机国产化"之后还会有"零部件国产化"的第二道关卡——
+而且这道关卡更慢，因为它对应的是<em>材料、工艺与时间的积累</em>。</p>
+
+<h3>12.3 为什么设备比芯片更难替代</h3>
+
+<p>这是本节的核心判断，也是很多外行误判的根源。设备难替代，难在四件事：</p>
+
+<ol>
+  <li><strong>工艺窗口（Process Window）</strong>：
+    不是"能不能做出 10 nm 的线"，而是"能不能在压力、温度、气体流量、腔壁状态都波动的情况下，
+    连续三个月都做出稳定的 10 nm"。<em>窗口宽度决定良率与稼动率</em>。</li>
+  <li><strong>配方库（Recipe Library）</strong>：
+    每一层膜、每一种结构都有一套经过千百次 DOE 优化的参数组合。
+    这是设备厂商与晶圆厂共同积累的资产，新玩家没有。</li>
+  <li><strong>稳定性与稼动率（Uptime）</strong>：
+    量产线对设备的稼动率要求是<em>九成以上</em>。
+    一台性能好但每月要停两天检修的机器，客户宁可不要。
+    因为停机的损失远大于设备价差。</li>
+  <li><strong>零部件生态</strong>：如上，整机能做不代表供应链可控。</li>
+</ol>
+
+<div class="note">
+  <b>一句话总结这一节：</b>
+  芯片的难点是"设计 + 制造"两头，设备的难点是"物理极限 + 工程稳定性 + 供应链生态"三头。
+  <em>图纸可以逆向，工艺窗口与经验不能</em>。
+  因此判断国产设备的进展，看"验证机台数量、重复订单、稼动率数据"比看"参数指标"更靠谱。
+</div>
+
+<h2 id="s13">13. 设备如何决定产业节奏</h2>
+
+<p>前面都在讲技术，这一节讲<strong>时间</strong>——因为产业里最贵的资源从来不是钱，是时间。</p>
+
+<h3>13.1 交期与排产：EUV 是典型的"产能约束型"产品</h3>
+
+<p>ASML 每年能交付的 EUV 数量是<em>几十台量级</em>（受光学、零部件与装配产能限制），
+而全球先进节点的扩产需求远超于此。于是形成了一条清晰的传导链：</p>
+
+<p><strong>EUV 产能 → 客户排产顺序 → 先进制程产能 → 高端芯片供给</strong>。
+谁的订单排在前面，谁就先拿到先进制程的产能。
+这解释了两个现象：为什么头部晶圆厂会提前数年锁定设备订单（长协、预付款、联合研发），
+以及为什么"先进制程产能"在相当长时间里是<em>稀缺且高度集中</em>的。</p>
+
+<h3>13.2 设备资本开支是景气的先行指标</h3>
+
+<p>逻辑很直白：晶圆厂只有在<em>预期未来 2~3 年需求旺盛</em>时才会下单买设备，
+因为设备从下单到产出需要这么久。所以：</p>
+
+<ul>
+  <li><strong>设备订单 / 出货数据（如 SEMI 公布的设备出货统计）</strong>领先于芯片产出与库存周期，
+    是判断行业景气的重要先行指标。</li>
+  <li><strong>设备公司股价</strong>往往先于芯片公司反映景气变化（但也因此对利率与预期更敏感）。</li>
+  <li><strong>反向也成立</strong>：一旦需求转弱，晶圆厂第一反应是<em>推迟设备拉货与验收</em>，
+    设备端的下滑会出现得又快又猛，这就是设备股的"高 β"特征。</li>
+</ul>
+
+<h3>13.3 制程迁移的时机其实是"算账"结果</h3>
+
+<p>一个常被忽略的事实：<strong>晶圆厂决定要不要上某个新制程/新设备，本质是算 CoO（Cost of Ownership）</strong>。</p>
+
+<div class="formula-block">
+  <span class="fl">CoO ≈（折旧 + 运维 + 耗材 + 人力 + 占地 + 良率损失）/ 有效产出片数</span>
+  <span class="fnote">设备越贵不一定越差：如果贵的机器产能更高、良率更好、占用人工更少，
+  折到每片晶圆上可能更便宜。<b>设备采购是"算单片成本"，不是"算报价单"</b>。
+  这也是为什么同一类设备里，贵的那台经常反而卖得更好。</span>
+</div>
+
+<p>把 CoO 展开就理解了产业里的很多决策：</p>
+
+<ul>
+  <li>为什么 EUV 这么贵还要买：因为<em>四重曝光的 DUV 方案在步骤数、周期、良率上更贵</em>。</li>
+  <li>为什么 High-NA 不是所有人都抢：因为<em>半场曝光对超大裸片有产能损失</em>，
+    只有真正需要它分辨率的产品才划算。</li>
+  <li>为什么成熟节点设备还在大量采购：因为老设备折旧完了，
+    成熟芯片的<em>单片成本反而更有竞争力</em>。</li>
+</ul>
+
+<h3>13.4 AI 如何把瓶颈从晶圆厂搬到封装厂</h3>
+
+<p>这是最近几年最重要的结构变化，值得单独讲清楚：</p>
+
+<ol>
+  <li><strong>AI 芯片需要 HBM</strong>：高带宽存储靠 3D 堆叠与硅通孔实现（<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>），
+    HBM 的产能瓶颈不在晶圆制造，而在<em>堆叠键合与减薄</em>环节。</li>
+  <li><strong>AI 芯片需要 2.5D 集成</strong>：逻辑裸片与 HBM 要放在中介层（interposer）上互连，
+    对应 <strong>CoWoS 类工艺</strong>，核心设备是<em>TC bonder、混合键合机、减薄机、临时键合/解键合设备</em>
+    （<a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇</a>）。</li>
+  <li><strong>这些设备的供应链比前道更窄</strong>：
+    混合键合、高精度贴装的头部供应商数量很少，产能扩张慢，
+    于是<em>瓶颈从"EUVer 够不够"变成了"键合机够不够"</em>。</li>
+</ol>
+
+<p>结论很实用：<strong>看 AI 芯片的产能瓶颈，不要只盯晶圆厂与光刻机，
+要看 CoWoS/HBM 相关设备的交付节奏。</strong>
+这也是为什么第 9 节强调后道设备——过去它们是产业链的"配角"，现在成了"卡点"。</p>
+
+<h2 id="s14">14. 常见误区</h2>
+
+<h3>误区一："有 EDA 和 IP 就能造芯片"</h3>
+
+<p>准确说，有<a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇</a>的 EDA 与 IP，
+你拥有的是"把设计变成可交付版图"的能力；
+但要把它变成芯片，还需要<em>制造端的整条设备链与工艺库</em>。
+同一份 GDSII 给不同的晶圆厂做，良率可以天差地别——差别就在设备、配方与良率工程。
+<strong>设计是必要条件，制造能力是另一套完全不同的能力。</strong></p>
+
+<h3>误区二："买台光刻机就能生产"</h3>
+
+<p>缺了四样东西照样做不出良率：</p>
+<ul>
+  <li><strong>配套设备</strong>：Track、刻蚀、薄膜、CMP、量测、清洗，缺一环就不闭环；</li>
+  <li><strong>工艺 know-how</strong>：配方、OPC 模型、工艺窗口、缺陷归因体系；</li>
+  <li><strong>厂务</strong>：超纯水、特气、洁净室、微振动与恒温恒湿（第 10 节）；</li>
+  <li><strong>人才与体系</strong>：能把机台跑到九成稼动率的工程团队，是十年磨出来的。</li>
+</ul>
+<p>所以"买到机器"与"跑出良率"之间，隔着一整个产业生态。</p>
+
+<h3>误区三："国产设备只差精度"</h3>
+
+<p>这是最常见的误解。精度指标（如"能做 5 nm"）往往是最容易宣传的部分，
+而真正决定能不能进量产线的是：</p>
+<ul>
+  <li><strong>稳定性</strong>：连续跑几个月，片间差异是否收敛；</li>
+  <li><strong>稼动率</strong>：MTBF（平均无故障时间）与 MTTR（平均修复时间）是否达标；</li>
+  <li><strong>工艺窗口宽度</strong>：参数波动 ±5% 时是否还稳；</li>
+  <li><strong>零部件生态与备件供应</strong>：坏了能不能 24 小时内拿到备件。</li>
+</ul>
+<p>换句话说：<em>实验室指标是"能不能"，量产指标是"能不能一直"。</em>
+后者才是壁垒所在。</p>
+
+<h3>误区四："设备越贵越好"</h3>
+
+<p>错。正确的比较方式是 <strong>CoO（单片成本）</strong>，见 13.3 节。
+一台贵 30% 但产能高 50%、良率高 1 个百分点的设备，长期看更便宜；
+反过来，一台便宜但稼动率只有 70% 的设备，会拖垮整条产线的产能规划。
+<strong>报价单是成本，CoO 才是价格。</strong></p>
+
+<h3>误区五："先进封装只是把芯片装起来"</h3>
+
+<p>今天的先进封装（键合精度进入亚微米、混合键合要求纳米级平坦度）已经是
+<em>与晶圆制造同等级别的精密制造</em>。它需要前道级的洁净度、量测与工艺控制能力，
+只是加工对象从"晶圆上的图形"变成了"裸片间的互连"。
+把先进封装理解为"低端组装"，会严重误判当前产业的瓶颈分布。</p>
+
+<h2 id="s15">15. 自测</h2>
+
+<details class="quiz">
+  <summary>第 1 题 · 刻蚀机 A 售价 400 万美元，产能 120 片/小时，稼动率 90%；刻蚀机 B 售价 300 万美元，产能 80 片/小时，稼动率 80%。产线每年运行 8000 小时，设备按 5 年直线折旧，忽略运维与耗材。仅从折旧对应的单片成本看，哪台更划算？若目标年产出为 86.4 万片，哪台的总投资更低？</summary>
+  <div class="answer">
+    <p><strong>答案：两种口径下都是 A 更划算。</strong></p>
+    <p>① 单片折旧成本：
+      A 年产出 = 120 × 0.9 × 8000 = <strong>86.4 万片/年</strong>，5 年共 432 万片，
+      单片折旧 = 400 万 ÷ 432 万 ≈ <strong>0.93 美元/片</strong>；
+      B 年产出 = 80 × 0.8 × 8000 = <strong>51.2 万片/年</strong>，5 年共 256 万片，
+      单片折旧 = 300 万 ÷ 256 万 ≈ <strong>1.17 美元/片</strong>。
+      A 便宜约 20%。</p>
+    <p>② 达到 86.4 万片/年所需投资：
+      A 需 1 台 → 400 万美元；
+      B 需 86.4 ÷ 51.2 ≈ <strong>1.69 台</strong> → 约 507 万美元，且多占 69% 的洁净室面积与人力。
+      A 反而少花约 100 万美元。</p>
+    <p><strong>要点：</strong>这就是 CoO 思路——<em>别看报价，看"每片摊多少"和"达到同样产出要多少钱"</em>。
+      实际采购还要叠加运维、耗材、占地、良率与备件供应，但结论通常一致：
+      高产能 + 高稼动率的机型，在大规模量产中几乎总是赢。</p>
+  </div>
+</details>
+
+<details class="quiz">
+  <summary>第 2 题 · 为什么 EUV 光源功率（瓦数）几乎直接等于产能？请用"剂量—曝光时间—每小时片数"的关系说明，并指出为什么提高功率不能无限提升产能。</summary>
+  <div class="answer">
+    <p><strong>答案：</strong>光刻胶要发生光化学反应，需要吸收一定的<em>曝光剂量 D（mJ/cm²）</em>，这是由材料决定的固定值。
+      光源可用功率为 P 时，单位时间能覆盖的面积正比于 P/D，因此单片曝光时间
+      <em>t ≈ 面积 × D /（P × 光学透过率）</em>。P 翻倍，t 近似减半。</p>
+    <p>而产能 <em>WPH ≈ 3600 /（t + t<sub>overhead</sub>）</em>，其中 t<sub>overhead</sub> 是上下片、对准、步进等非曝光时间。
+      所以在 t 占主导的阶段，<strong>功率翻倍 ≈ 产能接近翻倍</strong>——这就是为什么 EUV 从 250 W 往 500 W 以上推进是核心议题。</p>
+    <p><strong>为什么不能无限提升：</strong>三个天花板——
+      ① t<sub>overhead</sub> 不能压缩到零，功率再高产能也饱和（收益递减）；
+      ② 功率越高，等离子体碎屑、热负荷与光学污染越严重，镜面寿命与稼动率下降；
+      ③ 工件台加速度与对准精度有机械/控制极限，扫描速度跟不上也没用。</p>
+  </div>
+</details>
+
+<details class="quiz">
+  <summary>第 3 题 · 有人说："High-NA EUV（NA 0.55）分辨率比 NA 0.33 高约 1.7 倍，所以它出来后 0.33 NA 的 EUV 就该淘汰了。"这个判断对吗？请给出至少两条反对理由。</summary>
+  <div class="answer">
+    <p><strong>答案：不对，两者会长期共存、按产品分工。</strong></p>
+    <p>① <strong>半场曝光</strong>：High-NA 的曝光场面积只有 0.33 NA 机型的一半，
+      大面积裸片（如接近光罩极限的 AI/GPU 裸片）需要<em>两次曝光再拼接</em>，
+      拼接会引入额外的套刻误差与产能损失。对这些产品而言，0.33 NA 一次曝光可能反而更划算。</p>
+    <p>② <strong>成本与导入门槛</strong>：High-NA 单价在<em>3 亿美元以上量级</em>，
+      更重更大，对厂房层高、地基、吊装提出新要求，需要新建或大改造 fab，导入周期长。</p>
+    <p>③ <strong>分辨率不是唯一需求</strong>：很多层（如较宽松的金属层、通孔层）本来
+      0.33 NA 单次曝光就够，用 High-NA 属于"杀鸡用牛刀"，纯增加成本。</p>
+    <p><strong>结论：</strong>High-NA 用在<em>最关键的、必须单次曝光的精细层</em>，其余层继续用 0.33 NA 或 DUV 多重曝光。
+      这正是 CoO 思路在设备选型上的体现。</p>
+  </div>
+</details>
+
+<details class="quiz">
+  <summary>第 4 题 · 同样是"国产化"，为什么清洗、CMP 等环节推进相对快，而量测检测、离子注入、光刻推进慢？请用"壁垒形态"的框架解释，并指出一个"国产化率数字"容易误导人的地方。</summary>
+  <div class="answer">
+    <p><strong>答案：</strong>核心在于壁垒的<em>形态</em>不同。</p>
+    <p>① <strong>分散型壁垒（清洗、CMP、刻蚀、部分薄膜）</strong>：
+      难点分布在大量具体工艺场景里，可以<em>逐个场景攻破</em>——
+      先在成熟节点的某个应用做到够好，通过验证后再逐步扩展。
+      进展呈"稳步爬坡"；清洗与 CMP 因为机台结构相对标准化、耗材可自给，走得更快。</p>
+    <p>② <strong>集中型壁垒（光刻，尤其 EUV）</strong>：
+      难点集中在少数不可替代的节点（光源、亚纳米光学、精密工件台），
+      每个节点又依赖上游超精密加工、镀膜与材料生态，<em>必须整条链同时达标</em>，进展呈"阶跃"形态。</p>
+    <p>③ <strong>算法与数据型壁垒（量测检测）</strong>：
+      难点不在硬件机械精度，而在<em>缺陷数据库、检测算法、吞吐与灵敏度的平衡</em>，
+      需要长期在真实量产线上积累，且客户不敢轻易换——属于"时间壁垒"。</p>
+    <p>④ <strong>机台可靠性型壁垒（离子注入）</strong>：
+      束线复杂度高、可靠性要求严，一旦停机影响整线，客户切换极其谨慎。</p>
+    <p><strong>数字误导之处：</strong>"国产化率 30%"这个数字不含信息——
+      <em>要看它发生在哪个节点（成熟还是先进）、按金额还是台数、是否只在个别客户处、设备稼动率与重复订单情况</em>。
+      同样是三成，清洗的三成（成熟节点量产、重复采购）与光刻的三成（若真有）含金量完全不同。
+      正确的跟踪指标是：<strong>验证机台数 → 重复订单 → 稼动率与良率数据 → 先进节点导入</strong>。</p>
+  </div>
+</details>
+
+<div class="series">
+  <div class="series-title">集成电路学习路径 · 系列导航</div>
+  <ol>
+    <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+    <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+    <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+    <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+    <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+    <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+    <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+    <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+    <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+    <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+    <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+    <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+    <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+    <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+    <li class="current">第 15 篇：半导体设备与产业链 · 核心装备全景</li>
+    <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+    <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+    <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+    <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+    <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+  </ol>
+</div>
+
+</div>
+
+<div class="tagbar">
+  <span class="chip">#半导体设备</span>
+  <span class="chip">#光刻机</span>
+  <span class="chip">#EUV</span>
+  <span class="chip">#刻蚀机</span>
+  <span class="chip">#薄膜沉积</span>
+  <span class="chip">#离子注入</span>
+  <span class="chip">#CMP</span>
+  <span class="chip">#量测检测</span>
+  <span class="chip">#ASML</span>
+  <span class="chip">#厂务配套</span>
+  <span class="chip">#国产化</span>
+  <span class="chip">#CoO单片成本</span>
+</div>
+
+</div></main>
+<footer class="foot"><div>© 2026 半导体 · 财经 学习笔记</div><div><a href="../../index.html">回到主页</a></div></footer>
+</body>
+</html>
+
