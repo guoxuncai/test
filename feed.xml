@@ -5,7 +5,28 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 02 Oct 2026 13:02:13 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2026 14:11:58 +0800</lastBuildDate>
+    <item>
+      <title>摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从摩尔定律与 Dennard 缩放讲起，拆解平面 MOSFET 微缩的短沟道效应、应变硅、HKMG，再到 FinFET、GAA 纳米片与背面供电，看懂六十年来晶体管一路变小的物理与工程]]></description>
+    </item>
+    <item>
+      <title>存储器 · DRAM、NAND 与新型存储</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-存储器原理-DRAM-NAND与新型存储.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-存储器原理-DRAM-NAND与新型存储.html</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[存储器占半导体市场近三分之一。本篇讲清 SRAM 6T 单元、DRAM 1T1C 与 64ms 刷新、NAND 浮栅隧穿与 3D 堆叠、NOR 的 XIP、MRAM/PCM/RRAM/FRAM 四种新型存储，以及存储层级金字塔与存算一体的新]]></description>
+    </item>
+    <item>
+      <title>先进封装与系统级集成 · 2.5D、3D 与 Chiplet</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[摩尔定律放缓之后，系统级集成如何接棒续摩尔：从扇出封装、TSV、硅中介层到 2.5D/3D 封装与 hybrid bonding，深讲 CoWoS 产能、HBM 带宽账本、Chiplet 良率经济学与 UCIe 生态，以及热、电、测试的连锁]]></description>
+    </item>
     <item>
       <title>薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-薄膜沉积与掺杂工艺详解.html</link>
@@ -264,27 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-08瑾年财经早报_.html</guid>
       <pubDate>Tue, 08 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[昨日A股震荡收高，创业板指大涨3.41%，两市成交近2万亿；财政部3000亿特别国债注资八大央企方案落地；央行连续22个月增持黄金。新的一周，市场迎来多重催化，让我们快速浏览今日要点。]]></description>
-    </item>
-    <item>
-      <title>2026年二季度宏观经济数据解读</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-7-2Q2_macro_report.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-7-2Q2_macro_report.html</guid>
-      <pubDate>Thu, 02 Jul 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[出口与高端制造维持高景气，6月出口同比增速达27%，高技术制造业增加值上半年累计增长13.3%；然而内需持续疲软，上半年固定资产投资累计同比下降5.7%，社零累计同比仅增长1.3%，消费与投资双双承压。一个积极信号是：二季度名义GDP增速回…]]></description>
-    </item>
-    <item>
-      <title>2026年Q2季度经济数据深度解读</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-07-02Q2_macro_review.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-07-02Q2_macro_review.html</guid>
-      <pubDate>Thu, 02 Jul 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[季度宏观 2026年Q2经济数据深度解读 GDP 4.3% CPI温和上涨 出口强势领跑 K型分化延续 瑾年 2026年9月 一、结论摘要 2026年二季度，中国经济交出了一份"总量偏弱、结构分化"的成绩单。二季度GDP同比 增长4.3% …]]></description>
-    </item>
-    <item>
-      <title>半导体器件新手路径地图 | 设计→实验验证全流程 (详细行动清单)</title>
-      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-06-01-半导体器件新手路径地图.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-06-01-半导体器件新手路径地图.html</guid>
-      <pubDate>Mon, 01 Jun 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[从理论学习、软件安装、仿真练习到版图设计、MPW 流片与实验测试的完整行动清单，含每月可执行步骤与资源工具]]></description>
     </item>
   </channel>
 </rss>

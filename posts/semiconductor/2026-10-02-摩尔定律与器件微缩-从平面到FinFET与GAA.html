@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</title>
+<meta name="description" content="从摩尔定律与 Dennard 缩放讲起，拆解平面 MOSFET 微缩的短沟道效应、应变硅、HKMG，再到 FinFET、GAA 纳米片与背面供电，看懂六十年来晶体管一路变小的物理与工程。">
+<meta name="keywords" content="摩尔定律,器件微缩,短沟道效应,FinFET,GAA,HKMG,应变硅,背供电,CFET,Dennard缩放">
+<meta name="date" content="2026-10-02">
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a class="back" href="../../index.html">← 返回主页</a><span class="crumb">半导体 · 集成电路学习笔记</span><div class="topbar-spacer"></div></div></div>
+<main class="article"><div class="article-inner">
+<span class="cat-badge semi">半导体 · 器件</span>
+<h1 class="title">摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</h1>
+<div class="meta"><span>2026-10-02</span><span class="sep"></span><span>集成电路学习路径 · 第 6 篇</span><span class="sep"></span><span>阅读约 25 分钟</span></div>
+<div class="content">
+
+<div class="box">
+<div class="box-title">这一篇要解决什么问题</div>
+<p><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇</a>里，我们的 MOSFET 还是标准的平面结构：栅极躺在沟道上方，电流从源极水平流向漏极。按理说，这样一个器件只要"整体等比例缩小"，晶体管就更小、更快、更省电——这就是 1970 年代指导整个行业的 Dennard 缩放定律。但这套"免费午餐"在 2005 年前后吃到头了：漏电压不住、栅氧薄到原子级隧穿、功耗密度不降反升。</p>
+<p>这一篇就讲清楚三个问题：<strong>为什么平面 MOSFET 缩不下去了</strong>（短沟道效应的物理）、<strong>行业怎么一路续命</strong>（应变硅 → HKMG → FinFET → GAA → 背面供电）、以及<strong>微缩背后的经济账与物理极限</strong>。读完你会明白，为什么"3nm 芯片"里的晶体管其实没有一个是 3nm 大，以及为什么摩尔定律被宣判死刑二十年却一直没死。</p>
+</div>
+
+<div class="toc">
+<div class="toc-title">目录</div>
+<ol>
+<li><a href="#s1">摩尔定律是什么、不是什么</a></li>
+<li><a href="#s2">平面 MOSFET 微缩的收益与代价</a></li>
+<li><a href="#s3">短沟道效应：四个机制与特征长度 λ</a></li>
+<li><a href="#s4">应变硅：先从迁移率上挤性能</a></li>
+<li><a href="#s5">HKMG：栅介质与栅电极的换血</a></li>
+<li><a href="#s6">FinFET：把沟道竖起来</a></li>
+<li><a href="#s7">GAA 环绕栅极：栅控的终极形态</a></li>
+<li><a href="#s8">背面供电 BSPDN：供电网络搬家</a></li>
+<li><a href="#s9">节点命名的"水分"与真实密度</a></li>
+<li><a href="#s10">微缩的经济账</a></li>
+<li><a href="#s11">物理极限：摩尔定律死了吗</a></li>
+<li><a href="#s12">微缩历程时间线小结</a></li>
+<li><a href="#s13">与其他篇的衔接</a></li>
+<li><a href="#s14">常见误区</a></li>
+<li><a href="#s15">自测 4 题</a></li>
+</ol>
+</div>
+
+<h2 id="s1">1. 摩尔定律是什么、不是什么</h2>
+<p>1965 年，仙童半导体的 Gordon Moore 在《Electronics》杂志上写下一篇短文，观察到芯片上的元件数量大约每年翻一番。1975 年他把节奏修正为"每两年翻一番"——此后行业实际上把"每一代工艺、晶体管密度翻倍（约两年一代）"当作了路线图式的自我预言。注意两点：第一，它是对<strong>密度</strong>的观察，不是对<strong>性能</strong>的承诺；第二，它不是物理定律，而是一个行业集体投资节奏形成的<strong>经济学预言</strong>——因为大家都相信它，所以都按它排产能、排研发，它于是自我实现了。</p>
+<p>摩尔定律真正的"搭档"是 1974 年 IBM 的 Robert Dennard 提出的<strong>Dennard 缩放定律（Dennard scaling）</strong>。它回答了"缩小之后会发生什么"：假定 MOSFET 的所有几何尺寸（沟道长 L、栅氧厚度 t<sub>ox</sub>、结深、电源电压 V<sub>DD</sub>）都缩小 k 倍，那么：</p>
+<div class="formula-block">
+<div class="fl">尺寸缩 k 倍：L → L/k，t<sub>ox</sub> → t<sub>ox</sub>/k，V<sub>DD</sub> → V<sub>DD</sub>/k</div>
+<div class="fl">驱动电流 I<sub>on</sub> ∝ W/k × V<sub>DD</sub>/k …… 晶体管延迟 ∝ CV/I 几乎不变 → <strong>更快</strong></div>
+<div class="fl">每个晶体管功耗 ∝ I·V 缩 k² 倍，面积缩 k² 倍 → <strong>功耗密度恒定</strong></div>
+<div class="fnote">Dennard 缩放：等比例缩小下，密度翻倍的同时性能提升、功耗密度不变——晶体管"越缩越好"，这就是 1970–2005 年的金科玉律。</div>
+</div>
+<p>问题在于，Dennard 缩放从 2005 年前就<strong>失效</strong>了。原因后面几节会详细拆：电源电压没法再按比例降（阈值电压压不下去，亚阈值漏电会爆炸），导致功耗密度不降反升。后果在产品上看得非常清楚：2003–2005 年，CPU 主频冲到 3–4 GHz 后<strong>停滞了将近二十年</strong>；行业从"单核提频"转向"多核并行"（2005 年前后双核普及），后来又转向"同频下压功耗"。这就是著名的<strong>功耗墙（power wall）</strong>——摩尔定律给的密度红利还在，但 Dennard 给的功耗红利没了。今天所有关于"dark silicon（暗硅：能造出来但没预算同时点亮的部分）"的讨论，根源都在这里。</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dennard缩放与实际功耗密度">
+<defs>
+<marker id="ar6-1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft)"/></marker>
+</defs>
+<line x1="70" y1="215" x2="620" y2="215" stroke="var(--border)" stroke-width="1.5" marker-end="url(#ar6-1)"/>
+<line x1="70" y1="215" x2="70" y2="35" stroke="var(--border)" stroke-width="1.5" marker-end="url(#ar6-1)"/>
+<text x="330" y="245" text-anchor="middle" fill="var(--text-soft)" font-size="11">年份</text>
+<text x="40" y="130" text-anchor="middle" fill="var(--text-soft)" font-size="11" transform="rotate(-90 40 130)">功耗密度（相对值）</text>
+<line x1="70" y1="185" x2="620" y2="185" stroke="var(--border)" stroke-dasharray="4 4" stroke-width="1"/>
+<text x="600" y="178" text-anchor="end" fill="var(--text-mute)" font-size="10">Dennard 预言：恒定</text>
+<path d="M 90 178 C 200 174, 300 170, 380 158 C 430 148, 460 120, 500 85 C 530 60, 570 48, 610 44" fill="none" stroke="var(--semi)" stroke-width="2.5"/>
+<text x="595" y="66" fill="var(--semi)" font-size="11">实际：不降反升</text>
+<line x1="380" y1="60" x2="380" y2="215" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/>
+<text x="380" y="50" text-anchor="middle" fill="var(--accent)" font-size="11">约 2005：Dennard 缩放失效</text>
+<text x="120" y="140" fill="var(--text-soft)" font-size="10">主频随之停滞</text>
+<text x="120" y="156" fill="var(--text-soft)" font-size="10">→ 转向多核</text>
+</svg>
+<figcaption>图 1 · Dennard 缩放预言功耗密度恒定，实际在 2005 年前后掉头向上——功耗墙由此而来。</figcaption>
+</figure>
+
+<h2 id="s2">2. 平面 MOSFET 微缩的收益与代价</h2>
+<p>先复习<a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇</a>的结论：平面 MOSFET 的驱动电流 I<sub>on</sub> 大致正比于 W/L（宽长比），栅控能力依赖栅压在沟道里建立的垂直电场。那么把 L 缩小，直接收益有三条：</p>
+<p><strong>其一，速度。</strong>I<sub>on</sub> ∝ 1/L，栅电容 C<sub>g</sub> 也随面积缩小，延迟 ∝ CV/I 下降——电路跑得更快。<strong>其二，密度。</strong>面积 ∝ L²，沟道缩短一半，同样晶圆上晶体管数量翻四倍，这是摩尔定律的直接兑现。<strong>其三，动态功耗。</strong>P<sub>dyn</sub> = αCV<sub>f</sub>，C 变小、V<sub>DD</sub> 又能跟着降，每次翻转更省电。</p>
+<p>但代价也同步到账，而且是两条"漏电"账：</p>
+<p><strong>亚阈值漏电（subthreshold leakage）。</strong>理想晶体管关断时电流为零，但真实的 I<sub>D</sub>-V<sub>G</sub> 曲线在阈值以下呈指数尾巴。衡量它的是亚阈值摆幅 S（subthreshold swing，单位 mV/dec，即漏电流每降十倍需要的栅压）。室温下由 kT/q 决定的理论下限是 <strong>60 mV/dec</strong>——沟道越短，静电退化，S 越差，关断越不干净。<strong>栅氧隧穿漏电（gate leakage）。</strong>为了维持栅控，t<sub>ox</sub> 必须随 L 一起缩；90nm 节点时 SiO<sub>2</sub> 物理厚度已经压到约 1.2nm，相当于<strong>五个原子层</strong>，电子直接量子隧穿过去，栅漏电流大得让静态功耗失控。</p>
+<div class="note">一个有用的心智模型：晶体管本质是一场"拔河"——栅极想把沟道"关住"，漏极想把沟道"拽开"。尺寸越大、栅离沟道越近，栅赢；沟道短到漏极的耗尽区电场能穿透进来，漏就赢了。漏赢的表现，就是下面这一节的短沟道效应。</div>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="平面MOSFET微缩后的漏电路径">
+<defs>
+<marker id="ar6-2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--semi)"/></marker>
+<marker id="ar6-2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+</defs>
+<rect x="120" y="90" width="440" height="80" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="340" y="185" text-anchor="middle" fill="var(--text-mute)" font-size="10">衬底（p 型）</text>
+<rect x="180" y="60" width="90" height="30" fill="var(--semi)"/>
+<text x="225" y="80" text-anchor="middle" fill="var(--text)" font-size="11">源极 n+</text>
+<rect x="410" y="60" width="90" height="30" fill="var(--semi)"/>
+<text x="455" y="80" text-anchor="middle" fill="var(--text)" font-size="11">漏极 n+</text>
+<rect x="280" y="35" width="120" height="18" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="340" y="49" text-anchor="middle" fill="var(--text)" font-size="11">栅极</text>
+<rect x="280" y="53" width="120" height="9" fill="var(--border)"/>
+<text x="452" y="62" fill="var(--text-mute)" font-size="9">t_ox 很薄</text>
+<line x1="272" y1="90" x2="272" y2="140" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="408" y1="90" x2="408" y2="140" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="284" y1="160" x2="284" y2="98" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-2b)"/>
+<line x1="396" y1="160" x2="396" y2="98" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-2b)"/>
+<line x1="310" y1="150" x2="370" y2="150" stroke="var(--semi)" stroke-width="1.5" marker-end="url(#ar6-2)"/>
+<text x="340" y="143" text-anchor="middle" fill="var(--text-soft)" font-size="10">L 短 → 两侧耗尽区相接</text>
+<path d="M 225 95 C 300 118, 380 118, 455 95" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar6-2b)"/>
+<text x="560" y="115" fill="var(--accent)" font-size="10">① 亚阈值漏电</text>
+<text x="560" y="130" fill="var(--accent)" font-size="10">（穿通路径）</text>
+<path d="M 340 44 C 400 20, 470 20, 520 45" fill="none" stroke="var(--semi)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar6-2)"/>
+<text x="556" y="40" fill="var(--semi)" font-size="10">② 栅氧隧穿</text>
+<text x="556" y="55" fill="var(--semi)" font-size="10">漏电</text>
+</svg>
+<figcaption>图 2 · 平面 MOSFET 微缩到极限后的两条主要漏电路径：穿通沟道下方的亚阈值漏电，与穿过超薄栅氧的直接隧穿。</figcaption>
+</figure>
+
+<h2 id="s3">3. 短沟道效应：四个机制与特征长度 λ</h2>
+<p>短沟道效应（short-channel effect，SCE）不是单一现象，而是漏极静电"入侵"沟道的四种具体表现。逐个看：</p>
+<p><strong>① 阈值电压滚降（V<sub>t</sub> roll-off）。</strong>阈值电压由耗尽电荷决定；沟道变短后，源漏结耗尽区分走的电荷占比变大，栅需要控制的净电荷变少，于是 <strong>V<sub>t</sub> 随 L 缩短而下降</strong>。这在批产里很致命：光刻带来的 L 离散（比如 ±2nm）会让同一颗芯片上不同位置的晶体管 V<sub>t</sub> 不一致——工艺越先进，这个"随机性"越难压。</p>
+<p><strong>② DIBL（drain-induced barrier lowering，漏致势垒降低）。</strong>关断状态下源极与沟道之间存在一个电子势垒；正常情况下势垒高度由栅压控制。沟道短了之后，<strong>漏极电压 V<sub>D</sub> 的电场能穿透耗尽区、把这条势垒"压低"</strong>——漏压越高，越容易"撬开"关不死的管子。DIBL 用 ΔV<sub>t</sub>/ΔV<sub>D</sub>（mV/V）量化，先进节点要求压到 50mV/V 以下。它的尺度依赖有个经典近似：</p>
+<div class="formula-block">
+<div class="fl">ΔV<sub>t</sub> ∝ exp(−L / λ)</div>
+<div class="fl">λ = √( ε<sub>si</sub> · t<sub>ox</sub> · x<sub>dep</sub> / ε<sub>ox</sub> )</div>
+<div class="fnote">λ 是"静电特征长度"：栅控通过栅氧（电容 C<sub>ox</sub>）作用，漏控穿过硅耗尽层作用，两者是一对分压关系。ε<sub>si</sub>=11.7，ε<sub>ox</sub>=3.9。L/λ 越大，指数压得越死，漏控越难穿透。</div>
+</div>
+<p>λ 的物理直觉值得多花一句：<strong>它就是"栅的电场能伸进沟道多深"的度量。</strong>栅氧越薄（t<sub>ox</sub> 小）、耗尽层越浅（x<sub>dep</sub> 小），λ 越小，栅控越"贴身"，漏极越插不上手。工程经验是 <strong>L ≥ 4~6λ</strong> 才算静电健康。所以"缩小 L"的前提是先把 λ 做小——这半句话，就是后面 40 年结构创新的全部剧本：薄栅氧（HKMG）、浅耗尽（halo/倒掺杂、SOI 超薄体）、以及最终把栅包住沟道（FinFET/GAA），全都是在压 λ。</p>
+<div class="tip">把 λ 与亚阈值摆幅连起来看：理想长沟道的 S 只由 kT·ln10/q ≈ 60mV/dec 决定，与几何无关；短沟道下漏极电场"帮忙抬"沟道电位，S 退化为 60mV/dec 乘上一个大于 1 的因子（≈1 + 3·exp(−L/λ) 量级）。这个因子告诉你两件事：S 的退化是指数型的，λ 一旦逼近 L/4 就急剧恶化；而 60mV/dec 下限也解释了为什么传统 MOSFET 关不干净——除非换隧穿 FET、负电容 FET 这类"新机制"器件，那又是另一个故事了。</div>
+<p><strong>③ 穿通（punch-through）。</strong>比 DIBL 更极端的版本：源漏两个耗尽区直接在沟道<strong>下方深处</strong>连成一片，电流不再走表面、栅压完全失控，器件"击穿式"漏电。对策是把沟道下部掺杂做高（retrograde/halo 倒掺杂）或把结做浅——但掺杂高了又带来迁移率退化与结电容上升，又是一个取舍。</p>
+<p><strong>④ 热载流子注入与 GIDL。</strong>沟道短、电场强，载流子被加速到高能后可能<strong>注入栅氧</strong>造成阈值漂移与寿命退化（hot carrier injection，HCI），在沟道漏端尤其严重；另外漏极与栅氧交叠区的强场会诱发<strong>带间隧穿</strong>产生漏电流（gate-induced drain leakage，GIDL）。轻掺杂漏（LDD）结构与后来的应力工程，都是为了收拾这两个局面。</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="栅控与漏控的竞争">
+<defs>
+<marker id="ar6-3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--semi)"/></marker>
+<marker id="ar6-3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+</defs>
+<rect x="90" y="150" width="230" height="50" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="360" y="150" width="230" height="50" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="205" y="215" text-anchor="middle" fill="var(--text-soft)" font-size="11">长沟道：L ≫ λ</text>
+<text x="475" y="215" text-anchor="middle" fill="var(--text-soft)" font-size="11">短沟道：L ~ 2~3λ</text>
+<rect x="130" y="120" width="60" height="30" fill="var(--semi)"/>
+<rect x="220" y="120" width="60" height="30" fill="var(--semi)"/>
+<rect x="400" y="120" width="50" height="30" fill="var(--semi)"/>
+<rect x="500" y="120" width="50" height="30" fill="var(--semi)"/>
+<text x="160" y="140" text-anchor="middle" fill="var(--text)" font-size="9">源</text>
+<text x="250" y="140" text-anchor="middle" fill="var(--text)" font-size="9">漏</text>
+<text x="425" y="140" text-anchor="middle" fill="var(--text)" font-size="9">源</text>
+<text x="525" y="140" text-anchor="middle" fill="var(--text)" font-size="9">漏</text>
+<rect x="185" y="100" width="40" height="12" fill="var(--border)"/>
+<rect x="445" y="100" width="60" height="12" fill="var(--border)"/>
+<path d="M 205 155 C 205 135, 210 125, 205 112" fill="none" stroke="var(--semi)" stroke-width="1.5" marker-end="url(#ar6-3)"/>
+<path d="M 245 155 C 245 140, 240 132, 245 112" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-3b)"/>
+<path d="M 445 155 C 445 132, 455 120, 470 106" fill="none" stroke="var(--semi)" stroke-width="1.5" marker-end="url(#ar6-3)"/>
+<path d="M 505 155 C 505 132, 495 120, 480 106" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-3b)"/>
+<text x="205" y="88" text-anchor="middle" fill="var(--semi)" font-size="10">栅控主导</text>
+<text x="475" y="88" text-anchor="middle" fill="var(--accent)" font-size="10">漏控穿透</text>
+<line x1="395" y1="150" x2="455" y2="150" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="620" y="160" text-anchor="middle" fill="var(--text-mute)" font-size="9">λ 越小越安全</text>
+<text x="620" y="175" text-anchor="middle" fill="var(--text-mute)" font-size="9">L ≥ 4~6λ</text>
+</svg>
+<figcaption>图 3 · 栅控（蓝）与漏控（橙）的拔河：长沟道下漏极电场够不着源端势垒；短沟道下漏控穿透，DIBL 与穿通随之而来。一切微缩创新的核心都是压小 λ。</figcaption>
+</figure>
+
+<h2 id="s4">4. 应变硅：先从迁移率上挤性能</h2>
+<p>到了 90nm/65nm 时代，L 已经小到再缩就要漏电失控，但产品还想要性能。工程师换了个思路：<strong>先别缩了，把沟道里载流子跑得更快</strong>——手段是应变硅（strained Si）。这在物理上完全说得通：回顾<a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇</a>，迁移率由有效质量决定，而有效质量由能带结构（E-k 关系的曲率）决定。晶格被拉伸或压缩，能带会劈裂、简并被解除，载流子的散射变少、有效质量变小，迁移率就上去了。</p>
+<p><strong>PMOS 的招：SiGe 源漏压应变（compressive strain）。</strong>锗的晶格常数（0.565nm）比硅（0.543nm）大约 4%，在 PMOS 的源漏区选择性地外延生长嵌入硅的锗硅（SiGe），它会把沟道<strong>纵向压压</strong>。硅的价带顶有轻空穴带与重空穴带两条简并能带，压应变让轻空穴带被顶到上面，空穴有效质量下降——空穴迁移率提升约 <strong>50%</strong>（相对无应变）。为什么先救 PMOS？因为空穴迁移率天生只有电子的三分之一左右，CMOS 的速度短板永远在 PMOS 一侧。</p>
+<p><strong>NMOS 的招：CESL 拉应变（tensile strain）。</strong>NMOS 没法用大晶格源漏（那会变成压应变），改用<strong>刻蚀停止层氮化硅</strong>（contact etch stop layer，CESL）在沟道上方施加拉应变，导带能量下移且能谷简并解除，电子迁移率提升约 <strong>10–20%</strong>。</p>
+<div class="tip">记住这个组合：<b>PMOS 压应变、NMOS 拉应变</b>。90nm（2002 年，Intel 90nm 首次量产应变硅）之后，"应力工程"成了每一代节点的标配，并与后续 HKMG、FinFET 叠加使用——直到今天，先进工艺的器件层里依然有应力。</div>
+<p>应变硅的启示在于：<strong>微缩不再只有"把东西做小"一条路</strong>。当几何微缩开始失灵，行业学会了从材料与物理层面继续兑现摩尔定律的"每代更快"。这个思路在下一节 HKMG、乃至更远的 2D 材料/CFET 里会反复出现。</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="应变硅原理">
+<defs>
+<marker id="ar6-4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--semi)"/></marker>
+<marker id="ar6-4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+</defs>
+<rect x="60" y="140" width="220" height="60" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="60" y="170" width="90" height="30" fill="var(--semi)"/>
+<rect x="190" y="170" width="90" height="30" fill="var(--semi)"/>
+<rect x="150" y="140" width="40" height="30" fill="var(--border)"/>
+<text x="170" y="215" text-anchor="middle" fill="var(--text-soft)" font-size="10">PMOS：SiGe 源漏</text>
+<path d="M 120 185 L 150 185 L 150 178 L 158 178 L 158 185 L 190 185" fill="none" stroke="var(--semi)" stroke-width="2" marker-end="url(#ar6-4)"/>
+<path d="M 118 128 L 128 128 L 122 120 L 134 120 L 128 112" fill="none" stroke="var(--semi)" stroke-width="1.5" marker-end="url(#ar6-4)"/>
+<path d="M 222 128 L 212 128 L 218 120 L 206 120 L 212 112" fill="none" stroke="var(--semi)" stroke-width="1.5" marker-end="url(#ar6-4)"/>
+<text x="170" y="103" text-anchor="middle" fill="var(--semi)" font-size="10">压应变 → 空穴迁移率 +50%</text>
+<rect x="400" y="140" width="220" height="60" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="400" y="170" width="90" height="30" fill="var(--semi)"/>
+<rect x="530" y="170" width="90" height="30" fill="var(--semi)"/>
+<rect x="490" y="140" width="40" height="30" fill="var(--border)"/>
+<rect x="482" y="128" width="56" height="10" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="510" y="215" text-anchor="middle" fill="var(--text-soft)" font-size="10">NMOS：CESL 拉应力层</text>
+<path d="M 460 185 L 490 185 L 490 178 L 498 178 L 498 185 L 530 185" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#ar6-4b)"/>
+<path d="M 470 112 L 480 112 L 474 104 L 486 104 L 480 96" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-4b)"/>
+<path d="M 550 112 L 540 112 L 546 104 L 534 104 L 540 96" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-4b)"/>
+<text x="510" y="88" text-anchor="middle" fill="var(--accent)" font-size="10">拉应变 → 电子迁移率 +10~20%</text>
+</svg>
+<figcaption>图 4 · 应变硅：PMOS 用晶格更大的 SiGe 源漏对沟道施压应变，NMOS 用氮化硅 CESL 施拉应变，分别提升空穴与电子迁移率。</figcaption>
+</figure>
+
+<h2 id="s5">5. HKMG：栅介质与栅电极的换血</h2>
+<p>时间到 45nm（2007 年，Intel Penryn），栅氧这条路也走到头了。前文说过，90nm 时 SiO<sub>2</sub> 物理厚度约 1.2nm——五个原子层——隧穿电流已经失控。若继续用 SiO<sub>2</sub>，哪怕把它做得再薄，栅漏电都会盖过一切收益。<strong>解法不是"更薄"，而是"更厚但同样能干"：换高介电常数材料（high-k）。</strong></p>
+<p>栅控强度由栅电容决定，而平板电容 C = εA/d：介电常数 ε 更大，物理厚度 d 就可以更厚，电容却不变。为比较方便，行业引入<strong>等效氧化层厚度 EOT（equivalent oxide thickness）</strong>：</p>
+<div class="formula-block">
+<div class="fl">EOT = t · ( 3.9 / k )</div>
+<div class="fnote">3.9 是 SiO<sub>2</sub> 的介电常数。一层 k≈25 的 HfO<sub>2</sub>，物理厚度做到 3~4nm，EOT 只有约 0.5~0.6nm——电容效果相当于零点几纳米的 SiO<sub>2</sub>，但物理上厚了三倍，隧穿指数级下降。</div>
+</div>
+<p>主力材料是<strong>HfO<sub>2</sub>（氧化铪，k≈25）</strong>，用 ALD（原子层沉积，见<a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 12 篇</a>）一层一层铺出来，保证 3nm 级薄膜的均匀性与保形性。HfO<sub>2</sub> 也不是省油的灯：它带隙比 SiO<sub>2</sub> 窄、内部常有氧空位做"陷阱"，界面与体缺陷让载流子俘获/释放，表现为阈值漂移（可靠性测试里的 PBTI/NBTI 变得更显眼）与随机电报噪声；所以真实栅叠是"HfO<sub>2</sub> 下面垫一薄层 SiO<sub>2</sub> 界面层（interfacial layer）"的双层结构——界面层保迁移率，高 k 层保电容，两层各司其职。这个"理想材料不存在，就用叠层凑"的工程哲学，贯穿了此后所有先进模块。</p>
+<p>但换介质只是换血的一半，另一半在栅电极：<strong>多晶硅栅被金属取代</strong>。原因有三：其一，重掺杂多晶硅栅自身有一层耗尽区（<strong>多晶硅耗尽效应</strong>，poly depletion），相当于在栅氧上又串了一层低 k 电容，EOT 白白变大——金属没有耗尽问题；其二，多晶硅/SiO<sub>2</sub> 体系的<strong>费米钉扎（Fermi-level pinning）</strong>与固定电荷让阈值电压调不准；其三，多晶硅栅要做 n 型、p 型两套掺杂，而金属栅可以直接用功函数配平 NMOS/PMOS 的阈值（后来发展为双功函数金属叠层）。三者合起来，就是 Intel 宣传材料里的"Gate High-k + Metal Gate"。</p>
+<div class="warn"><b>gate-first 还是 gate-last？</b>HfO<sub>2</sub> 经不起高温——先做金属栅再退火，功函数会被"烧"偏。IBM/Samsung 联盟选 gate-first（先栅后退火，成本低但调阈值受限）；Intel 和 TSMC 选 gate-last（replacement gate：先用假栅完成全部高温工序，最后挖掉换金属栅，工艺多几步但电学质量好）。最终 gate-last 成了行业主流——这是典型的"多三步工艺，换电学自由度"的取舍，呼应<a href="2026-10-01-芯片制造工艺流程详解.html">第 9 篇</a>的流程观。</div>
+
+<h2 id="s6">6. FinFET：把沟道竖起来</h2>
+<p>应变硅救了迁移率，HKMG 救了栅介质，但 λ 里的 x<sub>dep</sub>——漏极电场穿过硅体耗尽层——依然无解。平面结构的根本困境是：<strong>栅只有一个面，沟道却"扎根"在体硅里</strong>，漏控总能从体硅绕过栅。真正的破局发生在几何上：2011 年，Intel 在 22nm 节点量产了<strong>FinFET（鳍式场效应晶体管）</strong>，这是自平面 MOSFET 诞生以来第一次换沟道拓扑。</p>
+<p>FinFET 把沟道做成一片竖立的"鱼鳍"，栅极像马鞍一样跨上去，<strong>从三面（两侧+顶部）夹住沟道</strong>。静电学上的效果立竿见影：栅控距离从"一个 x<sub>dep</sub>"变成"半片鳍宽"，λ 大幅变小，DIBL、V<sub>t</sub> roll-off、亚阈值漏电都被压死。更妙的是<strong>体硅可以近乎全耗尽</strong>——沟道里几乎没有残留的中性体区给漏极当"后门"。</p>
+<figure class="diagram">
+<svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FinFET三维结构">
+<defs>
+<marker id="ar6-5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft)"/></marker>
+<marker id="ar6-5b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--semi)"/></marker>
+</defs>
+<polygon points="150,110 310,110 350,80 190,80" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="250" y="103" text-anchor="middle" fill="var(--text-soft)" font-size="10">金属栅（gate-last）</text>
+<polygon points="150,110 150,170 310,170 310,110" fill="var(--border)"/>
+<text x="230" y="145" text-anchor="middle" fill="var(--text)" font-size="10">栅跨越鳍顶与两侧</text>
+<polygon points="230,170 230,230 250,230 250,170" fill="var(--semi)"/>
+<text x="272" y="205" fill="var(--semi)" font-size="10">鳍（fin）＝沟道</text>
+<polygon points="180,240 200,230 340,230 320,240" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="430" y="120" fill="var(--text)" font-size="11">栅控三面夹持</text>
+<line x1="425" y1="126" x2="360" y2="130" stroke="var(--text-soft)" stroke-width="1" marker-end="url(#ar6-5)"/>
+<text x="430" y="150" fill="var(--text-soft)" font-size="10">λ 随鳍宽减小而减小</text>
+<text x="430" y="168" fill="var(--text-soft)" font-size="10">→ L 可缩到静电安全区</text>
+<text x="430" y="200" fill="var(--semi)" font-size="10">驱动电流 ≈ 每鳍量化：</text>
+<text x="430" y="218" fill="var(--semi)" font-size="10">W_eff ≈ 2×H_fin + W_fin</text>
+<text x="430" y="236" fill="var(--text-soft)" font-size="10">（顶面 + 两侧）</text>
+</svg>
+<figcaption>图 5 · FinFET：竖立的鳍状沟道被栅三面包围，有效宽度 W_eff 由鳍高与鳍宽几何决定——驱动电流因此按"鳍数"取整。</figcaption>
+</figure>
+<p>FinFET 带来的第一个"甜蜜的麻烦"是<strong>宽度量化（width quantization）</strong>。平面时代，晶体管宽度 W 想画多宽画多宽（连续可调）；FinFET 时代，W_eff 等于每片鳍贡献的 2H<sub>fin</sub>+W<sub>fin</sub>，想要更大驱动电流只能<strong>并联更多片鳍</strong>——2 片、3 片、4 片，没有 2.5 片。这对设计是根本性改变：版图师从"画矩形"变成"数鳍"，标准单元高度按鳍数离散成 3 鳍、2 鳍、1 鳍档位（后来普遍收敛到单鳍+触点增强），这正是第 15 篇版图实战里会展开的内容。</p>
+<p>第二个麻烦在制造端。FinFET 要求<strong>高深宽比（HAR）刻蚀</strong>：鳍高 50nm 量级、鳍宽十几纳米，深宽比接近 10:1 甚至更高，刻蚀稍歪就是鳍倾倒或底部过蚀，对应工艺细节见<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 11 篇</a>。更早的 22nm 时代，193nm 浸没式光刻已经不够用，鳍的图形要靠<strong>自对准双图案化（SADP）</strong>拼出来，这是<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 10 篇</a>的重点内容。此外还有寄生问题：鳍立在浅沟槽隔离（STI）之上，鳍底与 STI 交界处的"fin 圆化"和界面态会引入寄生电阻与离散度；源漏接触要搭在很小的鳍顶上，接触电阻成了新瓶颈（催生了后来的触点金属硅化物工程与 eSiGe 应力接触）。</p>
+<div class="note"><b>别忘了 FD-SOI 这条平行路线。</b>把沟道做进一层只有十几纳米的超薄硅膜（绝缘体上硅），栅控从背面氧化层被"垫"薄了，λ 同样很小，还能用背栅偏压调制阈值（体偏压自由度是 FinFET 没有的）。SoC 主打低功耗与射频/模拟友好。它输给 FinFET 的不是静电，而是生态：SOI 晶圆更贵、且与主流体硅产线不兼容。两条路线的竞争说明：先进节点的技术选择从来不只是物理问题，还有产业链问题。</div>
+
+<h2 id="s7">7. GAA 环绕栅极：栅控的终极形态</h2>
+<p>FinFET 把栅控从一面升级到三面，逻辑上下一步自然就是<strong>四面包围</strong>——这就是 GAA（gate-all-around，环绕栅极）晶体管，主流实现形态是<strong>纳米片（nanosheet）</strong>。2019 年 Samsung 在其 3nm 级工艺上率先量产 GAA（2022 年出货），TSMC 在 N2（2025 年量产）跟进，Intel 的 RibbonFET 从 20A/18A（2024–2025）开始切换。FinFET 服役约十年后，行业再次更换沟道拓扑。</p>
+<p>把"竖着的鳍"换成"横着叠放的几片薄片"，栅极从四面完全包裹每一片沟道——λ 里再也找不到漏极的进攻角度，亚阈值摆幅逼近 60mV/dec 理论极限，短沟道效应在同等 L 下显著优于 FinFET。但 GAA 真正打动设计者的，是<strong>宽度可调</strong>：纳米片的片宽 W<sub>NS</sub> 是一个连续可设计参数（在版图上画多宽就是多宽），同一套工艺库可以派出不同宽度的器件——宽片给高驱动的关键路径，窄片给低功耗的静态逻辑，而 FinFET 的"只能数鳍"从此成为历史。这是从"离散器件"回到"连续设计空间"的回归。</p>
+<p>代价全在工艺端，而且每一步都是硬骨头：</p>
+<p><strong>① 内侧墙（inner spacer）。</strong>堆叠片之间要精确填充隔离介质，防止栅极金属在片与片之间"短路桥接"，同时还要隔离漏极电场向下方沟道片的穿透。inner spacer 是 GAA 工程里公认最难的模块之一，深宽比越高越难。<strong>② 底部牺牲层释放（channel release）。</strong>制造顺序是：先外延生长 Si/SiGe 超晶格叠层（Si 沟道片与 SiGe 牺牲层交替），做完栅极后用选择性刻蚀把 SiGe <strong>横向掏空</strong>，让栅金属流进去四面包围。这个"释放"要求刻蚀液只吃 SiGe 不吃 Si，且要在栅极已经就位的前提下进行——选择性、方向性、均一性三重考验（呼应第 11 篇的选择性刻蚀）。<strong>③ 悬空沟道的力学与污染。</strong>几纳米厚的硅片被"吊"在源漏之间，释放后不能塌、不能粘、颗粒不能卡在片间——量测与良率控制（第 13 篇）的压力陡增。</p>
+<figure class="diagram">
+<svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GAA纳米片堆叠">
+<defs>
+<marker id="ar6-6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-soft)"/></marker>
+</defs>
+<rect x="90" y="150" width="80" height="70" fill="var(--semi)"/>
+<rect x="390" y="150" width="80" height="70" fill="var(--semi)"/>
+<text x="130" y="240" text-anchor="middle" fill="var(--text-soft)" font-size="10">源极外延</text>
+<text x="430" y="240" text-anchor="middle" fill="var(--text-soft)" font-size="10">漏极外延</text>
+<rect x="170" y="158" width="220" height="16" fill="var(--semi)"/>
+<rect x="170" y="186" width="220" height="16" fill="var(--semi)"/>
+<rect x="170" y="214" width="220" height="16" fill="var(--semi)"/>
+<text x="280" y="170" text-anchor="middle" fill="var(--text)" font-size="9">Si 沟道片 3</text>
+<text x="280" y="198" text-anchor="middle" fill="var(--text)" font-size="9">Si 沟道片 2</text>
+<text x="280" y="226" text-anchor="middle" fill="var(--text)" font-size="9">Si 沟道片 1</text>
+<rect x="240" y="60" width="80" height="12" fill="var(--border)"/>
+<rect x="240" y="88" width="80" height="12" fill="var(--border)"/>
+<rect x="240" y="116" width="80" height="12" fill="var(--border)"/>
+<text x="280" y="50" text-anchor="middle" fill="var(--text-soft)" font-size="10">金属栅（四面包裹每一片）</text>
+<line x1="280" y1="72" x2="280" y2="156" stroke="var(--border)" stroke-width="2"/>
+<line x1="280" y1="100" x2="280" y2="184" stroke="var(--border)" stroke-width="2"/>
+<line x1="280" y1="128" x2="280" y2="212" stroke="var(--border)" stroke-width="2"/>
+<text x="540" y="130" fill="var(--text)" font-size="10">片宽 W_NS 可调</text>
+<text x="540" y="148" fill="var(--text-soft)" font-size="9">宽片 → 高驱动</text>
+<text x="540" y="164" fill="var(--text-soft)" font-size="9">窄片 → 低功耗</text>
+<line x1="530" y1="170" x2="478" y2="190" stroke="var(--text-soft)" stroke-width="1" marker-end="url(#ar6-6)"/>
+<text x="540" y="200" fill="var(--text-soft)" font-size="9">inner spacer 防</text>
+<text x="540" y="216" fill="var(--text-soft)" font-size="9">片间栅桥接</text>
+</svg>
+<figcaption>图 6 · GAA 纳米片：水平堆叠的 Si 沟道片被金属栅四面包围；释放工艺掏空 SiGe 牺牲层后栅金属填充其间，片宽成为设计自由度。</figcaption>
+</figure>
+<p>再往后看，路线图上已经画好的还有两步：<strong>forksheet</strong>——把 NMOS 与 PMOS 的沟道片用一面共享的"叉子"介质墙隔开，省掉 n/p 器件之间的间距，密度再进一步；<strong>CFET（complementary FET）</strong>——干脆把 NMOS 叠在 PMOS <strong>正上方</strong>，垂直堆叠互补对，反相器的占地面积理论上减半。CFET 要解决超垂直外延、两面各自金属栅、上下对准（3D 对准精度）与热管理，是 2030 年前后的候选方向。</p>
+
+<h2 id="s8">8. 背面供电 BSPDN：供电网络搬家</h2>
+<p>器件微缩到 3nm 以下，"瓶颈"已经不在晶体管本身，而在它头顶上的供电网络。传统工艺里，信号线与电源线（VDD/VSS）混在晶圆同一面的多层金属里（BEOL，见第 9 篇）。随着 M0 层间距越压越窄，电源线不得不跟着变细——但电流不降反升（密度上去了），结果就是<strong>IR drop</strong>（电源线上欧姆压降）吃掉本已很低的 V<sub>DD</sub> 余量：名义 0.7V 的电源，到晶体管脚下可能只剩 0.65V，性能与良率双双受损。</p>
+<p><strong>BSPDN（backside power delivery network，背面供电网络）</strong>的思路简单粗暴：把电源线整个<strong>搬到晶圆背面</strong>。正面金属只留给信号，电源用粗线从晶圆背面直接送到每个晶体管的脚下（通过纳米 TSV 直连器件）。Intel 18A（2025）的 <strong>PowerVia</strong> 与 TSMC A16（规划 2026 下半年）的 <strong>Super Power Rail</strong> 都是这条路线。收益的量级：IR drop 显著改善（供电网络电阻可降一个数量级级别），正面释放出信号布线资源让标准单元密度提升约 5–10%，逻辑密度与性能同步受益。</p>
+<p>代价同样真实：要在晶圆正面做完器件后，把整片晶圆<strong>翻过来减薄</strong>到几十微米甚至更薄，再在背面做一套金属化，然后用纳米级 TSV 穿透晶圆把电源接到正面——晶圆减薄、键合、对准、散热都是全新的工艺模块，晶圆还会变得又薄又脆，运送与量测都要重新设计。流程顺序上也有讲究：业界普遍采用"正面做完 FEOL 与部分 BEOL → 键合到载板 → 减薄露背 → 背面刻 TSV 与金属化 → 拆载板接最终封装"，整个流程中晶圆要经历两次翻转与一次超薄状态的全套加工，对颗粒控制与翘曲管理（warpage）的要求是前所未有的——这也是为什么 BSPDN 从论文到量产用了将近十年。这是把 BEOL 的复杂度翻倍、换取供电自由的典型 DTCO 抉择（呼应第 13 篇量测与良率、第 17 篇先进封装里的 3D 集成思想）。</p>
+
+<h2 id="s9">9. 节点命名的"水分"与真实密度</h2>
+<p>如果你以为"3nm 工艺"意味着栅长 3nm，那这一节要给你泼冷水。节点名（28nm → 22 → 16/14 → 10 → 7 → 5 → 3 → 2）曾经确实对应物理尺寸（比如 250nm 时代栅长真的约 250nm），但从 90nm 之后<strong>名字就开始脱离物理</strong>：各家的"7nm"栅长实际在 16–20nm 量级，"3nm"的栅长约 20nm 上下、金属间距 20–30nm 量级。名字如今是<strong>营销学坐标</strong>，只表达"比上一代更先进"的代际关系，与任何单一物理尺寸都无关。</p>
+<p>那怎么横向比较？行业公认的硬指标是<strong>晶体管密度（MTr/mm²，每平方毫米百万晶体管）</strong>。公开量级参考：Intel 4（HP 库）约 100+ MTr/mm²；TSMC N3 约 200 MTr/mm² 量级（HPC 库约 100–150，HD 库更高）；Samsung 3nm GAA 约 170–200 MTr/mm² 量级。注意这些数字在库配置（HP/HDS 等混合比例）上口径不一，<strong>只能看量级，不能直接比大小</strong>。比名字和比密度都不可靠时，行业发明了<strong>"等效节点"</strong>的讨论方式：把某家的工艺折算到"物理上等效于传统命名的第几代"，用栅距、金属间距、单元高度这些真实几何参数来换算——这也是看懂工艺对比类文章的必备心法。</p>
+<div class="warn"><b>一句话记住：</b>节点名是品牌，不是尺寸。看到"某厂 3nm 打败某厂 5nm"这类标题，先问三个问题：比的什么库？什么密度口径？PPA（性能/功耗/面积）是仿真还是量产数据？</div>
+
+<h2 id="s10">10. 微缩的经济账</h2>
+<p>摩尔定律的另一半是经济。Dennard 缩放时代，微缩是"免费午餐"：晶体管更小更快更省电，晶圆贵一点也值得。先进节点时代，这笔账越来越难算。</p>
+<p><strong>晶圆成本一路上扬</strong>：先进节点的 12 英寸晶圆（含工艺费）从成熟节点的两千多美元涨到 3nm 级的两万美元量级。涨价的直接推手是工序数：每个先进节点比上代多几十到上百道光工序，EUV 掩模一张就要十几万美元、一台 EUV 光刻机超过一亿五千万美元——这些都是折进晶圆价格里的。摊到单颗芯片，先进节点大芯片动辄上百美元制造成本。<strong>每晶体管成本的下降显著放缓</strong>：28nm 时代，每代微缩能把每晶体管成本砍掉三成左右；7nm 以后，每代只降一成上下，个别节点甚至几乎不降——摩尔定律的经济学版本（每晶体管成本持续下降）已经接近失灵。</p>
+<p><strong>设计流片成本的台阶更陡</strong>：行业通行估算，7nm 芯片全套设计与掩模流片成本约 <strong>3 亿美元</strong>量级，5nm 约 4–5 亿，3nm 达到 <strong>5–6 亿美元</strong>量级（含 IP、验证与多轮掩模）。这意味着先进节点只剩下每年出货量以千万计的巨头玩得起——手机 SoC、GPU、AI 加速器与云巨头的定制芯片。制造成本筛掉小玩家，设计成本筛掉中型玩家。</p>
+<p>行业对此的回应是 <strong>DTCO（design-technology co-optimization，设计工艺协同优化）</strong>：不再让工艺单方面定规格、设计被动接受，而是<strong>在定工艺规格的最早阶段就让设计与工艺互相谈判</strong>——标准单元库选 1 鳍还是 2 鳍、触点位置、金属层布线策略、BSPDN 送电拓扑、甚至"哪些单元值得为它多三步掩模"，都放进同一个优化闭环。第 14 篇 EDA 工具链里的 PPA 评估、第 15 篇的库与版图规则，都是 DTCO 的落地形态。当物理微缩的边际收益递减，<strong>钱花在哪一步最划算</strong>成了与"能不能做出来"同等重要的问题。</p>
+
+<h2 id="s11">11. 物理极限：摩尔定律死了吗</h2>
+<p>把镜头拉到最微观处，看看微缩还剩多少空间。硅的晶格常数是 <strong>0.543nm</strong>——原子间距约四分之一个纳米；今天 3nm 级的栅氧等效厚度只有零点几纳米，物理上就是<strong>几层原子</strong>。再往下缩，三堵墙迎面而来：<strong>量子隧穿</strong>（沟道薄到几纳米，源漏直接隧穿；栅氧薄到零点几纳米，电子直接穿栅——第 2 篇的势垒在这里失效）；<strong>热涨落</strong>（室温 kT≈26meV，器件里只容几百个电子时，单个杂质原子的有无、一两个电子的涨落都能改变开关行为——V<sub>t</sub> 离散度随器件缩小恶性上升）；<strong>原子级粗糙度</strong>（界面粗糙 1–2 个原子层，迁移率与可靠性就明显劣化——你无法把墙磨得比原子更平）。</p>
+<p>但"摩尔定律死了"这个标题，媒体已经写了二十年，而行业年年还在交出新节点。为什么？因为摩尔定律早已不是"把 L 缩小"这一件事，而是一个<strong>多维度续命系统</strong>：几何维（平面→FinFET→GAA→CFET，换结构接着缩）；材料维（应变硅、HfO<sub>2</sub>、未来可能的 2D 沟道材料）；互连维（HKMG、低 k 介质、BSPDN）；封装与系统维（2.5D/3D、Chiplet、HBM 堆叠——见第 17 篇，把"缩"的任务从晶体管转交给系统组装）。每一个维度单独看都撞过墙，但轮换着看，<strong>系统级性价比还在进步</strong>。</p>
+<div class="tip">工程师的表述：摩尔定律的重心从"晶体管更小"迁移到"单位成本的系统性能更好"。只要这条曲线还在走，"摩尔定律"这个经济学叙事就没死——哪怕它的物理学原始含义（Dennard 式等比例缩放）确实在 2005 年就结束了。</div>
+
+<h2 id="s12">12. 微缩历程时间线小结</h2>
+<p>把这一篇的脉络压缩成一张表。注意最后一列：每次"续命"都是换一个维度发力。</p>
+<table class="term-table">
+<tr><th>年份（量产）</th><th>节点代表</th><th>关键结构/材料创新</th><th>解决的瓶颈</th></tr>
+<tr><td>1965 / 1975</td><td>—</td><td>摩尔经验观察；Dennard 缩放定律（1974）</td><td>确立微缩路线图</td></tr>
+<tr><td>~2002</td><td>90nm</td><td>应变硅：PMOS SiGe 源漏、NMOS CESL</td><td>迁移率天花板</td></tr>
+<tr><td>~2005</td><td>65nm</td><td>应力工程全面铺开；栅氧逼近极限</td><td>Dennard 失效后的性能续命</td></tr>
+<tr><td>2007</td><td>45nm（Intel）</td><td>HKMG：HfO<sub>2</sub> 高 k + 金属栅（gate-last）</td><td>栅氧隧穿漏电</td></tr>
+<tr><td>2011</td><td>22nm（Intel）</td><td>FinFET 首次量产，三面栅</td><td>短沟道效应 / 亚阈值漏电</td></tr>
+<tr><td>~2014–2015</td><td>14/16nm</td><td>行业全面 FinFET 化；SADP 双图案化普及</td><td>密度与静电继续微缩</td></tr>
+<tr><td>2018–2019</td><td>7nm</td><td>EUV 光刻导入（第 10 篇）</td><td>多重图案化的成本爆炸</td></tr>
+<tr><td>2022</td><td>3nm（Samsung）</td><td>GAA 纳米片首次量产</td><td>FinFET 静电极限</td></tr>
+<tr><td>2025</td><td>N2 / 18A</td><td>TSMC N2 GAA 量产；Intel 18A 背面供电 PowerVia</td><td>供电 IR drop / 密度</td></tr>
+<tr><td>2026+</td><td>A16 等</td><td>TSMC A16 Super Power Rail；forksheet/CFET 研发中</td><td>下一代密度与供电</td></tr>
+</table>
+
+<h2 id="s13">13. 与其他篇的衔接</h2>
+<p>这一篇刻意只讲了"器件的物理与结构"，把制造难度全部"欠账"给后面：FinFET 的高深宽比刻蚀、GAA 的选择性释放刻蚀，都压在<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 11 篇</a>；这些结构要经过几百道工序组装起来，全景见<a href="2026-10-01-芯片制造工艺流程详解.html">第 9 篇</a>，四大工艺模块（光刻 <a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 10 篇</a>、刻蚀第 11 篇、薄膜与掺杂 <a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 12 篇</a>、CMP 与量测 <a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇</a>）逐篇展开。反过来，器件越复杂，工艺步数越多、每个参数的工艺窗口越窄——这就是为什么先进节点的良率爬坡越来越慢，也是第 13 篇良率控制存在的理由。</p>
+<p>另一条暗线是：晶体管开关速度越快、密度越高，<strong>互连延迟、供电 IR drop、散热</strong>这三件事越突出——本篇的 BSPDN 只是供电这一环，散热与系统级集成的完整答案（2.5D/3D、Chiplet、HBM）在<a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 17 篇</a>。微缩故事讲到 GAA 并没有结束，它只是从"器件内"转移到了"器件外"。</p>
+
+<h2 id="s14">14. 常见误区</h2>
+<p><strong>误区一："3nm 芯片的晶体管是 3nm 大。"</strong>错。节点名与任何物理尺寸都无对应关系：3nm 节点的实际栅长约 20nm，金属间距 20–30nm 量级。名字是代际营销坐标，真实密度要看 MTr/mm² 与单元高度等几何参数（第 9 节）。</p>
+<p><strong>误区二："FinFET 没有漏电。"</strong>FinFET 确实把亚阈值漏电压了一个数量级，但没有消除漏电：栅氧隧穿依然存在（HKMG 缓解但非归零）、GIDL 在高漏压下仍在、源漏寄生与接触电阻造成的功耗损耗反而更大。先进芯片的静态功耗依然可观，否则"暗硅"问题就不会存在。</p>
+<p><strong>误区三："节点越小性能一定越强。"</strong>PPA（性能/功耗/面积）是三条曲线，不是一条：3nm 的低功耗库未必打得过上一代的高性能库；且互连与供电（IR drop）常常才是瓶颈。比较工艺必须在同库配置、同电压/频率目标下看，否则就是关公战秦琼。</p>
+<p><strong>误区四："摩尔定律是物理定律，所以永远不会停。"</strong>它是行业投资的自我实现预言，不是定律。它已经死过一次（Dennard 缩放 2005 年终结），现在的形态是靠结构、材料、封装多维轮换续命的经济学曲线——认真对待它的正确方式是关注每晶体管成本曲线，而不是迷信名字。</p>
+
+<h2 id="s15">15. 自测 4 题</h2>
+<details class="quiz">
+<summary>Q1 · Dennard 缩放定律说"尺寸缩 k 倍、功耗密度不变"，它在 2005 年前后为什么失效？失效的直接产品后果是什么？</summary>
+<div class="answer">因为电源电压无法继续按 k 比例下降：阈值电压有亚阈值摆幅的物理约束（室温理论下限 60mV/dec），V<sub>DD</sub> 降太多则 V<sub>t</sub> 必须跟着降，亚阈值漏电会指数爆炸；V<sub>DD</sub> 停在 1V 附近不再下降，而密度照常翻倍，功耗密度便不降反升。直接后果：CPU 主频在 3–4GHz 后停滞近二十年，行业转向多核并行与能效优化，"功耗墙"与暗硅问题由此而来。</div>
+</details>
+<details class="quiz">
+<summary>Q2 · 写出短沟道效应特征长度 λ 的表达式，并说明为什么"压小 λ"是四十年结构创新的总纲。</summary>
+<div class="answer">λ = √( ε<sub>si</sub>·t<sub>ox</sub>·x<sub>dep</sub> / ε<sub>ox</sub> )，DIBL 近似为 ΔV<sub>t</sub> ∝ exp(−L/λ)。λ 度量漏极电场穿透进沟道的深度；L/λ 越大栅控越压得住漏控。压小 λ 的三个抓手恰好对应历次结构创新：减小 t<sub>ox</sub>（HKMG 高 k 介质）、减小 x<sub>dep</sub>（halo 倒掺杂、SOI 超薄体）、减小栅控几何距离（FinFET 三面栅、GAA 四面包围）。所以每一代"新结构"，本质都是给 λ 换一个更小的公式变量。</div>
+</details>
+<details class="quiz">
+<summary>Q3 · 从 FinFET 到 GAA 纳米片，对芯片设计者最大的解放是什么？对工艺工程师最难的新增步骤是什么？</summary>
+<div class="answer">设计者：宽度重新连续可调。FinFET 的 W_eff 只能按鳍数取整（2、3、4 片鳍），GAA 的纳米片片宽是版图上的连续参数，同一工艺库可用宽片做高驱动路径、窄片做低功耗逻辑，设计空间从离散回到连续。工艺工程师：释放与隔离——用选择性刻蚀横向掏空 SiGe 牺牲层让栅金属四面包围（channel release），以及堆叠片之间的 inner spacer 填充（防栅桥接与漏场穿透），两者都在几纳米尺度上进行，选择性、方向性、均一性要求都是 FinFET 时代没有的。</div>
+</details>
+<details class="quiz">
+<summary>Q4 · 为什么说"节点名字早已脱离物理尺寸"？比较两家工艺先进程度时，应该看哪些真实参数？</summary>
+<div class="answer">因为 90nm 之后节点名不再对应栅长：如今"3nm"节点的栅长约 20nm、金属间距 20–30nm 量级，名字只是代际营销坐标。真实比较应看：晶体管密度 MTr/mm²（注意 HP/HDS 库配置口径）、接触栅间距（CPP）、最小金属间距（MMP）、标准单元高度、以及同条件下的 PPA 数据。更严谨的做法是用"等效节点"换算——把这些几何参数折算回传统命名的物理代际。</div>
+</details>
+
+<div class="series">
+  <div class="series-title">集成电路学习路径 · 系列导航</div>
+  <ol>
+    <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+    <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+    <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+    <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+    <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+    <li class="current">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</li>
+    <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+    <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 8 篇：硅单晶生长与衬底制备工艺</a></li>
+    <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 9 篇：芯片制造工艺流程详解（总览）</a></li>
+    <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 10 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+    <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 11 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+    <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 12 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+    <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇：CMP 平坦化、量测与良率控制</a></li>
+    <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 14 篇：芯片设计流程与 EDA 工具链</a></li>
+    <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 15 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+    <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇：芯片封装、测试与失效分析</a></li>
+    <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 17 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+    <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+  </ol>
+</div>
+
+</div>
+<div class="tagbar"><span class="chip">#摩尔定律</span><span class="chip">#Dennard缩放</span><span class="chip">#短沟道效应</span><span class="chip">#HKMG</span><span class="chip">#应变硅</span><span class="chip">#FinFET</span><span class="chip">#GAA</span><span class="chip">#背面供电</span><span class="chip">#CFET</span><span class="chip">#DTCO</span></div>
+</div></main>
+<footer class="foot"><div>© 2026 半导体 · 财经 学习笔记</div><div><a href="../../index.html">回到主页</a></div></footer>
+</body>
+</html>

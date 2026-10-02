@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>先进封装与系统级集成 · 2.5D、3D 与 Chiplet</title>
+<meta name="description" content="摩尔定律放缓之后，系统级集成如何接棒续摩尔：从扇出封装、TSV、硅中介层到 2.5D/3D 封装与 hybrid bonding，深讲 CoWoS 产能、HBM 带宽账本、Chiplet 良率经济学与 UCIe 生态，以及热、电、测试的连锁难题。">
+<meta name="keywords" content="先进封装,2.5D,3D封装,CoWoS,TSV,hybrid bonding,Chiplet,UCIe,HBM,扇出封装,EMIB">
+<meta name="date" content="2026-10-02">
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a class="back" href="../../index.html">← 返回主页</a><span class="crumb">半导体 · 集成电路学习笔记</span><div class="topbar-spacer"></div></div></div>
+<main class="article"><div class="article-inner">
+<span class="cat-badge semi">半导体 · 测试</span>
+<h1 class="title">先进封装与系统级集成 · 2.5D、3D 与 Chiplet</h1>
+<div class="meta"><span>2026-10-02</span><span class="sep"></span><span>集成电路学习路径 · 第 17 篇</span><span class="sep"></span><span>阅读约 25 分钟</span></div>
+<div class="content">
+
+<div class="box">
+<span class="box-title">这一篇要解决什么</span>
+上一篇（<a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇</a>）我们讲完了一颗芯片的"传统终章"：CP、FT、引线键合/倒装封装、可靠性与失效分析。但过去十年，芯片世界最大的变化恰恰发生在封装环节——当晶体管微缩不再便宜、不再省电之后，<strong>先进封装（Advanced Packaging）接棒成为性能提升的主战场</strong>。这一篇回答四个问题：为什么是封装？2.5D 与 3D 到底差在哪？HBM 和 Chiplet 凭什么改变了产业格局？以及，这些花活背后热、电、测试的代价是什么？
+</div>
+
+<div class="toc">
+<div class="toc-title">目录</div>
+<ol>
+<li><a href="#s1">为什么先进封装是后摩尔时代的主战场</a></li>
+<li><a href="#s2">封装互连的演进主线：从引线到混合键合</a></li>
+<li><a href="#s3">扇出型封装 Fan-Out 与重布线层 RDL</a></li>
+<li><a href="#s4">2.5D 封装：硅中介层与 CoWoS</a></li>
+<li><a href="#s5">TSV 硅通孔工艺流程</a></li>
+<li><a href="#s6">3D 封装：microbump 堆叠与 hybrid bonding</a></li>
+<li><a href="#s7">HBM 深度案例：AI 时代的带宽发动机</a></li>
+<li><a href="#s8">Chiplet 芯粒革命与 UCIe</a></li>
+<li><a href="#s9">系统级集成的热与电挑战</a></li>
+<li><a href="#s10">良率与测试的连锁变化</a></li>
+<li><a href="#s11">商业格局速览</a></li>
+<li><a href="#s12">未来方向：玻璃基板、CPO 与真 3D</a></li>
+<li><a href="#s13">常见误区</a></li>
+<li><a href="#s14">自测</a></li>
+</ol>
+</div>
+
+<h2 id="s1">1. 为什么先进封装是后摩尔时代的主战场</h2>
+
+<p>先把"时代背景"讲清楚，否则后面所有技术选择都会显得莫名其妙。从 1965 年摩尔提出经验规律到 2005 年前后，芯片行业享受了双重红利：<strong>摩尔定律</strong>（单位面积晶体管数每 18~24 个月翻倍）和 <strong>Dennard 缩放</strong>（尺寸缩小时电压同比例下降，功耗密度保持不变）。但 Dennard 缩放在 2005~2007 年左右实质性终结——电压降到 1V 附近后，阈值电压与漏电流的物理限制不允许再往下压，频率从此卡在 4~5 GHz 至今。行业靠多核与 <a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">FinFET/GAA（第 6 篇）</a>续了命，但另一条腿也瘸了：<strong>单晶体管成本在 28nm 节点之后不再明显下降</strong>。</p>
+
+<p>成本为什么暴涨？设备（EUV 光刻机单台超 1.5 亿欧元）、掩膜（3nm 一套全芯片掩膜上千万美元级）、晶圆（3nm 代工晶圆报价约 2 万美元/片）、良率（大 die 上 <a href="2026-10-01-CMP平坦化量测与良率控制.html">Poisson 良率模型（第 13 篇）</a>的惩罚）都在涨。既然"往 2D 里塞更多晶体管"越来越贵，一个自然的想法是：<strong>往第三维要集成度，把已经做好的芯片高效地拼起来</strong>。这就是先进封装的逻辑起点——性能提升的来源，从"晶体管密度"转向"系统集成密度"。</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="后摩尔时代三条技术路线">
+<defs>
+<marker id="ar17-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+<text x="340" y="26" text-anchor="middle" font-size="13" fill="var(--text)">摩尔定律放缓后的三条路线</text>
+
+<rect x="20" y="48" width="200" height="150" rx="10" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1.2"/>
+<text x="120" y="74" text-anchor="middle" font-size="12" fill="var(--text)">More Moore</text>
+<text x="120" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">继续晶体管微缩</text>
+<text x="120" y="118" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">FinFET → GAA → CFET</text>
+<text x="120" y="138" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">2D 密度继续翻倍</text>
+<text x="120" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">但成本与功耗代价陡增</text>
+<text x="120" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">对应第 6 篇器件微缩</text>
+
+<rect x="240" y="48" width="200" height="150" rx="10" fill="var(--semi)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="340" y="74" text-anchor="middle" font-size="12" fill="var(--text)">More than Moore</text>
+<text x="340" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">系统级集成 · 先进封装</text>
+<text x="340" y="118" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">2.5D / 3D / Chiplet / HBM</text>
+<text x="340" y="138" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">集成密度从 2D 转向 3D</text>
+<text x="340" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">异构异质，按需选工艺</text>
+<text x="340" y="182" text-anchor="middle" font-size="10" fill="var(--accent)">本文主线</text>
+
+<rect x="460" y="48" width="200" height="150" rx="10" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1.2"/>
+<text x="560" y="74" text-anchor="middle" font-size="12" fill="var(--text)">Beyond CMOS</text>
+<text x="560" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">新材料 · 新原理器件</text>
+<text x="560" y="118" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">碳纳米管 / 二维材料</text>
+<text x="560" y="138" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">自旋电子 / 量子计算</text>
+<text x="560" y="158" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">远期研究，尚未量产接棒</text>
+<text x="560" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">对应第 7 篇新型存储等探索</text>
+
+<line x1="120" y1="222" x2="300" y2="222" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar17-1)"/>
+<text x="490" y="226" text-anchor="middle" font-size="11" fill="var(--text-soft)">性能推进主力：晶体管密度 → 系统集成密度</text>
+</g>
+</svg>
+<figcaption>图1 · 后摩尔时代的三条路线。先进封装属于 More than Moore：不改晶体管本身，改"晶体管之间的连接方式"。</figcaption>
+</figure>
+
+<div class="kv">
+<div><div class="v">2005~2007</div><div class="l">Dennard 缩放终结，频率停滞</div></div>
+<div><div class="v">28nm</div><div class="l">单晶体管成本甜点，此后不再下降</div></div>
+<div><div class="v">~$2 万</div><div class="l">3nm 级晶圆单价（代工报价量级）</div></div>
+<div><div class="v">3D</div><div class="l">集成度增长的新方向：堆叠与拼装</div></div>
+</div>
+
+<p>注意三者的关系：<strong>不是替代，而是并行</strong>。顶尖产品（比如 AI GPU）同时在三条路上押注——逻辑用 3nm/4nm 的 GAA（More Moore），封装用 CoWoS + HBM + Chiplet（More than Moore），并资助下一代器件研究（Beyond CMOS）。但过去五年真正的"增量性能"大头来自第二条路：单看 GPU 逻辑芯片架构改进带来的吞吐提升，远小于 HBM 带宽翻倍带来的提升。这也是为什么先进封装产能成了 2024 年以来 AI 算力的硬瓶颈——这个问题我们留到第 4 节展开。</p>
+
+<h2 id="s2">2. 封装互连的演进主线：从引线到混合键合</h2>
+
+<p><a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇</a>讲过传统封装的两大类：引线键合（Wire Bonding）与倒装（Flip Chip）。把它们和本篇的新技术放在同一把尺子上，才能看清演进的方向。<strong>这把尺子就是互连密度与寄生参数</strong>：</p>
+
+<table class="term-table">
+<thead><tr><th>互连技术</th><th>典型 pitch</th><th>IO 数量级</th><th>寄生电感（每互连）</th><th>出现时间</th></tr></thead>
+<tbody>
+<tr><td>引线键合 Wire Bond</td><td>35~50 μm（线弧）</td><td>几十~几百</td><td>~1 nH/mm 金线</td><td>1960s</td></tr>
+<tr><td>倒装 C4 Bump</td><td>130~180 μm</td><td>~10³</td><td>~0.1 nH</td><td>1960s（IBM）/ 1990s 普及</td></tr>
+<tr><td>Microbump / 2.5D</td><td>40~55 μm</td><td>~10⁴~10⁵</td><td>~几十 pH</td><td>2010s（Xilinx Virtex-7 首批量产 2.5D）</td></tr>
+<tr><td>Hybrid Bonding</td><td>9 μm → 6 μm 以下</td><td>~10⁶/cm² 量级</td><td>~pH 级，接近片内互连</td><td>2010s 末（SoIC / Foveros Direct）</td></tr>
+</tbody>
+</table>
+
+<p>三个观察值得强调。第一，<strong>每一代之间的互连密度差是 1~2 个数量级</strong>，这不是渐进改良，是台阶式跳跃。第二，寄生参数同样按数量级下降：引线键合的 1 nH 级电感，在 5 Gbps 以上信号上就是灾难（电抗 2πfL，10 GHz 下 1 nH 阻抗约 63 Ω，信号直接被"锁死"），而 hybrid bonding 的互连寄生已接近芯片内部互连，这正是 die-to-die 接口能做到 ~0.25 pJ/bit 能效的物理基础。第三，<strong>IO 数量的天花板决定了系统架构</strong>：引线键合时代不可能出现 HBM 这种 1024-bit 超宽接口的器件——不是想不到，是接不上。</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="互连密度演进阶梯">
+<defs>
+<marker id="ar17-2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+<text x="340" y="26" text-anchor="middle" font-size="13" fill="var(--text)">封装互连密度：60 年 · 四个数量级</text>
+
+<line x1="70" y1="40" x2="70" y2="210" stroke="var(--border)" stroke-width="1.2"/>
+<text x="64" y="52" text-anchor="end" font-size="10" fill="var(--text-mute)">10⁶</text>
+<text x="64" y="102" text-anchor="end" font-size="10" fill="var(--text-mute)">10⁴</text>
+<text x="64" y="152" text-anchor="end" font-size="10" fill="var(--text-mute)">10²</text>
+<text x="34" y="130" text-anchor="middle" font-size="10" fill="var(--text-mute)">IO</text>
+
+<rect x="90" y="192" width="130" height="18" rx="4" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1"/>
+<rect x="240" y="162" width="130" height="48" rx="4" fill="var(--semi)" fill-opacity=".22" stroke="var(--semi)" stroke-width="1"/>
+<rect x="390" y="122" width="130" height="88" rx="4" fill="var(--semi)" fill-opacity=".34" stroke="var(--semi)" stroke-width="1"/>
+<rect x="540" y="66" width="120" height="144" rx="4" fill="var(--semi)" fill-opacity=".48" stroke="var(--accent)" stroke-width="1.4"/>
+
+<text x="155" y="182" text-anchor="middle" font-size="10.5" fill="var(--text)">引线键合</text>
+<text x="155" y="198" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">~10² IO</text>
+<text x="305" y="152" text-anchor="middle" font-size="10.5" fill="var(--text)">倒装 C4</text>
+<text x="305" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">~10³ IO</text>
+<text x="455" y="112" text-anchor="middle" font-size="10.5" fill="var(--text)">Microbump</text>
+<text x="455" y="128" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">~10⁴~10⁵ IO</text>
+<text x="600" y="52" text-anchor="middle" font-size="10.5" fill="var(--text)">Hybrid Bonding</text>
+<text x="600" y="68" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">~10⁶/cm² · bumpless</text>
+
+<text x="155" y="232" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1960s</text>
+<text x="305" y="232" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1990s</text>
+<text x="455" y="232" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">2010s</text>
+<text x="600" y="232" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">2019→</text>
+
+<line x1="90" y1="248" x2="655" y2="248" stroke="var(--text-mute)" stroke-width="1" marker-end="url(#ar17-2)"/>
+<text x="372" y="244" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">pitch：50 μm → 150 μm → 45 μm → 9 μm → 6 μm</text>
+</g>
+</svg>
+<figcaption>图2 · 互连密度演进。注意纵轴是对数：hybrid bonding 相对引线键合是四个数量级的跨越，寄生参数随之下降到接近片内互连。</figcaption>
+</figure>
+
+<p>演进的技术主线可以概括为四步：<strong>引线键合 → 倒装（bump 凸点）→ 晶圆级封装 WLP → 扇出 Fan-Out</strong>。倒装把芯片翻转过来、凸点朝下对准基板，IO 遍布整个面而不是只排四边；晶圆级封装（Wafer Level Packaging）则干脆在整片晶圆上完成再布线与植球，划片即成品（fan-in WLCSP，芯片尺寸=封装尺寸）；但当芯片面积太小、凸点排不下所有 IO 时，就需要把 IO"扇出"到芯片轮廓之外——这就是下一节的 Fan-Out。</p>
+
+<h2 id="s3">3. 扇出型封装 Fan-Out 与重布线层 RDL</h2>
+
+<p>Fan-Out（扇出型封装）的鼻祖是英飞凌 2006 年量产的 <strong>eWLB</strong>（embedded Wafer Level Ball Grid Array）：把裸片埋进人工重建的"晶圆"（reconstituted wafer）里——先将 good die 按间距摆好，注塑塑封成一片等效晶圆，然后在塑封表面做<strong>重布线层 RDL（Redistribution Layer）</strong>，把芯片上间距细密的小焊盘"扇出"重排成间距宽松、可植球的阵列。芯片面积小于封装面积的差值被充分利用，IO 自然就"多出来了"。</p>
+
+<p>这里的关键构件是 <strong>RDL</strong>：一层（或多层）聚合物介质 + 嵌入其中的铜细线。第一代 eWLB 的 RDL 线宽/线距约 8/8 μm，如今主流已到 2/2 μm 甚至更细。RDL 是无源布线层，不承担逻辑功能，但它的线宽直接决定了"扇出比"和信号完整性。苹果 2016 年的 A10 处理器采用台积电 <strong>InFO-PoP</strong>（fan-out 上再堆叠 DRAM），把 fan-out 从射频小芯片带进了手机主处理器，是这项技术的标志性节点。</p>
+
+<p>再往上一个层级是<strong>面板级封装 PLP（Panel Level Packaging）</strong>：把 reconstituted 载体从 300 mm 晶圆换成 600×600 mm 的方形面板。算一笔面积账：600 mm 方形面板约 0.36 m²，而 300 mm 晶圆约 0.07 m²——单片面板面积是晶圆的 5 倍以上，且方形区域装载方形 die 没有圆形晶圆的边缘浪费。<strong>单位 die 的封装成本因此可以下降 20~40%</strong>（视利用率与良率）。代价是工程难度：方形塑封的翘曲控制、面板搬运与均匀性都比圆晶圆难，RDL 对位精度也受限。所以目前的分工大致是：高精度、高价值产品走晶圆级 fan-out，成本敏感的大批量产品（射频、电源、部分消费类）走面板级。</p>
+
+<div class="note"><b>为什么 fan-out 重要？</b>它确立了"封装可以自带布线资源"的范式——RDL 让封装不再是"保护壳"，而是互连子系统。后面 2.5D 的 RDL interposer、以及有机基板上越来越密的中介层，都是这个范式的延伸。</div>
+
+<p>Fan-Out 的取舍也预告了整个先进封装行业的核心难题：<strong>它要求 Known Good Die（KGD）</strong>。die 一旦埋进塑封体，就再也不可能单独更换，所以只有 CP 全通过的 die 才能上重建晶圆——良率与测试的问题从这一刻起就埋下了，第 8、10 节会回头算这笔账。</p>
+
+<h2 id="s4">2.5D 封装：硅中介层与 CoWoS</h2>
+
+<p>2.5D 封装解决的问题非常具体：<strong>让两颗以上的高速芯片靠得足够近、连线足够密，但又不互相干扰</strong>。"2.5D"这个名字听起来像营销，其实很准确：芯片并排（不是堆叠）放在一块中介层上，集成度提升来自"平面内的高密度互连"，还没进入"垂直堆叠"的 3D 世界。</p>
+
+<p>以台积电 <strong>CoWoS</strong>（Chip-on-Wafer-on-Substrate）为例，把结构从上到下拆开：</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CoWoS 2.5D 封装剖面">
+<defs>
+<marker id="ar17-3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+<text x="340" y="22" text-anchor="middle" font-size="13" fill="var(--text)">CoWoS 2.5D 剖面示意</text>
+
+<rect x="55" y="36" width="130" height="50" rx="4" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.2"/>
+<text x="120" y="58" text-anchor="middle" font-size="11" fill="var(--text)">HBM</text>
+<text x="120" y="75" text-anchor="middle" font-size="9" fill="var(--text-mute)">DRAM 堆叠</text>
+
+<rect x="210" y="30" width="240" height="62" rx="4" fill="var(--semi)" fill-opacity=".38" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="330" y="55" text-anchor="middle" font-size="11.5" fill="var(--text)">GPU / ASIC die（N4/N3）</text>
+<text x="330" y="74" text-anchor="middle" font-size="9" fill="var(--text-mute)">SoC · 约 600~800 mm²</text>
+
+<rect x="475" y="36" width="130" height="50" rx="4" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.2"/>
+<text x="540" y="58" text-anchor="middle" font-size="11" fill="var(--text)">HBM</text>
+<text x="540" y="75" text-anchor="middle" font-size="9" fill="var(--text-mute)">DRAM 堆叠</text>
+
+<g fill="var(--text-soft)">
+<circle cx="90" cy="98" r="1.8"/><circle cx="110" cy="98" r="1.8"/><circle cx="130" cy="98" r="1.8"/><circle cx="150" cy="98" r="1.8"/><circle cx="170" cy="98" r="1.8"/>
+<circle cx="230" cy="102" r="1.8"/><circle cx="250" cy="102" r="1.8"/><circle cx="270" cy="102" r="1.8"/><circle cx="290" cy="102" r="1.8"/><circle cx="310" cy="102" r="1.8"/><circle cx="330" cy="102" r="1.8"/><circle cx="350" cy="102" r="1.8"/><circle cx="370" cy="102" r="1.8"/><circle cx="390" cy="102" r="1.8"/><circle cx="410" cy="102" r="1.8"/><circle cx="430" cy="102" r="1.8"/>
+<circle cx="500" cy="98" r="1.8"/><circle cx="520" cy="98" r="1.8"/><circle cx="540" cy="98" r="1.8"/><circle cx="560" cy="98" r="1.8"/><circle cx="580" cy="98" r="1.8"/>
+</g>
+<text x="648" y="92" text-anchor="end" font-size="9.5" fill="var(--text-mute)">microbump</text>
+<text x="648" y="106" text-anchor="end" font-size="9.5" fill="var(--text-mute)">pitch 40~55 μm</text>
+
+<rect x="40" y="112" width="580" height="52" rx="4" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.4"/>
+<polyline points="60,126 120,126 150,136 260,136 300,126 420,126" fill="none" stroke="var(--semi)" stroke-width="1.2"/>
+<polyline points="80,148 200,148 230,138 350,138 390,148 560,148" fill="none" stroke="var(--semi)" stroke-width="1.2"/>
+<polyline points="60,158 180,158 210,150 330,150 370,158 580,158" fill="none" stroke="var(--semi)" stroke-width="1.2" opacity=".7"/>
+<rect x="105" y="112" width="7" height="52" fill="var(--text-soft)" opacity=".55"/>
+<rect x="300" y="112" width="7" height="52" fill="var(--text-soft)" opacity=".55"/>
+<rect x="455" y="112" width="7" height="52" fill="var(--text-soft)" opacity=".55"/>
+<text x="648" y="130" text-anchor="end" font-size="9.5" fill="var(--text-mute)">RDL：线宽 0.4~2 μm</text>
+<text x="648" y="145" text-anchor="end" font-size="9.5" fill="var(--text-mute)">TSV：Ø ~10 μm · 深 ~100 μm</text>
+<text x="648" y="160" text-anchor="end" font-size="9.5" fill="var(--text-mute)">硅中介层 interposer</text>
+
+<g fill="var(--text-soft)">
+<circle cx="120" cy="172" r="2.2"/><circle cx="160" cy="172" r="2.2"/><circle cx="200" cy="172" r="2.2"/><circle cx="240" cy="172" r="2.2"/><circle cx="280" cy="172" r="2.2"/><circle cx="320" cy="172" r="2.2"/><circle cx="360" cy="172" r="2.2"/><circle cx="400" cy="172" r="2.2"/><circle cx="440" cy="172" r="2.2"/><circle cx="480" cy="172" r="2.2"/><circle cx="520" cy="172" r="2.2"/><circle cx="560" cy="172" r="2.2"/>
+</g>
+<text x="648" y="176" text-anchor="end" font-size="9.5" fill="var(--text-mute)">C4 bump</text>
+
+<rect x="30" y="184" width="600" height="44" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+<polyline points="60,198 250,198 290,210 430,210 470,198 610,198" fill="none" stroke="var(--text-mute)" stroke-width="1"/>
+<polyline points="60,216 200,216 240,206 400,206 440,216 610,216" fill="none" stroke="var(--text-mute)" stroke-width="1" opacity=".7"/>
+<text x="640" y="210" text-anchor="end" font-size="9.5" fill="var(--text-mute)">有机基板（ABF）· 线宽 9~12 μm</text>
+
+<g fill="var(--text-soft)">
+<circle cx="90" cy="248" r="6"/><circle cx="170" cy="248" r="6"/><circle cx="250" cy="248" r="6"/><circle cx="330" cy="248" r="6"/><circle cx="410" cy="248" r="6"/><circle cx="490" cy="248" r="6"/><circle cx="570" cy="248" r="6"/>
+</g>
+<text x="648" y="252" text-anchor="end" font-size="9.5" fill="var(--text-mute)">BGA 焊球 → PCB</text>
+
+<line x1="330" y1="92" x2="330" y2="112" stroke="var(--text-mute)" stroke-width="1" marker-end="url(#ar17-3)" opacity=".6"/>
+</g>
+</svg>
+<figcaption>图3 · CoWoS 2.5D 剖面：GPU 与 HBM 并排贴在硅中介层上，高速信号走 interposer 内的细密 RDL，普通信号经 C4 落入有机基板，最后 BGA 焊球出板。</figcaption>
+</figure>
+
+<p><strong>为什么 GPU + HBM 必须上 2.5D？</strong>关键在走线密度。HBM 的接口是 1024-bit 超宽总线（第 7 节细算），一颗 GPU 挂 4~8 颗 HBM，需要同时为每颗 HBM 提供 1024 根数据线 + 电源地 + 控制，单 die 边缘要走通数千根高速线。有机基板的线宽线距是 9/12 μm 量级——每毫米只能走约 2~3 根差分对，根本排不下；而硅中介层借用了芯片 BEOL 工艺，RDL 线宽 0.4~2 μm，走线密度比有机基板高一到两个数量级，还能在 die 之间塞进去整面的去耦电容。一句话：<strong>带宽需求 × 走线密度 = 2.5D 的必然性</strong>。</p>
+
+<p>CoWoS 的产能故事值得单独讲。2023 年起 NVIDIA A100/H100 把 CoWoS 需求拉爆，台积电 CoWoS 月产能从 2023 年中约 1.5 万片（折 12 英寸等效）一路扩到 2025 年的数万片，仍供不应求——公开报道里 NVIDIA 高管多次把 CoWoS 列为出货瓶颈，"买不到 CoWoS = 买不到 GPU"一度是行业共识。这也解释了为什么各家都在找 Plan B：AMD MI300 系列同样吃 CoWoS，三星、英特尔拼命宣传自家 2.5D 就是为了接住外溢需求。<strong>封装产能第一次和晶圆产能平起平坐，成为算力供给侧的硬约束</strong>。</p>
+
+<p>替代路线有三个方向，按"去硅程度"排列：</p>
+
+<table class="term-table">
+<thead><tr><th>路线</th><th>代表</th><th>中介层方案</th><th>优劣</th></tr></thead>
+<tbody>
+<tr><td>硅 interposer（CoWoS-S）</td><td>TSMC CoWoS</td><td>整片硅，BEOL RDL + TSV</td><td>密度最高、成熟；贵，面积受光罩限制，需 Shrink 拼接扩展</td></tr>
+<tr><td>RDL interposer（CoWoS-R / InFO 类）</td><td>TSMC CoWoS-R</td><td>去掉硅，直接在塑封上做细线 RDL</td><td>便宜、面积可大于光罩；线宽稍粗，TSV 需求转移</td></tr>
+<tr><td>局部硅桥（EMIB）</td><td>Intel EMIB</td><td>只在 die 对接处埋小块硅桥，无 TSV</td><td>成本最优（硅面积最小）；桥接带宽有限，布通率依赖布局</td></tr>
+</tbody>
+</table>
+
+<p><strong>EMIB</strong>（Embedded Multi-die Interconnect Bridge）的思路尤其值得体会：它不追求"整面高密度"，只在两颗 die 的交界带放一条几毫米宽的硅桥，桥内走亚微米细线，其余互连交给普通基板。硅桥从基板侧面与 die 引脚相连，<strong>完全不需要 TSV</strong>，省掉了 interposer 里最贵的一环。对于 die 间互连需求集中于"边缘走廊"的产品（CPU + IO die、CPU + 加速器），EMIB 的性价比极高；而对于 GPU+HBM 这种"整面灌带宽"的拓扑，CoWoS 的全片 interposer 仍不可替代。<strong>没有最好的封装，只有匹配流量拓扑的封装</strong>——这个原则贯穿本篇。</p>
+
+<h2 id="s5">TSV 硅通孔工艺流程</h2>
+
+<p>TSV（Through-Silicon Via，硅通孔）是垂直集成的"电梯井"：在硅片上刻出直径 5~10 μm、深度约 100 μm 的深孔，内壁绝缘、衬 barrier/seed、电镀填铜，把 die 正面的互连垂直引到背面（或引到堆叠的上一层）。它是 HBM、硅 interposer、3D 堆叠的共同基础设施。整个流程几乎是<strong>第 11 篇深硅刻蚀（HAR）</strong>与<strong>第 12 篇薄膜工艺</strong>的实战汇编：</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TSV 工艺流程">
+<defs>
+<marker id="ar17-4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+
+<g>
+<rect x="25" y="60" width="110" height="70" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<rect x="70" y="60" width="18" height="52" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1"/>
+<text x="80" y="150" text-anchor="middle" font-size="10.5" fill="var(--text)">① 深孔刻蚀</text>
+<text x="80" y="166" text-anchor="middle" font-size="9" fill="var(--text-mute)">Bosch DRIE</text>
+<text x="80" y="180" text-anchor="middle" font-size="9" fill="var(--text-mute)">Ø5~10 μm · AR 10:1</text>
+</g>
+
+<g>
+<rect x="155" y="60" width="110" height="70" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<rect x="182" y="60" width="16" height="52" fill="var(--semi)" fill-opacity=".12"/>
+<rect x="180" y="60" width="20" height="52" fill="none" stroke="var(--semi)" stroke-width="1.6"/>
+<text x="210" y="150" text-anchor="middle" font-size="10.5" fill="var(--text)">② 绝缘层 Liner</text>
+<text x="210" y="166" text-anchor="middle" font-size="9" fill="var(--text-mute)">SiO₂ · CVD</text>
+<text x="210" y="180" text-anchor="middle" font-size="9" fill="var(--text-mute)">保形覆盖是难点</text>
+</g>
+
+<g>
+<rect x="285" y="60" width="110" height="70" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<rect x="312" y="60" width="16" height="52" fill="var(--semi)" fill-opacity=".12"/>
+<rect x="311" y="60" width="18" height="52" fill="none" stroke="var(--semi)" stroke-width="1.4"/>
+<rect x="314" y="60" width="12" height="52" fill="none" stroke="var(--text-soft)" stroke-width="1.6"/>
+<text x="340" y="150" text-anchor="middle" font-size="10.5" fill="var(--text)">③ Barrier/Seed</text>
+<text x="340" y="166" text-anchor="middle" font-size="9" fill="var(--text-mute)">TaN/TiN + Cu seed</text>
+<text x="340" y="180" text-anchor="middle" font-size="9" fill="var(--text-mute)">PVD 深孔保形差</text>
+</g>
+
+<g>
+<rect x="415" y="60" width="110" height="70" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<rect x="442" y="60" width="16" height="52" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1"/>
+<text x="470" y="150" text-anchor="middle" font-size="10.5" fill="var(--text)">④ 铜电镀填孔</text>
+<text x="470" y="166" text-anchor="middle" font-size="9" fill="var(--text-mute)">ECD · 自底向上</text>
+<text x="470" y="180" text-anchor="middle" font-size="9" fill="var(--text-mute)">抑制剂防空洞/缝隙</text>
+</g>
+
+<g>
+<rect x="545" y="60" width="110" height="58" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<line x1="545" y1="66" x2="655" y2="66" stroke="var(--text)" stroke-width="1.4"/>
+<rect x="572" y="60" width="16" height="40" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1"/>
+<rect x="545" y="130" width="110" height="12" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<rect x="572" y="122" width="16" height="12" fill="var(--semi)" fill-opacity=".55"/>
+<text x="600" y="150" text-anchor="middle" font-size="10.5" fill="var(--text)">⑤ CMP + 薄化露头</text>
+<text x="600" y="166" text-anchor="middle" font-size="9" fill="var(--text-mute)">上表面平整</text>
+<text x="600" y="180" text-anchor="middle" font-size="9" fill="var(--text-mute)">背面研磨至 Cu 露出</text>
+</g>
+
+<line x1="140" y1="42" x2="150" y2="42" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar17-4)"/>
+<line x1="270" y1="42" x2="280" y2="42" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar17-4)"/>
+<line x1="400" y1="42" x2="410" y2="42" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar17-4)"/>
+<line x1="530" y1="42" x2="540" y2="42" stroke="var(--text-mute)" stroke-width="1.2" marker-end="url(#ar17-4)"/>
+<text x="340" y="26" text-anchor="middle" font-size="13" fill="var(--text)">TSV 工艺五步（via-middle 顺序）</text>
+</g>
+</svg>
+<figcaption>图4 · TSV 工艺流程。刻蚀的深宽比（AR≈10:1）与电镀的无空洞填充是两大工艺难点，分别对应第 11 篇 HAR 刻蚀与第 12 篇电镀/薄膜的内容。</figcaption>
+</figure>
+
+<p>逐点拆解难点。①<strong>深孔刻蚀</strong>：用 Bosch 时间复用法（刻蚀-钝化交替），深宽比 10:1 量级意味着 10 μm 宽的孔要刻 100 μm 深，还得控制侧壁锥度与 notch（底部过刻蚀）。②<strong>绝缘层</strong>：TEOS 或 O₃-TEOS 亚大气压 CVD 沉 SiO₂，深孔底部的台阶覆盖率远低于开口处，膜太薄会漏电，太厚挤压后续铜的截面积。③<strong>barrier/seed</strong>：TaN/TiN 阻挡层防止 Cu 扩散进硅，PVD 在深孔里"喷不进底"，所以 seed 层底部常断——这是电镀缺陷的头号来源，行业内用离子化 PVD、ALD barrier 等手段补救。④<strong>电镀填孔</strong>：靠添加剂体系（加速剂聚底、抑制剂护壁）实现自底向上（bottom-up）生长，杜绝空洞——空洞会在后续热循环中变成致命缺陷。⑤<strong>CMP + 薄化露头</strong>：正面 CMP 去掉过电镀铜帽（呼应<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇</a>），若做 TSV last/reveal 流程，还要把晶圆临时键合到载板上、背面研磨抛光至 TSV 铜柱"露头"，再与下一片键合。</p>
+
+<p>流程顺序有两种哲学：<strong>via-first</strong>（在晶体管制作之前打孔）工艺简单但互连布局受限；<strong>via-middle</strong>（FEOL 之后、BEOL 之前）是主流——TSV 与 BEOL 金属层直接对连，设计自由度最大，但要承受 400 °C 以上 BEOL 热预算对 Cu TSV 应力的考验。此外 Cu（CTE≈17 ppm/K）与硅（2.6 ppm/K）的热失配会让 TSV 周围形成纳米级应力区，即 <strong>keep-out zone</strong>——TSV 附近数百纳米到微米级的区域不宜放对应力敏感的器件，这又把问题绕回了<a href="2026-10-01-硅单晶生长与衬底制备工艺.html">硅衬底的晶格与机械性质（第 8 篇）</a>。</p>
+
+<div class="kv">
+<div><div class="v">Ø 5~10 μm</div><div class="l">TSV 直径典型范围</div></div>
+<div><div class="v">10:1</div><div class="l">深宽比量级，Bosch DRIE</div></div>
+<div><div class="v">via-middle</div><div class="l">主流插入点：FEOL 后 BEOL 前</div></div>
+<div><div class="v">无空洞</div><div class="l">电镀填孔的生命线</div></div>
+</div>
+
+<h2 id="s6">3D 封装：microbump 堆叠与 hybrid bonding</h2>
+
+<p>2.5D 是"并排"，3D 是"叠起来"。垂直堆叠有两条技术路线，差异本质上是<strong>层间互连的 pitch</strong>：</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="microbump 与 hybrid bonding 对比">
+<g font-size="12">
+<text x="170" y="28" text-anchor="middle" font-size="12" fill="var(--text)">路线 A · Microbump 堆叠</text>
+<text x="510" y="28" text-anchor="middle" font-size="12" fill="var(--text)">路线 B · Hybrid Bonding</text>
+
+<line x1="340" y1="42" x2="340" y2="216" stroke="var(--border)" stroke-width="1" stroke-dasharray="5 4"/>
+
+<rect x="50" y="48" width="240" height="46" rx="4" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+<text x="170" y="75" text-anchor="middle" font-size="10.5" fill="var(--text)">上层 die</text>
+<circle cx="120" cy="102" r="7" fill="var(--semi)" fill-opacity=".5" stroke="var(--text-soft)" stroke-width="1"/>
+<circle cx="170" cy="102" r="7" fill="var(--semi)" fill-opacity=".5" stroke="var(--text-soft)" stroke-width="1"/>
+<circle cx="220" cy="102" r="7" fill="var(--semi)" fill-opacity=".5" stroke="var(--text-soft)" stroke-width="1"/>
+<rect x="50" y="112" width="240" height="46" rx="4" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+<text x="170" y="139" text-anchor="middle" font-size="10.5" fill="var(--text)">下层 die</text>
+<text x="170" y="182" text-anchor="middle" font-size="10" fill="var(--text-soft)">bump pitch 40~55 μm（可缩至 ~25 μm）</text>
+<text x="170" y="200" text-anchor="middle" font-size="10" fill="var(--text-soft)">代表：Intel Foveros、HBM 层间</text>
+
+<rect x="380" y="48" width="260" height="50" rx="4" fill="var(--semi)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="510" y="76" text-anchor="middle" font-size="10.5" fill="var(--text)">上层 die</text>
+<g fill="var(--semi)" fill-opacity=".75">
+<rect x="404" y="98" width="14" height="5" rx="1"/><rect x="432" y="98" width="14" height="5" rx="1"/><rect x="460" y="98" width="14" height="5" rx="1"/><rect x="488" y="98" width="14" height="5" rx="1"/><rect x="516" y="98" width="14" height="5" rx="1"/><rect x="544" y="98" width="14" height="5" rx="1"/><rect x="572" y="98" width="14" height="5" rx="1"/><rect x="600" y="98" width="14" height="5" rx="1"/>
+</g>
+<line x1="380" y1="105" x2="640" y2="105" stroke="var(--text-soft)" stroke-width="1"/>
+<rect x="380" y="107" width="260" height="50" rx="4" fill="var(--semi)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="510" y="135" text-anchor="middle" font-size="10.5" fill="var(--text)">下层 die</text>
+<text x="510" y="182" text-anchor="middle" font-size="10" fill="var(--text-soft)">Cu pad 直接键合（bumpless）pitch 9 μm → 6 μm</text>
+<text x="510" y="200" text-anchor="middle" font-size="10" fill="var(--text-soft)">代表：TSMC SoIC、Intel Foveros Direct</text>
+
+<text x="170" y="226" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">互连密度 ~10⁴/mm² 级</text>
+<text x="510" y="226" text-anchor="middle" font-size="9.5" fill="var(--accent)">互连密度 ~10⁶/cm² 级，高 1~2 个数量级</text>
+</g>
+</svg>
+<figcaption>图5 · 两条 3D 堆叠路线。hybrid bonding 用 Cu-Cu 直接键合取代焊料凸点，pitch 从几十微米压到 10 μm 以下，代价是键合面对平整度的苛刻要求。</figcaption>
+</figure>
+
+<p><strong>路线 A：microbump 堆叠</strong>。把倒装焊点缩小到 40 μm pitch 以下（Cu pillar + 焊料帽），逐层叠放、回流。这是目前最成熟的路线：HBM 的层间、Intel Foveros（Lakefield、Meteor Lake 的 base tile 架构）都基于它。极限在于物理：pitch 缩到 20 μm 以下时，焊球太小、共面性公差不变，相邻 bump 之间桥连短路的风险指数上升，回流塌陷也控不住——<strong>bump 的物理尺寸成了密度的天花板</strong>。</p>
+
+<p><strong>路线 B：hybrid bonding（混合键合）</strong>。彻底取消焊料：两片晶圆/die 的键合面上同时有介电层（SiO₂ 或 SiCN）与嵌入的 Cu pad，先靠介电层表面活化后的 Si-OH 缩合实现室温预键合（介电-介电键合），再在 200~300 °C 退火——Cu 热膨胀比周围介电层快，被"挤"在一起形成金属-金属直接键合。因为没有焊球，pitch 可以一直压：TSMC SoIC 一代约 9 μm，二代 6 μm，路线图指向 4.5 μm 以下；互连密度比 microbump 高 1~2 个数量级，寄生电感/电容接近片内水平。</p>
+
+<p>代价全部集中在<strong>键合表面的平整度</strong>上。铜 pad 若相对介电层凹陷（dishing）或凸起（erosion/step height）超过 1~2 nm，要么 Cu 对不上 Cu，要么介电层悬空、键合强度崩塌。这意味着键合前的 CMP 必须把表面控制在<strong>埃（Å，10⁻¹⁰ m）级</strong>——比标准逻辑后段 CMP 的要求再高一个数量级，晶圆级计量（呼应<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇</a>的平坦化与量测）成了 hybrid bonding 良率的生死线。这也是为什么量产 hybrid bonding 的主力是晶圆厂（TSMC SoIC、三星 X-Cube、Intel Foveros Direct），而不是传统 OSAT。</p>
+
+<p>实战案例最能说明问题：AMD 的 <strong>3D V-Cache</strong>（Zen 3/4/5 系列）用 SoIC 把一片 64 MB SRAM die 以 hybrid bonding 叠在 CPU die 上，L3 从 32 MB 跳到 96 MB，游戏平均帧率提升可观——而 CPU die 本身的工艺与版图几乎不动。垂直方向的"第二个数量级"就是这么来的：同一块 100 mm² 的地皮上"免费"多出一片 die 的晶体管。</p>
+
+<h2 id="s7">HBM 深度案例：AI 时代的带宽发动机</h2>
+
+<p>HBM（High Bandwidth Memory，高带宽内存）是本篇所有技术的汇合点：它是<strong>TSV 堆叠 + 2.5D 封装 + KGD 测试</strong>三位一体的产品，也是 AI 算力最紧缺的零部件。先看结构：</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HBM 堆叠结构">
+<defs>
+<marker id="ar17-5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+<text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)">HBM 堆叠结构与超宽接口</text>
+
+<rect x="40" y="80" width="200" height="130" rx="4" fill="var(--semi)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="140" y="135" text-anchor="middle" font-size="11.5" fill="var(--text)">GPU / ASIC</text>
+<text x="140" y="155" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">HBM PHY 在 die 边缘</text>
+
+<g fill="var(--text-soft)">
+<circle cx="262" cy="95" r="1.8"/><circle cx="276" cy="95" r="1.8"/><circle cx="290" cy="95" r="1.8"/>
+<circle cx="262" cy="130" r="1.8"/><circle cx="276" cy="130" r="1.8"/><circle cx="290" cy="130" r="1.8"/>
+<circle cx="262" cy="165" r="1.8"/><circle cx="276" cy="165" r="1.8"/><circle cx="290" cy="165" r="1.8"/>
+<circle cx="262" cy="195" r="1.8"/><circle cx="276" cy="195" r="1.8"/><circle cx="290" cy="195" r="1.8"/>
+</g>
+<line x1="240" y1="110" x2="310" y2="110" stroke="var(--text-mute)" stroke-width="1" marker-end="url(#ar17-5)"/>
+<text x="275" y="72" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1024-bit 超宽接口</text>
+<text x="275" y="86" text-anchor="middle" font-size="9" fill="var(--text-mute)">数千根互连 · 走 interposer</text>
+
+<rect x="315" y="44" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="63" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".22" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="82" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".26" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="101" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="120" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".34" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="139" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".38" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="158" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".42" stroke="var(--semi)" stroke-width="1"/>
+<rect x="315" y="177" width="200" height="16" rx="2" fill="var(--semi)" fill-opacity=".46" stroke="var(--semi)" stroke-width="1"/>
+<text x="415" y="56" text-anchor="middle" font-size="9" fill="var(--text)">DRAM die（薄化 ~30 μm）</text>
+<text x="415" y="189" text-anchor="middle" font-size="9" fill="var(--text)">DRAM die × 8（8Hi）</text>
+
+<rect x="315" y="197" width="200" height="30" rx="2" fill="var(--semi)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.2"/>
+<text x="415" y="216" text-anchor="middle" font-size="9.5" fill="var(--text)">Base die（逻辑工艺）</text>
+
+<line x1="360" y1="40" x2="360" y2="230" stroke="var(--text-soft)" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="470" y1="40" x2="470" y2="230" stroke="var(--text-soft)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="348" y="244" text-anchor="middle" font-size="9" fill="var(--text-mute)">TSV 贯穿全栈</text>
+
+<text x="575" y="70" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">8Hi/12Hi · 2.5D</text>
+<text x="575" y="88" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">每栈 8~36 GB</text>
+<text x="575" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">层间 microbump</text>
+<text x="575" y="124" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">DRAM 间 TSV 互通</text>
+<text x="575" y="142" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">base die 做测试与修复</text>
+
+<text x="340" y="278" text-anchor="middle" font-size="10" fill="var(--text-soft)">带宽 = 接口位宽 × 数据速率 ÷ 8：1024 bit × 9.6 Gbps ÷ 8 ≈ 1.23 TB/s（HBM3e 每栈）</text>
+</g>
+</svg>
+<figcaption>图6 · HBM 剖面：8~12 片 DRAM 薄化后 TSV 堆叠，底部是逻辑工艺的 base die，1024-bit 接口面朝 GPU，靠 2.5D interposer 完成数千根互连。</figcaption>
+</figure>
+
+<p><strong>HBM 的本质是把内存带宽做成了"宽进"而非"快跑"</strong>。DDR5 单条 DIMM 只有 64-bit 接口，想提速只能拉频率，但频率拉得越高、信号完整性越难做，板级走线还动辄几十 pJ/bit。HBM 反其道：接口位宽直接给到 1024-bit（HBM4 起 2048-bit），DRAM 核心阵列并行度极高，每 pin 速率只需 4~10 Gbps 的"舒服区间"。带宽公式与演进账本：</p>
+
+<div class="formula-block">
+<div class="fl">BW = 位宽 × 每 pin 速率 ÷ 8 = 1024 bit × 9.6 Gbps ÷ 8 ≈ 1.23 TB/s</div>
+<div class="fnote">HBM3e 每栈带宽。注意分子里的位宽是 1024——这是"用宽度换速率"的核心。每 pin 速率反而比 GDDR 低一个量级，功耗与 SI 压力小得多。</div>
+</div>
+
+<table class="term-table">
+<thead><tr><th>代际</th><th>接口位宽</th><th>每 pin 速率</th><th>每栈带宽</th><th>每栈容量（8~12Hi）</th></tr></thead>
+<tbody>
+<tr><td>HBM2（2016）</td><td>1024-bit</td><td>~2 Gbps</td><td>~256 GB/s</td><td>4~8 GB</td></tr>
+<tr><td>HBM2e（2020）</td><td>1024-bit</td><td>~3.6 Gbps</td><td>~460 GB/s</td><td>8~16 GB</td></tr>
+<tr><td>HBM3（2022）</td><td>1024-bit</td><td>6.4 Gbps</td><td>~819 GB/s</td><td>8~16 GB</td></tr>
+<tr><td>HBM3e（2024）</td><td>1024-bit</td><td>9.6 Gbps+</td><td>~1.2 TB/s</td><td>12~36 GB（12Hi）</td></tr>
+<tr><td>HBM4（2026→）</td><td>2048-bit</td><td>8 Gbps 起</td><td>~2 TB/s 起</td><td>16~48 GB 量级</td></tr>
+</tbody>
+</table>
+
+<p>放在一起对比才震撼：</p>
+
+<table class="term-table">
+<thead><tr><th>技术</th><th>接口位宽</th><th>速率</th><th>单器件带宽</th><th>典型用途</th></tr></thead>
+<tbody>
+<tr><td>DDR5 DIMM</td><td>64-bit</td><td>6.4~8.8 Gbps（MRDIMM 更高）</td><td>~50~70 GB/s</td><td>CPU 主存：容量优先</td></tr>
+<tr><td>GDDR7</td><td>32-bit/颗粒 ×多颗</td><td>32~40 Gbps</td><td>~1.5~1.8 TB/s（整卡）</td><td>游戏显卡：性价比带宽</td></tr>
+<tr><td>HBM3e</td><td>1024-bit/栈 ×8 栈</td><td>9.6 Gbps</td><td>~8 TB/s（整封装）</td><td>AI 加速器：带宽密度与能效</td></tr>
+</tbody>
+</table>
+
+<p><strong>为什么 HBM 必须用 2.5D 贴着 GPU 放？</strong>两个原因。其一，1024 根数据线物理上只能走硅 interposer（第 4 节已算过走线密度账）；其二，功耗：板级长走线的驱动功耗会吃掉带宽收益，HBM 与 GPU 间距压到毫米级后，接口能效做到 ~3~5 pJ/bit，比传统板级内存好一个数量级。代价也直白：HBM 用 DRAM 工艺做堆叠，良率敏感、产能被 CoWoS 与 DRAM 双重卡位，单价远高于同容量 DDR——所以 HBM 至今只出现在"带宽就是钱"的 AI/HPC 场景。顺带一提，HBM4 开始 base die 有望改用逻辑代工工艺（把 PHY、测试逻辑做进去），DRAM 厂与逻辑代工厂的分工正在重组，这是观察未来几年供应链的好窗口。</p>
+
+<h2 id="s8">Chiplet 芯粒革命与 UCIe</h2>
+
+<p>Chiplet（芯粒）回答的问题是：<strong>一颗芯片大到一定程度后，"一整块"是否还是最优解？</strong>答案越来越倾向否定。用<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇</a>的 Poisson 良率模型算一笔账：</p>
+
+<div class="formula-block">
+<div class="fl">Y = e^(−A·D)</div>
+<div class="fnote">Y 为良率，A 为 die 面积（cm²），D 为缺陷密度（个/cm²）。取 D=0.05/cm²（示意值）：100 mm² die 良率约 61%；400 mm² 约 13.5%；700 mm² 只剩约 3%。D 越小差距越缓（领先制程 D 可到 0.01~0.02），但方向不变：良率随面积指数衰减，成本却近似随面积线性增长——超大面积 die 在经济上必然崩塌。</div>
+</div>
+
+<figure class="diagram">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chiplet 拆分的良率与成本收益">
+<defs>
+<marker id="ar17-6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-mute)"/></marker>
+</defs>
+<g font-size="12">
+<text x="340" y="26" text-anchor="middle" font-size="13" fill="var(--text)">把大 die 拆成 Chiplet：良率与工艺的双重收益</text>
+
+<rect x="40" y="56" width="230" height="140" rx="6" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1.3"/>
+<text x="155" y="84" text-anchor="middle" font-size="11.5" fill="var(--text)">单片大 SoC（~700+ mm²）</text>
+<g stroke="var(--semi)" stroke-width="1" fill="none" stroke-dasharray="3 2">
+<rect x="70" y="100" width="26" height="26"/><rect x="150" y="120" width="26" height="26"/><rect x="210" y="90" width="26" height="26"/><rect x="110" y="150" width="26" height="26"/>
+</g>
+<text x="155" y="176" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">缺陷 D=0.05：良率仅个位数</text>
+<text x="155" y="192" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">一套掩膜 ~上千万美元级</text>
+
+<line x1="290" y1="126" x2="355" y2="126" stroke="var(--text-mute)" stroke-width="1.4" marker-end="url(#ar17-6)"/>
+<text x="322" y="114" text-anchor="middle" font-size="10" fill="var(--text-soft)">拆分</text>
+
+<rect x="380" y="56" width="110" height="60" rx="5" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.1"/>
+<text x="435" y="82" text-anchor="middle" font-size="10.5" fill="var(--text)">CCD 0</text>
+<text x="435" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">8 核 · N4</text>
+<rect x="510" y="56" width="110" height="60" rx="5" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.1"/>
+<text x="565" y="82" text-anchor="middle" font-size="10.5" fill="var(--text)">CCD 1</text>
+<text x="565" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">8 核 · N4</text>
+<rect x="380" y="126" width="110" height="60" rx="5" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.1"/>
+<text x="435" y="152" text-anchor="middle" font-size="10.5" fill="var(--text)">CCD 2</text>
+<text x="435" y="170" text-anchor="middle" font-size="9" fill="var(--text-mute)">8 核 · N4</text>
+<rect x="510" y="126" width="110" height="60" rx="5" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.1"/>
+<text x="565" y="152" text-anchor="middle" font-size="10.5" fill="var(--text)">CCD 3</text>
+<text x="565" y="170" text-anchor="middle" font-size="9" fill="var(--text-mute)">8 核 · N4</text>
+<rect x="380" y="196" width="240" height="40" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+<text x="500" y="213" text-anchor="middle" font-size="10" fill="var(--text)">IOD · 内存/PCIe 控制器</text>
+<text x="500" y="229" text-anchor="middle" font-size="9" fill="var(--text-mute)">成熟节点 · 模拟 IO 在此</text>
+
+<text x="500" y="252" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">小 die 良率高 · 各节点最优 · IP 复用 · 产品线快速衍生</text>
+</g>
+</svg>
+<figcaption>图7 · AMD EPYC 式拆分：4 个 8 核 CCD（先进节点）+ 1 个 IOD（成熟节点）。逻辑、IO、模拟各回各家，先进硅片面积最小化。</figcaption>
+</figure>
+
+<p>良率之外还有三笔账。<strong>工艺账</strong>：CPU 核心吃先进节点，但内存控制器、PCIe PHY、SerDes 对节点不敏感（模拟电路在新节点反而难做），用 6nm/12nm 做 IOD 能省下大笔晶圆钱。<strong>掩膜与研发账</strong>：一套 5nm 级掩膜上千万美元，拆分后只有小 die 需要全套，IOD 用成熟节点掩膜便宜得多；改一代产品只需重做部分 chiplet，产品线衍生（8 核、16 核、32 核、64 核共用同一 CCD）像拼积木。<strong>IP 复用账</strong>：一个验证过的 CCD 可以同时服务 EPYC（服务器）、Ryzen（桌面）、Instinct（加速器）三条线，摊薄设计与验证成本。</p>
+
+<p>AMD 的实战数据是最有力的注脚：Zen 2（2019）起把此前的单片 Zeppelin 拆成 8 核 CCD（~7nm，约 70+ mm²）+ IOD（12nm，~125 mm²）。小 CCD 良率远高于假设中的单片大 die，服务器旗舰 EPYC 拿 8 个 CCD 组 64 核；单片方案在同样制程下良率损失与掩膜开销都被量化为"数亿美元级/年"的节省——这也是全行业转向 chiplet 的临门一脚。</p>
+
+<p>chiplet 要成为"产业"而非"独门绝技"，需要 die-to-die 互连标准化，这就是 2022 年由 Intel 牵头、十余家公司共建的 <strong>UCIe</strong>（Universal Chiplet Interconnect Express）。它的定位是封装内互连：先进封装档 bump pitch 25~55 μm、标准封装档 100 μm+，单 pin 速率 4~32 GT/s（NRZ），先进封装下单向带宽密度可达 ~900 GB/s/mm 量级（UCIe 2.0 起向 TB/s/mm 迈进）。对比一下板级互连就明白为什么"先进封装内互连"是降维打击：</p>
+
+<table class="term-table">
+<thead><tr><th>互连</th><th>距离域</th><th>能效（量级）</th><th>带宽密度</th></tr></thead>
+<tbody>
+<tr><td>PCIe / 板级 SerDes</td><td>几十 cm</td><td>~5~10 pJ/bit</td><td>每 lane 32~64 GT/s</td></tr>
+<tr><td>封装内 SerDes（如 Infinity Fabric）</td><td>几 mm~几 cm</td><td>~1~2 pJ/bit</td><td>高一个数量级</td></tr>
+<tr><td>UCIe 并行总线（先进封装）</td><td>&lt;1 cm</td><td>~0.25~0.5 pJ/bit</td><td>~900 GB/s/mm+，再高 1~2 个数量级</td></tr>
+</tbody>
+</table>
+
+<p>物理规律很简单：距离越短，驱动损耗越小、可以并行而不怕串音、速率可以更随意。<strong>封装内互连的能效与带宽密度都比板级好一到两个数量级</strong>——这就是 chiplet 的物理红利，也是为什么大家愿意为先进封装付溢价。但 chiplet 也有绕不开的坑：<strong>KGD（Known Good Die，已知合格 die）</strong>。传统封装里 die 坏了在 CP 阶段就被筛掉；chiplet 模式下 die 要先卖给/交给别人封装，买方必须确认三件事：全速功能测试通过（不只是 CP 的有限向量）、可靠性寿命达标（按<a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇</a>的浴盆曲线做 burn-in 筛掉早期失效）、参数分布足够集中。KGD 测试成本可能占 chiplet 成本的 10~20%，而"测试覆盖不了、堆完才发现坏"的尾部风险永远存在——这是 chiplet 商业模式里最不性感、最要命的一环。</p>
+
+<h2 id="s9">系统级集成的热与电挑战</h2>
+
+<p>前面六节讲"怎么集成"，这一节讲"为什么难"。3D 堆叠不是免费的：它把芯片设计里原本独立的热、电、机械问题全部耦合到了一起。</p>
+
+<p><strong>热：最硬的约束。</strong>2D 芯片贴着散热器，热走一条直路；3D 堆叠后，<strong>下层 die 的热必须穿过上层 die</strong> 才能到达散热器——路径上多了一层硅、多了一层键合界面、多了一层 TIM（热界面材料，Thermal Interface Material，导热系数从普通导热膏的 1~5 W/mK 到液态金属的 ~73 W/mK，每层界面都是一个热阻串联项）。更麻烦的是"热敏邻居"：DRAM 的刷新窗口对温度极其敏感（超过约 85 °C 就要缩短 tREFI、加倍刷新功耗，95 °C 附近逼近规格上限），而现代 AI 封装恰恰是"逻辑发热大户紧贴 HBM"的布局。结果就是热设计约束（TDC）直接吃掉了性能预算：很多 AI 芯片的实际算力上限不是硅片，而是散热。行业的应对按"离热源距离"排序：优化布局把热源错开 → 更强 TIM 与均热板 → 背面散热（把功率 die 翻个面直接贴冷板）→ <strong>微流道液冷</strong>（在 die 或封装内刻微通道，冷却液直接流过芯片背面，热阻可压到 0.1~0.2 K/W 量级）。当单封装功耗从 300 W（A100）涨到 700 W+（MI300X）再到 1000 W 级（B200），风冷退场、液冷进场已是定局——机柜功率密度进入 100 kW 级，"每瓦散热成本"成了数据中心经济学的新核心变量。</p>
+
+<p><strong>电：供电完整性的新考验。</strong>堆叠让瞬态电流更猛：多 die 共享一路供电，负载在纳秒尺度上突变，IR drop 与 L·di/dt 引起的电压塌陷（voltage droop）比单 die 时代严重得多，而工作电压只有 0.7~0.8 V——余量极薄。解法是全链路缩阻抗：基板与 interposer 里埋更多去耦电容、增加电源/地平面层数、细化 PDN 网络；更根本的解法是<strong>背面供电 BSPDN</strong>（BackSide Power Delivery，见<a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇</a>）：把供电网络从正面金属层挪到晶圆背面，信号与电源各走各面，供电路径的电阻下降一个量级——Intel PowerVia 与 TSMC A16 都押注于此。它虽然属于"前道工艺"，但和先进封装的供电理念一脉相承：<strong>电流怎么进来，正在和信号怎么出去一样重要</strong>。</p>
+
+<p><strong>机械：CTE 失配与翘曲。</strong>封装里挤着一堆热膨胀系数差异巨大的材料：硅 2.6、铜 16.7、塑封料 10~12、有机基板 13~17（单位 ppm/K）。温度每循环一轮，各层就要"各胀各的"，大封装（服务器级已到 70×70 mm 以上）的中心与边缘位移差可以到几百微米，表现为<strong>翘曲</strong>——轻则 SMT 贴装虚焊，重则 die 内应力超限、low-k 介质开裂。控制手段包括低 CTE 基板与塑封配方、对称叠层设计、以及精细的回流温度曲线。2.5D 里"硅 interposer 上再放大 silicon die"的双层失配是翘曲治理的教科书案例，这也是 CoWoS 工艺窗口 tuning 的主要工作量之一。</p>
+
+<div class="warn"><b>一句话总结</b>：先进封装把"摩尔红利"从晶体管层面搬到了系统层面，同时也把系统级难题（热、供电、机械应力）搬进了封装工厂——工程师从"设计一颗芯片"变成了"设计一个子系统"。</div>
+
+<h2 id="s10">良率与测试的连锁变化</h2>
+
+<p>传统封装里，测试在封装前后各做一次（CP/FT，见<a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇</a>），坏了大不了报废单颗。先进封装把这个简单模型彻底打破：<strong>堆叠结构里一个坏 die 会毁掉整个 stack</strong>。算一笔账：8 层 HBM，假设每层 DRAM die 测试后良率 97%，全栈无缺陷概率只有 0.97⁸ ≈ 78%——还没算 base die、键合与封装环节的损失。所以先进封装的世界里，测试不再是流程的"质检站"，而是良率的"守门人"，一切围绕三个动作展开：</p>
+
+<p><strong>第一，KGD 前移与加严</strong>。堆叠前对每片 die 做全温度、全向量的深度测试，并按浴盆曲线做 burn-in 筛除早期失效（这部分成本第 8 节算过，占 chiplet 成本的 10~20%）。测试覆盖率的每一次提升，都在为堆叠良率买保险。</p>
+
+<p><strong>第二，堆叠中途测试（stack testing）与修复（repair）</strong>。HBM 的实践最成熟：TSV 堆叠过程中逐层插入测试点，base die 内建修复机制——DRAM 的冗余行/列（redundant row/column）在晶圆阶段用激光熔丝修复，封装完成后还能通过 <strong>PPR（Post Package Repair）</strong>用 eFuse 再修一次，把封装应力导致的新增坏单元救回来。HBM3e 的 12Hi 大栈如果没有修复机制，良率根本不可行。这是"用冗余换良率"的经典工程学，和 NAND 3D 堆叠的冗余设计（见<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>）一脉相承。</p>
+
+<p><strong>第三，不可见缺陷的检测</strong>。传统封装的可视化检查（X-ray 看焊球、光学看引线）到 3D 时代大面积失效：堆叠内部的 bump 是 hidden joint，TSV 深埋硅中完全不可见。检测手段被迫升级：声学扫描显微镜（SAT/CSAM）用超声波探测层间空洞与脱层，X-ray 断层看堆叠对位，红外锁相热成像定位短路发热点。更被动的一招是"可靠性试验抓漏网"：温度循环、HAST 等加速应力（第 16 篇的可靠性工具箱）在出货前把潜在缺陷引爆。行业共识是：<strong>先进封装的检测难点不在单点技术，而在"检测点必须跟着工艺往前移"——等封装完成再想看内部，已经太晚了</strong>。</p>
+
+<h2 id="s11">商业格局速览</h2>
+
+<p>技术看完了，看一眼牌桌上的玩家。先进封装的竞争格局按"谁的硅、谁的线、谁的手"分成三个梯队：</p>
+
+<table class="term-table">
+<thead><tr><th>公司</th><th>2.5D 平台</th><th>3D 平台</th><th>定位</th></tr></thead>
+<tbody>
+<tr><td>TSMC</td><td>CoWoS-S / CoWoS-R / CoWoS-L（局部硅桥+LCL）</td><td>SoIC（hybrid bonding，9→6 μm）</td><td>AI 加速器全垄断位，产能即话语权</td></tr>
+<tr><td>Intel</td><td>EMIB（局部硅桥）</td><td>Foveros / Foveros Direct</td><td>自用为主+代工开放，BSPDN/桥接路线激进</td></tr>
+<tr><td>三星</td><td>I-Cube / H-Cube</td><td>X-Cube / S.Connect</td><td>存储强项绑定 HBM，代工封装联动</td></tr>
+<tr><td>OSAT（日月光 ASE、安靠 Amkor 等）</td><td>fan-out、RDL interposer、CoWoS 后段委外</td><td>hybrid bonding 起步中</td><td>接住晶圆厂外溢的中低密度集成与量产工程</td></tr>
+</tbody>
+</table>
+
+<p>值得体会的是<strong>边界的移动</strong>。传统分工里晶圆厂（IDM/fab）管前道、OSAT 管后道，泾渭分明。先进封装把这条线搅浑了：硅 interposer 与 hybrid bonding 是晶圆工艺的延伸（BEOL RDL、Å 级 CMP、晶圆级键合），天然归 fab；而塑封、RDL 扇出、基板贴合是 OSAT 的传统强项。于是出现"分段代工"：TSMC 做 interposer 与键合，OSAT 做 module 级组装；三星做 HBM 全栈；苹果、NVIDIA、AMD 亲自下场定义封装规格。<strong>封装正在从"制造的下游"变成"产品的定义环节"</strong>——这是十年前没人预测到的格局变化。</p>
+
+<h2 id="s12">未来方向：玻璃基板、CPO 与真 3D</h2>
+
+<p>最后看三个正在路上的方向，它们共同的逻辑是"继续解决本篇留下的问题"。</p>
+
+<p><strong>玻璃基板（Glass Core Substrate）</strong>：有机基板的老毛病（CTE 大、翘曲、细线难做）在玻璃上都能缓解——玻璃的 CTE 可在 3~12 ppm/K 区间定制、表面平整度远超 ABF 板、通孔（TGV，玻璃通孔）可以做到 10 μm 级高密度，且大尺寸面板不翘。Intel、三星电机、SKC Absolics 都在推进，瞄准的是 2030 年前后超大封装（>100×100 mm）的基板升级。挑战在脆性与切割/孔金属化成本——玻璃不会一蹴而就，但方向明确：<strong>基板的"硅化"</strong>。</p>
+
+<p><strong>共封装光学 CPO（Co-Packaged Optics）</strong>：AI 集群的网络带宽膨胀让可插拔光模块的能效（~15~30 pJ/bit）与密度成为瓶颈。CPO 把光引擎（激光器+调制器+硅光芯片）与交换/计算芯片封进同一个封装，电信号走 UCIe 级的短距互连再转光，系统能效有望压到 10 pJ/bit 以下，带宽密度提升一个量级。代价是可维护性——激光器坏了要换整个封装，可靠性工程（呼应第 16 篇）压力全在封装厂身上。这是"封装内互连"逻辑向光域的自然延伸：距离越短越省电，那就把光收发器搬到离芯片最近的地方。</p>
+
+<p><strong>CFET 与真 3D 逻辑</strong>：器件层面，GAA 之后的大招是 CFET（Complementary FET）——nMOS 直接叠在 pMOS 上，把逻辑门"竖起来"，属于第 6 篇路线图的远期一站；系统层面，hybrid bonding 的 pitch 继续下探（6→4.5 μm 以下）后，"逻辑-on-逻辑"的粒度可以从 block 级细化到模块阵列级，真正的 3D 逻辑分区（而非现在的"cache-on-logic"）开始可行。加上 UCIe 生态的开放（IP 厂、存储厂、逻辑厂各自出 chiplet 自由拼装），<strong>未来的"一颗芯片"会越来越像一个封装好的小型系统</strong>——这正是本篇标题"系统级集成"的含义。</p>
+
+<h2 id="s13">常见误区</h2>
+
+<p><strong>误区一："2.5D 比 3D 落后，迟早被淘汰。"</strong>不是代际关系，是路线关系。3D 堆叠的散热路径天然更差（上层挡住下层），且 hybrid bonding 成本仍高；对"带宽灌满、发热巨大"的 GPU+HBM 场景，2.5D 反而是热、成本、带宽的最优解——HBM 本身虽然内部是 3D 堆叠，但它在系统里始终以 2.5D 姿态与 GPU 并排。真正的演进图景是混合使用：同一封装里，cache 用 3D 叠（3D V-Cache），内存用 2.5D 摆（CoWoS）。<strong>选择的标准是流量拓扑、热预算与成本的三元权衡，不是"新打旧"</strong>。</p>
+
+<p><strong>误区二："Chiplet 就是为了便宜。"</strong>只说对一半。拆分会<strong>新增</strong>成本：两次测试（KGD 加严）、先进封装键合、更多封装基板面积，中低容量产品用 chiplet 甚至更贵。chiplet 真正省下的是三样：大 die 的指数级良率损失（Poisson 惩罚）、全套先进节点掩膜费（IOD 走成熟节点）、以及跨产品线的研发摊销。所以它的甜点区是"大容量、多衍生、先进节点"的产品——EPYC 是教科书案例，而一颗小 MCU 用 chiplet 就是自找麻烦。</p>
+
+<p><strong>误区三："先进封装是后道，不需要好工艺。"</strong>恰恰相反，本篇出现过两个"前道级"的工艺要求：TSV 刻蚀是深宽比 10:1 的 HAR 工艺（第 11 篇的难度天花板之一），hybrid bonding 要求 Å 级 CMP 平整度（比逻辑后段还苛刻一个数量级）。先进封装没有降低工艺难度，只是把难度从"更小的晶体管"转移到了"更完美的表面与界面"。低估它的工艺含量，是外行人看封装最常见的错位。</p>
+
+<h2 id="s14">自测</h2>
+
+<details class="quiz">
+<summary>Q1 · HBM3e 每栈带宽约 1.2 TB/s 是怎么算出来的？请写出公式并指出关键变量。</summary>
+<div class="answer">带宽 = 接口位宽 × 每 pin 数据速率 ÷ 8。HBM3e 为 1024-bit 超宽接口、每 pin 约 9.6 Gbps：1024 × 9.6 ÷ 8 ≈ 1.23 TB/s。关键洞察在"位宽"：HBM 牺牲pin速率（比 GDDR 低一个量级）换取 1024-bit 的超宽并行接口，这决定了它必须用 2.5D interposer 承载数千根互连——位宽（而不是速率）才是 HBM 设计哲学的第一变量。</div>
+</details>
+
+<details class="quiz">
+<summary>Q2 · 用 Poisson 良率模型解释：为什么 AMD 把大芯片拆成多个小 CCD 反而更省钱？</summary>
+<div class="answer">Y = e^(−A·D)，良率随 die 面积指数衰减。取 D=0.05/cm²：100 mm² 的 CCD 良率约 61%，而假设的 700 mm² 单片良率仅约 3%——虽然 chiplet 增加了封装与 KGD 测试成本，但省下的良率损失、掩膜费（IOD 用成熟节点）与跨产品线的研发摊销远超新增成本。此外 CCD（先进节点）与 IOD（成熟节点）各选各的工艺，先进硅片面积最小化，这是第二重成本收益。</div>
+</details>
+
+<details class="quiz">
+<summary>Q3 · hybrid bonding 为什么对 CMP 平整度的要求是 Å 级？超差会发生什么？</summary>
+<div class="answer">hybrid bonding 依赖 Cu pad 与周围介电层同时键合：介电层靠表面活化后的 Si-OH 缩合成键，Cu 靠退火时热膨胀挤压实现金属直接键合。若 Cu 相对介电层凹陷（dishing）或凸起超过 1~2 nm，要么 Cu-Cu 接触不上（开路），要么介电面无法贴合（键合强度崩塌、空洞）。pitch 压到 9 μm 以下时 pad 本身只有几百纳米，绝对公差不变而比例恶化，所以表面必须控制在埃（10⁻¹⁰ m）级——这是第 13 篇 CMP 与量测内容的最高要求场景。</div>
+</details>
+
+<details class="quiz">
+<summary>Q4 · 3D 堆叠的散热为什么比 2D 难？给出至少两条工程对策。</summary>
+<div class="answer">因为堆叠后下层 die 的热必须穿过上层 die 及其界面（键合层、TIM）才能到达散热器，热阻串联变长；且邻居可能是热敏的 DRAM（HBM 超 85 °C 需加密刷新）。对策：①优化布局错开热源；②升级 TIM/均热板；③背面散热设计；④微流道液冷，冷却液直接流经 die 背面，热阻可压至 0.1~0.2 K/W 量级。热设计约束如今常成为 AI 芯片算力的第一上限。</div>
+</details>
+
+<div class="series">
+  <div class="series-title">集成电路学习路径 · 系列导航</div>
+  <ol>
+    <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+    <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+    <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+    <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+    <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+    <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+    <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+    <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 8 篇：硅单晶生长与衬底制备工艺</a></li>
+    <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 9 篇：芯片制造工艺流程详解（总览）</a></li>
+    <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 10 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+    <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 11 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+    <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 12 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+    <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 13 篇：CMP 平坦化、量测与良率控制</a></li>
+    <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 14 篇：芯片设计流程与 EDA 工具链</a></li>
+    <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 15 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+    <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 16 篇：芯片封装、测试与失效分析</a></li>
+    <li class="current">第 17 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</li>
+    <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+  </ol>
+</div>
+
+</div>
+<div class="tagbar"><span class="chip">#先进封装</span><span class="chip">#2.5D</span><span class="chip">#3D封装</span><span class="chip">#CoWoS</span><span class="chip">#TSV</span><span class="chip">#HybridBonding</span><span class="chip">#Chiplet</span><span class="chip">#HBM</span><span class="chip">#UCIe</span><span class="chip">#扇出封装</span></div>
+</div></main>
+<footer class="foot"><div>© 2026 半导体 · 财经 学习笔记</div><div><a href="../../index.html">回到主页</a></div></footer>
+</body>
+</html>

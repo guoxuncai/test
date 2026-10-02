@@ -1,6 +1,57 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-02 13:02:13  共 41 篇 */
+/* 生成时间: 2026-10-02 14:11:58  共 44 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
+    "url": "posts/semiconductor/2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html",
+    "date": "2026-10-02",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从摩尔定律与 Dennard 缩放讲起，拆解平面 MOSFET 微缩的短沟道效应、应变硅、HKMG，再到 FinFET、GAA 纳米片与背面供电，看懂六十年来晶体管一路变小的物理与工程",
+    "tags": [
+      "摩尔定律",
+      "器件微缩",
+      "短沟道效应",
+      "FinFET",
+      "GAA",
+      "HKMG"
+    ],
+    "size": 54.5
+  },
+  {
+    "title": "存储器 · DRAM、NAND 与新型存储",
+    "url": "posts/semiconductor/2026-10-02-存储器原理-DRAM-NAND与新型存储.html",
+    "date": "2026-10-02",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "存储器占半导体市场近三分之一。本篇讲清 SRAM 6T 单元、DRAM 1T1C 与 64ms 刷新、NAND 浮栅隧穿与 3D 堆叠、NOR 的 XIP、MRAM/PCM/RRAM/FRAM 四种新型存储，以及存储层级金字塔与存算一体的新",
+    "tags": [
+      "存储器",
+      "DRAM",
+      "SRAM",
+      "NAND",
+      "3D",
+      "浮栅"
+    ],
+    "size": 84.3
+  },
+  {
+    "title": "先进封装与系统级集成 · 2.5D、3D 与 Chiplet",
+    "url": "posts/semiconductor/2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html",
+    "date": "2026-10-02",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "摩尔定律放缓之后，系统级集成如何接棒续摩尔：从扇出封装、TSV、硅中介层到 2.5D/3D 封装与 hybrid bonding，深讲 CoWoS 产能、HBM 带宽账本、Chiplet 良率经济学与 UCIe 生态，以及热、电、测试的连锁",
+    "tags": [
+      "先进封装",
+      "2.5D",
+      "3D封装",
+      "CoWoS",
+      "TSV",
+      "hybrid"
+    ],
+    "size": 69.3
+  },
   {
     "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
     "url": "posts/semiconductor/2026-10-01-薄膜沉积与掺杂工艺详解.html",
@@ -16,7 +67,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 75.0
+    "size": 75.5
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -33,7 +84,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 19.8
+    "size": 20.3
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -50,7 +101,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 20.9
+    "size": 21.4
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -67,7 +118,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 24.3
+    "size": 24.8
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -84,7 +135,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 69.3
+    "size": 69.7
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -111,7 +162,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 23.6
+    "size": 24.1
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -128,7 +179,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 69.0
+    "size": 69.5
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -145,7 +196,7 @@ window.SITE_POSTS = [
       "PN结基础",
       "半导体物理"
     ],
-    "size": 20.2
+    "size": 20.6
   },
   {
     "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
@@ -162,7 +213,7 @@ window.SITE_POSTS = [
       "选择比",
       "各向异性"
     ],
-    "size": 74.0
+    "size": 74.4
   },
   {
     "title": "光刻工艺详解 · 从光学原理到 EUV",
@@ -179,7 +230,7 @@ window.SITE_POSTS = [
       "EUV",
       "High-NA"
     ],
-    "size": 58.3
+    "size": 58.8
   },
   {
     "title": "PN 结原理与特性",
@@ -196,7 +247,7 @@ window.SITE_POSTS = [
       "齐纳击穿",
       "雪崩击穿"
     ],
-    "size": 18.2
+    "size": 18.6
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -213,7 +264,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 20.4
+    "size": 20.9
   },
   {
     "title": "CMP 平坦化、量测与良率控制",
@@ -230,7 +281,7 @@ window.SITE_POSTS = [
       "终点检测",
       "椭偏仪"
     ],
-    "size": 84.3
+    "size": 84.8
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -247,7 +298,7 @@ window.SITE_POSTS = [
       "动态功耗",
       "建立时间"
     ],
-    "size": 19.1
+    "size": 19.6
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -533,7 +584,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 17
+    "count": 20
   },
   {
     "id": "finance",
