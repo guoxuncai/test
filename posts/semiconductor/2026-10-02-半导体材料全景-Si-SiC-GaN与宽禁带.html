@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半导体材料全景 · Si、SiC、GaN 与宽禁带</title>
+<meta name="description" content="从硅到碳化硅、氮化镓，再到氧化镓与金刚石：本篇讲清禁带宽度如何决定耐压、漏电与发光，Baliga/Johnson/Keyes 三个优值系数的算法与排序，Si/Ge/GaAs/InP/SiC/GaN 各自的胜负手，并给一张按场景反查材料的选材决策表。">
+<meta name="keywords" content="半导体材料,硅,SiC,GaN,碳化硅,氮化镓,宽禁带,化合物半导体,GaAs,InP,氧化镓,禁带宽度,击穿场强,Baliga优值">
+<meta name="date" content="2026-10-02">
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a class="back" href="../../index.html">← 返回主页</a><span class="crumb">半导体 · 集成电路学习笔记</span><div class="topbar-spacer"></div></div></div>
+<main class="article"><div class="article-inner">
+<span class="cat-badge semi">半导体 · 材料与工艺</span>
+<h1 class="title">半导体材料全景 · Si、SiC、GaN 与宽禁带</h1>
+<div class="meta"><span>2026-10-02</span><span class="sep"></span><span>集成电路学习路径 · 第 8 篇</span><span class="sep"></span><span>阅读约 25 分钟</span></div>
+<div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        前面几篇我们默认了一件事：<strong>所有的器件都做在硅上</strong>。<a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇</a>的能带、<a href="2026-10-01-PN结原理与特性.html">第 3 篇</a>的 PN 结、<a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇</a>的 MOSFET、<a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇</a>的 FinFET 与 GAA、<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>的 DRAM 与 NAND——它们的舞台统统是硅。但硅其实并不优秀：它不发光，它的耐压一般，它的迁移率只有砷化镓的六分之一，它到 150 ℃ 就开始漏得一塌糊涂。<strong>为什么偏偏是硅赢了？又是什么时候硅真的不够用？</strong>本篇就是回答这两个问题：<strong>把材料的物性参数翻译成"这句话用器件语言怎么说"，讲清 Si / Ge / GaAs / InP / SiC / GaN / Ga<sub>2</sub>O<sub>3</sub> / 金刚石各自的胜负手，最后给一张"按场景反查材料"的决策表</strong>。读完你应该能独立回答：车载主驱为什么选碳化硅而不是氮化镓？65 W 快充头为什么反过来选氮化镓？而手机里的 CPU 为什么至今还是硅，并且大概率会是硅很久很久。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">为什么材料是"天花板"：Eg 这一个参数按下所有开关</a></li>
+          <li><a href="#s2">材料的"代际"划分，以及这套说法的局限</a></li>
+          <li><a href="#s3">关键物性参数：每个数字背后管着什么</a></li>
+          <li><a href="#s4">材料优值系数 FOM：没有全面最优，只有场景最优</a></li>
+          <li><a href="#s5">硅 Si：靠"综合最优"登基的绝对主力，以及它的四道天花板</a></li>
+          <li><a href="#s6">锗 Ge：从第一只晶体管到应变工程与红外光学的配角</a></li>
+          <li><a href="#s7">化合物半导体 GaAs / InP：只在硅做不了的地方出手</a></li>
+          <li><a href="#s8">碳化硅 SiC：高压高温战场的主力，以及它为什么这么贵</a></li>
+          <li><a href="#s9">氮化镓 GaN：极化出来的二维电子气，与一场高频革命</a></li>
+          <li><a href="#s10">SiC 与 GaN 的分工：功率-频率坐标上的势力范围</a></li>
+          <li><a href="#s11">超宽禁带前沿：Ga<sub>2</sub>O<sub>3</sub>、AlN 与金刚石</a></li>
+          <li><a href="#s12">后硅沟道与二维材料：MoS<sub>2</sub>、石墨烯、碳纳米管</a></li>
+          <li><a href="#s13">其他功能半导体材料：IGZO、钙钛矿、有机与自旋</a></li>
+          <li><a href="#s14">选材决策表与四个常见误区</a></li>
+          <li><a href="#s15">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 为什么材料是"天花板"：Eg 这一个参数按下所有开关</h2>
+
+      <p>先纠正一个新手常见的错觉：<strong>设计水平决定器件性能的上限</strong>。这句话只对了一半。设计决定的是"你这手牌打得漂不漂亮"，而材料决定的是"你手上有哪些牌"——<strong>工程师永远做不出材料不允许的器件</strong>。你可以用超结（superjunction）结构让硅突破一维理论极限，可以让 GaN 的常开器件变成常关器件，可以把整颗芯片翻转过来给金刚石散热片降温；但你没有任何办法让硅发出高效的蓝光，也无法用现有硅工艺做出一颗 1200 V、开关损耗极低的单极器件。</p>
+
+      <div class="kv">
+        <div><span class="v">1.12 eV</span><span class="l">硅在 300 K 的禁带宽度，决定了它的耐压与耐温上限</span></div>
+        <div><span class="v">~10×</span><span class="l">4H-SiC 击穿临界场强相对硅的倍数（3.0 vs 0.3 MV/cm）</span></div>
+        <div><span class="v">~10<sup>18</sup></span><span class="l">300 K 下硅本征载流子浓度相对 4H-SiC 的量级差</span></div>
+        <div><span class="v">~15×</span><span class="l">金刚石热导率相对硅的倍数（22 vs 1.5 W/(cm·K)）</span></div>
+      </div>
+
+      <p>在全部材料参数里，排在第一位的永远是<strong>禁带宽度 E<sub>g</sub></strong>（bandgap，<a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇</a>已建立概念）。它之所以是"总开关"，因为它同时按下了三件事：</p>
+
+      <p><strong>第一件：能耐多高的电压。</strong>击穿的物理本质是<strong>碰撞电离</strong>（impact ionization）：漂移区里的电子在电场中被加速，能量积累到超过电离阈值（约为 1.5 E<sub>g</sub>）时，就能把价带电子踢到导带，产生一对新的电子-空穴对；新载流子继续被加速继续电离，雪崩成型。E<sub>g</sub> 越大，"踢一个新电子出来"的门槛越高，材料就能扛住越大的电场。经验上 <em>E<sub>crit</sub> 随 E<sub>g</sub> 单调上升</em>，硅约 0.3 MV/cm，4H-SiC 约 2.5~3.5 MV/cm，GaN 约 3.3 MV/cm——这就是为什么高压器件必须换材料。</p>
+
+      <p><strong>第二件：能工作在多高的温度。</strong>半导体的本征载流子浓度随温度暴力增长：</p>
+
+      <div class="formula-block">
+        <span class="fl">n<sub>i</sub>(T) ∝ T<sup>3/2</sup> × exp[ − E<sub>g</sub> / (2 k T) ]</span>
+        <span class="fnote">代入 300 K（kT = 0.0259 eV）：硅 E<sub>g</sub>/2kT ≈ 21.6，4H-SiC ≈ 62.9。指数差 e<sup>41</sup> 量级——即便再算上有效态密度差别，<strong>300 K 下硅的 n<sub>i</sub> 约 10<sup>10</sup> cm<sup>−3</sup>，而 SiC 的 n<sub>i</sub> 小到 10<sup>−8</sup> cm<sup>−3</sup> 量级，实际上等于"没有"</strong>。这就是为什么硅器件到了 200 ℃ 基本不工作，而 SiC 器件能在 200 ℃ 以上照常干活。</span>
+      </div>
+
+      <p>硅为什么扛不住高温？我们后面第 5 节会亲手算一遍：<strong>200 ℃ 时硅的 n<sub>i</sub> 会涨到约 5×10<sup>13</sup> cm<sup>−3</sup></strong>，这个数字已经逼近重掺杂区的掺杂浓度——PN 结不再由掺杂浓度决定，而由热激发的本征载流子决定，<strong>结消失了，器件不再是半导体器件</strong>。</p>
+
+      <p><strong>第三件：能不能发光。</strong>光子被半导体吸收（或由复合产生）的能量必须大于禁带宽度：</p>
+
+      <div class="formula-block">
+        <span class="fl">λ (nm) = 1240 / E<sub>g</sub> (eV)</span>
+        <span class="fnote">硅 E<sub>g</sub> = 1.12 eV → 只能发出/吸收波长 ≤ 1100 nm 的<strong>红外光</strong>（这也是硅光电探测器止步于近红外的原因）；GaAs E<sub>g</sub> = 1.42 eV → 873 nm；GaN E<sub>g</sub> = 3.4 eV → 365 nm（近紫外），掺 In 形成 InGaN 后可将 E<sub>g</sub> 调低到蓝光对应的 ~2.7 eV（450 nm）。<strong>要想发出可见光，第一步就得禁带够宽。</strong></span>
+      </div>
+
+      <p>但这里有一个巨大的陷阱，也是新手最常踩的坑：<strong>光有合适的禁带宽度还不够，还必须是"直接带隙"才可能高效发光</strong>。第 2 篇讲过能带的 E-k 关系：如果导带底和价带顶在动量空间（k 空间）里对准了同一个 k 值，电子下落时不改变动量，一颗光子直接带走全部能量，这是<strong>直接带隙</strong>（GaAs、InP、GaN 都属于此类），发光效率高到可以做激光器；如果两者错位，复合必须同时借助声子来"补"动量差，三体过程的概率低好几个数量级，这是<strong>间接带隙</strong>（硅、锗、碳化硅）。这就是全世界工程师折腾了几十年也没造出实用硅激光器的根本原因——<strong>不是硅不够好，是硅的物理属性不允许</strong>。</p>
+
+      <p>除了 E<sub>g</sub>，剩下的参数大体上分管以下几件事，<strong>它们之间没有相关性，所以材料必须"挑着用"</strong>：</p>
+
+      <ul>
+        <li><strong>击穿临界场强 E<sub>crit</sub></strong>——决定耐压和漂移区电阻（第 3、4 节展开）；</li>
+        <li><strong>载流子迁移率 μ<sub>n</sub>、μ<sub>p</sub> 与饱和漂移速度 v<sub>sat</sub></strong>——决定"电流跑得多快"，从而决定频率、开关速度与跨导；</li>
+        <li><strong>热导率 κ</strong>——决定热量能否散出去，从而决定功率密度与可靠性；</li>
+        <li><strong>直接/间接带隙、晶格常数、与衬底的匹配度</strong>——决定能不能发光、能不能长成好晶体、能不能外延；</li>
+        <li><strong>能不能找到天然的优质绝缘层 / 稳定的掺杂方式 / 大尺寸低成本衬底</strong>——这些"看似次要"的属性，往往才是商业胜负的真正分水岭。</li>
+      </ul>
+
+      <div class="note">
+        <strong>本篇的核心世界观：</strong>半导体材料没有"更好"，只有"更适合某个问题"。<br>
+        硅赢下的是一场<strong>综合考试</strong>——它的每一项都不是冠军，但它在"能否以工业规模、以极低成本、做出极高良率"这件事上遥遥领先，形成了几十年不可撼动的产业正反馈；而 SiC、GaN、GaAs、InP 各自攻占的是<strong>硅明确做不到的那几个角落</strong>。理解材料的关键从来不是背参数表，而是<strong>搞清楚每个参数在器件层面"卡住了谁的脖子"</strong>。
+      </div>
+
+      <h2 id="s2">2. 材料的"代际"划分，以及这套说法的局限</h2>
+
+      <p>中文语境里你可能频繁听到"第三代半导体"这个词，它是大约在 2010 年代中后期随着碳化硅、氮化镓产业爆发而被广泛使用的<strong>产业俗称</strong>。这套划分确实方便记忆，但必须一开始就提醒：<strong>"第三代"完全不等于"更先进"</strong>。它没有"第一代已被淘汰"的含义，也不是一条技术升级路线——CPU 至今仍用第一代材料硅，而没有任何迹象表明它会改用氮化镓。所谓代际，划分依据其实是<strong>材料的化学性质与主要应用维度</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体材料禁带宽度标尺">
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="18" font-size="11" font-weight="700" fill="var(--text)">禁带宽度 E<sub>g</sub> 标尺（300 K）：越宽越耐压、越耐高温，也越难长出好晶体</text>
+            <text x="20" y="34" font-size="9.5" fill="var(--text-mute)">横轴单位 eV，虚线为常用分界：宽禁带 WBG（约 2.3 eV 以上）与超宽禁带 UWBG（约 4 eV 以上）</text>
+
+            <line x1="303" y1="40" x2="303" y2="238" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="306" y="52" font-size="9" fill="var(--text-mute)">WBG 门槛（约 2.3 eV，对应可见光绿光光子能量）</text>
+            <line x1="417" y1="40" x2="417" y2="238" stroke="var(--text-mute)" stroke-width="1.3" stroke-dasharray="4 3"/>
+            <text x="420" y="66" font-size="9" fill="var(--text-mute)">UWBG 门槛（4 eV）</text>
+
+            <text x="140" y="52" text-anchor="end" font-size="10" fill="var(--text-soft)">Ge</text>
+            <rect x="150" y="40" width="44" height="13" rx="2" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)"/>
+            <text x="200" y="51" font-size="9.5" fill="var(--text-soft)">0.66 eV ｜ 第一代 · 元素半导体 · 首只晶体管</text>
+
+            <text x="140" y="73" text-anchor="end" font-size="10" font-weight="700" fill="var(--text)">Si</text>
+            <rect x="150" y="61" width="75" height="13" rx="2" fill="var(--accent)" fill-opacity=".75" stroke="var(--accent)"/>
+            <text x="231" y="72" font-size="9.5" fill="var(--text)">1.12 eV ｜ 第一代 · 逻辑/存储/功率/光伏的绝对主力</text>
+
+            <text x="140" y="94" text-anchor="end" font-size="10" fill="var(--text-soft)">InP</text>
+            <rect x="150" y="82" width="89" height="13" rx="2" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)"/>
+            <text x="245" y="93" font-size="9.5" fill="var(--text-soft)">1.34 eV ｜ 第二代 · 1310/1550 nm 光通信激光器</text>
+
+            <text x="140" y="115" text-anchor="end" font-size="10" font-weight="700" fill="var(--text)">GaAs</text>
+            <rect x="150" y="103" width="95" height="13" rx="2" fill="var(--semi)" fill-opacity=".62" stroke="var(--semi)"/>
+            <text x="251" y="114" font-size="9.5" fill="var(--text)">1.42 eV ｜ 第二代 · 射频功放、LED、VCSEL</text>
+
+            <text x="140" y="136" text-anchor="end" font-size="10" font-weight="700" fill="var(--text)">4H-SiC</text>
+            <rect x="150" y="124" width="217" height="13" rx="2" fill="var(--semi)" fill-opacity=".85" stroke="var(--semi)"/>
+            <text x="373" y="135" font-size="9.5" fill="var(--text)">3.26 eV ｜ 第三代 · 600 V 以上高压功率主战场</text>
+
+            <text x="140" y="157" text-anchor="end" font-size="10" font-weight="700" fill="var(--text)">GaN</text>
+            <rect x="150" y="145" width="227" height="13" rx="2" fill="var(--semi)" fill-opacity=".85" stroke="var(--semi)"/>
+            <text x="383" y="156" font-size="9.5" fill="var(--text)">3.4 eV ｜ 第三代 · 高频功率 + 蓝光/白光 LED 之基</text>
+
+            <text x="140" y="178" text-anchor="end" font-size="10" fill="var(--text-soft)">β-Ga<sub>2</sub>O<sub>3</sub></text>
+            <rect x="150" y="166" width="320" height="13" rx="2" fill="var(--fin)" fill-opacity=".6" stroke="var(--fin)"/>
+            <text x="476" y="177" font-size="9.5" fill="var(--text-soft)">约 4.8 eV ｜ 第四代 · 可用熔体法长晶，成本低但散热极差</text>
+
+            <text x="140" y="199" text-anchor="end" font-size="10" fill="var(--text-soft)">金刚石</text>
+            <rect x="150" y="187" width="367" height="13" rx="2" fill="var(--fin)" fill-opacity=".7" stroke="var(--fin)"/>
+            <text x="523" y="198" font-size="9.5" fill="var(--text-soft)">5.47 eV ｜ 第四代 · 热导率全场最高，终极功率半导体</text>
+
+            <text x="140" y="220" text-anchor="end" font-size="10" fill="var(--text-soft)">AlN</text>
+            <rect x="150" y="208" width="400" height="13" rx="2" fill="var(--fin)" fill-opacity=".8" stroke="var(--fin)"/>
+            <text x="556" y="219" font-size="9.5" fill="var(--text-soft)">6.0 eV ｜ 第四代 · 深紫外 LED 与紫外探测</text>
+
+            <line x1="150" y1="238" x2="550" y2="238" stroke="var(--border)" stroke-width="1.2"/>
+            <g font-size="9" fill="var(--text-mute)">
+              <line x1="150" y1="238" x2="150" y2="243"/><text x="150" y="252" text-anchor="middle" fill="var(--text-mute)">0</text>
+              <line x1="217" y1="238" x2="217" y2="243"/><text x="217" y="252" text-anchor="middle" fill="var(--text-mute)">1</text>
+              <line x1="283" y1="238" x2="283" y2="243"/><text x="283" y="252" text-anchor="middle" fill="var(--text-mute)">2</text>
+              <line x1="350" y1="238" x2="350" y2="243"/><text x="350" y="252" text-anchor="middle" fill="var(--text-mute)">3</text>
+              <line x1="417" y1="238" x2="417" y2="243"/><text x="417" y="252" text-anchor="middle" fill="var(--text-mute)">4</text>
+              <line x1="483" y1="238" x2="483" y2="243"/><text x="483" y="252" text-anchor="middle" fill="var(--text-mute)">5</text>
+              <line x1="550" y1="238" x2="550" y2="243"/><text x="550" y="252" text-anchor="middle" fill="var(--text-mute)">6 eV</text>
+            </g>
+
+            <rect x="20" y="264" width="640" height="30" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="34" y="283" font-size="10" fill="var(--text-soft)">读这张图的正确方式：<tspan font-weight="700" fill="var(--text)">数字越大只代表"潜能越大"，不代表"越该用"</tspan>—— 硅的 1.12 eV 撑起了 99% 以上的半导体产值，因为其余代价定了胜负。</text>
+          </g>
+        </svg>
+        <figcaption>图 1：常见半导体材料的禁带宽度标尺。宽禁带指 E<sub>g</sub> 明显大于硅的材料，超宽禁带一般指 E<sub>g</sub> &gt; 4 eV。</figcaption>
+      </figure>
+
+      <p><strong>第一代：元素半导体——硅 Si、锗 Ge。</strong>周期表第 IV 族，单质即可成为半导体，靠金刚石结构共价键成键。锗是 1947 年那只改变世界的晶体管的材料，但后来被硅全面取代（第 6 节讲为什么）。硅则是整个产业的基石，全球 300 mm 抛光片年出货量以千万片计，逻辑、存储、模拟、功率、图像传感器、光伏——<strong>超过 95% 的半导体产值建立在硅之上</strong>。</p>
+
+      <p><strong>第二代：化合物半导体——砷化镓 GaAs、磷化铟 InP。</strong>由第 III 族与第 V 族元素化合而成（称为 III-V 族化合物）。它们的杀手锏是<strong>直接带隙 + 高电子迁移率</strong>，因此主宰了"发光"与"射频"两件事：手机里的功率放大器、数据中心的激光器、可见光 LED，都是第二代材料的地盘。它们的短板也非常致命：晶圆小、脆、贵、有毒、<strong>没有天然氧化物</strong>（这一点后面会反复出现）。</p>
+
+      <p><strong>第三代：宽禁带半导体——碳化硅 SiC、氮化镓 GaN。</strong>这里要特别注意：<em>SiC 是 IV-IV 族化合物（硅和碳），GaN 是 III-V 族氮化物</em>，两者化学性质完全不同，被放在"第三代"只是因为它们都突破了硅的耐压/耐温/频率天花板，且在 2000 年代后同时进入功率电子的主舞台。</p>
+
+      <p><strong>第四代：超宽禁带——氧化镓 Ga<sub>2</sub>O<sub>3</sub>、氮化铝 AlN、金刚石。</strong>E<sub>g</sub> 普遍在 4~6 eV，理论上能把功率器件推向更高电压更高效率，但它们各自卡在一个极为棘手的基础问题上（第 11 节细讲）。此外还有几条"非主流但很重要"的支线：<strong>二维材料</strong>（MoS<sub>2</sub>、石墨烯）、<strong>氧化物半导体</strong>（IGZO）、<strong>有机半导体</strong>、<strong>钙钛矿</strong>，它们服务的已经不完全是"更好的开关"，而是显示、光伏、柔性、传感这些新维度。</p>
+
+      <div class="warn">
+        <b>关于"代际"这个说法，请务必记住三件事：</b><br>
+        ① <b>它不是升级关系。</b>你的手机 SoC、AI 加速卡、内存颗粒，用的都是"第一代"硅，而且短期内看不到替代方案；<br>
+        ② <b>它划分的是"应用维度"。</b>第二代主打光电与射频，第三代主打功率与高压，各自解决不同的问题；<br>
+        ③ <b>用它做投资叙事时尤其要警惕。</b>"某公司布局第三代半导体"这句话本身，<strong>不蕴含任何技术领先性的信息</strong>——做 LED 蓝宝石衬底的和做车规 SiC MOSFET 的，都可以自称第三代。评价一家企业要看它具体是哪条产品线、处于什么电压档位、良率和认证到了哪一步。
+      </div>
+
+      <h2 id="s3">3. 关键物性参数：每个数字背后管着什么</h2>
+
+      <p>这一节我们把参数表里那些数字逐条"翻译"成工程语言。请务必带着一个问题读：<strong>这个数字变大/变小，对器件意味着什么？</strong></p>
+
+      <h3>3.1 击穿临界场强 E<sub>crit</sub>：耐压的硬上限</h3>
+
+      <p>定义：材料在不发生雪崩击穿的前提下能承受的最大电场。它直接决定<strong>耐受电压</strong>，而且以一种非常"划算"的方式——因为漂移区（drift region，PN 结之间那层承担电压的低掺杂区）的厚度可以近似写成：</p>
+
+      <div class="formula-block">
+        <span class="fl">W ≈ 2 · BV / E<sub>crit</sub>　,　R<sub>on,sp</sub> = W / (q · μ<sub>n</sub> · N<sub>D</sub>) ∝ BV<sup>2</sup> / (ε · μ<sub>n</sub> · E<sub>crit</sub><sup>3</sup>)</span>
+        <span class="fnote">BV 为阻断电压，W 为所需漂移区厚度，N<sub>D</sub> 为漂移区掺杂浓度。<strong>关键点：E<sub>crit</sub> 是三次方出现的</strong>——临界场强翻 10 倍，同样耐压下的漂移区理论电阻就降低约 1000 倍。这解释了为什么宽禁带材料一出现就把功率器件的格局改写了。</span>
+      </div>
+
+      <p>顺便说一个实用细节：教科书上用 E<sub>crit</sub> 在临界值设计，工程上永远要留 <strong>20%~50% 的裕度</strong>，因为实际器件有边缘终端（edge termination）电场集中、有掺杂不均匀、有缺陷。所以"3 MV/cm 的 SiC，1200 V 器件"并不会真的按照 4 μm 去设计。</p>
+
+      <h3>3.2 迁移率 μ<sub>n</sub> / μ<sub>p</sub> 与饱和漂移速度 v<sub>sat</sub>：速度的上限</h3>
+
+      <p>迁移率 μ 描述载流子在单位电场下的漂移速度（v = μE），单位 cm<sup>2</sup>/(V·s)。它决定：<strong>同样的沟道尺寸下，器件能给出多大的跨导与电流</strong>，以及同等掺杂下电阻有多小。所以 GaAs 的 8500（硅的约 6 倍）意味着它的 FET 能在更高频率下仍有增益——这正是它能做毫米波、亚毫米波器件的原因。</p>
+
+      <p>但电场加大后漂移速度会"饱和"，因为载流子把能量交给晶格（发射光学声子）的速度追上了从电场获取能量的速度。这个<strong>饱和漂移速度 v<sub>sat</sub></strong>才是高频大功率器件的天花板：硅约 1.0×10<sup>7</sup> cm/s，4H-SiC 约 2.0×10<sup>7</sup>，GaN 约 2.5×10<sup>7</sup> cm/s。所以做功率放大器时，宽禁带材料能同时提供"高电压摆幅 + 高速度"，这正是第 4 节 Johnson 优值的物理含义。</p>
+
+      <div class="note">
+        <strong>一个容易忽略的事实：</strong>GaAs 有一条著名的<em>负微分迁移率</em>曲线——电子在某个电场（约 3 kV/cm）以上会从高迁移率的 Γ 谷跃迁到低迁移率的 L 谷，速度反而随电场下降。这个"反常"既是耿氏二极管（Gunn diode）这类微波振荡器的物理基础，也意味着 GaAs 器件的高频性能不能简单用低场迁移率 8500 去外推。
+      </div>
+
+      <h3>3.3 热导率 κ：功率密度的最终裁判</h3>
+
+      <p>器件不是永动机，损耗最终都变成热量。<strong>热导率 κ 决定热量能不能从结（junction）走到散热器</strong>。硅 1.5 W/(cm·K) 属于中等水平；SiC 约 4.9 W/(cm·K) 是硅的 3 倍多，这让 SiC 器件在高压大功率下结温可以压得更低、或者散热器可以做得更小；金刚石约 22 W/(cm·K) 是全场第一，也因此成为终极散热材料。</p>
+
+      <p>这里有两个特别值得记住的反面案例：<strong>GaAs 只有 0.46 W/(cm·K)，GaN 体材料约 1.3 W/(cm·K)</strong>——它们明明也很耐高压，却不适合做超大功率器件，因为热量出不来。而 GaN-on-SiC 射频器件之所以能输出到几百瓦，靠的恰恰是<strong>底下那层 SiC 衬底在帮忙散热</strong>（这是 GaN 选衬底时的头等考量，第 9 节展开）。</p>
+
+      <h3>3.4 相对介电常数 ε<sub>r</sub>：被低估的双刃剑</h3>
+
+      <p>ε<sub>r</sub> 越大，同样厚度的介质层能提供越大的栅电容 → 更强的栅控能力、更大的驱动电流。但代价是：</p>
+
+      <ul>
+        <li><strong>寄生电容变大</strong>：器件的输入电容 C<sub>iss</sub>、输出电容 C<sub>oss</sub>、反向传输电容 C<sub>rss</sub>（米勒电容）随之上升，开关速度与开关损耗变差；</li>
+        <li>根据上面的 R<sub>on,sp</sub> 公式，ε<sub>r</sub> 在分子，<strong>大一点其实是好事</strong>（Baliga 优值里它就排在首位）；</li>
+        <li>更重要的是：ε<sub>r</sub> 与击穿电场 E<sub>crit</sub> 一起决定了<em>特征长度</em>，即器件尺寸缩放的物理尺度：特征长度 ∝ ε · E<sub>crit</sub> / (q · n)。</li>
+      </ul>
+
+      <p>实际排列如下：Si 11.7、GaAs 13.1、InP 12.4、4H-SiC 9.7、GaN 8.9、金刚石 5.7。注意一下这个趋势——<strong>宽禁带材料的介电常数普遍偏低</strong>，这让它们的寄生电容天然较小，是有利于高速的一面。</p>
+
+      <h3>3.5 直接带隙 vs 间接带隙：发不发光的分水岭</h3>
+
+      <p>前面已经讲透：<strong>要做 LED、激光器、高效率光电探测器，必须是直接带隙</strong>（或者至少是允许直接跃迁的带隙结构）。这条判据几乎就是一条产品线分界线：GaAs（直接）做 VCSEL 和射频；InP（直接）做光通信激光器；GaN（直接）做蓝光 LED 与蓝光激光器；而 SiC（间接）虽然 E<sub>g</sub> = 3.26 eV 对应 380 nm 的近紫外，理论上能发紫光，却只能做低效紫外 LED ——<em>它真正能站得住的发光路线并非注入式发光，而是作为衬底去外延 GaN，或用于荧光转换类器件</em>，因此 SiC 发光的市场份额几乎可以忽略。</p>
+
+      <h3>3.6 晶格常数、晶格匹配与热膨胀系数：决定晶体能不能长好</h3>
+
+      <p>外延生长时，如果两种材料的晶格常数相差太多，界面上就会产生<strong>失配位错</strong>（misfit dislocation），位错延伸到器件有源区就成了漏电通道、散射中心、可靠性杀手。<a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇</a>讲过晶格常数这个概念，这里我们只看它的后果：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="关键物性参数对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="16" font-size="11" font-weight="700" fill="var(--text)">三个关键参数的横向对比（横轴统一按各组最大值归一化，注意三组的物理含义不同）</text>
+
+            <text x="130" y="36" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">击穿场强 E<sub>crit</sub>（MV/cm）</text>
+            <text x="350" y="36" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">热导率 κ（W/(cm·K)）</text>
+            <text x="570" y="36" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">电子迁移率 μ<sub>n</sub>（cm²/(V·s)）</text>
+
+            <line x1="40" y1="212" x2="230" y2="212" stroke="var(--border)"/>
+            <line x1="260" y1="212" x2="450" y2="212" stroke="var(--border)"/>
+            <line x1="480" y1="212" x2="670" y2="212" stroke="var(--border)"/>
+
+            <g fill="var(--semi)" fill-opacity=".85" stroke="var(--semi)">
+              <rect x="52" y="201" width="24" height="11"/><rect x="92" y="197" width="24" height="15"/>
+              <rect x="132" y="96" width="24" height="116"/><rect x="172" y="84" width="24" height="128"/>
+              <rect x="272" y="174" width="24" height="38"/><rect x="312" y="207" width="24" height="5"/>
+              <rect x="352" y="84" width="24" height="128"/><rect x="392" y="178" width="24" height="34"/>
+              <rect x="492" y="191" width="24" height="21"/><rect x="532" y="82" width="24" height="130"/>
+              <rect x="572" y="193" width="24" height="19"/><rect x="612" y="190" width="24" height="22"/>
+            </g>
+
+            <g font-size="9" text-anchor="middle" fill="var(--text-soft)">
+              <text x="64" y="243" fill="var(--text-soft)">Si</text><text x="104" y="243" fill="var(--text-soft)">GaAs</text><text x="144" y="243" fill="var(--text-soft)">SiC</text><text x="184" y="243" fill="var(--text-soft)">GaN</text>
+              <text x="284" y="243" fill="var(--text-soft)">Si</text><text x="324" y="243" fill="var(--text-soft)">GaAs</text><text x="364" y="243" fill="var(--text-soft)">SiC</text><text x="404" y="243" fill="var(--text-soft)">GaN</text>
+              <text x="504" y="243" fill="var(--text-soft)">Si</text><text x="544" y="243" fill="var(--text-soft)">GaAs</text><text x="584" y="243" fill="var(--text-soft)">SiC</text><text x="624" y="243" fill="var(--text-soft)">GaN</text>
+            </g>
+            <g font-size="9" text-anchor="middle" fill="var(--text-mute)">
+              <text x="64" y="255" fill="var(--text-mute)">0.3</text><text x="104" y="255" fill="var(--text-mute)">0.4</text><text x="144" y="255" fill="var(--text-mute)">3.0</text><text x="184" y="255" fill="var(--text-mute)">3.3</text>
+              <text x="284" y="255" fill="var(--text-mute)">1.5</text><text x="324" y="255" fill="var(--text-mute)">0.46</text><text x="364" y="255" fill="var(--text-mute)">4.9</text><text x="404" y="255" fill="var(--text-mute)">1.3</text>
+              <text x="504" y="255" fill="var(--text-mute)">1400</text><text x="544" y="255" fill="var(--text-mute)">8500</text><text x="584" y="255" fill="var(--text-mute)">1000</text><text x="624" y="255" fill="var(--text-mute)">1200</text>
+            </g>
+
+            <text x="20" y="228" font-size="9.5" fill="var(--text-mute)">注：GaN 的 μ<sub>n</sub> 取体材料值约 1200，其异质结二维电子气可达 1500~2000 cm²/(V·s)。</text>
+
+            <line x1="20" y1="236" x2="660" y2="236" stroke="var(--border)" stroke-dasharray="3 3"/>
+          </g>
+        </svg>
+        <figcaption>图 2：同一批材料在三个关键维度上的相对位置。注意：没有任何材料在三个维度上同时领先。</figcaption>
+      </figure>
+
+      <p>把三张条形图放在一起看，结论非常清晰：<strong>SiC 赢在耐压与散热，GaN 赢在场强（速度潜力），GaAs 赢在迁移率，而硅哪一项都不出色——但它的每一项都"够用"，加上成本和无缺陷衬底，这才是它统治世界的原因。</strong></p>
+
+      <p>关于晶格失配，请记住数量级概念：在 GaN-on-Si（硅衬底上长氮化镓）工艺里，两者失配高达约 17%，热膨胀系数相差约 2.5 倍（GaN 约 5.6×10<sup>−6</sup>/K，Si 约 2.6×10<sup>−6</sup>/K），结果就是：</p>
+
+      <ul>
+        <li>外延层里的<strong>穿透位错密度</strong>高达 10<sup>8</sup>~10<sup>9</sup> cm<sup>−2</sup>（硅单晶是接近 0）；</li>
+        <li>降温后外延片会<strong>严重翘曲</strong>（bow），150 mm 硅片上的翘曲量可达数十微米到数百微米量级</li>
+        <li>必须依赖一层数微米厚的<strong>应力缓冲层</strong>（通常是渐变组分的 AlGaN 或多层 AlN/GaN 超晶格）来把位错"憋死"在缓冲层里。</li>
+      </ul>
+
+      <p>这就是为什么"硅上长氮化镓"虽然最有成本吸引力（直接沿用成熟的硅产线！），却是最难的科学 —— 我们在第 9 节会完整复盘。</p>
+
+      <h2 id="s4">4. 材料优值系数 FOM：没有全面最优，只有场景最优</h2>
+
+      <p>既然参数这么多而且互相无关，有没有办法一句话评价"哪种材料更适合做某一类器件"？有，这就是<strong>材料优值系数（Figure of Merit，FOM）</strong>。不同学者针对不同目标各自推导了优值，这里我们只讲三个最有代表性的，它们恰好对应功率电子的三种典型约束：<strong>低导通损耗、高频、散热</strong>。</p>
+
+      <h3>4.1 Baliga 优值（BFOM）：低压功率场景</h3>
+
+      <p>Baliga 在 1980 年代推导了单极（多数载流子）功率器件的最小比导通电阻 R<sub>on,sp</sub>（单位面积导通电阻），把第 3 节那个公式中的材料部分单独拎出来，定义为：</p>
+
+      <div class="formula-block">
+        <span class="fl">BFOM = ε<sub>r</sub> · μ<sub>n</sub> · E<sub>crit</sub><sup>3</sup>　（通常以硅为 1 归一化）</span>
+        <span class="fnote">推导脉络：BV ∝ ε·E<sub>crit</sub><sup>2</sup>/(2q·N<sub>D</sub>)，漂移区电阻 R<sub>on,sp</sub> = 4BV<sup>2</sup>/(ε·μ·E<sub>crit</sub><sup>3</sup>)。<strong> BFOM 越大，同样耐压下导通损耗越小。</strong>它适用于 MOSFET、肖特基二极管这类<em>单极器件</em>——双极器件（IGBT、晶闸管）因为有电导调制效应，不受这条极限约束。</span>
+      </div>
+
+      <table class="term-table">
+        <thead><tr><th>材料</th><th>ε<sub>r</sub></th><th>μ<sub>n</sub> (cm²/(V·s))</th><th>E<sub>crit</sub> (MV/cm)</th><th>BFOM（相对 Si = 1）</th><th>解读</th></tr></thead>
+        <tbody>
+          <tr><td>Si</td><td>11.7</td><td>1400</td><td>0.3</td><td>1</td><td>基准：漂移区电阻决定了低压以上的天花板</td></tr>
+          <tr><td>GaAs</td><td>13.1</td><td>8500</td><td>0.4</td><td>约 16</td><td>迁移率救场，但 E<sub>crit</sub> 太小，做不了高压</td></tr>
+          <tr><td>4H-SiC</td><td>9.7</td><td>1000</td><td>3.0</td><td>约 590</td><td>E<sub>crit</sub> 三次方的威力：场强 10 倍 → 约 600 倍</td></tr>
+          <tr><td>GaN</td><td>8.9</td><td>1200（2DEG 2000）</td><td>3.3</td><td>约 880（按 2DEG 约 1450）</td><td>通常与 SiC 同数量级，差异来自迁移率取值</td></tr>
+        </tbody>
+      </table>
+
+      <p>算一遍就明白了：4H-SiC 相对硅的优势是 (9.7/11.7) × (1000/1400) × (3.0/0.3)<sup>3</sup> ≈ 0.83 × 0.71 × 1000 ≈ <strong>590 倍</strong>。虽然前两项（介电常数、迁移率）都吃了亏，但<strong>E<sub>crit</sub><sup>3</sup> 的 1000 倍碾压了所有劣势</strong>。这就是宽禁带的全部秘密。</p>
+
+      <div class="tip">
+        <b>但请立刻给这个 590 倍泼一盆冷水。</b>实际 1200 V SiC MOSFET 的比导通电阻大约在 <b>2~3.5 mΩ·cm²</b>，而按 BFOM 算出的硅理论极限是约 150 mΩ·cm²、SiC 理论极限仅约 0.25 mΩ·cm² —— <strong>SiC 器件距离自己的理论极限还有近 10 倍差距</strong>。差距来自哪里？沟道区（channel）电阻、JFET 区电阻、源极接触电阻、衬底电阻，以及 SiC MOSFET 那糟糕的沟道迁移率（见第 8 节）。<br><br>
+        <b>这是理解功率器件研发的正确视角：</b>BFOM 说的是"漂移区能有多好"，而真正的战场上，<em>沟道与接触往往才是主角</em>。这也是为什么 Trench MOS 结构（把沟道从水平改成垂直）对 SiC 如此重要——它在跟自己的沟道电阻作战。
+      </div>
+
+      <h3>4.2 Johnson 优值（JFOM）：高频功率场景</h3>
+
+      <p>当器件用于功率放大时（发射机、雷达、基站），核心限制不再是导通损耗，而是"能在多高频率下仍输出多大功率"。Johnson 指出，器件能承受的电压摆幅受限于场强 × 尺寸，能承受的频率受限于载流子渡越速度，因此：</p>
+
+      <div class="formula-block">
+        <span class="fl">JFOM ∝ v<sub>sat</sub> · E<sub>crit</sub>　（等价于功率-频率乘积的上限）</span>
+        <span class="fnote">直接用第 3 节的数字估算（相对硅）：Si = 1（1.0×10<sup>7</sup> × 0.3），GaAs ≈ 1.6（1.2×10<sup>7</sup> × 0.4），4H-SiC ≈ 20（2.0×10<sup>7</sup> × 3.0），GaN ≈ 27（2.5×10<sup>7</sup> × 3.3）。若考虑 GaN 异质结二维电子气，实际射频输出功率密度可比同尺寸 GaAs 高<strong> 5~10 倍</strong>，这正是 5G 宏基站与有源相控阵雷达几乎全线转向 GaN-on-SiC 的原因。</span>
+      </div>
+
+      <h3>4.3 Keyes 优值（KFOM）：散热受限场景</h3>
+
+      <p>Keyes 关注的是"热量能不能搬出去"——当集成密度受限于散热能力时：</p>
+
+      <div class="formula-block">
+        <span class="fl">KFOM ∝ κ · v<sub>sat</sub>　（热导率与极限速度的乘积）</span>
+        <span class="fnote">相对硅（1.5 × 1.0×10<sup>7</sup> = 1）：GaAs ≈ 0.37（0.46 × 1.2×10<sup>7</sup>，<strong>比硅还差</strong>！），4H-SiC ≈ 6.5（4.9 × 2.0×10<sup>7</sup>），GaN ≈ 2.2（1.3 × 2.5×10<sup>7</sup>），金刚石 ≈ 22 以上（22 × 1.5×10<sup>7</sup>，最高）。这张表彻底说明了"GaAs 跑得快但热度散不掉"，也说明了为何 GaN 射频器件要选 SiC 衬底——<strong>GaN 提供速度与功率，SiC 负责把热量带走</strong>。</span>
+      </div>
+
+      <p>把三个优值放在一张表上，你会看到一幅非常有教育意义的画面：</p>
+
+      <table class="term-table">
+        <thead><tr><th>材料</th><th>BFOM（导通损耗）</th><th>JFOM（高频功率）</th><th>KFOM（散热）</th><th>结论</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Si</strong></td><td>1</td><td>1</td><td>1</td><td>三项全是基准，但因为成本与工艺生态，仍是第一选择</td></tr>
+          <tr><td><strong>GaAs</strong></td><td>约 16</td><td>约 1.6</td><td>约 0.37</td><td>只有速度优势；要做大功率必须解决散热，故多为小信号/小功率 RF</td></tr>
+          <tr><td><strong>4H-SiC</strong></td><td>约 590</td><td>约 20</td><td>约 6.5</td><td>三项全面领先——但衬底贵、加工难，且沟道迁移率是短板</td></tr>
+          <tr><td><strong>GaN</strong></td><td>约 880~1450</td><td>约 27</td><td>约 2.2</td><td>导通与频率双优，散热是唯一短板，靠衬底选路弥补</td></tr>
+          <tr><td><strong>金刚石</strong></td><td>&gt;10<sup>4</sup>（理论）</td><td>&gt;50</td><td>约 22</td><td>理论上的终极材料，但掺杂与大尺寸单晶尚未解决</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>FOM 的正确用法与四个已知局限：</strong><br>
+        ① FOM<strong>只在同类器件间比较才有意义</strong>——拿 BFOM 去评价 IGBT 是错的（双极器件有电导调制）；<br>
+        ② FOM <strong>只覆盖有源区的物理极限</strong>，完全没有考虑衬底成本、缺陷密度、可靠性、封装这些问题；<br>
+        ③ 它假设<em>均匀电场</em>——工程上的终端结构、场板（field plate）设计会让真实场分布复杂得多；<br>
+        ④ 它没有告诉我们<strong>如何把材料做成器件</strong>。同样一块 GaN，做成横向 HEMT 只能用到 650 V，做成垂直器件才可能挑战 1200 V 以上，而这又需要昂贵的 GaN 体单晶。<br>
+        <strong>一句话：FOM 决定"物理上可能"，工艺决定"商业上可行"。</strong>
+      </div>
+
+      <h2 id="s5">5. 硅 Si：靠"综合最优"登基的绝对主力，以及它的四道天花板</h2>
+
+      <p>硅到底凭什么？答案有点反直觉：<strong>硅没有一项参数是冠军，但它是唯一一项不拖后腿的材料</strong>——更准确地说，硅赢在一连串看似不起眼、实则每一项都能决定商业化生死的"综合属性"上。</p>
+
+      <h3>5.1 硅的四张王牌</h3>
+
+      <p><strong>王牌一：原料几乎不要钱。</strong>硅的地壳丰度约 <strong>27.7%</strong>，仅次于氧（46.6%），排名第二。沙子、石英、砂岩本质都是二氧化硅。这意味着硅的原料供应不存在任何资源约束（对比一下：GaAs 要用砷，InP 要用铟，铟是稀散金属，供应极其有限；金刚石干脆要靠人工合成）。</p>
+
+      <p><strong>王牌二：自带完美的天然氧化物——这是半导体史上最大的运气。</strong>硅氧化生成的 SiO<sub>2</sub>，同时满足了三件事：<em>它是极好的绝缘体</em>（禁带约 9 eV，击穿场强可达 10 MV/cm）；<em>它极其致密稳定</em>，不溶于水、能挡住绝大多数杂质（所以能当掺杂掩膜，这正是平面工艺得以成立的前提）；最重要的是，<strong>Si/SiO<sub>2</sub> 的界面态密度可以被做到 10<sup>10</sup> cm<sup>−2</sup>·eV<sup>−1</sup> 量级</strong>——这个数字的含义是：硅表面每一万个原子里才有一个"悬而未决的化学键"在捣乱，因此 MOSFET 的沟道可以在界面上被干净地形成与关断。</p>
+
+      <div class="tip">
+        <b>请把"有天然氧化物"这件事的重量看清楚。</b>对比一下就知道它有多珍贵：<br>
+        · <b>GaAs 没有</b>——它的自然氧化层是 Ga<sub>2</sub>O<sub>3</sub>／As<sub>2</sub>O<sub>3</sub> 的混合物，疏松、不稳定、化学计量不固定，几十年来全世界都没做成可靠的 GaAs MOS 器件，所以 GaAs 只能做 MESFET / HEMT / HBT 这类<em>不需要高质量栅介质</em>的器件。<br>
+        · <b>SiC 有，但质量差得多</b>——SiC 氧化确实也生成 SiO<sub>2</sub>（这是 SiC 相对 GaN 的一大幸运，让 SiC 能做 MOSFET），但界面态密度比硅高 <b>2~3 个数量级</b>，直接把沟道迁移率打到体材料的百分之几，这是 SiC MOSFET 至今绕不过去的坎（第 8 节）。<br>
+        · <b>GaN 连这一步都要绕</b>——它没有能支撑 MOS 沟道的天然界面，所以主流 GaN 功率器件干脆不用 MOS 结构，改用<em>肖特基栅</em>构造 HEMT（第 9 节）。<br>
+        看明白了吗？今天我们习以为常的"CMOS"，其实是建立在硅这个独一无二的化学性质之上的。
+      </div>
+
+      <p><strong>王牌三：能长出完美的大单晶。</strong><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇</a>会详述直拉法（Czochralski，CZ）：可以把直径 <strong>300 mm</strong>（12 英寸）的硅单晶坩埚拉出来，而且<strong>近乎零位错</strong>，纯度达到 <strong>99.999999999%（11 个 9）</strong>。作为对照，GaAs 主流只有 4~6 英寸，InP 只有 2~4 英寸，SiC 花了三十年才从 4 英寸爬到 6 英寸并刚刚开始 8 英寸产业化，GaN 干脆没有实用的体单晶。<strong>晶圆直径每增大一档，单位芯片成本就下降约 20~30%</strong>——仅仅这一点，就足以让硅赢下整场成本战争。</p>
+
+      <p><strong>王牌四：工艺生态与工程知识积累。</strong>硼、磷、砷、锑的掺杂，热氧化、扩散、离子注入、外延、光刻、刻蚀、CMP、金属化——七十年来人类在这一种材料上积累了几乎全部半导体工艺 Know-how，并形成了一条由设备、材料、EDA、IP、代工组成的完整产业链（<a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇</a>起展开）。这个生态的价值是<strong>复利</strong>的：每多一批人用硅，硅的成本就更低、良率就更高，于是更多人来用硅。</p>
+
+      <div class="kv">
+        <div><span class="v">27.7%</span><span class="l">硅的地壳丰度（仅次于氧）</span></div>
+        <div><span class="v">~10<sup>10</sup></span><span class="l">Si/SiO₂ 界面态密度（cm⁻²·eV⁻¹），近乎完美</span></div>
+        <div><span class="v">300 mm</span><span class="l">硅主流晶圆直径，可拉出近乎零位错单晶</span></div>
+        <div><span class="v">11 个 9</span><span class="l">电子级多晶硅纯度 99.999999999%</span></div>
+      </div>
+
+      <h3>5.2 硅的四道天花板</h3>
+
+      <p><strong>天花板一：间接带隙，发不了光。</strong>第 1 节已讲透。这条限制使得硅在 LED、激光器、高效率光电转换上彻底缺席——你手机屏幕、家里的灯、光模块里的激光器，没有一个能用硅做发光材料。光子学领域正在用"硅平台上集成别的发光材料"（比如把 InP 激光器键合到硅光芯片上）来绕过去，这是当下最活跃的方向之一。</p>
+
+      <p><strong>天花板二：E<sub>g</sub> 太窄，高温漏电失控。</strong>亲手算一遍最有说服力。把 T = 473 K（200 ℃）代入第 1 节的公式（忽略 E<sub>g</sub> 随温度的缓慢下降）：</p>
+
+      <div class="formula-block">
+        <span class="fl">n<sub>i</sub>(473 K) ≈ 1×10<sup>10</sup> × (473/300)<sup>3/2</sup> × exp[ (1.12 / 2k) × (1/300 − 1/473) ] ≈ 5×10<sup>13</sup> cm<sup>−3</sup></span>
+        <span class="fnote">300 K 时硅的 n<sub>i</sub> ≈ 1×10<sup>10</sup> cm<sup>−3</sup>，200 ℃ 时暴涨到约 <strong>5×10<sup>13</sup> cm<sup>−3</sup></strong>（涨了五千倍）。这个数字已经<strong>接近轻掺杂区的掺杂浓度</strong>——PN 结的两边被热激发的本征载流子"抹平"，耗尽区消失、二极管开关失效。换成 E<sub>g</sub> = 3.26 eV 的 SiC，同样的温度爬升只让它从 10<sup>−8</sup> 量级升到可以忽略的水平。<strong>这就是为什么通用硅器件的结温规格通常封顶在 125~150 ℃，车规通常到 175 ℃，而 SiC 器件可以标称工作在 200 ℃ 以上（理论极限接近 600 ℃）</strong>。</span>
+      </div>
+
+      <p><strong>天花板三：漂移区电阻随耐压爆炸。</strong>这是第 3 节公式的直接后果，可以用一个数字感受：<em>1200 V 时硅的一维理论极限比导通电阻约 150 mΩ·cm²，而实际 1200 V 硅 MOSFET 如果真的做出来，芯片会大到毫无商业价值</em>——所以工程上 1000 V 以上基本不玩硅 MOSFET，改用<strong>IGBT</strong>（绝缘栅双极晶体管），靠注入少数载流子做"电导调制"来压低导通压降。代价是什么呢？<strong>关断时有拖尾电流，开关频率被卡在几十 kHz</strong>，变压器、电感、滤波器因此又大又重。下面是行业里常用的经验关系：</p>
+
+      <div class="formula-block">
+        <span class="fl">R<sub>on,sp</sub> ∝ BV<sup>2.5</sup>　（工程经验系数，略劣于理论的 BV<sup>2</sup>）</span>
+        <span class="fnote">指数比理论的 2 略高，是因为还要考虑终端区面积、二维电场集中、散热路径等非理想因素。这条经验规律的含义很直白：<strong>耐压翻一倍，导通电阻涨约 5.7 倍（2<sup>2.5</sup>）</strong>。所以硅 MOSFET 的经济区间基本被锁死在 700 V 以下，而 1200 V 以上必须想办法（IGBT、超结、或者干脆换材料）。</span>
+      </div>
+
+      <p><strong>天花板四：高频化受阻。</strong>低压场景下面这部分要小心区分：<em>MOSFET 本身的开关可以很快</em>（几百 kHz 甚至 MHz，手机里的 buck 转换器工作在 MHz 级没问题），但一旦牵涉<strong>高压</strong>，硅就要么被迫采用 IGBT（少子存储拖累开关），要么因为体二极管的反向恢复电荷（Q<sub>rr</sub>）在硬开关桥臂里产生巨大的反向恢复损耗。这两件事合计起来，就是"你怎么也不能把一台 100 kW 的电机逆变器开到 100 kHz"的根本原因。</p>
+
+      <h3>5.3 硅的应用版图</h3>
+
+      <ul>
+        <li><strong>逻辑与 SoC</strong>：CPU、GPU、AI 加速器、手机 SoC——硅在这里的统治地位是绝对的，而且在可见的未来内看不到替代方案。原因不是硅性能最好，而是<em>微缩这条路本身就极度依赖硅的那一整套综合属性</em>：300 mm 无缺陷晶圆、原子级平整界面、high-k 金属栅、应变工程，环环相扣（详见<a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇</a>）。</li>
+        <li><strong>存储器</strong>：DRAM 与 NAND（<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>），几乎 100% 硅。</li>
+        <li><strong>图像传感器 CIS</strong>：硅的带隙 1.12 eV 恰好对应 1100 nm 截止波长，完美覆盖 400~1000 nm 的可见光加近红外；加上硅工艺的极致成熟度，CMOS 图像传感器成为硅在"光电"方向上的一大意外收获。</li>
+        <li><strong>功率器件（低压）</strong>：超结 MOSFET 用在 600~800 V，中低压 MOSFET 用在 100 V 以下，IGBT 模组覆盖 600~6500 V。这一块正在被 SiC 从上方、被 GaN 从右侧蚕食，但因为成本优势巨大，基本盘极稳。</li>
+        <li><strong>光伏</strong>：晶硅太阳能电池占全球光伏装机量的 <strong>95% 以上</strong>，实验室单结晶硅效率已达 26%~27%，逼近单结硅的肖克利-奎伊瑟理论极限约 29.4%。硅在光伏上的竞争对手是钙钛矿叠层（第 13 节）。</li>
+      </ul>
+
+      <h2 id="s6">6. 锗 Ge：从第一只晶体管到应变工程与红外光学的配角</h2>
+
+      <p>1947 年 12 月，贝尔实验室的巴丁、布拉顿、肖克利做出人类第一只晶体管，材料是<strong>锗</strong>。今天你几乎买不到锗做的芯片，但锗并没有退出历史舞台，而是转型成了几个极为专业、不可替代的角色。这一节讲"一个失败者如何靠专业化重新立足"。</p>
+
+      <h3>6.1 锗为什么输给了硅</h3>
+
+      <p>锗的优点很诱人：<strong>E<sub>g</sub> 只有 0.66 eV</strong> → 更低的开启电压；<strong>电子迁移率 3900、空穴迁移率 1900 cm<sup>2</sup>/(V·s)</strong>（硅分别是 1400 和 450，锗的空穴迁移率是硅的 4 倍多）；熔点低（938 ℃），早期提纯更容易在实验室条件下完成——这也是为什么它先赢。</p>
+
+      <p>但它有两处致命伤：</p>
+
+      <ol>
+        <li><strong>禁带太窄 → 室温本征导电。</strong>锗室温 n<sub>i</sub> 约 <strong>2.4×10<sup>13</sup> cm<sup>−3</sup></strong>（硅是 1×10<sup>10</sup>，差了三个数量级）。这意味着锗器件在室温下漏电就相当可观，到了 80~100 ℃ 基本就关不严了。早期锗晶体管在夏天收音机里"跑音"是这个物理事实的直接体现。<em>作为对照：硅要到 200 ℃ 才进入同等糟糕的境界（上一节刚算过）。</em></li>
+        <li><strong>二氧化锗 GeO<sub>2</sub> 不稳定且溶于水。</strong>这条决定了锗的死刑。硅之所以能做平面工艺、能做 MOSFET，全靠那层又致密又不溶的 SiO<sub>2</sub>；而 GeO<sub>2</sub> 疏松、水溶性、易挥发，<strong>既当不了掺杂掩膜，也当不了钝化层，更做不出高质量栅介质</strong>。在晶体管产业向"平面加工 + MOS 结构"转型的 1960 年代，这个短板让锗彻底出局。</li>
+      </ol>
+
+      <div class="note">
+        <strong>技术演进史上的一个启示：</strong>锗的失败不是"性能不够"，而是<strong>"无法被大规模加工"</strong>。半导体材料的第一门槛从来不是参数，而是<em>能不能被稳定地做出界面、做出图形、做出可靠的量产流程</em>。后面你会看到，这条规律在 SiC、GaN、金刚石身上一次次重演。
+      </div>
+
+      <h3>6.2 锗的现代三件套</h3>
+
+      <p><strong>① SiGe 应变沟道——把锗"掺"进硅里，而不是单独用。</strong>把 Ge 掺入 Si 形成 SiGe 合金后，晶格常数变大。先进的 CMOS 工艺在 PMOS 的源漏区刻蚀出凹槽再<strong>选择性外延 SiGe</strong>（第 13 篇会讲选择性外延工艺），这样 PMOS 沟道被夹在两个"想变大的"SiGe 之间，被迫受到<strong>压应变</strong>。压应变使能带结构发生变化，<strong>空穴的有效质量变小、迁移率显著提升</strong>，PMOS 驱动电流提高可达 25%~50%。这就是<a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇</a>讲过的应变工程——锗在这里的贡献是<em>给别人当压强工具</em>，而不是当沟道本身。</p>
+
+      <p><strong>② SiGe HBT——异质结双极晶体管的王者。</strong>技术原理是在基区用窄带隙的 SiGe、发射区用宽带隙的 Si，形成异质结。价带不连续让空穴很难从基区往发射区倒灌，因此基区可以做得很重掺杂（降低基极电阻）却仍保持高增益。结果是这种器件<strong>截止频率 f<sub>T</sub> / 最高振荡频率 f<sub>max</sub> 双双达到数百 GHz 量级</strong>，且与 CMOS 工艺兼容良好（SiGe BiCMOS 可以把毫米波电路与数字电路做在同一颗芯片上）。典型应用：<strong>77~79 GHz 汽车毫米波雷达收发前端、太赫兹成像、光通信跨阻放大器</strong>。这是锗最成功的一次商业化。</p>
+
+      <p><strong>③ 红外光学与红外探测。</strong>锗在可见光下<strong>完全不透明</strong>（因为它 0.66 eV 的带隙连可见光都能吸收），但在 <strong>2~14 μm 的热红外波段高度透明</strong>。这使得锗成为红外热像仪镜头的标准材料（你可以看到那种金属光泽的灰色窗口，那就是锗镜片），同时也是夜视、气体传感、火警探测等系统的核心光学件。此外，把锗外延到硅上，还可以做 <strong>850~1550 nm 近红外探测器</strong>——这正是硅光子（silicon photonics）芯片接收端的关键器件。难点在于锗与硅晶格失配约 4.2%，需要渐变缓冲层来消化失配位错，而这会带来<span class="chip">暗电流</span>问题。</p>
+
+      <p><strong>④ 作为集成 III-V 材料的缓冲过渡层。</strong>Ge 的晶格常数（5.658 Å）恰好介于 Si（5.431 Å）与 GaAs（5.653 Å）之间，几乎是 GaAs 的完美匹配对象。工业界因此常用"Si 上先长一层 Ge（或渐变 SiGe）作缓冲，再在上面长 GaAs/InP"的办法做大失配外延，这是硅基光电子集成的一条重要路径（代价是 Ge 与 Si 之间 4.2% 的失配需要渐变缓冲层来吸收位错）。空间太阳能电池上，锗衬底本身就是三结 GaInP/GaAs/Ge 叠层电池的最底层。</p>
+
+      <h2 id="s7">7. 化合物半导体 GaAs / InP：只在硅做不了的地方出手</h2>
+
+      <p>把 GaAs 和 InP 放在一起讲是有理由的：它们都是 III-V 族、都是直接带隙、都以"小尺寸高成本"著称，也都在同一件事上赚钱——<strong>硅做不了的事</strong>。</p>
+
+      <h3>7.1 GaAs 的四张好牌</h3>
+
+      <ol>
+        <li><strong>直接带隙（1.42 eV）</strong>：能高效发光与吸光，红光 LED 时代的主力；今天仍有大量红外 LED、VCSEL、边发射激光器用它。</li>
+        <li><strong>极高电子迁移率（8500 cm<sup>2</sup>/(V·s)）</strong>：硅的 6 倍。这意味着同样栅长的 FET 有更高的跨导与增益，射频性能天然更好。</li>
+        <li><strong>半绝缘衬底（SI-GaAs）</strong>：这是特别值得单独拎出来的一条。GaAs 可以通过掺铬或利用本征深能级缺陷（EL<sub>2</sub>）补偿，做出<strong>电阻率高达 10<sup>7</sup>~10<sup>8</sup> Ω·cm 的单晶衬底</strong>——几乎就是一块绝缘体。衬底本身不导电意味着：传输线几乎没有衬底损耗、寄生电容极小、各器件之间天然隔离。这直接使得 <strong>MMIC（单片微波集成电路）成为可能</strong>：你可以把功率放大器、低噪放、开关、移相器、混频器全部做在同一片 GaAs 上。而在硅上做同样的东西，衬底是导电的，信号会跑光。</li>
+        <li><strong>射频器件谱系齐全</strong>：MESFET、pHEMT（赝配高电子迁移率晶体管）、HBT（异质结双极晶体管），分别适配不同的功率、频率与线性度需求。</li>
+      </ol>
+
+      <h3>7.2 InP：光通信波长的主人</h3>
+
+      <p>为什么长距离光通信偏偏要 InP？因为石英光纤有两个"窗口"：<strong>1310 nm 色散最小，1550 nm 损耗最低（约 0.2 dB/km）</strong>。要把半导体激光器的波长对准这两个数字，E<sub>g</sub> 必须落在约 <strong>0.8~0.95 eV</strong>，而这恰好是 InGaAsP 四元合金（外延在 InP 衬底上，晶格匹配）能调节的范围。相关的四种器件：<strong>DFB 激光器、EML（电吸收调制激光器）、直接调制激光器，以及 InGaAs PIN/APD 探测器</strong>，全部是 InP 体系的产物。</p>
+
+      <div class="formula-block">
+        <span class="fl">λ (nm) = 1240 / E<sub>g</sub> (eV)　→　1550 nm 对应 E<sub>g</sub> ≈ 0.80 eV；1310 nm 对应 ≈ 0.95 eV</span>
+        <span class="fnote">这两个能量值正好落在 <strong>In<sub>1−x</sub>Ga<sub>x</sub>As<sub>y</sub>P<sub>1−y</sub></strong> 四元合金的调谐范围内（且能与 InP 衬底保持晶格匹配，这是能长高质量外延的前提）。硅做不到，GaAs 的 E<sub>g</sub> = 1.42 eV 对应 873 nm，也做不到。<strong>整个长途光通信与数据中心光互连，就建立在 InP 这一套材料体系之上。</strong></span>
+      </div>
+
+      <p>此外 InP HEMT / InP HBT 拥有全场最高的高频性能（f<sub>max</sub> 可达 1 THz 以上），在毫米波、亚毫米波和太赫兹前端里是不可替代的选择，只是成本太高、只用在仪器与国防级别的产品上。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 295" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GaAs 与 InP 的三类光电应用">
+          <defs>
+            <marker id="ar8-1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L8 4 L0 8 Z" fill="var(--semi)"/>
+            </marker>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="16" y="14" font-size="11" font-weight="700" fill="var(--text)">GaAs / InP 的三条主战线：射频、光通信、光感测</text>
+
+            <text x="16" y="40" font-size="10" font-weight="700" fill="var(--semi)">① 射频前端 RF front-end</text>
+            <rect x="16" y="50" width="104" height="46" rx="7" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)"/>
+            <text x="68" y="70" text-anchor="middle" font-size="9.5" fill="var(--text)">GaAs HBT</text>
+            <text x="68" y="86" text-anchor="middle" font-size="9.5" fill="var(--text)">／ pHEMT</text>
+            <line x1="124" y1="73" x2="146" y2="73" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="150" y="50" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="210" y="70" text-anchor="middle" font-size="9.5" fill="var(--text)">功率放大器 PA</text>
+            <text x="210" y="86" text-anchor="middle" font-size="9" fill="var(--text-mute)">高效率 · 高线性</text>
+            <line x1="274" y1="73" x2="336" y2="73" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="340" y="50" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="400" y="70" text-anchor="middle" font-size="9.5" fill="var(--text)">滤波器 / 双工器</text>
+            <text x="400" y="86" text-anchor="middle" font-size="9" fill="var(--text-mute)">SAW / BAW</text>
+            <line x1="464" y1="73" x2="526" y2="73" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="530" y="50" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="590" y="70" text-anchor="middle" font-size="9.5" fill="var(--text)">天线开关</text>
+            <text x="590" y="86" text-anchor="middle" font-size="9" fill="var(--text-mute)">SOI 为主，天线端</text>
+            <text x="654" y="70" font-size="9" text-anchor="end" fill="var(--text-mute)">手机 / Wi-Fi / 基站</text>
+
+            <text x="16" y="128" font-size="10" font-weight="700" fill="var(--semi)">② 光通信 optical communication</text>
+            <rect x="16" y="138" width="104" height="46" rx="7" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)"/>
+            <text x="68" y="158" text-anchor="middle" font-size="9.5" fill="var(--text)">InP 衬底</text>
+            <text x="68" y="174" text-anchor="middle" font-size="9.5" fill="var(--text)">InGaAsP 外延</text>
+            <line x1="124" y1="161" x2="146" y2="161" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="150" y="138" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="210" y="158" text-anchor="middle" font-size="9.5" fill="var(--text)">DFB / EML 激光器</text>
+            <text x="210" y="174" text-anchor="middle" font-size="9" fill="var(--text-mute)">1310 / 1550 nm</text>
+            <line x1="274" y1="161" x2="336" y2="161" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="340" y="138" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="400" y="158" text-anchor="middle" font-size="9.5" fill="var(--text)">单模光纤</text>
+            <text x="400" y="174" text-anchor="middle" font-size="9" fill="var(--text-mute)">损耗 ~0.2 dB/km</text>
+            <line x1="464" y1="161" x2="526" y2="161" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="530" y="138" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="590" y="158" text-anchor="middle" font-size="9.5" fill="var(--text)">InGaAs PIN/APD</text>
+            <text x="590" y="174" text-anchor="middle" font-size="9" fill="var(--text-mute)">接收端光电转换</text>
+
+            <text x="16" y="216" font-size="10" font-weight="700" fill="var(--semi)">③ 光感测 sensing</text>
+            <rect x="16" y="226" width="104" height="46" rx="7" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)"/>
+            <text x="68" y="246" text-anchor="middle" font-size="9.5" fill="var(--text)">GaAs VCSEL</text>
+            <text x="68" y="262" text-anchor="middle" font-size="9" fill="var(--text-mute)">850 / 940 nm</text>
+            <line x1="124" y1="249" x2="146" y2="249" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="150" y="226" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="210" y="246" text-anchor="middle" font-size="9.5" fill="var(--text)">泛光照明 / 点阵</text>
+            <text x="210" y="262" text-anchor="middle" font-size="9" fill="var(--text-mute)">纳秒级调制</text>
+            <line x1="274" y1="249" x2="336" y2="249" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="340" y="226" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="400" y="246" text-anchor="middle" font-size="9.5" fill="var(--text)">目标漫反射</text>
+            <text x="400" y="262" text-anchor="middle" font-size="9" fill="var(--text-mute)">飞行时间 ToF</text>
+            <line x1="464" y1="249" x2="526" y2="249" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-1)"/>
+            <rect x="530" y="226" width="120" height="46" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="590" y="246" text-anchor="middle" font-size="9.5" fill="var(--text)">SPAD / CMOS 接收</text>
+            <text x="590" y="262" text-anchor="middle" font-size="9" fill="var(--text-mute)">深度图输出</text>
+
+            <text x="16" y="288" font-size="9" fill="var(--text-mute)">典型落地产品：手机面部识别与激光对焦、扫地机与机器人 LiDAR、车载激光雷达、数据中心 400G/800G 光模块。</text>
+          </g>
+        </svg>
+        <figcaption>图 3：GaAs 与 InP 的三条应用链路。它们几乎从不在"算"这件事上与硅竞争，只做硅做不了的发光、感光与高频。</figcaption>
+      </figure>
+
+      <h3>7.3 为什么它们只做"硅做不了"的事</h3>
+
+      <p>GaAs / InP 的短板是一份很长的账单，每一条都在限制它们能做多大的生意：</p>
+
+      <ul>
+        <li><strong>晶圆小</strong>：GaAs 主流 4~6 英寸（近年有厂商推 8 英寸 GaAs 的尝试，但良率与脆性仍是问题），InP 主流 2~4 英寸。<em>硅是 300 mm（12 英寸）</em>。同样的器件，GaAs 的单颗成本天然高出一个数量级。</li>
+        <li><strong>脆且易碎</strong>：GaAs 的机械强度远低于硅，产线搬运、划片、磨片的碎片率明显更高，这直接吃掉良率。</li>
+        <li><strong>砷有毒性</strong>：从原材料到外延尾气处理，都需要严格的环保与安全投入。这不是小问题，它决定了任何一条 GaAs 产线的固定成本。</li>
+        <li><strong>没有天然氧化物</strong>：前面强调过，这让它无法做 MOS 器件，也就<strong>无法做大规模数字集成电路</strong>——这就是 GaAs 永远进不了 CPU/GPU 这个市场的根本原因。</li>
+        <li><strong>热导率低</strong>：GaAs 仅 0.46 W/(cm·K)（硅的不到三分之一），InP 也只有 0.68 W/(cm·K)。热量出不来，所以它<strong>做不了大功率器件</strong>——手机 PA 的输出功率通常在 1~3 W 量级，基站级的大功率业务只能交给后面的 GaN-on-SiC。</li>
+      </ul>
+
+      <div class="note">
+        <strong>一句话总结这一节：</strong>GaAs/InP 的胜利公式是——<em>在必须"发声"（发光）或必须"听得清、说得快"（射频）的地方，用一个尺寸小、价格贵、工序复杂的衬底，换来硅给不出来的性能</em>。它们从来都不是硅的替代品，而是硅旁边的特种兵。真正试图正面取代硅在功率电子中的地位的，是接下来两节的主角：碳化硅与氮化镓。
+      </div>
+
+      <h2 id="s8">8. 碳化硅 SiC：高压高温战场的主力，以及它为什么这么贵</h2>
+
+      <p>碳化硅的故事，是两个角色同时翻盘的教科书案例：<strong>材料属性上，它把硅的四道天花板砍掉三道；产业属性上，它把一个材料难点变成了一整套工艺难题</strong>，导致它的成本长期居高不下。</p>
+
+      <h3>8.1 物性：为什么 SiC 天生适合高压高温</h3>
+
+      <p>SiC 有上百种晶型（polytype），其中电子器件只用两种：<strong>4H-SiC</strong>（主流）和 <strong>6H-SiC</strong>。取产业标准的 4H-SiC 看：</p>
+
+      <table class="term-table">
+        <thead><tr><th>参数</th><th>4H-SiC</th><th>相对 Si</th><th>器件语言翻译</th></tr></thead>
+        <tbody>
+          <tr><td>禁带宽度 E<sub>g</sub></td><td>3.26 eV</td><td>约 2.9×</td><td>本征温度极高，200 ℃ 以上照常工作；漏电流低几个数量级</td></tr>
+          <tr><td>击穿场强 E<sub>crit</sub></td><td>约 2.5~3.5 MV/cm</td><td>约 10×</td><td>同样耐压，漂移区厚度只需约 1/10，电阻理论上低约 600 倍</td></tr>
+          <tr><td>热导率 κ</td><td>约 4.9 W/(cm·K)</td><td>约 3.2×</td><td>散热器可以做小，或者同体积下输出功率更大</td></tr>
+          <tr><td>饱和漂移速度 v<sub>sat</sub></td><td>约 2.0×10<sup>7</sup> cm/s</td><td>约 2×</td><td>支持更高开关频率（但通常不追求极致高频）</td></tr>
+          <tr><td>体电子迁移率 μ<sub>n</sub></td><td>约 1000 cm²/(V·s)</td><td>约 0.7×</td><td>略逊于硅，但不是主要矛盾</td></tr>
+          <tr><td>天然氧化物</td><td>有（热氧化生成 SiO<sub>2</sub>）</td><td>—</td><td>幸运：SiC 是唯一能做高质量 MOSFET 的宽禁带材料</td></tr>
+          <tr><td>带隙类型</td><td>间接</td><td>同 Si</td><td>做不了高效率发光器件（这限制了它的应用面）</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>请把最后两行放在一起读，这是 SiC 与 GaN 分道扬镳的原点：</strong><br>
+        SiC <b>有</b>天然氧化物（ SiO<sub>2</sub> ）→ 能做 <b>MOSFET</b> → 天然适合<b>高压垂直结构</b>器件（电流竖着走，电压由厚外延层承担）→ 主攻 600 V 以上。<br>
+        GaN <b>没有</b>可用的 MOS 界面，但有<b>极化效应带来的二维电子气</b> → 做 <b>HEMT</b> → 横向器件，电子在界面上横向跑 → 主攻快、主攻高频。<br>
+        <b>两条路的物理起点完全不同，所以它们不会互相替代。</b>
+      </div>
+
+      <h3>8.2 杀手应用：为什么电动车要把硅 IGBT 换成 SiC MOSFET</h3>
+
+      <p>电动车的<strong>主驱逆变器</strong>（traction inverter）负责把电池的直流电变成驱动电机的三相交流电，是整个电驱系统的"咽喉"。传统方案用硅 IGBT 模块，问题是：</p>
+
+      <ul>
+        <li><strong>IGBT 有拖尾电流</strong>：关断时注入的少数载流子要慢慢复合掉，形成明显的关断拖尾损耗，开关频率只能卡在 10 kHz 上下；</li>
+        <li><strong>反并联二极管的反向恢复</strong>：硅 PiN 二极管反向恢复电荷大，每次换流都要额外贡献损耗；</li>
+        <li><strong>轻载效率难看</strong>：城市工况下逆变器大多时间工作在低负载区，而 IGBT 的开关损耗与负载相关性不友好——恰恰在这里最费电。</li>
+      </ul>
+
+      <p>换成 SiC MOSFET 之后，改变了三件事：</p>
+
+      <ol>
+        <li><strong>单极器件，没有少子存储</strong>：开关损耗大幅下降。典型对比是同等规格下，<em>SiC MOSFET 的开关损耗可比硅 IGBT 低 50%~80%</em>，尤其在部分负载工况下差距最大；</li>
+        <li><strong>可用 SiC 肖特基二极管（SBD/JBS）替代硅 PiN 二极管</strong>：反向恢复电荷近乎为零（注意：若直接用 SiC MOSFET 的体二极管续流，它仍有双极导电成分，因此工程上多用外接 SiC SBD 旁路，或在第三代沟槽器件中把体二极管的双极退化降到最低）；</li>
+        <li><strong>高温能力</strong>：结温可从 150 ℃ 提到 175~200 ℃，冷却系统可以简化。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Si IGBT 与 SiC MOSFET 的效率与损耗对比">
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="16" font-size="11" font-weight="700" fill="var(--text)">100 kW 级主驱逆变器：三种工况下的系统效率示意（纵轴已放大）</text>
+
+            <line x1="60" y1="250" x2="380" y2="250" stroke="var(--border)" stroke-width="1.2"/>
+            <line x1="60" y1="250" x2="60" y2="40" stroke="var(--border)" stroke-width="1.2"/>
+            <g font-size="9" fill="var(--text-mute)" text-anchor="end">
+              <text x="54" y="251" fill="var(--text-mute)">94%</text><text x="54" y="209" fill="var(--text-mute)">96%</text><text x="54" y="167" fill="var(--text-mute)">98%</text><text x="54" y="125" fill="var(--text-mute)">100%</text>
+            </g>
+            <g stroke="var(--border)" stroke-dasharray="2 3">
+              <line x1="60" y1="208" x2="380" y2="208"/>
+              <line x1="60" y1="166" x2="380" y2="166"/>
+              <line x1="60" y1="124" x2="380" y2="124"/>
+            </g>
+
+            <rect x="60" y="30" width="14" height="11" rx="2" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)"/>
+            <text x="80" y="39" font-size="9.5" fill="var(--text-soft)">硅 IGBT 方案</text>
+            <rect x="160" y="30" width="14" height="11" rx="2" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)"/>
+            <text x="180" y="39" font-size="9.5" fill="var(--text-soft)">SiC MOSFET 方案</text>
+
+            <g>
+              <rect x="110" y="208" width="30" height="42" rx="3" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)"/>
+              <rect x="146" y="174" width="30" height="76" rx="3" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)"/>
+              <text x="125" y="203" text-anchor="middle" font-size="9" fill="var(--text-soft)">96.0</text>
+              <text x="161" y="169" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text)">97.6</text>
+
+              <rect x="200" y="183" width="30" height="67" rx="3" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)"/>
+              <rect x="236" y="158" width="30" height="92" rx="3" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)"/>
+              <text x="215" y="178" text-anchor="middle" font-size="9" fill="var(--text-soft)">97.2</text>
+              <text x="251" y="153" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text)">98.4</text>
+
+              <rect x="290" y="166" width="30" height="84" rx="3" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)"/>
+              <rect x="326" y="147" width="30" height="103" rx="3" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)"/>
+              <text x="305" y="161" text-anchor="middle" font-size="9" fill="var(--text-soft)">98.0</text>
+              <text x="341" y="142" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text)">98.9</text>
+
+              <text x="143" y="264" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">市区轻载</text>
+              <text x="233" y="264" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">综合工况</text>
+              <text x="323" y="264" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">高速满载</text>
+              <text x="191" y="278" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text)">差距：</text>
+              <text x="240" y="278" font-size="9" fill="var(--text-soft)">轻载 +1.6 pt　综合 +1.2 pt　满载 +0.9 pt</text>
+            </g>
+
+            <rect x="420" y="30" width="240" height="112" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="434" y="50" font-size="10" font-weight="700" fill="var(--text)">换成 SiC 之后变了什么</text>
+            <text x="434" y="70" font-size="9.5" fill="var(--text-soft)">· 开关损耗下降幅度常达 50%~80%</text>
+            <text x="434" y="87" font-size="9.5" fill="var(--text-soft)">· 反向恢复电荷近乎归零（配 SiC SBD）</text>
+            <text x="434" y="104" font-size="9.5" fill="var(--text-soft)">· 可提频到数十 kHz → 电感/滤波器体积缩小</text>
+            <text x="434" y="121" font-size="9.5" fill="var(--text-soft)">· 与 800 V 高压平台天然契合</text>
+            <text x="434" y="138" font-size="9.5" fill="var(--text-soft)">· 代价：器件成本仍显著高于硅</text>
+
+            <rect x="420" y="152" width="240" height="118" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="434" y="172" font-size="10" font-weight="700" fill="var(--text)">整车层面的账怎么算</text>
+            <text x="434" y="191" font-size="9.5" fill="var(--text-soft)">官方与整机厂常引用：续航提升</text>
+            <text x="434" y="208" font-size="9.5" fill="var(--text)">约 5%~10%（实测多在 3%~8%）</text>
+            <text x="434" y="227" font-size="9.5" fill="var(--text-soft)">等效算法：同续航下电池可少装</text>
+            <text x="434" y="244" font-size="9.5" fill="var(--text)">数 kWh，抵消一部分器件成本</text>
+            <text x="434" y="263" font-size="9" fill="var(--text-mute)">市区轻载占比越高，SiC 的相对收益越大</text>
+          </g>
+        </svg>
+        <figcaption>图 4：SiC MOSFET 相对硅 IGBT 的效率优势主要集中在<strong>轻载与中载</strong>工况，而这个区间恰好对应真实的城市驾驶循环。</figcaption>
+      </figure>
+
+      <p>关于"续航提升 5%~10%"这个常被引用的数字，我们需要保持工程上的诚实：它取决于<strong>整车的基础效率、驾驶循环中轻载占比、电池容量、以及是否同时优化了电机与减速器</strong>。行业实测多在 <strong>3%~8%</strong> 区间；但从另一个角度算账可能更有说服力——<em>如果要拿到同样的续航，装 SiC 方案的车可以少装几 kWh 电池</em>，而这几 kWh 电池的成本往往就能抵消 SiC 器件相对硅 IGBT 的价差。<strong>这就是为什么 800 V 高压平台几乎全线拥抱 SiC</strong>：电压越高，SiC 的优势越大，而电池/线束/冷却的节省反而让系统总成本接近持平。</p>
+
+      <h3>8.3 电压档位与应用分布</h3>
+
+      <table class="term-table">
+        <thead><tr><th>规格</th><th>典型 application</th><th>与硅的关系</th></tr></thead>
+        <tbody>
+          <tr><td><strong>650 V</strong></td><td>车载 OBC（车载充电机）、DC-DC、光伏微型逆变器、服务器电源、充电桩模块</td><td>这里 SiC 与 GaN、与高压 Si SJ MOSFET 三方竞争，"提高效率/提高功率密度"是主要诉求</td></tr>
+          <tr><td><strong>1200 V</strong></td><td>电动车主驱逆变器、光伏集中式逆变器、储能变流器 PCS、大功率充电桩、UPS</td><td>SiC 最肥的一块市场：硅 IGBT 在这里被逐步替换</td></tr>
+          <tr><td><strong>1700 V</strong></td><td>工业电机驱动、光伏 1500 V 系统、风力发电变流器、船舶电力推进</td><td>硅的方案体积巨大，SiC 优势更明显</td></tr>
+          <tr><td><strong>3300 V 及以上</strong></td><td>轨道交通牵引、电力机车、智能电网、高压直流输电</td><td>目前仍以硅 IGBT 压接式模块为主，SiC 正在以" SiC MOSFET/SiC IGBT 混合模块"形式渗透</td></tr>
+        </tbody>
+      </table>
+
+      <h3>8.4 为什么 SiC 这么贵：六个工艺难点</h3>
+
+      <p>这是本节的重点，也是新手最缺的一块认知。<strong>SiC 的价格问题不是市场炒作，是实打实的物理与化学难题。</strong></p>
+
+      <ol>
+        <li><strong>长晶的物理强迫：没有液相。</strong>SiC 在常压下不会熔化成化学计量比的液体，只会<strong>升华</strong>（约 2700 ℃ 以上分解）。所以不能用硅那种"把料熔化后拉晶体"的直拉法，而必须用<strong>物理气相传输法（PVT）</strong>：在 2000~2500 ℃ 的石墨坩埚里，让原料在下方升华、在上方籽晶上重新结晶。代价是：<em>生长速度极慢，典型只有 0.1~1 mm/h</em>（硅直拉法可以达到每小时几十毫米量级，翻了百倍）；整个过程无法直接观察；温度窗口极窄；<strong>产出的晶锭只有十几到几十毫米厚</strong>。这就是"SiC 衬底贵"的第一性原因。</li>
+        <li><strong>晶型控制与缺陷。</strong>SiC 有上百种堆垛顺序的晶型，长晶过程中稍不留神就会"堆错一层"，变成另一种晶型（称为晶型夹杂），这部分晶体就报废了。此外还有穿透螺位错（TSD）、刃位错、基平面位错（BPD），以及历史上著名的"微管"（micropipe）——一个贯穿整个晶锭的空心管子，会让器件直接击穿。好消息是：经过二十年努力，<em>微管密度已降到接近为零</em>，主流衬底的位错密度降到 10<sup>2</sup>~10<sup>4</sup> cm<sup>−2</sup> 量级；坏消息是：<strong>基平面位错会在器件工作时"繁殖"，诱发堆垛层错，造成导通电阻漂移</strong>——这是一个需要衬底厂与外延厂共同抑制的可靠性问题。</li>
+        <li><strong>6 英寸 → 8 英寸的爬坡异常艰难。</strong>硅三十年前就到了 300 mm，而 SiC 到 2010 年代才确立 150 mm（6 英寸）量产，200 mm（8 英寸）直到最近几年才正式开始批量供货并快速爬产。难度在于：坩埚越大，<strong>温度场与气相流场越难均匀</strong>，径向温差几十度就会导致生长速率不均、应力开裂。</li>
+        <li><strong>硬度带来的加工困境。</strong>SiC 的莫氏硬度约 <strong>9.2~9.5</strong>，仅次于金刚石（10）。这意味着：<em>切片只能用金刚石线锯，且效率极低</em>；研磨抛光要用专门的金刚石磨料 CPM 工艺；每片晶圆都要消耗可观的加工时间。<strong>硅片 CMP 几分钟搞定的事，SiC 要花几十分钟到数小时</strong>（对比第 14 篇的 CMP 工艺，你会更深理解这种"加工代价"）。</li>
+        <li><strong>掺杂方式完全不同。</strong>硅里可以做<strong>高温扩散</strong>（杂质在固体里扩散进去），而 SiC 里杂质扩散系数极低，<strong>只能通过离子注入 + 超高温退火（1600~1800 ℃）</strong>来实现选择性掺杂。高温退火本身又带来新问题：碳原子容易析出、表面碳化、形貌劣化、注入损伤难以完全修复。工艺复杂度与设备要求直线上升。</li>
+        <li><strong>栅氧界面质量——SiC MOSFET 的阿喀琉斯之踵。</strong>SiC 热氧化确实生成 SiO<sub>2</sub>，但界面上残留大量的碳团簇、硅悬挂键与近界面缺陷，界面态密度比 Si/SiO<sub>2</sub> 高 <strong>2~3 个数量级</strong>。后果直接而痛苦：<em>反型层里的电子被这些缺陷散射与俘获，沟道有效迁移率只有 20~50 cm²/(V·s)，仅为体材料 1000 的百分之几</em>。于是出现了这样的荒诞局面：<strong>漂移区电阻被材料特性降到极低，却被沟道电阻拖了后腿</strong>。此外，界面态还会引起<strong>阈值电压漂移</strong>与栅氧可靠性问题（业界通过 NO/N<sub>2</sub>O 退火、掺氮界面钝化等手段缓解，但未能根本解决）。</li>
+      </ol>
+
+      <h3>8.5 SiC 的器件结构：SBD、DMOS、Trench</h3>
+
+      <p><strong>SiC SBD / JBS（结势垒肖特基二极管）</strong>：这是最先商业化的 SiC 器件，因为它简单。它是<strong>单极器件，没有少数载流子存储，反向恢复时间近乎为零</strong>，可以工作在几十 kHz 以上；配套的好处是它的开关损耗与温度相关性远小于硅快恢复二极管。常见问题：肖特基势垒较低导致反向漏电流偏大，因此产业上多用 JBS（在肖特基界面下注入 P 型区形成结势垒）来压制漏电。</p>
+
+      <p><strong>平面 DMOS（VDMOS）</strong>：早期的 SiC MOSFET 结构，横向的双注入 MOS 沟道 + 电流垂直流向衬底。优点是工艺相对简单、栅氧可靠性容易做；缺点是<strong>元胞尺寸大、JFET 区电阻高</strong>，比导通电阻下不来。</p>
+
+      <p><strong>沟槽栅 Trench MOS</strong>：把栅极挖沟槽竖起来，<strong>去掉了 JFET 区电阻，元胞可以更密</strong>，比导通电阻可下降 30%~50%。这是近几代主流厂商（英飞凌、罗姆、博世、意法半导体等）的主力结构。但代价有三：<em>沟槽底部的栅氧电场集中</em>（必须做屏蔽极/深 P 区保护）、<em>沟槽侧壁的沟道迁移率与晶面取向强相关</em>、以及更复杂的工艺控制。这里可以清楚看到功率器件的一个永恒主题：<strong>结构创新是在跟"材料给不完的好处"做交换</strong>。</p>
+
+      <div class="warn">
+        <b>工程实践中还有两个常被忽略的现实：</b><br>
+        ① <b>SiC MOSFET 的短路耐受时间明显短于硅 IGBT</b>（典型为几微秒量级），驱动电路必须在极短时间内完成关断保护，这对栅极驱动与保护设计提出了更高要求；<br>
+        ② <b>栅极驱动电压不能照搬硅</b>：SiC MOSFET 常需要 <b>+15~+18 V 开通、−2~−5 V 关断</b>，且对栅极回路电感、米勒效应、寄生导通极其敏感。<strong>换一颗 SiC 器件，意味着要同时重新设计驱动、缓冲、 Layout 寄生参数、散热路径与 EMI 对策</strong>——这正是第 14 节要讲的"材料换一下就能用"这种想法的彻底破产。
+      </div>
+
+      <h2 id="s9">9. 氮化镓 GaN：极化出来的二维电子气，与一场高频革命</h2>
+
+      <p>GaN 的故事比 SiC 更"反常识"：<strong>它最厉害的地方，恰恰是它天然"漏电"——不需要任何掺杂，界面上就自动生成一层超高浓度、超高迁移率的导电沟道</strong>。这层东西叫<strong>二维电子气（2DEG，two-dimensional electron gas）</strong>，是整个 GaN 器件世界的基石。</p>
+
+      <h3>9.1 核心武器：AlGaN/GaN 异质结的极化效应</h3>
+
+      <p>GaN（E<sub>g</sub> = 3.4 eV）和 AlN（E<sub>g</sub> = 6.0 eV）是同族氮化物，两者可以按任意比例形成<strong>AlGaN 三元合金</strong>。把一层大约 15~25 nm 厚、Al 组分约 20%~25% 的 AlGaN 外延生长在 GaN 上，就构成了 GaN HEMT 的骨架。魔法在这里发生：</p>
+
+      <ol>
+        <li><strong>自发极化（spontaneous polarization）</strong>：纤锌矿结构的氮化物晶体中，正负电荷中心天然不重合，整层材料自带极化电场。AlGaN 与 GaN 的自发极化强度不同。</li>
+        <li><strong>压电极化（piezoelectric polarization）</strong>：AlGaN 的晶格常数比 GaN 小，被"撑"着长在 GaN 上时承受双轴拉伸应变，<strong>形变产生额外的压电极化</strong>。这一项通常占总极化电荷的一半左右。</li>
+        <li><strong>界面上的极化不连续</strong>：两层材料极化强度不同，界面处就出现了净的<strong>束缚面电荷</strong>（约 1×10<sup>13</sup> cm<sup>−2</sup> 量级）。正电荷通常出现在表面一侧、负电荷出现在衬底一侧（具体取决于极化方向与外延面的极性），负电荷一侧在 AlGaN/GaN 界面。</li>
+        <li><strong>为了补偿这些正电荷，自由电子必须聚集</strong>：这些电子来自表面态、或者来自 AlGaN 中的施主，它们被扫到界面上、被 GaN 一侧的导带不连续（ΔE<sub>c</sub> ≈ 0.3~0.5 eV）挤在极薄的三角形量子阱里。<strong>这就是二维电子气。它在垂直于界面的方向上被限制在几个纳米内（量子化），但在平行于界面的方向上有极高的迁移率</strong>（1500~2000 cm²/(V·s)），因为<em>沟道里没有任何电离杂质散射</em>——它不需要掺杂，这是它与 MOSFET 反型层的本质区别。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AlGaN 与 GaN 异质结能带图与二维电子气形成">
+          <defs>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="16" font-size="11" font-weight="700" fill="var(--text)">AlGaN/GaN 异质结：无需掺杂，界面自动长出二维电子气</text>
+
+            <text x="20" y="40" font-size="10" font-weight="700" fill="var(--text-soft)">左：外延层结构</text>
+            <rect x="20" y="50" width="150" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="95" y="64" text-anchor="middle" font-size="9.5" fill="var(--text)">Al<sub>0.25</sub>Ga<sub>0.75</sub>N 势垒层</text>
+            <text x="95" y="78" text-anchor="middle" font-size="9" fill="var(--text-mute)">15~25 nm，宽禁带</text>
+            <text x="176" y="72" font-size="9" fill="var(--text-mute)">Eg 约 4.0 eV</text>
+
+            <rect x="20" y="88" width="150" height="44" rx="6" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)"/>
+            <text x="95" y="102" text-anchor="middle" font-size="9.5" fill="var(--text)">GaN 沟道层</text>
+            <text x="95" y="117" text-anchor="middle" font-size="9" fill="var(--text-mute)">Eg = 3.4 eV，未掺杂或弱 n</text>
+            <text x="176" y="110" font-size="9" fill="var(--text-mute)">i-GaN</text>
+
+            <rect x="20" y="136" width="150" height="34" rx="6" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="95" y="150" text-anchor="middle" font-size="9.5" fill="var(--text)">缓冲层 / 成核层</text>
+            <text x="95" y="164" text-anchor="middle" font-size="9" fill="var(--text-mute)">AlN 或渐变 AlGaN，数 μm</text>
+
+            <rect x="20" y="174" width="150" height="34" rx="6" fill="var(--border)" fill-opacity=".4" stroke="var(--text-mute)"/>
+            <text x="95" y="188" text-anchor="middle" font-size="9.5" fill="var(--text)">衬底</text>
+            <text x="95" y="202" text-anchor="middle" font-size="9" fill="var(--text-mute)">Si / SiC / 蓝宝石</text>
+
+            <line x1="52" y1="88" x2="52" y2="132" stroke="var(--fin)" stroke-width="1.1"/>
+            <text x="20" y="86" font-size="9" fill="var(--fin)">+σ</text>
+            <circle cx="95" cy="88" r="2.4" fill="var(--fin)"/>
+            <text x="102" y="92" font-size="9" fill="var(--fin)">极化正电荷（束缚）</text>
+            <circle cx="95" cy="130" r="2.4" fill="var(--fin)"/>
+            <text x="102" y="134" font-size="9" fill="var(--fin)">极化正电荷（束缚）</text>
+
+            <text x="20" y="240" font-size="9.5" fill="var(--text-soft)">↓ 应力工程：缓冲层要同时吃掉失配位错与热应力</text>
+            <text x="20" y="258" font-size="9" fill="var(--text-mute)">失配：GaN-on-Si 约 17%，GaN-on-蓝宝石约 16%，</text>
+            <text x="20" y="274" font-size="9" fill="var(--text-mute)">缓冲层与应力工程决定位错密度与翘曲量。</text>
+            <text x="20" y="290" font-size="9" fill="var(--text-mute)">外延温度：MOCVD 约 1000~1100 ℃。</text>
+
+            <text x="330" y="40" font-size="10" font-weight="700" fill="var(--text-soft)">右：沿深度方向的导带 E<sub>c</sub> 分布</text>
+            <line x1="330" y1="60" x2="330" y2="262" stroke="var(--border)"/>
+            <line x1="330" y1="262" x2="660" y2="262" stroke="var(--border)"/>
+            <text x="666" y="266" font-size="9" text-anchor="end" fill="var(--text-mute)">深度方向 →</text>
+
+            <path d="M336 84 L470 118 L470 148 L494 196 L560 132 L620 124 L656 122" fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <text x="352" y="80" font-size="9" fill="var(--semi)">AlGaN 中 E<sub>c</sub>（受极化电场倾斜）</text>
+            <text x="640" y="118" font-size="9" text-anchor="end" fill="var(--semi)">GaN 中 E<sub>c</sub></text>
+
+            <line x1="336" y1="196" x2="656" y2="196" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="5 3"/>
+            <text x="340" y="192" font-size="9.5" fill="var(--fin)">费米能级 E<sub>F</sub>（平的）</text>
+
+            <path d="M470 148 L494 196 L512 176 Z" fill="var(--semi)" fill-opacity=".22"/>
+            <text x="500" y="168" font-size="9.5" font-weight="700" fill="var(--text)">三角形势阱</text>
+            <text x="500" y="182" font-size="9" fill="var(--text-soft)">E<sub>c</sub> 低于 E<sub>F</sub> → 填有电子</text>
+
+            <g fill="var(--text)">
+              <circle cx="478" cy="188" r="2.6"/><circle cx="488" cy="190" r="2.6"/><circle cx="498" cy="189" r="2.6"/>
+              <circle cx="508" cy="187" r="2.6"/><circle cx="518" cy="186" r="2.6"/>
+            </g>
+            <text x="530" y="212" font-size="9.5" font-weight="700" fill="var(--text)">二维电子气 2DEG</text>
+            <text x="530" y="226" font-size="9" fill="var(--text-soft)">n<sub>s</sub> 约 1×10<sup>13</sup> cm<sup>−2</sup></text>
+            <text x="530" y="240" font-size="9" fill="var(--text-soft)">μ 约 1500~2000 cm²/(V·s)</text>
+            <text x="530" y="254" font-size="9" fill="var(--text-soft)">薄层电阻约 400~600 Ω/□</text>
+
+            <line x1="470" y1="130" x2="470" y2="160" stroke="var(--fin)" stroke-width="1.1" stroke-dasharray="3 2"/>
+            <text x="474" y="128" font-size="9" fill="var(--fin)">ΔE<sub>c</sub> 约 0.3~0.5 eV（导带不连续台阶）</text>
+          </g>
+        </svg>
+        <figcaption>图 5：AlGaN/GaN 异质结的能带示意。极化电荷在界面"逼"出一层无需掺杂的高迁移率电子，这就是 HEMT 常开特性的来源。</figcaption>
+      </figure>
+
+      <p>把这件事量化出来：</p>
+
+      <div class="formula-block">
+        <span class="fl">n<sub>s</sub> ≈ σ<sub>pol</sub> / q − [ ε<sub>AlGaN</sub> / (q<sup>2</sup> · d) ] × [ q·φ<sub>B</sub> + E<sub>F</sub> − ΔE<sub>c</sub> ]</span>
+        <span class="fnote">第一项 σ<sub>pol</sub>/q 是极化面电荷全部贡献给沟道的理想值（σ<sub>pol</sub> 约 1×10<sup>13</sup> cm<sup>−2</sup> 量级）；第二项是"损失项"——势垒层越薄 d 越小，损失越大，这也是为什么<strong>势垒层不能做得太薄</strong>。典型结果：<em>n<sub>s</sub> ≈ 0.8~1.5×10<sup>13</sup> cm<sup>−2</sup></em>，这个值比 MOSFET 反型层的面密度高一到两个数量级，且因为沟道不掺杂，<strong>迁移率几乎不受电离杂质散射影响</strong>。</span>
+      </div>
+
+      <h3>9.2 天然的常开（耗尽型）器件，以及如何做成常关（增强型）</h3>
+
+      <p>问题来了：<strong>零栅压时 2DEG 就存在</strong>，所以天然的 GaN HEMT 是<strong>耗尽型（D-mode，常开）</strong>器件，阈值电压通常 <strong>V<sub>th</sub> ≈ −2~−4 V</strong>，要靠加负栅压才能关断。可是功率电子的安全性要求"断电/驱动失效时必须关断"（fail-safe），于是业界发展出两条主流路线：</p>
+
+      <ul>
+        <li><strong>p-GaN 栅增强型</strong>：在 AlGaN 上面再长一层 P 型 GaN 帽层。P 型 GaN 与 AlGaN 形成 PN 结，<strong>它的内建电场把栅下方的能带整体抬高，使 E<sub>c</sub> 抬到费米能级以上，沟道在零偏时消失</strong>；加正栅压后能带重新压下去，沟道恢复。这样得到 V<sub>th</sub> ≈ +1.5~+2.5 V 的常关器件。代价有两个：<em>一是栅压一旦超过约 +6~+7 V，栅极 PN 结或肖特基接触就会导通</em>，因此驱动设计受限（需要精确的门限与米勒钳位）；<em>二是 p 型 GaN 的掺杂与欧姆接触工艺难度不小</em>（Mg 受主电离能约 170~200 meV，室温激活率很低）。</li>
+        <li><strong>Cascode 共源共栅方案</strong>：把一个高压 D-mode GaN HEMT 与一颗低压硅 MOSFET 串联（硅管作源极跟随/主控），对外呈现出常关特性。优点是工程师可以"像用硅 MOS 一样"驱动它；代价是<em>引入了硅管的体二极管与额外导通电阻</em>，封装与回路电感变差，成本上升，且高频优势被削弱一部分。</li>
+      </ul>
+
+      <div class="tip">
+        <b>选型的经验法则：</b>追求极致高频与功率密度（快充、数据中心 48 V 母线、高频 DC-DC）时偏好 <b>p-GaN 栅增强型</b>；追求易用性、需要与传统驱动兼容的工业场景，或电压/电流等级较大时，<b>cascode 共源共栅</b>更容易落地。两者在系统层面的取舍，往往比器件参数本身更重要。
+      </div>
+
+      <h3>9.3 三种衬底路线：这是理解 GaN 产业的钥匙</h3>
+
+      <p>GaN 没有低成本的大尺寸体单晶（虽然有 HVPE、氨热法等自支撑 GaN 衬底产业，但尺寸与价格都还难以支撑大规模功率应用），<strong>所有 GaN 器件都是异质外延</strong>。选什么衬底，直接决定了产品的性能定位与成本结构：</p>
+
+      <table class="term-table">
+        <thead><tr><th>路线</th><th>衬底尺寸</th><th>优点</th><th>缺点</th><th>主战场</th></tr></thead>
+        <tbody>
+          <tr><td><strong>GaN-on-Si</strong></td><td>6~8 英寸（可沿用硅产线）</td><td>成本最低、尺寸最大、产能弹性最大；可用标准硅 Fab 后端</td><td>失配约 17%、热膨胀差约 2.5 倍 → 缓冲层厚、位错密度高（10<sup>8</sup>~10<sup>9</sup> cm<sup>−2</sup>）、晶圆翘曲大、耐压受限（通常 ≤ 650 V）</td><td>消费电源、快充、数据中心电源、车规低压辅助电源</td></tr>
+          <tr><td><strong>GaN-on-SiC</strong></td><td>4~6 英寸</td><td>衬底热导率 4.9 W/(cm·K)，散热最好；半绝缘衬底适合微波</td><td>衬底极贵；尺寸小；成本高一个数量级</td><td>5G 基站功放、雷达、卫星通信、电子战</td></tr>
+          <tr><td><strong>GaN-on-Sapphire</strong></td><td>4~6 英寸</td><td>技术最成熟、成本适中、蓝宝石绝缘且化学稳定</td><td>蓝宝石热导率极低（约 0.3 W/(cm·K)）、不导电不好做垂直结构</td><td>蓝光/白光 LED、Micro LED（InGaN 体系）</td></tr>
+        </tbody>
+      </table>
+
+      <p>顺便补一笔这段历史：<strong>InGaN 蓝光 LED</strong>是 1990 年代困扰全球物理学界与产业界十多年的难题——GaN 的 P 型掺杂长期无法实现，直到中村修二（利用低温 GaN 缓冲层 + 热退火激活 Mg 受主）等人在 1990 年代初突破，蓝光 LED 才成为可能，进而才有白光 LED（蓝光芯片 + YAG 荧光粉）与今天的 LED 照明革命，这项工作获得了 2014 年诺贝尔物理学奖。<strong>它很好地说明了本章的主题：一个"掺杂"这种看似细节的材料问题，能卡住整个产业十年。</strong></p>
+
+      <h3>9.4 应用：从 65 W 充电头到雷达</h3>
+
+      <ul>
+        <li><strong>65 W 快充/氮化镓充电器</strong>：GaN 最成功的消费级市场。<strong>核心逻辑是提频</strong>：把开关频率从硅的 65~130 kHz 提到 300 kHz~1 MHz 以上，<em>变压器与输出滤波电容的体积随频率上升而缩小</em>，功率密度可从硅方案的约 0.5 W/cm³ 提升到 1 W/cm³ 以上，同等功率下充电器体积缩小约 40%~50%，且因为效率更高而发热更低。这是"材料的物理优势 → 系统形态改变"的最佳案例。</li>
+        <li><strong>数据中心与通信电源</strong>：服务器电源的 AC-DC 整流（图腾柱 PFC 拓扑几乎是为 GaN 量身定做的，因为 GaN 反向恢复近乎为零）与 48 V 母线 DC-DC 变换，是提高"钛金级"效率的关键路径。AI 服务器单机架功耗暴涨的背景下，这一块的价值正在快速上升。</li>
+        <li><strong>车载</strong>：48 V 轻混系统的 DC-DC、OBC（车载充电机，部分厂商选 GaN，部分选 SiC，取决于功率等级与拓扑）、以及激光雷达 LiDAR 里的短脉冲驱动（GaN 能提供纳秒级的极高峰值电流脉冲，直接决定激光雷达的探测距离与分辨率）。</li>
+        <li><strong>RF 射频</strong>：5G 宏基站的功率放大器几乎全线 GaN-on-SiC——<em>同样的输出功率，GaN 器件面积只有 LDMOS 的几分之一，且带宽更宽</em>，这让 Massive MIMO 天线阵列在体积与散热上成为可能；相控阵雷达同理。</li>
+      </ul>
+
+      <h3>9.5 可靠性：GaN 的两个"成长烦恼"</h3>
+
+      <p><strong>动态导通电阻 R<sub>ds(on)</sub> 退化</strong>：这是 GaN HEMT 最著名的可靠性问题。器件在高压关断状态下，电子可能被<strong>陷阱</strong>（表面态、缓冲层深能级、势垒层缺陷）俘获；当器件再次开通时，这些被俘获的负电荷会部分"抵消"沟道里的二维电子气，表现为<strong>导通电阻比静态测量值高出数十个百分点</strong>。这与历史上称为"电流崩塌（current collapse）"的现象同源：<em>陷阱俘获导致沟道局部耗尽，输出电流下降</em>。工程上的对策包括：表面钝化（SiN<sub>x</sub>）、场板（field plate）结构优化电场分布、缓冲层掺碳/掺铁形成半绝缘层、以及更洁净的界面工艺。行业已在用"动态 R<sub>ds(on)</sub> 与静态值之比"作为标准筛选项，成熟产品的动态退化被控制在一个较小的倍数以内。</p>
+
+      <p>还有一个长期隐痛：<strong>GaN 缺少实用的高质量 p 型沟道</strong>（Mg 受主电离能太高），因此难以做 p 沟道器件，也就<strong>难以像 CMOS 那样做互补电路</strong>，也难以像 SiC 那样做垂直双极结构器件。<em>这决定了 GaN 的体系偏向单极横向器件</em>，也决定了它短时间内主攻 650 V 以下、以及 RF 市场。要突破这一点，需要低成本的大尺寸自支撑 GaN 单晶来做垂直器件——这正是当前 HVPE/氨热法 GaN 衬底产业化的目标。</p>
+
+      <h2 id="s10">10. SiC 与 GaN 的分工：功率-频率坐标上的势力范围</h2>
+
+      <p>到这里，我们可以把三种功率材料放进同一张<strong>功率-频率坐标图</strong>里了。请记住读图的方法：这不是一张"谁更强"的排名图，而是一张<strong>势力范围划分图</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Si、SiC、GaN 在功率-频率坐标上的势力范围">
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="16" font-size="11" font-weight="700" fill="var(--text)">功率 - 频率坐标图：三种材料的势力范围（示意，边界为渐变过渡）</text>
+
+            <line x1="80" y1="270" x2="650" y2="270" stroke="var(--border)" stroke-width="1.2"/>
+            <line x1="80" y1="270" x2="80" y2="40" stroke="var(--border)" stroke-width="1.2"/>
+            <g font-size="9" fill="var(--text-mute)">
+              <text x="80" y="284" text-anchor="middle" fill="var(--text-mute)">100 Hz</text>
+              <text x="150" y="284" text-anchor="middle" fill="var(--text-mute)">1 k</text>
+              <text x="220" y="284" text-anchor="middle" fill="var(--text-mute)">10 k</text>
+              <text x="290" y="284" text-anchor="middle" fill="var(--text-mute)">100 k</text>
+              <text x="360" y="284" text-anchor="middle" fill="var(--text-mute)">1 M</text>
+              <text x="430" y="284" text-anchor="middle" fill="var(--text-mute)">10 M</text>
+              <text x="500" y="284" text-anchor="middle" fill="var(--text-mute)">100 M</text>
+              <text x="570" y="284" text-anchor="middle" fill="var(--text-mute)">1 G</text>
+              <text x="640" y="284" text-anchor="middle" fill="var(--text-mute)">10 GHz</text>
+              <text x="60" y="274" text-anchor="end" fill="var(--text-mute)">1 W</text>
+              <text x="60" y="237" text-anchor="end" fill="var(--text-mute)">10 W</text>
+              <text x="60" y="201" text-anchor="end" fill="var(--text-mute)">100 W</text>
+              <text x="60" y="164" text-anchor="end" fill="var(--text-mute)">1 kW</text>
+              <text x="60" y="127" text-anchor="end" fill="var(--text-mute)">10 kW</text>
+              <text x="60" y="91" text-anchor="end" fill="var(--text-mute)">100 kW</text>
+              <text x="60" y="54" text-anchor="end" fill="var(--text-mute)">1 MW</text>
+            </g>
+            <text x="365" y="300" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">开关频率 / 工作频率（对数轴）</text>
+            <text x="18" y="152" font-size="9.5" fill="var(--text-soft)" transform="rotate(-90 18 152)">输出功率（对数轴）</text>
+
+            <ellipse cx="175" cy="155" rx="95" ry="110" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-dasharray="4 3"/>
+            <text x="102" y="150" font-size="11" font-weight="700" fill="var(--text)">Si</text>
+            <text x="96" y="166" font-size="9" fill="var(--text-soft)">低频 · 全功率段</text>
+            <text x="96" y="180" font-size="9" fill="var(--text-soft)">成本最低</text>
+            <text x="96" y="194" font-size="9" fill="var(--text-soft)">SJ MOS / IGBT</text>
+
+            <ellipse cx="330" cy="130" rx="72" ry="82" fill="var(--semi)" fill-opacity=".20" stroke="var(--semi)" stroke-dasharray="4 3"/>
+            <text x="288" y="126" font-size="11" font-weight="700" fill="var(--text)">SiC</text>
+            <text x="282" y="142" font-size="9" fill="var(--text-soft)">中高压 · 中频</text>
+            <text x="282" y="156" font-size="9" fill="var(--text-soft)">耐压 + 散热</text>
+            <text x="282" y="170" font-size="9" fill="var(--text-soft)">600 V 以上</text>
+
+            <ellipse cx="455" cy="185" rx="95" ry="72" fill="var(--fin)" fill-opacity=".20" stroke="var(--fin)" stroke-dasharray="4 3"/>
+            <text x="412" y="182" font-size="11" font-weight="700" fill="var(--text)">GaN</text>
+            <text x="398" y="198" font-size="9" fill="var(--text-soft)">低压高频</text>
+            <text x="398" y="212" font-size="9" fill="var(--text-soft)">开关速度</text>
+            <text x="398" y="226" font-size="9" fill="var(--text-soft)">650 V 以下</text>
+
+            <ellipse cx="590" cy="225" rx="62" ry="38" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-dasharray="3 3"/>
+            <text x="556" y="228" font-size="10" font-weight="700" fill="var(--text)">GaAs / SiGe</text>
+            <text x="548" y="242" font-size="9" fill="var(--text-soft)">射频微波 · 小功率</text>
+
+            <text x="486" y="60" font-size="9" fill="var(--text-mute)"> RF 应用（GaN-on-SiC）：基站 / 雷达</text>
+            <line x1="484" y1="64" x2="512" y2="76" stroke="var(--text-mute)" stroke-width="1"/>
+          </g>
+        </svg>
+        <figcaption>图 6：Si / SiC / GaN 的势力范围。三个椭圆的重叠区正是当前工程界争论最多、也最有趣的地方。</figcaption>
+      </figure>
+
+      <p>把图上的信息翻译成工程师的决策逻辑：</p>
+
+      <ul>
+        <li><strong>硅的低频全功率统治区</strong>：只要频率低于约 20~50 kHz、电压不超过 ~900 V（或者不在意开关损耗），硅永远是最便宜的答案。<em>家电、工控、工业电机、消费适配器、低端 UPS</em>——这些市场里 SiC/GaN 的优势无法覆盖它们的价差。</li>
+        <li><strong>SiC 的中高压区</strong>：当<strong>阻断电压超过约 650 V</strong>、或者<strong>结温要超过 150 ℃</strong>、或者<strong>散热条件受限但功率很大</strong>，SiC 就开始碾压。典型场景：车载主驱逆变器（1200 V）、光伏集中式逆变器、储能 PCS、大功率充电桩。</li>
+        <li><strong>GaN 的低压高频区</strong>：当<strong>电压低于约 650 V、但你想把频率开到几百 kHz 甚至 MHz</strong>，或者你追求的是<strong>体积与功率密度</strong>而不是极致效率，GaN 是无可替代的。典型场景：65 W~300 W 快充、数据中心服务器电源、高频 DC-DC、激光雷达驱动。</li>
+        <li><strong>重叠区的判断依据</strong>：在 400~650 V、几十 kHz 这个交叉区间，三个技术都可能合理，最终决定者是<em>系统成本</em>：<strong>器件价格 + 磁性元件/散热器/PCB 成本 + 开发周期与认证成本</strong>。举两个真实例子：<em>同为车载充电机 OBC，中小功率描绘 GaN 更高效更紧凑，大功率则 SiC 更稳更高压；同为数据中心电源，图腾柱 PFC 常用 SiC 或 GaN 取决于功率等级与产品线策略。</em></li>
+      </ul>
+
+      <div class="note">
+        <strong>最重要的一句话：三者互补，而非替代。</strong>真实的电动车里往往是<strong>三者同时在场</strong>：主驱逆变器用 SiC MOSFET（高电压大功率）、车载充电机与 DC-DC 可能用 SiC 或 GaN（看功率等级）、而车灯驱动、各类小电机、低压配电与所有 MCU/SoC/传感器还在用大量硅器件。<strong>理解"哪个位置用什么"，比背诵"谁更先进"有用一万倍。</strong>
+      </div>
+
+      <h2 id="s11">11. 超宽禁带前沿：Ga<sub>2</sub>O<sub>3</sub>、AlN 与金刚石</h2>
+
+      <p>再往上看，是禁带宽度超过 4 eV 的<strong>超宽禁带（ultra-wide bandgap，UWBG）</strong>家族。它们的理论指标非常好看，但每一家都卡着一个"物理层面的硬伤"，这些硬伤反而比器件原理更值得学习——<strong>它们演示了一件事：材料的商业命运，往往由最短的那块板决定。</strong></p>
+
+      <h3>11.1 氧化镓 Ga<sub>2</sub>O<sub>3</sub>：成本潜力最大，散热最差</h3>
+
+      <p><strong>它的王牌是"能用熔体法长晶"。</strong>这一点的重要性怎么强调都不为过：β-Ga<sub>2</sub>O<sub>3</sub>（最常见、也是最稳定的晶型）可以在常压下熔化，因此可以用<strong>导模法（EFG）、提拉法（Czochralski）、布里奇曼法等经典的熔体生长技术</strong>直接拉出单晶——这意味着它可以<em>沿用衬底产业最成熟、成本最低的那套方法</em>。对比 SiC 必须靠 2000 ℃ 以上、0.1~1 mm/h 的升华长晶，Ga<sub>2</sub>O<sub>3</sub> 的成本潜力显然是指数级更好的，业界也确实在向 6 英寸推进。</p>
+
+      <p><strong>它的指标：</strong>E<sub>g</sub> ≈ 4.8~4.9 eV，击穿场强理论值可达 <strong>6~8 MV/cm</strong>（硅的 20 倍以上），Baliga 优值理论可达硅的<strong>数千倍</strong>，比 SiC 与 GaN 还高一个量级。适合做 1200 V 以上的超高压器件。</p>
+
+      <p><strong>它的致命短板有两个：</strong></p>
+
+      <ol>
+        <li><strong>热导率极低：约 0.1~0.3 W/(cm·K)</strong>，只有硅的十分之一、SiC 的四十分之一。这对功率器件几乎是最坏的消息——<em>热量一旦产生就出不去</em>，结温迅速升高。工程上只能想办法从外部补救：<strong>把器件层剥离并键合到高热导率的 SiC 或金刚石衬底上</strong>（异质集成散热），或者采用双面/顶面散热封装。但这样一来，它最大的优势（便宜的熔体法衬底）就被昂贵的键合工艺吃掉了。<strong>这是一个典型的"系统性问题"：你不能只优化材料本身。</strong></li>
+        <li><strong>没有实用的 p 型掺杂。</strong>Ga<sub>2</sub>O<sub>3</sub> 的价带顶非常平（空穴有效质量极大、自陷极化子），受主电离能过高，<strong>几乎不可能做出 p 型层</strong>。这带来三个后果：无法做 PN 结、无法做双极器件、<em>无法用 PN 结边缘终端来缓解电场集中</em>（这是高压器件最常用的耐压手段之一！）。因此 Ga<sub>2</sub>O<sub>3</sub> 器件只能用<strong>单极结构</strong>（肖特基二极管 SBD、MOSFET）并且要靠场板、介质辅助耗尽等替代方案做终端保护。</li>
+      </ol>
+
+      <div class="note">
+        <strong>Ga<sub>2</sub>O<sub>3</sub> 给初学者的一课：</strong>评价一种新材料时，请<em>优先找它的短板</em>，而不是先看它有多漂亮的理论上限。Baliga 优值高几千倍听起来很震撼，但如果这个材料的**热导率**是同行的 1/40，那你必须先回答"如何把热量带走"这个前置问题——而这往往决定了这项技术能否走出实验室。同样的逻辑在第 12、13 节还会反复出现。
+      </div>
+
+      <h3>11.2 氮化铝 AlN：为深紫外而生</h3>
+
+      <p>AlN 的 E<sub>g</sub> 约 <strong>6.0 eV</strong>，对应波长约 207 nm，属于<strong>深紫外（UVC）</strong>范畴。它的核心价值在于：把 AlN 与 GaN 按不同比例形成 AlGaN 三元合金，可以把发光波长在 <strong>210~365 nm 之间连续调节</strong>——这正是传统汞灯（254 nm 杀菌紫外线）的替代者，也是 UVC LED 杀菌、固化、气体传感、非视距通信的核心器件。</p>
+
+      <p>AlN 的热导率也相当不错（理论值可达 2.9~3.2 W/(cm·K)，单晶实测也可达较高水平，远远好于 GaN 与 Ga<sub>2</sub>O<sub>3</sub>），且它是绝缘体、击穿场强高。它还是 GaN-on-Si 外延里最常用的<strong>成核层/应力过渡层</strong>材料，以及在 GaN HEMT 里做背势垒提升沟道限制的能力。</p>
+
+      <p>困难在哪？三件事：<strong>高质量的低缺陷 AlN 单晶衬底极难获得</strong>（主流用蓝宝石上外延 AlN 模板）；<strong>AlGaN 的 p 型掺杂随 Al 组分升高而急剧恶化</strong>（Mg 受主电离能随 Al 含量上升）；以及由此导致的<strong>深紫外 LED 的电光转换效率很低</strong>，目前 UVC LED 的效率远低于已经成熟的蓝光 LED，寿命与成本也同样受限，因此它还没能大规模替代传统的紫外汞灯。</p>
+
+      <h3>11.3 金刚石：理论上的终极半导体</h3>
+
+      <p>金刚石是这张"物性成绩单"里最极端的一个存在。<strong>它的每一项都用"全场最高"来形容：</strong></p>
+
+      <table class="term-table">
+        <thead><tr><th>参数</th><th>金刚石</th><th>相对硅</th><th>意义</th></tr></thead>
+        <tbody>
+          <tr><td>禁带宽度 E<sub>g</sub></td><td>5.47 eV</td><td>约 4.9×</td><td>理论工作温度可达 500 ℃ 以上，漏电极低</td></tr>
+          <tr><td>击穿场强 E<sub>crit</sub></td><td>约 10 MV/cm</td><td>约 33×</td><td>可支撑极端高压与小尺寸漂移区</td></tr>
+          <tr><td>热导率 κ</td><td>约 22 W/(cm·K)</td><td>约 15×</td><td>最强的散热能力，甚至会让其他宽禁带器件用它当散热片</td></tr>
+          <tr><td>载流子迁移率</td><td>μ<sub>n</sub> 约 4500、μ<sub>p</sub> 约 3800 cm²/(V·s)</td><td>约 3× / 约 8×</td><td>少见地<strong>空穴迁移率也很高</strong>，理论上能做 CMOS</td></tr>
+          <tr><td>Baliga 优值</td><td>理论可达硅的数千至上万倍</td><td>—</td><td>功率半导体的终极答案</td></tr>
+        </tbody>
+      </table>
+
+      <p>既然这么完美，为什么我们还没看到金刚石芯片？因为它的短板是最难啃的那一种：</p>
+
+      <ol>
+        <li><strong>n 型掺杂几乎做不出来。</strong>目前最可行的 n 型杂质是<strong>磷</strong>，但它在金刚石中的施主电离能高达约 <strong>0.57 eV</strong>（硅里磷是 0.045 eV）。这意味着<em>室温下绝大部分磷原子并不电离</em>，自由电子浓度低到无法构成好的导电沟道。（p 型用硼，电离能约 0.37 eV，同样偏高但相对好一些，所以金刚石二极管通常以 p 型为主。）近年学术界也在探索其他方案，但都还远离量产。</li>
+        <li><strong>大面积高质量单晶极其昂贵。</strong>天然金刚石不用说；人工金刚石主流有高压高温法（HPHT）与微波等离子体化学气相沉积法（MPCVD）两条路。后者能在籽晶上生长单晶，但要获得半导体级、位错密度足够低、<strong>直径达到英寸级</strong>的单晶极慢极贵。这也是为什么"金刚石半导体"目前仍停留在实验室器件与军工演示阶段。</li>
+        <li><strong>加工难度地狱级。</strong>作为自然界最硬的材料，掺杂、刻蚀、欧姆接触每一步都很难。</li>
+      </ol>
+
+      <div class="tip">
+        <b>但金刚石已经在上演另一出戏：不当半导体，当散热片。</b>把 GaN HEMT 的有源层键合到金刚石衬底上（业界所谓的 <b>GaN-on-Diamond</b>），可以极大改善射频功率器件的散热瓶颈，从而在同样体积下实现数倍的输出功率密度。这条路线已经在高性能射频与国防电子领域得到认可。<strong>材料有时候不需要替代别人，只要在最关键的地方补上别人的短板，就是一门好生意。</strong>
+      </div>
+
+      <h2 id="s12">12. 后硅沟道与二维材料：MoS<sub>2</sub>、石墨烯、碳纳米管</h2>
+
+      <p>第 6 篇讲过硅 CMOS 的微缩困境：当沟道长度缩到十几纳米，栅极对沟道的静电控制越来越难，短沟道效应、漏电、迁移率退化全来了。一条思路是把器件结构改成 FinFET、GAA（这在<a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇</a>已讲）；另一条更激进的思路是：<strong>干脆换掉沟道材料本身</strong>。这一节讲后硅时代的三位候选人。</p>
+
+      <h3>12.1 过渡金属硫族化合物 TMD：MoS<sub>2</sub> / WS<sub>2</sub></h3>
+
+      <p>MoS<sub>2</sub>（二硫化钼）是二维材料里最受关注的一个。它的晶体结构是"三明治"：<strong>一层钼原子夹在两层硫原子之间</strong>（S-Mo-S），层内是强共价键，层间靠范德华力结合，因此可以被剥离到<strong>单层厚度约 0.65 nm</strong>。它有两个性质令人兴奋：</p>
+
+      <ol>
+        <li><strong>单层时从间接带隙变为直接带隙</strong>（体材料 E<sub>g</sub> 约 1.2 eV 是间接带隙， 单层时约 1.8 eV 变成直接带隙）——既能做低功耗晶体管，也能做发光/光电探测器。</li>
+        <li><strong>原子级厚度天然抗短沟道效应。</strong>这是它与第 6 篇的直接呼应：短沟道效应的本质是"栅控不住远离栅的那部分沟道"，而当整个沟道只有 0.65 nm 厚时，栅极从头到尾都"看得见"它。<em>因此即使沟道长度缩到 10 nm 以下，理论上仍能保持优秀的关断特性。</em></li>
+      </ol>
+
+      <p>它现在卡在哪里？四件事，每一件都不轻松：</p>
+
+      <ul>
+        <li><strong>接触电阻。</strong>金属与单层 TMD 接触时会形成较大的肖特基势垒，且二维材料的费米能级钉扎效应明显，接触电阻常常高达 kΩ·μm 量级，会吃掉器件的大部分性能。近年出现的<strong>半金属接触（如 Bi、Sb）</strong>把接触电阻压低了一个数量级以上，是这条路的重要进展。</li>
+        <li><strong>迁移率。</strong>理论上单层 MoS<sub>2</sub> 的声子限制迁移率可达数百 cm²/(V·s)，但实际器件受限于衬底声子散射、带电杂质散射与界面粗糙，通常只有几十到一二百。<strong>做大尺寸 CMOS 恐怕不够用</strong>。</li>
+        <li><strong>稳定掺杂。</strong>传统的替位式掺杂在二维材料里很难控制，业界更多依赖表面电荷转移掺杂或静电掺杂，这对量产很不友好。</li>
+        <li><strong>与 CMOS 产线兼容。</strong>二维材料的转移、生长（MOCVD/大面积 CVD 已能在 200~300 mm 衬底上演示）、介质沉积（在二维表面上用 ALD 生长 high-k 介质时不容易成核）每一步都要重新设计，而且这些物料接触到的是一台价值上亿美元的产线。</li>
+      </ul>
+
+      <p>目前产业与学术界的主流判断是：<strong>MoS<sub>2</sub> 类二维沟道大概率不是用来"全面替换硅"，而是用来做 CFET（互补场效应晶体管）的 n 型层、做后端集成的 BEOL 器件、或做超低功耗低电流场景</strong>——也就是说，它会被塞进硅工艺的某个缝隙里，而不是把硅挤出去。</p>
+
+      <h3>12.2 石墨烯：导电之王，开关之奴</h3>
+
+      <p>石墨烯（graphene）是单层碳原子组成的蜂窝状二维晶体，2010 年获得诺贝尔物理学奖。它的载流子迁移率极高（悬空样品可达 10<sup>5</sup>~10<sup>6</sup> cm²/(V·s)，衬底上的实测量级也在 10<sup>4</sup> 以上），热导率极高，电流密度承受能力强，机械强度极高。</p>
+
+      <p>但它有一个无法回避的问题：<strong>带隙为零。</strong>它的价带与导带在狄拉克点相接触，没有能隙，因此石墨烯 FET 无法被彻底关断——<em>实测的开关电流比（I<sub>on</sub>/I<sub>off</sub>）通常只有几到几十</em>，而逻辑电路需要 10<sup>4</sup> 以上甚至更高的比值。<strong>这一个致命缺陷把它彻底排除在数字逻辑的大门之外。</strong>（人们尝试过纳米带、双层加电场开带隙等办法，但往往以牺牲迁移率为代价，且工艺极难控制。）</p>
+
+      <p>所以石墨烯的正确用法是：<strong>不要试图用它造 CPU</strong>，而是用它做它擅长的那些事——</p>
+
+      <ul>
+        <li>高速互连与电极：石墨烯的抗电迁移能力比铜强，在超细线宽下可能优于铜互连；</li>
+        <li>射频器件：极高迁移率与饱和速度支撑高频应用（不过受限于输出电阻与缺乏电流饱和，增益有限）；</li>
+        <li>传感器：单层结构意味着每一个原子都暴露在环境中，灵敏度理论上极高；</li>
+        <li>透明导电膜、复合材料、储能（石墨烯在电池导电剂里的应用已经落地）；</li>
+        <li>更重要的是作为其他二维材料的"配角"：接触电极、衬底、扩散阻挡层。</li>
+      </ul>
+
+      <div class="warn">
+        <b>一个值得反复咀嚼的教训：</b>石墨烯拥有人类测得过的最高迁移率、最高热导率、最强机械强度——然后它做不了晶体管。<strong>决定一项技术方向的，从来不是"最强的那一项"，而是"最短的那块板"。</strong>在评估任何"某某新材料突破"的新闻时，请第一时间问：<em>它的短板是什么？这个短板会不会恰好卡住它要解决的问题？</em>这正是本节与上一节反复试图建立的思维习惯。
+      </div>
+
+      <h3>12.3 碳纳米管 CNT</h3>
+
+      <p>碳纳米管可以看成"卷起来的石墨烯"，它的独特之处在于：<strong>带隙由直径和卷绕方式（手性）决定</strong>，经验规律为</p>
+
+      <div class="formula-block">
+        <span class="fl">E<sub>g</sub> ≈ 0.8 eV / d (nm)</span>
+        <span class="fnote">d 为管径。<strong>直径 1~1.5 nm 的半导体性 CNT，带隙落在 0.5~0.8 eV，恰好适合做低功耗晶体管沟道。</strong>麻烦也随之而来：同一批生长的 CNT 里约有三分之一是<em>金属性</em>（零带隙），它们会直接短路你的晶体管，所以必须提纯到 99.9999% 以上的半导体性纯度——这是整个领域三十年来最核心的挑战之一（手性分离、选择性生长、溶液分选等，各有路线）。</span>
+      </div>
+
+      <p>CNT 的优势很实在：迁移率可达数千 cm²/(V·s)、一维结构带来极佳的静电控制、可做成 GAA 式的环绕栅、理论上能在低电压下实现极高性能。行业也确实做出了里程碑级的验证：<strong>2019 年斯坦福大学团队在 200 mm 硅片上用 CNT 场效应晶体管做成了 RV16X-NANO 型 16 位处理器</strong>，能运行简单的操作系统——这证明了"非硅沟道 + 当代 CMOS 产线"的组合是可行的。</p>
+
+      <p>商业化拦路虎依然清晰：<strong>高纯度半导体性 CNT 的分离成本</strong>、阵列密度与取向一致性（需要 100~200 根/μm 的定向阵列才能获得足够电流驱动能力）、接触电阻、以及与 CMOS 后端工艺兼容的成本。因此它更可能先在<em>现有硅产线的某些特定层面</em>（比如 BEOL 器件、三维集成中的特定层）落地，而不是整体替换硅。</p>
+
+      <h2 id="s13">13. 其他功能半导体材料：IGZO、钙钛矿、有机与自旋</h2>
+
+      <p>最后这一节跳出"开关器件"的框架，看看那些为不同功能而生的半导体材料。它们的存在提醒我们：<strong>半导体的定义不是"用来做 CPU 的东西"，而是"电导率可被调控的材料"</strong>。</p>
+
+      <h3>13.1 氧化物半导体 IGZO：显示背板的主角</h3>
+
+      <p>IGZO（Indium Gallium Zinc Oxide，铟镓锌氧）是一种<strong>非晶氧化物半导体</strong>。它的两个属性让它在显示领域胜出：</p>
+
+      <ul>
+        <li><strong>迁移率适中但足够</strong>：约 10~30 cm²/(V·s)，远高于非晶硅（0.5~1），低于低温多晶硅 LTPS（50~100）。高迁移率意味着像素的开关晶体管可以做得更小、充电更快，支撑更高的分辨率与刷新率。</li>
+        <li><strong>关断漏电极低 + 可大面积均匀成膜</strong>：极低漏电意味着每个像素在一帧的大部分时间里不需要频繁刷新，这正是<strong>低温节能显示</strong>的关键；加上它的溅射成膜工艺与现有面板产线兼容性极好，可以在 8.5 代、10.5 代这样的超大玻璃基板上均匀制备。</li>
+      </ul>
+
+      <p>由此诞生了现在手机与平板里常见的 <strong>LTPO 背板</strong>（低温多晶硅 oxide 混合）：把驱动像素的部分用 IGZO（低漏电、支持低帧率刷新到 1 Hz 以省电），把需要高速的部分用 LTPS。<em>你的手机息屏显示为什么能几乎不耗电，就是这块玻璃基板上的半导体材料在帮忙。</em>此外，IGZO 极低漏电的特性也让它在<strong>新型 DRAM/eDRAM</strong> 与存内计算的研究中反复出现（可与<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>对照阅读）。</p>
+
+      <h3>13.2 钙钛矿：光伏领域最凶猛的挑战者</h3>
+
+      <p>钙钛矿（perovskite，这里指具有 ABX<sub>3</sub> 结构的卤化物类光伏材料，典型如甲脒铅碘 FAPbI<sub>3</sub>）创造了光伏史上最快的效率提升纪录：<strong>2009 年首次用于光伏时效率仅 3.8%，十多年后单结实验室效率已超过 26%</strong>，与花了四十年才 27% 的晶硅形成鲜明对比。它好在哪里？</p>
+
+      <ul>
+        <li>带隙可调（通过改变化学组分覆盖 1.2~2.3 eV），非常适合做<strong>叠层电池的顶电池</strong>；</li>
+        <li>吸收系数高，几百纳米厚就能吸够光（晶硅需要上百微米）；</li>
+        <li>可用溶液法、狭缝涂布等低温低成本的方式制备，理论成本极低。</li>
+      </ul>
+
+      <p>问题也很尖锐：<strong>稳定性</strong>（水氧侵蚀、热分解、离子迁移导致的性能漂移，需要在器件寿命内保持数十年）、<strong>铅的毒性</strong>（尽管有铅含量极低的优点，但环境风险是商业化的必答题）、以及<strong>大面积制备时效率与均匀性的损失</strong>（小面积电池 26%，组件效率通常低不少）。目前产业界的共识路线是<strong>钙钛矿/晶硅叠层</strong>：让钙钛矿吸收高能光子、晶硅吸收低能光子，实验室效率已经显著超过单结晶硅的理论极限。<strong>它的对手不是替代晶硅，而是和晶硅结婚。</strong></p>
+
+      <h3>13.3 有机半导体与OLED：柔软的那一支</h3>
+
+      <p>有机半导体以共轭 π 键的小分子或聚合物构成。它的迁移率不高（OTFT 通常 1~10 cm²/(V·s)），可靠性低于无机材料，但它具备无机材料完全给不了的性质：<strong>可溶于墨水进行印刷、可在柔性塑料基板上加工、可在低温下大面积成膜</strong>。目前最成功的商业形式是 <strong>OLED（有机发光二极管）</strong>——它的自发光特性让屏幕可以做到纯黑、柔性与极薄，已经成为高端手机与电视的主流显示方案（柔性 OLED、折叠屏都是它的产物）。此外有机太阳能电池（OPV）、有机光电探测器、印刷 RFID 与柔性传感器也在逐步落地。</p>
+
+      <h3>13.4 磁性半导体与自旋电子学：一句话展望</h3>
+
+      <p>传统半导体只操控电子的<strong>电荷</strong>，而自旋电子学希望同时利用电子的<strong>自旋</strong>。已经落地的是稀磁/金属多层膜体系里的磁性随机存储器（MRAM，<a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇</a>讲过）；而"稀磁半导体"（如在 GaAs 中掺 Mn 形成的 (Ga,Mn)As）虽然早在上世纪 90 年代就成为研究热点，但<strong>居里温度太低</strong>（早期约 110 K，后来提升到接近 200 K 的水平，仍然远低于室温），至今未能实现室温工作的实用器件。拓扑绝缘体、自旋轨道转矩（SOT）、磁子学等新方向仍在探索阶段——它们的共同特点都是：<em>物理上非常漂亮，工程上还在非常早期</em>。</p>
+
+      <h2 id="s14">14. 选材决策表与四个常见误区</h2>
+
+      <p>最后把本篇整套逻辑压缩成一张可以"反查"的表。用法：<strong>先找出你的主导约束（通常是耐压、频率或温度），再读对应的材料。</strong></p>
+
+      <p>读完本篇，你脑里应该留下的不是一张参数表，而是一棵<strong>决策树</strong>：先问功能约束（要不要发光、电压多高、频率多高、温度多高），最后问成本与量产成熟度。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体材料选型决策流程">
+          <defs>
+            <marker id="ar8-4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L8 4 L0 8 Z" fill="var(--semi)"/>
+            </marker>
+          </defs>
+          <g font-size="10" fill="var(--text)">
+            <text x="20" y="14" font-size="11" font-weight="700" fill="var(--text)">选材三问：先按功能约束剔除，最后交给成本裁定</text>
+
+            <rect x="250" y="22" width="180" height="34" rx="7" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)"/>
+            <text x="340" y="38" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">需求：耐压 / 频率 / 温度 / 发光</text>
+            <text x="340" y="50" text-anchor="middle" font-size="9" fill="var(--text-mute)">外加：成本、供货、认证、良率</text>
+
+            <path d="M300 56 L300 68 L120 68 L120 88" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+            <path d="M340 56 L340 88" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+            <path d="M380 56 L380 68 L560 68 L560 88" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+
+            <path d="M120 88 L200 118 L40 118 Z" fill="var(--surface-2)" stroke="var(--semi)"/>
+            <text x="120" y="106" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">要发光 / 感光？</text>
+            <path d="M120 118 L120 146" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+            <rect x="30" y="150" width="180" height="46" rx="7" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)"/>
+            <text x="120" y="168" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">GaAs / InP / InGaN</text>
+            <text x="120" y="183" text-anchor="middle" font-size="9" fill="var(--text-soft)">LED · 激光器 · VCSEL · 探测器</text>
+            <text x="220" y="180" font-size="9" fill="var(--text-mute)">否 → 看下一问</text>
+
+            <path d="M340 88 L420 118 L260 118 Z" fill="var(--surface-2)" stroke="var(--semi)"/>
+            <text x="340" y="106" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">耐压 &gt; 650 V 或高温？</text>
+            <path d="M340 118 L340 146" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+            <rect x="250" y="150" width="180" height="46" rx="7" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)"/>
+            <text x="340" y="168" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">SiC MOSFET</text>
+            <text x="340" y="183" text-anchor="middle" font-size="9" fill="var(--text-soft)">车载主驱 · 光伏 · 充电桩 · 电网</text>
+            <text x="440" y="180" font-size="9" fill="var(--text-mute)">否 → 看下一问</text>
+
+            <path d="M560 88 L640 118 L480 118 Z" fill="var(--surface-2)" stroke="var(--semi)"/>
+            <text x="560" y="106" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">频率 &gt; 200 kHz 或要密度？</text>
+            <path d="M560 118 L560 146" fill="none" stroke="var(--semi)" stroke-width="1.2" marker-end="url(#ar8-4)"/>
+            <rect x="470" y="150" width="190" height="46" rx="7" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)"/>
+            <text x="565" y="168" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">GaN HEMT</text>
+            <text x="565" y="183" text-anchor="middle" font-size="9" fill="var(--text-soft)">快充 · 数据中心 · LiDAR · 基站射频</text>
+            <text x="450" y="180" font-size="9" fill="var(--text-mute)" text-anchor="end">否 ↓</text>
+
+            <rect x="30" y="212" width="630" height="36" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="46" y="228" font-size="10" font-weight="700" fill="var(--text)">三问都答"否" → 硅 Si</text>
+            <text x="46" y="242" font-size="9.5" fill="var(--text-soft)">逻辑 / 存储 / 图像传感器 / 家电工控 / 光伏：绝大多数场景下它仍然是最便宜且最可靠的答案</text>
+
+            <rect x="30" y="254" width="630" height="38" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="46" y="270" font-size="9.5" fill="var(--text-soft)">最后一问永远是成本：在满足功能约束的所有方案里，选系统总成本最低、供货最稳、认证最成熟的那个。</text>
+            <text x="46" y="285" font-size="9.5" fill="var(--text-soft)">换材料的连锁反应别忘了算：整套工艺、封装散热、栅极驱动、可靠性认证，全都要重做一遍。</text>
+          </g>
+        </svg>
+        <figcaption>图 7：选材决策流程。先用功能约束做"淘汰赛"，最后用系统与生产成本定胜负。</figcaption>
+      </figure>
+
+      <table class="term-table">
+        <thead><tr><th>场景</th><th>主导约束</th><th>推荐材料</th><th>为什么</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CPU / GPU / SoC / AI 加速</strong></td><td>集成度、成本，低压 1 V 左右</td><td><strong>Si</strong>（FinFET / GAA）</td><td>唯一具备 300 mm 无缺陷衬底与全套工艺生态的材料</td></tr>
+          <tr><td><strong>DRAM / NAND</strong></td><td>成本每 bit、漏电</td><td><strong>Si</strong></td><td>同上，且需要极致的低漏电与高深宽比工艺</td></tr>
+          <tr><td><strong>图像传感器 CIS</strong></td><td>400~1000 nm 吸光、低噪声</td><td><strong>Si</strong></td><td>E<sub>g</sub> = 1.12 eV 的截止波长天然匹配可见光</td></tr>
+          <tr><td><strong>家电 / 工控低压电源</strong></td><td>成本，&lt; 100 kHz</td><td><strong>Si</strong>（MOSFET / SJ MOS）</td><td>低压低频下宽禁带材料的溢价换不回收益</td></tr>
+          <tr><td><strong>工业电机 / 电焊机 / 大功率 UPS</strong></td><td>600~1700 V，成本敏感</td><td><strong>Si IGBT</strong>（SiC 正在渗透 1200 V 以上）</td><td>低频下 IGBT 的电导调制优势明显，成本远低于 SiC</td></tr>
+          <tr><td><strong>电动车主驱逆变器</strong></td><td>~1200 V，中频，散热受限</td><td><strong>SiC MOSFET</strong></td><td>耐压 + 散热 + 开关损耗三项同时最优</td></tr>
+          <tr><td><strong>800 V 平台 OBC / DC-DC</strong></td><td>650~1200 V，追求小型化</td><td><strong>SiC</strong>（大功率）/ <strong>GaN</strong>（中小功率）</td><td>看功率等级与拓扑；高功率 SiC 更稳，中小功率 GaN 更密</td></tr>
+          <tr><td><strong>65 W~300 W 快充适配器</strong></td><td>&lt; 650 V，追求功率密度</td><td><strong>GaN HEMT</strong></td><td>提频后磁性元件与电容体积大幅缩小</td></tr>
+          <tr><td><strong>数据中心服务器电源 / 48 V 母线</strong></td><td>效率 96%~99%，高密</td><td><strong>GaN</strong>（图腾柱 PFC、低压侧）/ <strong>SiC</strong>（高压侧）</td><td>两者常在同一台电源里分工协作</td></tr>
+          <tr><td><strong>手机 / Wi-Fi 射频前端</strong></td><td>1~7 GHz，线性度与效率</td><td><strong>GaAs HBT / pHEMT</strong>（PA）+ SOI（开关）</td><td>半绝缘衬底的低损耗对 RF 至关重要</td></tr>
+          <tr><td><strong>5G 宏基站 / 相控阵雷达</strong></td><td>3~6 GHz 以上，数十~数百 W</td><td><strong>GaN-on-SiC</strong></td><td>高频功率密度 + SiC 衬底散热，唯一可行组合</td></tr>
+          <tr><td><strong>毫米波雷达（77~79 GHz）</strong></td><td>高频收发前端</td><td><strong>SiGe HBT</strong>（BiCMOS）+ CMOS</td><td>与数字电路单芯片集成的成本优势</td></tr>
+          <tr><td><strong>光通信激光器 / 探测器</strong></td><td>1310 / 1550 nm</td><td><strong>InP</strong> 体系</td><td>E<sub>g</sub> 与波长匹配；硅与 GaAs 都做不到</td></tr>
+          <tr><td><strong>VCSEL 感测（人脸识别 / LiDAR）</strong></td><td>850 / 940 nm，纳秒调制</td><td><strong>GaAs VCSEL</strong></td><td>垂直腔面发射结构成熟，成本可控</td></tr>
+          <tr><td><strong>可见光 LED / Micro LED</strong></td><td>发光效率</td><td><strong>InGaN</strong>（蓝绿）/ <strong>AlGaInP</strong>（红黄）</td><td>必须直接带隙；多数生长在蓝宝石或 GaAs 衬底上</td></tr>
+          <tr><td><strong>深紫外杀菌 UVC LED</strong></td><td>210~280 nm</td><td><strong>AlGaN / AlN</strong></td><td>唯一能覆盖此波段的实用半导体体系，效率仍偏低</td></tr>
+          <tr><td><strong>红外热成像镜头 / 夜视</strong></td><td>2~14 μm 透过</td><td><strong>Ge</strong></td><td>锗在这个波段高度透明（可见光下不透明）</td></tr>
+          <tr><td><strong>显示背板 TFT</strong></td><td>大面积均匀性、低漏电</td><td><strong>IGZO / LTPS</strong></td><td>低漏电支撑低帧率省电，大面积溅射成膜成本低</td></tr>
+          <tr><td><strong>光伏</strong></td><td>成本每瓦、寿命 25 年</td><td><strong>Si</strong>（&gt;95%）+ 钙钛矿叠层（演进中）</td><td>晶硅的效率已逼近 29.4% 的单结理论极限</td></tr>
+          <tr><td><strong>油气钻井、航空发动机传感（&gt;250 ℃）</strong></td><td>极端温度</td><td><strong>SiC</strong>（主流）/ 金刚石（前沿）</td><td>硅在此温度下已完全失效</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>四个高频误区，按严重程度排序：</b><br><br>
+        <b>误区一："宽禁带一定全面优于硅。"</b>——在低压低频场景里，<b>硅仍然是最便宜、最可靠、供应最稳的选择</b>。把一颗工作在 100 kHz、80 V 的硅 MOSFET 换成 GaN，价格可能涨几倍却只换来可忽略的效率提升，还额外带来驱动与 EMI 的新麻烦。<b>材料选择永远是经济问题，不是物理量级竞赛。</b><br><br>
+        <b>误区二："GaN 会取代 SiC。"（或反过来）</b>——两者继承自不同的物理机制（SiC 有 MOS 界面 → 垂直高压器件；GaN 有极化 2DEG → 横向高频器件），中间还隔着 650 V 这个天然分水岭。<b>真实产品里两者经常同时使用。</b>更应关注的其实是可抉择边界的缓慢移动（例如 GaN 垂直结构若能借助低成本自支撑 GaN 衬底成熟，才可能向更高电压延伸）。<br><br>
+        <b>误区三："第三代半导体 = 更先进的技术。"</b>——这是产业俗称，不含任何技术与商业模式上的先进性判断。<b>一颗 3 nm 逻辑芯片用的是第一代材料</b>，它的技术含量与产业价值远高于一颗 1200 V SiC MOSFET。评价具体产品请回到参数、良率、成本、认证与客户。<br><br>
+        <b>误区四："材料换一下就能用。"</b>——这是工程师最容易低估的一条。换材料意味着：<b>整套工艺要重来</b>（SiC 要 1700 ℃ 注入退火、GaN 要重新设计缓冲层应力工程、缺陷与位错完全不是一个量级）；<b>器件结构与版图要重来</b>（垂直 vs 横向、p-GaN 栅 vs MOS 栅）；<b>封装与散热要重来</b>（SiC/GaN 常用烧结银、双面散热、氮化硅陶瓷基板来取代传统的焊料与铜框架）；<b>驱动电路要重来</b>（SiC 的门限与负压关断、GaN 的栅压上限与米勒钳位、对回路电感的极致敏感）；以及<b>测试、可靠性标准与失效模式要重新认证</b>（车规通常需要数千小时的高温反偏、温度循环、湿热偏置考核）。<b>材料改变引发的是系统级连锁反应。</b>
+      </div>
+
+      <p><strong>衔接下一站。</strong>本篇回答了"芯片用什么材料"，但还留着一个同样关键的问题：<strong>这些材料是怎么变成一片可以光刻的完美晶圆的？</strong>硅从石英砂到 11 个 9 的高纯多晶硅，再经直拉法拉成真正的单晶棒，最后切片、研磨、抛光成表面粗糙度不到 0.5 nm 的抛光片——这一整条路上每一个数字都极其硬核（坩埚转速、提拉速率、氧碳含量、COP 缺陷、 COP-free 区、外延层）。下一篇<a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇</a>《硅单晶生长与衬底制备工艺》就地接手这个问题。而在那之后，我们才真正踏进 <a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇</a>起的四大工艺篇（<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">光刻</a>、<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">刻蚀</a>、<a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">薄膜与掺杂</a>、<a href="2026-10-01-CMP平坦化量测与良率控制.html">CMP 与良率</a>）。</p>
+
+      <h2 id="s15">15. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：用 BFOM 公式估算 4H-SiC 相对硅的优势倍数，并解释 600 V 级功率 MOSFET 为什么几乎不选 4H-SiC 而选硅超结；请同时说明 BFOM 排在 590 倍、实际器件的比导通电阻却只差几十倍的原因。</summary>
+        <div class="answer">
+        <strong>① BFOM 计算：</strong>BFOM = ε<sub>r</sub> · μ<sub>n</sub> · E<sub>crit</sub><sup>3</sup>。<br>
+        · Si：11.7 × 1400 × (0.3)<sup>3</sup> = 11.7 × 1400 × 0.027 ≈ <strong>442</strong>（取 1 作基准）<br>
+        · 4H-SiC：9.7 × 1000 × (3.0)<sup>3</sup> = 9.7 × 1000 × 27 ≈ <strong>261,900</strong><br>
+        · 倍数 = 261,900 / 442 ≈ <strong>约 590 倍</strong>。<br>
+        拆开看：介电常数比 0.83（吃亏），迁移率比 0.71（吃亏），而 E<sub>crit</sub><sup>3</sup> 之比是 <strong>1000 倍</strong>（赢下全局）。这就是" <em>E<sub>crit</sub> 三次方</em>"的力量。<br><br>
+        <strong>② 为什么 600 V 不选 SiC：</strong>600 V 时硅超结（superjunction）MOSFET 通过横向的电荷补偿把一维极限打破，实际比导通电阻可低到<strong>十几~几十 mΩ·cm²</strong>，而成本的差距却是几倍到十几倍。在这个电压档位：<em>硅已经够用（导通损耗不是瓶颈），而 SiC 的溢价无法被系统收益覆盖</em>。再加上 600 V 场景往往工作在几十到一百多 kHz，SiC 的高频潜力也用不上。<strong>结论：600 V 是硅超结的经济区间；SiC 的甜蜜点在 900~1700 V。</strong><br><br>
+        <strong>③ 为什么实际差距远小于 590 倍：</strong>BFOM 只约束<strong>漂移区</strong>，而一颗真实 MOSFET 的总电阻还包括：沟道区电阻、JFET 区电阻、源极接触电阻、衬底电阻与封装寄生电阻。<br>
+        · 4H-SiC MOSFET 的<strong>沟道迁移率只有 20~50 cm²/(V·s)</strong>（体材料是约 1000）——原因是 Si/SiO<sub>2</sub> 之外的 SiC/SiO<sub>2</sub> 界面态密度比硅高 2~3 个数量级，界面散射与陷阱俘获严重；<br>
+        · 结果就是：<em>1200 V 时 SiC 的一维理论极限约 0.25 mΩ·cm²，实际器件却是 2~3.5 mΩ·cm²，差了近 10 倍</em>；而硅的理论极限约 150 mΩ·cm²，实际硅器件（该电压段多为 IGBT）也在同一数量级内。<br>
+        <strong>结论：BFOM 告诉我们"漂移区能有多好"，而真正的 engineering 战役打在沟道、界面与接触上。</strong>这也是为何 SiC 产业把沟槽栅（Trench MOS）、界面氮化退火、新型栅介质视为核心竞争点。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么 AlGaN/GaN HEMT 天生是"常开"（耗尽型）器件？请说出两种把它做成常关（增强型）的方法及其各自的代价。</summary>
+        <div class="answer">
+        <strong>① 根源：2DEG 不是靠外加偏压形成的，而是靠极化电荷。</strong><br>
+        AlGaN 与 GaN 的<strong>自发极化</strong>强度不同，且 AlGaN 被 GaN "撑开"产生<strong>压电极化</strong>，两者合计在异质界面留下约 1×10<sup>13</sup> cm<sup>−2</sup> 的束缚面电荷；为了电中性，<em>自由电子必须聚集到界面</em>，并被导带不连续 ΔE<sub>c</sub>（约 0.3~0.5 eV）挤在一个仅几纳米厚的三角形势阱里。<br>
+        结果是：<strong>V<sub>GS</sub> = 0 时沟道就存在</strong>，必须加负栅压（通常 <strong>−2~−4 V</strong>）耗尽它才能关断 → 天然<strong>耗尽型（D-mode，常开）</strong>。而功率电子要求失效时必须关断（fail-safe），所以必须转成增强型。<br><br>
+        <strong>② 方法一：p-GaN 栅。</strong>在势垒层上再长 P 型 GaN 帽层，利用 PN 结的内建电场<em>把栅下方的能带整体抬高到费米能级以上</em>，零偏时沟道消失 → V<sub>th</sub> 变成 <strong>+1.5~+2.5 V</strong>。<br>
+        代价：栅压超过约 <strong>+6~+7 V</strong> 时栅极结会导通，驱动必须精确限制并用米勒钳位；且 Mg 受主电离能约 170~200 meV，<strong>p 型 GaN 的低阻欧姆接触与激活率都是工艺难点</strong>。<br><br>
+        <strong>③ 方法二：Cascode 共源共栅。</strong>把高压<strong>D-mode GaN HEMT</strong> 与一颗<strong>低压硅 MOSFET</strong> 串联（硅管在源极侧控制），对外整体呈现常关特性，工程师可以"像驱动硅 MOS 一样"使用它。<br>
+        代价：<strong>引入硅管的额外导通电阻与其体二极管</strong>（反向恢复特性变差）、封装与回路电感变复杂、成本上升、并且 GaN 的高频优势被削弱一部分。<br><br>
+        <strong>④ 选型结论：</strong>追求功率密度与高频（快充、48 V 母线 DC-DC、LiDAR 驱动）→ 多采用 p-GaN 栅增强型；追求易用性与大功率兼容性（工业、部分车规）→ cascode 更容易落地。<strong>两者都不改变"2DEG 是常开的"这一物理事实，只是在器件外部把系统变成常关。</strong>
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：估算 300 K 下硅与 4H-SiC 的本征载流子浓度之比（用 n<sub>i</sub> ∝ T<sup>3/2</sup>exp[−E<sub>g</sub>/(2kT)]，忽略有效态密度与禁带随温度的变化），据此说明为什么硅的结温上限约 150 ℃ 而 SiC 可以到 200 ℃ 以上。</summary>
+        <div class="answer">
+        <strong>① 指数项对比（kT = 0.0259 eV，故 2kT = 0.0518 eV）：</strong><br>
+        · Si：exp[−1.12/0.0518] = exp(−21.6) ≈ <strong>4.2×10<sup>−10</sup></strong><br>
+        · 4H-SiC：exp[−3.26/0.0518] = exp(−62.9) ≈ <strong>6.5×10<sup>−28</sup></strong><br>
+        两者之比 ≈ 6.5×10<sup>−28</sup> / 4.2×10<sup>−10</sup> ≈ <strong>1.5×10<sup>−18</sup></strong>，即<strong>硅的本征载流子浓度约比 4H-SiC 高 10<sup>18</sup> 倍</strong>（T<sup>3/2</sup> 与有效态密度的修正不会改变这个数量级结论）。<br>
+        代入绝对值：Si 的 n<sub>i</sub> ≈ 1×10<sup>10</sup> cm<sup>−3</sup>，则 SiC 的 n<sub>i</sub> 只有 <strong>10<sup>−8</sup> cm<sup>−3</sup> 量级——实际上等于"没有"</strong>。<br><br>
+        <strong>② 再看高温下的硅：</strong>T = 473 K（200 ℃）时，<br>
+        n<sub>i</sub>(473 K) ≈ 1×10<sup>10</sup> × (473/300)<sup>3/2</sup> × exp[ (1.12/2k) × (1/300 − 1/473) ] ≈ 1×10<sup>10</sup> × 1.98 × e<sup>7.92</sup> ≈ <strong>5×10<sup>13</sup> cm<sup>−3</sup></strong>。<br>
+        这个浓度已经<strong>接近中低掺杂区的掺杂浓度</strong>：PN 结两侧被热激发的本征载流子抹平，耗尽区塌陷、二极管失去整流能力，漏电與功耗进一步加热形成热失控。所以硅器件通常把结温封在 <strong>125~150 ℃</strong>（车规可到 175 ℃ 上限，并要付出降额代价）。<br><br>
+        <strong>③ SiC 为什么能到 200 ℃ 以上：</strong>同样的温度爬升作用在 E<sub>g</sub> = 3.26 eV 的 SiC 上，n<sub>i</sub> 依然远远低于典型的漂移区掺杂浓度（10<sup>14</sup>~10<sup>16</sup> cm<sup>−3</sup> 量级），<em>PN 结依然完好</em>，因此器件的主要失效机理不再是"本征化"，而转移到封装、金属化、栅氧可靠性与热机械应力上——这些恰恰是可以通过工程手段（烧结银、氮化硅陶瓷基板、高温封装）去推的事情。<br><br>
+        <strong>④ 一句话总结：</strong>E<sub>g</sub> 出现在 n<sub>i</sub> 的<strong>指数</strong>里，因此禁带宽度的微小提升会带来差异的天壤之别。这就是" <strong>宽禁带 = 高温能力</strong>"这句话的全部数学内容。
+        </div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：一台 100 kW 电动车要选主驱逆变器方案，四个候选分别对应：硅 IGBT / 硅超结 MOSFET / SiC MOSFET / GaN HEMT。请按"耐压 / 频率 / 散热 / 成本"四个维度逐一判别，给出选择并说明另外三个被淘汰的理由。</summary>
+        <div class="answer">
+        <strong>场景设定：</strong>800 V 母线、峰值功率约 100~200 kW、开关频率目标数十 kHz、全天候高低温工况、体积与续航双敏感、每年数万台的规模。<br><br>
+        <strong>① 耐压：</strong>800 V 母线在开关过程中会有母线电压叠加反射的过冲，通常需要 <strong>1200 V</strong> 级器件。<br>
+        · <strong>硅超结 MOSFET 淘汰</strong>：商业上超结 MOS 的经济上限约 900 V，且高压下比导通电阻随 BV<sup>2.5</sup> 暴涨，芯片会大到不可接受；<br>
+        · <strong>GaN HEMT 淘汰</strong>：主流 GaN 是<em>横向</em>器件，缺乏经济的垂直耐压结构，且在 GaN-on-Si 上还要受缓冲层耐压与位错限制，主流商用集中在 <strong>≤650 V</strong>（向更高电压延伸需要昂贵的自支撑 GaN 衬底，尚不成熟）；<br>
+        · 硅 IGBT 与 SiC MOSFET 都覆盖 1200 V。<br><br>
+        <strong>② 频率与损耗：</strong>目标为数十 kHz。<br>
+        · <strong>硅 IGBT 的短板</strong>：双极器件，关断有<strong>拖尾电流</strong>，通常只能工作在 10 kHz 上下；<br>
+        · SiC MOSFET 是单极器件，且配 SiC SBD 后<strong>反向恢复电荷近乎为零</strong>，可以在数十 kHz 下保持较低开关损耗。<br><br>
+        <strong>③ 散热：</strong><br>
+        · SiC 热导率 <strong>4.9 W/(cm·K)</strong>，约硅的 3.2 倍，且结温可提到 175~200 ℃，冷却系统可简化；<br>
+        · GaN 体材料热导率仅约 1.3 W/(cm·K)，在 100 kW 级功率上散热路径会成为瓶颈（除非使用昂贵的 GaN-on-SiC）。<br><br>
+        <strong>④ 成本：</strong>这是唯一偏向硅的因素——硅 IGBT 模块价格远低于同规格 SiC MOSFET。但系统级算账会发生变化：<em>效率提升带来的续航收益，或换成"同等续航少装几 kWh 电池"的成本节省</em>，加上磁性元件、散热器、冷却系统的缩小，往往可以把器件价差抵消相当一部分。行业常引用的续航收益是 <strong>5%~10%（实测多在 3%~8%，取决于循环中轻载占比）</strong>。<br><br>
+        <strong>结论：选 SiC MOSFET（1200 V）。</strong>淘汰理由汇总：<br>
+        · <b>硅超结 MOS</b>：耐压不够 + R<sub>on,sp</sub> ∝ BV<sup>2.5</sup> 导致芯片过大；<br>
+        · <b>硅 IGBT</b>：可用且便宜，但开关频率被拖尾电流锁死，效率尤其在轻载工况下明显吃亏，不利于体积与续航；<br>
+        · <b>GaN HEMT</b>：横向结构 + GaN-on-Si 的耐压与散热双重限制，适合 650 V 以下的中小功率高频场合（快充、48 V 母线），不适合 ~100 kW 主驱。<br><br>
+        <strong>⑤ 别忘了后续连锁工程：</strong>换成 SiC 之后，必须同时重新设计<strong>栅极驱动</strong>（+15~+18 V 开通、−2~−5 V 关断）、<strong>短路保护</strong>（SiC 的短路耐受时间通常只有硅 IGBT 的一部分，典型几微秒量级）、<strong>PCB 的回路电感与米勒效应抑制</strong>、<strong>双面散热/烧结银/氮化硅基板</strong>以及 EMI 对策。这正是第 14 节"材料换一下就能用"误区想强调的内容。
+        </div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li class="current">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 15 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 16 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 17 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 18 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#半导体材料</span>
+      <span class="chip">#硅</span>
+      <span class="chip">#SiC碳化硅</span>
+      <span class="chip">#GaN氮化镓</span>
+      <span class="chip">#宽禁带半导体</span>
+      <span class="chip">#化合物半导体</span>
+      <span class="chip">#GaAs</span>
+      <span class="chip">#InP</span>
+      <span class="chip">#氧化镓</span>
+      <span class="chip">#禁带宽度</span>
+      <span class="chip">#Baliga优值</span>
+      <span class="chip">#二维电子气</span>
+    </div>
+
+  </div></main>
+<footer class="foot"><div>© 2026 半导体 · 财经 学习笔记</div><div><a href="../../index.html">回到主页</a></div></footer>
+</body>
+</html>
