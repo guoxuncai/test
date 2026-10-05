@@ -5,13 +5,20 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 00:53:43 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 07:49:22 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</guid>
       <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从雅卡尔的提花机到贝尔实验室的晶体管，从巴贝奇的失败到图灵的悲剧，从 ENIAC 的 18000 只电子管到你口袋里的手机——沿着人物与故事，讲清计算机的底层原理：开关如何学会做加法，存储程序如何改变一切]]></description>
+    </item>
+    <item>
+      <title>薛定谔方程、泡利不相容与费米-狄拉克分布：固体物理的量子三基石</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[用吉他弦、剧院座位和海平面三个比喻，讲清薛定谔方程、泡利不相容原理与费米-狄拉克分布——固体物理与半导体世界赖以运转的三块量子基石]]></description>
     </item>
     <item>
       <title>数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么</title>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-18瑾年财经早报_.html</guid>
       <pubDate>Fri, 18 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[上证指数 3864.28 0.41% 深证成指 — 0.33% 创业板指 — 0.40% 科创50 — 0.61% 两市成交 8688亿（沪）+ 9544亿（深） 9月17日收盘数据（注：9月17日为周三交易日；今日9月18日市场开盘前） …]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月17日</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-17每日财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-17每日财经早报_.html</guid>
-      <pubDate>Thu, 17 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[央行拟在MPA框架中新增限制银行过度持有长期债券的指标，后续关注政策落地对长端利率的影响。美国30年期国债收益率昨日盘中触及5.40%，创2007年以来新高。]]></description>
     </item>
   </channel>
 </rss>

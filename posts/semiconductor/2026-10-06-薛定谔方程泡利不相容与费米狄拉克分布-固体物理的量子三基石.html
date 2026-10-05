@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>薛定谔方程、泡利不相容与费米-狄拉克分布：固体物理的量子三基石</title>
+<meta name="description" content="用吉他弦、剧院座位和海平面三个比喻，讲清薛定谔方程、泡利不相容原理与费米-狄拉克分布——固体物理与半导体世界赖以运转的三块量子基石。">
+<meta name="keywords" content="固体物理,薛定谔方程,泡利不相容,费米狄拉克分布,费米能级,量子隧穿,能带,半导体">
+<meta name="date" content="2026-10-06">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 物理基础</span>
+    <h1 class="title">薛定谔方程、泡利不相容与费米-狄拉克分布：固体物理的量子三基石</h1>
+    <div class="meta">
+      <span>2026-10-06</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 2 篇</span><span class="sep"></span>
+      <span>阅读约 20 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        能带、费米能级、掺杂、PN 结——半导体的一切概念，追到底都压在三块量子基石上：
+        <strong>薛定谔方程</strong>告诉你电子「能待在哪」，<strong>泡利不相容</strong>规定「每个位置只能住一个」，
+        <strong>费米-狄拉克分布</strong>计算「电子实际住到哪一层」。
+        这一篇用吉他弦、剧院座位和海平面三个比喻，把三块基石一次讲透。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">为什么芯片世界需要量子力学</a></li>
+          <li><a href="#s2">薛定谔方程：电子不再有轨道，只有「概率云」</a></li>
+          <li><a href="#s3">泡利不相容：电子世界的「座位号」</a></li>
+          <li><a href="#s4">费米-狄拉克分布：电子住到了哪一层</a></li>
+          <li><a href="#s5">三块基石拼在一起：重新解释导体、半导体与绝缘体</a></li>
+          <li><a href="#s6">彩蛋：量子隧穿——薛定谔方程送来的意外礼物</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 为什么芯片世界需要量子力学</h2>
+
+      <p>上一章（固体物理基础）我们画出了晶格、晶向和晶胞——原子像士兵一样排成方阵。
+      但一个尴尬的问题马上出现：<strong>电子在晶体里到底怎么活动？</strong>
+      为什么铜一接上电池电子就哗哗地流，金刚石却纹丝不动？为什么掺一点点磷，硅的导电能力就翻着一百万倍地涨？</p>
+      <p>用牛顿力学算，答案全是错的——经典物理算出来的电子会一头栽进原子核，根本不存在稳定的原子。
+      1925 到 1927 这短短三年，物理学界连中三枪，每一枪都正中半导体工业的靶心：</p>
+      <ol>
+        <li><strong>1925 年，泡利</strong>提出不相容原理——电子的「座位规则」；</li>
+        <li><strong>1926 年，薛定谔</strong>写下波动方程——电子的「行为计算器」；</li>
+        <li><strong>1926 年，费米与狄拉克</strong>独立导出统计分布——电子的「入住统计表」。</li>
+      </ol>
+      <p>这三块基石拼在一起，才有了能带论、掺杂理论和 PN 结——也就有了你口袋里的手机。
+      下面逐一拆开。</p>
+
+      <h2 id="s2">2. 薛定谔方程：电子不再有轨道，只有「概率云」</h2>
+
+      <h3>2.1 从「知道一切」到「只能算概率」</h3>
+      <p>牛顿的世界观是：知道一颗炮弹此刻的位置和速度，就能算出它未来每一刻在哪里。
+      1926 年薛定谔却说：电子没法这样对待。你能写下的，只是一个<strong>波函数 ψ</strong>，
+      它的平方 |ψ|² 给出电子在各个位置<strong>出现的概率</strong>。方程本身长这样：</p>
+
+      <div class="formula-block">
+        <span class="fl">iℏ · ∂ψ/∂t = −(ℏ²/2m) ∇²ψ + V(x) ψ</span>
+        <span class="fnote">不用背。读法：左边是波函数随时间的变化，右边是「动能项 + 势能项」对它的改造。
+        你给出场地的地形 V(x)（原子核在哪、势垒多高），方程就吐出电子 Allowed 的波函数和对应能量。</span>
+      </div>
+
+      <p>它长得像描述水波、声波的波动方程——这不是巧合。<strong>电子真有波动性</strong>（1927 年戴维孙-革末电子衍射实验证实）。
+      最直观的图像是吉他弦：两端按住的弦只能以特定方式振动——基音、倍频、三倍频……
+      <strong>束缚的波只能取特定的形状</strong>。原子里的电子就是一根「按住的弦」，
+      每种允许的振动形状对应一个确定的能量——这就是「能级」的来源。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="经典轨道与量子概率云对比">
+          <!-- 左：经典想象 -->
+          <rect x="40" y="55" width="290" height="140" rx="8" fill="var(--down)" fill-opacity=".07" stroke="var(--down)" stroke-width="1.2" stroke-dasharray="6 4"/>
+          <text x="185" y="42" text-anchor="middle" font-size="13.5" fill="var(--down)" font-weight="700">经典想象：确定的轨道（已破产）</text>
+          <circle cx="185" cy="125" r="12" fill="var(--up)"/>
+          <ellipse cx="185" cy="125" rx="80" ry="38" fill="none" stroke="var(--down)" stroke-width="1.4"/>
+          <ellipse cx="185" cy="125" rx="110" ry="58" fill="none" stroke="var(--down)" stroke-width="1.4" transform="rotate(-18 185 125)"/>
+          <circle cx="265" cy="125" r="5" fill="var(--down)"/>
+          <circle cx="88" cy="92" r="5" fill="var(--down)"/>
+          <text x="185" y="215" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">像行星一样沿确定轨迹绕核旋转？实验说不存在</text>
+
+          <!-- 右：量子现实 -->
+          <rect x="350" y="55" width="290" height="140" rx="8" fill="var(--semi)" fill-opacity=".08" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="495" y="42" text-anchor="middle" font-size="13.5" fill="var(--semi)" font-weight="700">量子现实：概率云（|ψ|²）</text>
+          <!-- 概率云：中心密、外围疏的点 -->
+          <g fill="var(--semi)">
+            <circle cx="495" cy="125" r="3"/><circle cx="487" cy="117" r="3"/><circle cx="503" cy="117" r="3"/><circle cx="487" cy="133" r="3"/><circle cx="503" cy="133" r="3"/><circle cx="495" cy="109" r="3"/><circle cx="495" cy="141" r="3"/><circle cx="479" cy="125" r="3"/><circle cx="511" cy="125" r="3"/>
+            <circle cx="478" cy="110" r="2.2"/><circle cx="512" cy="110" r="2.2"/><circle cx="478" cy="140" r="2.2"/><circle cx="512" cy="140" r="2.2"/><circle cx="472" cy="125" r="2.2"/><circle cx="518" cy="125" r="2.2"/><circle cx="495" cy="100" r="2.2"/><circle cx="495" cy="150" r="2.2"/>
+            <circle cx="468" cy="108" r="1.6"/><circle cx="522" cy="108" r="1.6"/><circle cx="468" cy="142" r="1.6"/><circle cx="522" cy="142" r="1.6"/><circle cx="460" cy="125" r="1.6"/><circle cx="530" cy="125" r="1.6"/><circle cx="495" cy="92" r="1.6"/><circle cx="495" cy="158" r="1.6"/>
+            <circle cx="452" cy="118" r="1.2"/><circle cx="538" cy="118" r="1.2"/><circle cx="452" cy="134" r="1.2"/><circle cx="538" cy="134" r="1.2"/><circle cx="480" cy="96" r="1.2"/><circle cx="510" cy="96" r="1.2"/><circle cx="480" cy="156" r="1.2"/><circle cx="510" cy="156" r="1.2"/>
+          </g>
+          <text x="495" y="215" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">点越密 = 在这里找到电子的概率越大；轨迹本身不存在</text>
+        </svg>
+        <figcaption>图 1：从「轨道」到「概率云」。薛定谔方程算不出电子下一秒在哪，只能算出它出现在各处的概率分布。</figcaption>
+      </figure>
+
+      <h3>2.2 一个例子：把电子关进「势阱」</h3>
+      <p>把一个电子关在两堵无限高的墙之间（宽 L 的<strong>势阱</strong>，最简单的薛定谔方程可解模型），
+      方程给出的答案干净利落——能量不再连续，只能取：</p>
+
+      <div class="formula-block">
+        <span class="fl">E<sub>n</sub> = n² · h² / (8mL²)　　n = 1, 2, 3, …</span>
+        <span class="fnote">能量像楼梯：E₁、4E₁、9E₁……台阶间距越往上越大，且<strong>永不停在两级之间</strong>。
+        阱越窄（L 越小）台阶越高——这个「小空间里能量贵」的规律，后面会一路管到能带和量子阱器件。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="驻波与能级楼梯">
+          <!-- 左：吉他弦驻波 -->
+          <rect x="40" y="60" width="280" height="150" rx="8" fill="var(--fin)" fill-opacity=".07" stroke="var(--fin)" stroke-width="1.2"/>
+          <text x="180" y="46" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">束缚的波 = 只能取特定形状</text>
+          <circle cx="60" cy="135" r="4" fill="var(--text-mute)"/><circle cx="300" cy="135" r="4" fill="var(--text-mute)"/>
+          <line x1="60" y1="135" x2="300" y2="135" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 4"/>
+          <path d="M60 135 Q 105 95, 150 135 T 240 135 T 300 135" fill="none" stroke="var(--fin)" stroke-width="2.4"/>
+          <path d="M60 135 Q 82 108, 105 135 T 150 135 T 195 135 T 240 135 T 283 135" fill="none" stroke="var(--fin)" stroke-width="2" transform="translate(0 -38) scale(1 0.55)"/>
+          <text x="180" y="88" text-anchor="middle" font-size="11" fill="var(--text-mute)">吉他弦：只能整段振动或整段分瓣</text>
+          <text x="180" y="232" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">两端按住的弦，频率只能一倍、二倍、三倍……</text>
+
+          <!-- 右：能级楼梯 -->
+          <rect x="360" y="60" width="280" height="150" rx="8" fill="var(--semi)" fill-opacity=".07" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="500" y="46" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">能量 = 只能站的台阶</text>
+          <line x1="400" y1="196" x2="620" y2="196" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="400" y1="86" x2="400" y2="196" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <rect x="410" y="182" width="60" height="14" fill="var(--semi)" fill-opacity=".45"/>
+          <rect x="480" y="152" width="60" height="14" fill="var(--semi)" fill-opacity=".3"/>
+          <rect x="550" y="107" width="60" height="14" fill="var(--semi)" fill-opacity=".2"/>
+          <text x="440" y="176" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">n=1 · E₁</text>
+          <text x="510" y="146" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">n=2 · 4E₁</text>
+          <text x="580" y="101" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">n=3 · 9E₁</text>
+          <circle cx="440" cy="176" r="5" fill="var(--up)"/>
+          <text x="500" y="232" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">电子只能站在台阶上，且台阶间距 n² 递增</text>
+        </svg>
+        <figcaption>图 2：驻波与量子化。束缚的波只能取特定形状（左），所以束缚的电子只能取特定能量（右）——「能级」就是这么来的。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>为什么这是个大事：</b>原子发射的光为什么总是一些「分立的彩色谱线」（氢原子的巴耳末系）？
+        因为电子只能在能级台阶之间跳来跳去，每次跳下一级就吐出一个能量恰好等于台阶差的光子。
+        量子化不是数学游戏——霓虹灯的颜色、激光的波长、LED 的发光颜色，全是这排楼梯决定的。
+      </div>
+
+      <h2 id="s3">3. 泡利不相容：电子世界的「座位号」</h2>
+
+      <h3>3.1 规则本身：一个量子态，只许一个电子</h3>
+      <p>1925 年，泡利盯着原子光谱里解释不了的规律，提出了一条简单到近乎霸道的原则：</p>
+
+      <div class="warn">
+        <b>泡利不相容原理：</b>任何两个电子都不能处于<strong>完全相同的量子态</strong>。
+        把量子态想象成「房间号 + 床型」的完整描述：一个房间只能住一个电子，想同住一间？<strong>没门</strong>。
+      </div>
+
+      <p>注意「完全相同」四个字：电子自带一个叫<strong>自旋</strong>的属性（可以理解成两种朝向，↑ 和 ↓），
+      所以同一个「房间」其实有两张床——一张 ↑ 床、一张 ↓ 床，最多住两个电子。
+      房间住满了，后来的电子哪怕再不情愿，也只能去更高的楼层。</p>
+
+      <h3>3.2 推论一：元素周期表是被这条规则「排」出来的</h3>
+      <p>原子像一家从底层往上涨的酒店：<strong>能量最低原理</strong>说 electrons 都想住一层，
+      <strong>泡利</strong>说一层只有几个房间。于是电子按 1s(2 床) → 2s(2 床) → 2p(6 床) → 3s(2 床)……逐层填进去。
+      第 11 号元素钠的第 11 个电子只能住到 3s 层——一个「高楼层、容易被风吹走」的电子，
+      所以钠活泼得见水就炸。元素周期表的每一个「列」的化学相似性，都是电子楼层结构的投影。</p>
+
+      <h3>3.3 推论二：能级为什么会「裂」成能带——半导体的命根</h3>
+      <p>现在把故事搬到固体里。一个孤立的硅原子有自己的一套能级；把 N 个硅原子拉到一起组成晶体时，
+      相邻原子的电子云开始交叠——<strong>泡利不许任何两个电子的量子态完全一样</strong>，
+      于是原来的每一个能级被迫「裂」成 N 个略有差别的能级。N 是多少？
+      一立方厘米硅里大约有 5×10²² 个原子——这么多能级挤在一起，间距小到可以看成<strong>连续的带</strong>，这就是<strong>能带</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="能级分裂形成能带">
+          <text x="340" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">N 个原子靠近 → 能级分裂 → 能带（泡利的强制要求）</text>
+
+          <!-- 单原子 -->
+          <rect x="60" y="60" width="150" height="160" rx="8" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="135" y="82" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1 个原子</text>
+          <line x1="95" y1="180" x2="175" y2="180" stroke="var(--fin)" stroke-width="3"/>
+          <line x1="95" y1="150" x2="175" y2="150" stroke="var(--fin)" stroke-width="3"/>
+          <line x1="95" y1="110" x2="175" y2="110" stroke="var(--semi)" stroke-width="3"/>
+          <text x="210" y="184" font-size="10.5" fill="var(--text-mute)">1s</text>
+          <text x="210" y="154" font-size="10.5" fill="var(--text-mute)">2s</text>
+          <text x="210" y="114" font-size="10.5" fill="var(--text-mute)">2p</text>
+
+          <!-- 双原子 -->
+          <rect x="270" y="60" width="150" height="160" rx="8" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="345" y="82" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">2 个原子</text>
+          <line x1="300" y1="176" x2="360" y2="176" stroke="var(--fin)" stroke-width="2.6"/>
+          <line x1="310" y1="185" x2="370" y2="185" stroke="var(--fin)" stroke-width="2.6"/>
+          <line x1="300" y1="148" x2="360" y2="148" stroke="var(--fin)" stroke-width="2.6"/>
+          <line x1="310" y1="156" x2="370" y2="156" stroke="var(--fin)" stroke-width="2.6"/>
+          <line x1="300" y1="104" x2="360" y2="104" stroke="var(--semi)" stroke-width="2.6"/>
+          <line x1="310" y1="115" x2="370" y2="115" stroke="var(--semi)" stroke-width="2.6"/>
+          <text x="345" y="240" text-anchor="middle" font-size="11" fill="var(--text-soft)">每个能级裂成 2 条</text>
+
+          <!-- N 原子 -->
+          <rect x="470" y="60" width="160" height="160" rx="8" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="550" y="82" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">10²³ 个原子</text>
+          <rect x="495" y="90" width="110" height="36" rx="4" fill="var(--semi)" fill-opacity=".35"/>
+          <rect x="495" y="150" width="110" height="40" rx="4" fill="var(--fin)" fill-opacity=".4"/>
+          <text x="550" y="112" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">导带</text>
+          <text x="550" y="176" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">价带</text>
+          <text x="550" y="140" text-anchor="middle" font-size="10.5" fill="var(--down)">禁带 Eg</text>
+          <text x="550" y="240" text-anchor="middle" font-size="11" fill="var(--text-soft)">亿万条能级挤成连续的带</text>
+        </svg>
+        <figcaption>图 3：能带的形成。泡利不相容迫使 N 个原子的相同能级分裂成 N 个新能级；N 一大到宏观量级，分裂谱就密集成了「带」。</figcaption>
+      </figure>
+
+      <p>所以第 3 篇（半导体物理基础）里画的导带、价带、禁带，根子全在这里：
+      <strong>没有泡利不相容，N 个原子凑一起能级还是能级，世界上就不会有能带，也就没有半导体工业。</strong></p>
+
+      <h2 id="s4">4. 费米-狄拉克分布：电子住到了哪一层</h2>
+
+      <h3>4.1 绝对零度：一刀切的「海平面」</h3>
+      <p>泡利规定了「每房一人」，薛定谔方程列出了「有哪些房间」，
+      还剩最后一个问题：<strong>在温度 T 下，电子实际怎么挑房间？</strong>
+      1926 年费米和狄拉克各自独立给出了答案。绝对零度时最简单：
+      电子从最低能级开始挨个填，填到的最高一层就是——</p>
+
+      <div class="note">
+        <b>费米能级 E<sub>F</sub>：电子世界的「海平面」。</b>
+        绝对零度时，海平面以下的能级<strong>全部住满</strong>（占据概率 = 1），以上的<strong>全部空着</strong>（占据概率 = 0）。
+        铜的海平面淹到「导带中间」所以满街都是自由电子；金刚石的海平面远在导带之下，楼上没人，所以是绝缘体。
+      </div>
+
+      <h3>4.2 温度一升：海平面变「模糊」</h3>
+      <p>温度升高，电子有了热运动能量，海面开始起浪：费米能级附近的电子有的被热「甩」到高能级，
+      低处则留下空位。占据概率变成一条 S 形曲线：</p>
+
+      <div class="formula-block">
+        <span class="fl">f(E) = 1 / [ 1 + exp( (E − E<sub>F</sub>) / kT ) ]</span>
+        <span class="fnote">E = E<sub>F</sub> 时恒等于 1/2（费米能级的定义就藏在这）；每偏离 E<sub>F</sub> 一个 kT，概率就乘或除一个 e。
+        室温 kT ≈ 0.026 eV——记住这个数，后面所有半导体的「热不热得动」都拿它当尺子。</span>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="费米-狄拉克分布曲线">
+          <!-- 坐标轴 -->
+          <line x1="80" y1="215" x2="640" y2="215" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <line x1="80" y1="30" x2="80" y2="215" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <text x="650" y="219" font-size="13" fill="var(--text-mute)">E</text>
+          <text x="66" y="26" font-size="13" fill="var(--text-mute)">f(E)</text>
+
+          <!-- y 轴刻度 -->
+          <text x="72" y="49" text-anchor="end" font-size="11" fill="var(--text-mute)">1</text>
+          <text x="72" y="222" text-anchor="end" font-size="11" fill="var(--text-mute)">0</text>
+          <line x1="76" y1="45" x2="84" y2="45" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="76" y1="130" x2="84" y2="130" stroke="var(--text-mute)" stroke-width="1"/>
+          <text x="72" y="134" text-anchor="end" font-size="11" fill="var(--text-mute)">0.5</text>
+
+          <!-- T=0 阶梯 -->
+          <path d="M80 45 L360 45 L360 215 L640 215" fill="none" stroke="var(--text-mute)" stroke-width="2.2" stroke-dasharray="7 5"/>
+          <text x="200" y="70" font-size="12" fill="var(--text-mute)" font-weight="700">T = 0 K：一刀切满 / 空</text>
+
+          <!-- T>0 曲线 -->
+          <path d="M80 45 C 250 46, 300 50, 330 80 C 352 102, 355 118, 360 130 C 365 142, 370 158, 392 180 C 422 210, 470 214, 640 215"
+                fill="none" stroke="var(--up)" stroke-width="2.8"/>
+          <text x="480" y="80" font-size="12.5" fill="var(--up)" font-weight="700">T &gt; 0 K：海面起浪</text>
+
+          <!-- EF 竖线 -->
+          <line x1="360" y1="40" x2="360" y2="215" stroke="var(--down)" stroke-width="1.4" stroke-dasharray="5 4"/>
+          <text x="360" y="242" text-anchor="middle" font-size="12.5" fill="var(--down)" font-weight="700">E = E（费米能级）</text>
+          <text x="360" y="256" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">此处占据概率恒为 0.5</text>
+
+          <!-- kT 模糊带 -->
+          <rect x="330" y="88" width="60" height="84" fill="var(--up)" fill-opacity=".08"/>
+          <text x="430" y="120" font-size="11" fill="var(--up)">约 ±3kT 内</text>
+          <text x="430" y="136" font-size="11" fill="var(--up)">从「几乎满」</text>
+          <text x="430" y="152" font-size="11" fill="var(--up)">过渡到「几乎空」</text>
+        </svg>
+        <figcaption>图 4：费米-狄拉克分布。T=0 时是尖锐的阶梯；升温后海平面附近 ±几个 kT 的能级变得「半满半空」——半导体的一切故事都发生在这一小段模糊带里。</figcaption>
+      </figure>
+
+      <h3>4.3 为什么半导体对这段「模糊带」如痴如醉</h3>
+      <p>金属的费米能级泡在导带里，模糊不模糊都有海量电子导电；绝缘体的模糊带远在禁带深处，热激发是杯水车薪。
+      唯有半导体命好：<strong>禁带宽度（硅 1.12 eV）只比室温热运动尺度大几十倍</strong>，
+      导带底刚好挨着模糊带的下沿——常温下总有一小部分电子被热浪抛进导带，留下空穴。
+      更妙的是，掺杂可以把整条「海平面」上下移动：掺磷把它抬向导带（N 型），掺硼把它压向价带（P 型）。
+      第 4 篇 PN 结里 P 区和 N 区海平面高度不同引发的扩散与漂移，正是整个二极管故事的起点。</p>
+
+      <h2 id="s5">5. 三块基石拼在一起：重新解释导体、半导体与绝缘体</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三块基石的分工">
+          <text x="340" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">三块基石各管一件事</text>
+
+          <rect x="50" y="55" width="180" height="76" rx="10" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="140" y="82" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">薛定谔方程</text>
+          <text x="140" y="104" text-anchor="middle" font-size="11" fill="var(--text-soft)">算出有哪些「房间」</text>
+          <text x="140" y="120" text-anchor="middle" font-size="11" fill="var(--text-soft)">（能级 / 能带结构）</text>
+
+          <rect x="250" y="55" width="180" height="76" rx="10" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="340" y="82" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">泡利不相容</text>
+          <text x="340" y="104" text-anchor="middle" font-size="11" fill="var(--text-soft)">每间房只能住一个电子</text>
+          <text x="340" y="120" text-anchor="middle" font-size="11" fill="var(--text-soft)">（决定填充方式）</text>
+
+          <rect x="450" y="55" width="180" height="76" rx="10" fill="var(--up)" fill-opacity=".12" stroke="var(--up)" stroke-width="1.5"/>
+          <text x="540" y="82" text-anchor="middle" font-size="13" fill="var(--up)" font-weight="700">费米-狄拉克分布</text>
+          <text x="540" y="104" text-anchor="middle" font-size="11" fill="var(--text-soft)">温度 T 下实际住到哪层</text>
+          <text x="540" y="120" text-anchor="middle" font-size="11" fill="var(--text-soft)">（费米能级 / 占据概率）</text>
+
+          <line x1="140" y1="131" x2="320" y2="165" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="340" y1="131" x2="340" y2="165" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="540" y1="131" x2="360" y2="165" stroke="var(--text-mute)" stroke-width="1.2"/>
+
+          <rect x="220" y="165" width="240" height="46" rx="10" fill="var(--surface)" stroke="var(--text)" stroke-width="1.5"/>
+          <text x="340" y="187" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">能带论：导体 / 半导体 / 绝缘体</text>
+          <text x="340" y="204" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">以及一切半导体器件的物理起点</text>
+        </svg>
+        <figcaption>图 5：三块基石的分工。房间清单（薛定谔）+ 一房一人（泡利）+ 入住统计（费米-狄拉克）= 完整的固体电子图像。</figcaption>
+      </figure>
+
+      <p>拿三块基石走一遍经典问题：<strong>为什么铜导电、金刚石不导电、硅居中？</strong></p>
+      <ol>
+        <li><strong>铜</strong>：3d、4s 能级交叠后形成的能带只填了一半（泡利决定电子必须一层层往上住，住到半山腰），费米海平面泡在带内——楼上全是空位，电子轻轻一推就走，好导电；</li>
+        <li><strong>金刚石</strong>：碳的 2s、2p 能级裂开后劈成两半，价带<strong>恰好被 4 个价电子全部填满</strong>（每原子 4 电子 × N 原子 = 正好填满下带），禁带 5.5 eV。室温 kT 只有 0.026 eV，热激发概率 ∝ exp(−5.5/0.026) ≈ 10⁻⁹²——全宇宙的电子也凑不出几个跳上导带的，绝缘；</li>
+        <li><strong>硅</strong>：结构与金刚石相同，但禁带只有 1.12 eV，激发概率约 exp(−1.12/0.026) = 10⁻¹⁹——听着仍然渺小，但一立方厘米硅有 10²³ 量级的价电子，乘出来就是万亿级载流子，弱导电但<strong>可被温度、光照、掺杂任意调教</strong>——「半导体」三个字，就是这三种命运的分界线。</li>
+      </ol>
+
+      <h2 id="s6">6. 彩蛋：量子隧穿——薛定谔方程送来的意外礼物</h2>
+
+      <p>薛定谔方程还有一个让经典物理瞠目结舌的推论：波函数碰到一堵「能量翻不过去的墙」时，
+      不是戛然而止，而是<strong>指数衰减着钻进墙里</strong>。墙足够薄（纳米级）时，墙另一侧波函数仍不为零——
+      <strong>电子有一定概率直接「穿墙」</strong>，这就是量子隧穿。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="量子隧穿示意">
+          <!-- 势垒 -->
+          <rect x="300" y="70" width="90" height="115" fill="var(--down)" fill-opacity=".12" stroke="var(--down)" stroke-width="1.4"/>
+          <text x="345" y="60" text-anchor="middle" font-size="12" fill="var(--down)" font-weight="700">势垒（能量之墙）</text>
+          <line x1="80" y1="185" x2="620" y2="185" stroke="var(--text-mute)" stroke-width="1.4"/>
+
+          <!-- 入射波 -->
+          <path d="M95 185 Q 105 150, 115 185 T 135 185 T 155 185 T 175 185 T 195 185 T 215 185 T 235 185 T 255 185 T 275 185"
+                fill="none" stroke="var(--up)" stroke-width="2.4"/>
+          <text x="160" y="145" font-size="11.5" fill="var(--up)" font-weight="700">入射电子波</text>
+
+          <!-- 垒内衰减 -->
+          <path d="M300 150 Q 315 148, 330 160 T 360 176 T 390 183" fill="none" stroke="var(--down)" stroke-width="2.2" stroke-dasharray="4 3"/>
+          <text x="345" y="130" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">波函数指数衰减但不为零</text>
+
+          <!-- 透射波（幅度小） -->
+          <path d="M400 183 Q 408 176, 416 183 T 432 183 T 448 183 T 464 183 T 480 183 T 496 183 T 512 183"
+                fill="none" stroke="var(--semi)" stroke-width="2"/>
+          <text x="470" y="160" font-size="11.5" fill="var(--semi)" font-weight="700">墙后仍有波：隧穿概率 ≠ 0</text>
+          <circle cx="560" cy="170" r="5" fill="var(--semi)"/>
+          <text x="560" y="205" text-anchor="middle" font-size="11" fill="var(--text-soft)">电子出现在墙外</text>
+
+          <text x="340" y="222" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">墙越薄 / 势垒越低，隧穿概率越大（指数敏感）</text>
+        </svg>
+        <figcaption>图 6：量子隧穿。只要墙足够薄，电子能以非零概率「穿墙而过」——STM、闪存擦写、齐纳击穿共享同一个原理。</figcaption>
+      </figure>
+
+      <p>这不是实验室珍玩，它就生活在你的手机里：</p>
+      <ul>
+        <li><strong>闪存（SSD / U 盘）</strong>：写入数据就是把电子隧穿过一层氧化层「关」进浮栅——你存的每一张照片都是量子隧穿的功劳；</li>
+        <li><strong>扫描隧道显微镜（STM）</strong>：利用隧穿电流对距离的指数敏感，把人类视野带进了单个原子（1986 年诺贝尔奖）；</li>
+        <li><strong>齐纳击穿</strong>：重掺杂 PN 结的反向击穿，正是价带电子直接隧穿到导带（第 4 篇会再次遇到它）。</li>
+      </ul>
+      <p>当然它也是反派：晶体管尺寸缩到几纳米后，栅极漏电就是电子不该走却隧穿走了——
+      这构成了第 7 篇摩尔定律里「微缩越来越难」的物理底线之一。</p>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <div class="note">
+        <b>四个高频误区：</b><br>
+        ① 把概率云理解为「电子转得快所以拍出来是雾」——不对，电子<strong>没有轨迹</strong>，「轨迹」这个概念本身失效；<br>
+        ② 以为泡利不相容只是化学家的事——能带、周期表、白矮星不塌缩，全是它撑着的；<br>
+        ③ 把费米能级当成「一个真实存在的电子能级」——它是<strong>占据概率恰好为 0.5 的那个能量点</strong>，禁带里照样可以定义费米能级；<br>
+        ④ 以为「温度越高电子越活跃」适用于一切能级——费米分布的「模糊带」只有 ±几个 kT（室温约 0.1 eV 量级），远离它的能级几乎感受不到温度。
+      </div>
+
+      <details class="quiz"><summary>自测 1：为什么同一个原子轨道最多容纳两个电子，而不能三个？</summary>
+        <div class="answer">一个轨道对应一组空间量子态，自旋只提供两种取向（↑、↓）。
+        泡利不相容要求量子态（空间部分 + 自旋部分）不能完全重复，所以最多 2 个电子——且必须自旋相反。第三个电子找不到不重复的态，只能去更高能级。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：室温下，占据概率从 0.9 降到 0.1，能量要偏离费米能级多少？</summary>
+        <div class="answer">f(E)=0.9 时 E−E<sub>F</sub> = kT·ln(1/9) ≈ −2.2kT；f(E)=0.1 时 E−E<sub>F</sub> = kT·ln9 ≈ +2.2kT。
+        总跨度约 4.4kT，室温 kT≈0.026 eV，即约 <strong>0.11 eV</strong>。这就是「模糊带」的实际宽度——硅的 1.12 eV 禁带是它的十倍，所以导带底只能分到很少的热激发电子。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：金刚石（禁带 5.5 eV）和硅（1.12 eV）的室温热激发概率差多少个数量级？</summary>
+        <div class="answer">激发概率 ∝ exp(−E<sub>g</sub>/kT)。室温 kT≈0.026 eV：
+        硅 exp(−43) ≈ 10⁻¹⁹，金刚石 exp(−212) ≈ 10⁻⁹²。相差约 <strong>73 个数量级</strong>——
+        前者乘上 10²³ 量级的状态数尚有可观测的载流子，后者彻底归零。禁带宽度的指数杠杆，就是「半导体」能被精准调教的原因。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：闪存掉电后数据为什么能保存十年？这和隧穿有什么关系？</summary>
+        <div class="answer">写入时电子<strong>借助隧穿</strong>穿过氧化层进入浮栅并被关住；保存靠的是浮栅外那层<strong>更厚</strong>的氧化层——
+        隧穿概率随势垒宽度指数下降，厚层下十万亿年也漏不出几个电子，所以数据能长期保持。
+        同一个物理效应，薄层时是写入工具，厚层时是保险柜——隧穿概率的指数敏感性被工程师用到了两头。</div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li class="current">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 16 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 17 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 18 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 19 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 20 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#薛定谔方程</span>
+      <span class="chip">#泡利不相容</span>
+      <span class="chip">#费米狄拉克分布</span>
+      <span class="chip">#费米能级</span>
+      <span class="chip">#量子隧穿</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
