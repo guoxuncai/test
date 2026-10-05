@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么</title>
+<meta name="description" content="模拟电路、数字电路、MCU、FPGA、CPU、GPU 分别是什么、为了什么而出现、彼此有什么关系——用波形图、家族图谱、框图和 LUT 原理图讲透芯片家族。">
+<meta name="keywords" content="数字电路,模拟电路,MCU,FPGA,CPU,GPU,芯片,嵌入式,并行计算">
+<meta name="date" content="2026-10-06">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 体系</span>
+    <h1 class="title">数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么</h1>
+    <div class="meta">
+      <span>2026-10-06</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 25 篇</span><span class="sep"></span>
+      <span>阅读约 18 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        数字电路、模拟电路、MCU、FPGA、CPU、GPU——这六个词经常一起出现，却很少有人说清它们的关系：
+        谁包含谁？谁替代谁？它们各自是为了什么而诞生的？
+        这一篇用波形图、家族图谱和原理框图，把整棵「芯片家族树」一次讲清。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">一切从电压说起：模拟与数字</a></li>
+          <li><a href="#s2">芯片家族图谱：一张图看懂关系</a></li>
+          <li><a href="#s3">CPU：为了「运行任意程序」而生</a></li>
+          <li><a href="#s4">GPU：为了「海量重复」而生</a></li>
+          <li><a href="#s5">MCU：为了「塞进家电」而生</a></li>
+          <li><a href="#s6">FPGA：为了「改硬件不改版图」而生</a></li>
+          <li><a href="#s7">一张表看懂整个家族</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 一切从电压说起：模拟与数字</h2>
+
+      <p>芯片世界里的一切分工，都始于一个最基本的问题：<strong>怎么用电表示信息？</strong>
+      历史给出了两种答案，也就有了模拟电路和数字电路这两个「语系」。</p>
+
+      <h3>1.1 模拟电路：让电压连续地「唱歌」</h3>
+      <p>对着麦克风说话，声波被变成一段<strong>连续起伏的电压</strong>——声音大，电压就高；声音细，曲线就密。
+      这种「用电完美模仿真实世界」的思路，就是模拟电路。放大器把微弱的信号放大一万倍，
+      滤波器滤掉杂音，电源把 220 V 交流变成稳定的 3.3 V——模拟电路擅长的是
+      <strong>与真实世界的连续信号打交道</strong>。</p>
+      <p>但它有一个致命的命门：<strong>噪声擦不掉</strong>。信号每经过一级电路、每复制一次，
+      就像复印一份复印件，杂音只会越积越多，永远回不到原样。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="模拟信号与数字信号对比">
+          <!-- 左：模拟 -->
+          <rect x="40" y="55" width="290" height="140" rx="8" fill="var(--fin)" fill-opacity=".08" stroke="var(--fin)" stroke-width="1.2"/>
+          <text x="185" y="40" text-anchor="middle" font-size="14" fill="var(--fin)" font-weight="700">模拟信号：连续取值</text>
+          <line x1="60" y1="175" x2="310" y2="175" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M60 145 Q 78 78, 96 145 T 132 145 T 168 145 T 204 145 T 240 145 T 276 145 T 310 145"
+                fill="none" stroke="var(--fin)" stroke-width="2.6"/>
+          <text x="185" y="215" text-anchor="middle" font-size="12" fill="var(--text-soft)">电压可以取任何值，像波浪一样起伏</text>
+
+          <!-- 右：数字 -->
+          <rect x="350" y="55" width="290" height="140" rx="8" fill="var(--semi)" fill-opacity=".08" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="495" y="40" text-anchor="middle" font-size="14" fill="var(--semi)" font-weight="700">数字信号：只有 0 和 1</text>
+          <line x1="370" y1="175" x2="620" y2="175" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M370 160 L370 80 L392 80 L392 160 L414 160 L414 80 L436 80 L436 160 L470 160 L470 80 L492 80 L492 160 L514 160 L514 80 L560 80 L560 160 L604 160 L604 80 L620 80"
+                fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <text x="404" y="72" font-size="12" fill="var(--semi)" font-weight="700">1（高电平）</text>
+          <text x="404" y="196" font-size="12" fill="var(--text-mute)" font-weight="700">0（低电平）</text>
+          <text x="495" y="215" text-anchor="middle" font-size="12" fill="var(--text-soft)">电压只在高低两档之间跳变</text>
+        </svg>
+        <figcaption>图 1：模拟信号连续取值，像波浪；数字信号只认高低两个电平，像开关。这是两种「说话方式」的根本区别。</figcaption>
+      </figure>
+
+      <h3>1.2 数字电路：只用 0 和 1 说话，为什么反而更强</h3>
+      <p>数字电路的回答很粗暴：<strong>别模仿真实世界了，只认两个档位</strong>。
+      电压低于阈值就是 0，高于阈值就是 1，中间的地带一律不许停留。
+      这样一来，噪声只要没把电压推出 0 区或 1 区，逻辑值就<strong>完全不受影响</strong>——
+      这就是数字电路的抗噪声秘密。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="噪声容限示意">
+          <!-- 三段电压区间 -->
+          <rect x="60" y="95" width="200" height="44" rx="6" fill="var(--down)" fill-opacity=".22"/>
+          <rect x="260" y="95" width="120" height="44" rx="6" fill="var(--up)" fill-opacity=".12"/>
+          <rect x="380" y="95" width="240" height="44" rx="6" fill="var(--semi)" fill-opacity=".22"/>
+          <text x="160" y="123" text-anchor="middle" font-size="14" fill="var(--down)" font-weight="700">判为 0</text>
+          <text x="320" y="123" text-anchor="middle" font-size="13" fill="var(--text-mute)">禁区</text>
+          <text x="500" y="123" text-anchor="middle" font-size="14" fill="var(--semi)" font-weight="700">判为 1</text>
+
+          <!-- 阈值线 -->
+          <line x1="260" y1="70" x2="260" y2="155" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <line x1="380" y1="70" x2="380" y2="155" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <text x="260" y="62" text-anchor="middle" font-size="12" fill="var(--text-mute)">下阈值</text>
+          <text x="380" y="62" text-anchor="middle" font-size="12" fill="var(--text-mute)">上阈值</text>
+
+          <!-- 电压轴标注 -->
+          <line x1="60" y1="170" x2="620" y2="170" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="60" y="192" font-size="12" fill="var(--text-mute)">0 V</text>
+          <text x="612" y="192" font-size="12" fill="var(--text-mute)">VDD</text>
+          <text x="320" y="192" text-anchor="middle" font-size="12" fill="var(--text-soft)">电压落在两端区间内 → 逻辑值确定；掉进禁区 → 出错</text>
+        </svg>
+        <figcaption>图 2：噪声容限。只要噪声没有把电压推出 0 区或 1 区，数字电路的判断就分毫不差——这是模拟电路做不到的。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>数字化的三张王牌：</b>
+        ① <strong>抗噪声</strong>——电平有「容错区间」，噪声影响不到逻辑值；
+        ② <strong>复制不走样</strong>——信号衰减后可以「再生中继」，重新恢复成标准方波，复印一万份也和原件一样；
+        ③ <strong>可编程</strong>——0 和 1 恰好就是数学（布尔代数）和代码的语言，硬件和软件从此说同一种话。
+      </div>
+
+      <h3>1.3 分工一句话</h3>
+      <p><strong>模拟电路负责和真实世界打交道（传感器、电源、射频），数字电路负责可靠地思考（计算、存储、控制）。</strong>
+      你的手机里两者缺一不可：天线和功率放大器是模拟的，指纹识别前端的放大是模拟的，
+      而上面跑的操作系统和 App，全是数字电路的天下。</p>
+
+      <h2 id="s2">2. 芯片家族图谱：一张图看懂关系</h2>
+
+      <p>有了「模拟 / 数字」这两大语系，芯片家族的结构就清晰了：
+      <strong>CPU、GPU、MCU、FPGA 都是数字电路长出的不同「成品」</strong>，
+      而模拟电路则是所有芯片共同的地基——没有电源和时钟，再强的数字芯片也是一块砖。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="芯片家族图谱">
+          <!-- 根节点 -->
+          <rect x="235" y="22" width="210" height="40" rx="10" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="340" y="47" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">一块电路板要解决的问题</text>
+
+          <!-- 连线到 L1 -->
+          <line x1="255" y1="62" x2="175" y2="100" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <line x1="425" y1="62" x2="505" y2="100" stroke="var(--text-mute)" stroke-width="1.2"/>
+
+          <!-- L1 模拟 -->
+          <rect x="50" y="100" width="250" height="78" rx="10" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="175" y="127" text-anchor="middle" font-size="14" fill="var(--fin)" font-weight="700">模拟电路</text>
+          <text x="175" y="150" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">连续电压：放大 · 滤波 · 稳压 · 射频</text>
+          <text x="175" y="167" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">代表：运放、电源芯片、射频芯片</text>
+
+          <!-- L1 数字 -->
+          <rect x="380" y="100" width="250" height="78" rx="10" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="505" y="127" text-anchor="middle" font-size="14" fill="var(--semi)" font-weight="700">数字电路</text>
+          <text x="505" y="150" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">0 / 1 逻辑：逻辑门 → 运算 → 存储</text>
+          <text x="505" y="167" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">一切现代计算的母体</text>
+
+          <!-- 连线到 L2 四兄弟 -->
+          <line x1="505" y1="178" x2="125" y2="218" stroke="var(--semi)" stroke-width="1.1"/>
+          <line x1="505" y1="178" x2="290" y2="218" stroke="var(--semi)" stroke-width="1.1"/>
+          <line x1="505" y1="178" x2="455" y2="218" stroke="var(--semi)" stroke-width="1.1"/>
+          <line x1="505" y1="178" x2="600" y2="218" stroke="var(--semi)" stroke-width="1.1"/>
+
+          <!-- L2：四大成品 -->
+          <rect x="50" y="218" width="150" height="70" rx="8" fill="var(--surface)" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="125" y="243" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">CPU</text>
+          <text x="125" y="262" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">通用计算的大脑</text>
+          <text x="125" y="277" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">跑操作系统与程序</text>
+
+          <rect x="215" y="218" width="150" height="70" rx="8" fill="var(--surface)" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="290" y="243" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">GPU</text>
+          <text x="290" y="262" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">数千小核并行工厂</text>
+          <text x="290" y="277" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">图形 / AI 训练</text>
+
+          <rect x="380" y="218" width="150" height="70" rx="8" fill="var(--surface)" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="455" y="243" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">MCU</text>
+          <text x="455" y="262" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">单芯片小计算机</text>
+          <text x="455" y="277" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">家电 / 汽车 / IoT</text>
+
+          <rect x="545" y="218" width="120" height="70" rx="8" fill="var(--surface)" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="605" y="243" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">FPGA</text>
+          <text x="605" y="262" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">可重新接线的</text>
+          <text x="605" y="277" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">逻辑海洋</text>
+
+          <!-- 地基横条 -->
+          <rect x="50" y="322" width="615" height="52" rx="8" fill="var(--fin)" fill-opacity=".10" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="7 4"/>
+          <text x="357" y="344" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">模拟电路：所有芯片的地基</text>
+          <text x="357" y="363" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">供电（电源芯片）· 节拍（时钟）· 连接天线（射频）· 读取真实世界（传感器接口）</text>
+          <line x1="175" y1="178" x2="175" y2="322" stroke="var(--fin)" stroke-width="1.1" stroke-dasharray="4 3"/>
+        </svg>
+        <figcaption>图 3：芯片家族图谱。CPU、GPU、MCU、FPGA 是数字电路的四种「成品形态」，分工不同而非互相替代；模拟电路则是所有芯片共同的地基。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>一个比喻记住全家：</b>
+        模拟电路是<strong>地基和水电</strong>，谁也离不开；
+        CPU、GPU、MCU 是<strong>建好的房子</strong>——别墅（CPU）、厂房（GPU）、公寓（MCU），拎包即住但户型不能改；
+        FPGA 是<strong>乐高积木</strong>，今天搭什么明天拆了重搭；
+        ASIC（专用芯片）是<strong>定制精装房</strong>，最合身也最贵，盖了就不能动。
+      </div>
+
+      <h2 id="s3">3. CPU：为了「运行任意程序」而生</h2>
+
+      <p>1940 年代的计算机换个任务就要重新接线，冯·诺依曼提出了革命性想法：
+      <strong>把程序像数据一样存进存储器</strong>，让机器自己取指令、翻译、执行。
+      CPU 就是这个想法的化身——它不擅长任何具体事情，却<strong>什么都能做</strong>，
+      因为「做什么」由存储器里的软件说了算。</p>
+      <p>它的心跳循环只有三拍：<strong>取指 → 译码 → 执行</strong>（第 24 篇计算机发展史里有详细拆解）。
+      为了让这一拍快到极致，CPU 把大量晶体管花在分支预测、乱序执行、多级缓存这些「聪明但复杂」的控制逻辑上。
+      所以 CPU 的性格是：<strong>少而强的全能工人</strong>——擅长逻辑复杂、步骤环环相扣的串行任务，
+      比如跑操作系统、响应你的每一次点击。</p>
+      <p><strong>通用是有代价的</strong>：控制电路占了大量面积，真正干算术的部分反而不多。
+      当任务变成「对一亿个像素做同一个简单运算」时，让一个全能工人重复一亿次，显然不如雇一亿个小工同时干——
+      这就轮到 GPU 登场。</p>
+
+      <h2 id="s4">4. GPU：为了「海量重复」而生</h2>
+
+      <p>1990 年代末，3D 游戏要求每秒对上百万个像素做同样的光照和着色运算——像素之间互不相干，
+      是天生的<strong>并行任务</strong>。1999 年 NVIDIA 的 GeForce 256 第一次打出了 GPU 的名号。
+      设计思路与 CPU 完全相反：<strong>砍掉复杂的控制逻辑，把省下的晶体管全部换成更多、更简单的计算核心</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CPU 少量大核与 GPU 数量众多小核对比">
+          <!-- CPU 侧 -->
+          <text x="180" y="38" text-anchor="middle" font-size="14" fill="var(--up)" font-weight="700">CPU：4~16 个全能大核</text>
+          <rect x="70" y="60" width="100" height="70" rx="6" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+          <rect x="190" y="60" width="100" height="70" rx="6" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+          <rect x="70" y="145" width="100" height="70" rx="6" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+          <rect x="190" y="145" width="100" height="70" rx="6" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="120" y="100" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">核心 0</text>
+          <text x="240" y="100" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">核心 1</text>
+          <text x="120" y="185" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">核心 2</text>
+          <text x="240" y="185" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">核心 3</text>
+          <text x="180" y="240" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">每个核自带大缓存与复杂控制</text>
+          <text x="180" y="258" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">擅长：复杂逻辑 · 串行任务</text>
+
+          <!-- GPU 侧 -->
+          <text x="500" y="38" text-anchor="middle" font-size="14" fill="var(--semi)" font-weight="700">GPU：数千个精简小核</text>
+          <g fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1">
+            <!-- 8 列 x 5 行小方块 -->
+            <rect x="390" y="60" width="24" height="20"/><rect x="418" y="60" width="24" height="20"/><rect x="446" y="60" width="24" height="20"/><rect x="474" y="60" width="24" height="20"/><rect x="502" y="60" width="24" height="20"/><rect x="530" y="60" width="24" height="20"/><rect x="558" y="60" width="24" height="20"/><rect x="586" y="60" width="24" height="20"/>
+            <rect x="390" y="84" width="24" height="20"/><rect x="418" y="84" width="24" height="20"/><rect x="446" y="84" width="24" height="20"/><rect x="474" y="84" width="24" height="20"/><rect x="502" y="84" width="24" height="20"/><rect x="530" y="84" width="24" height="20"/><rect x="558" y="84" width="24" height="20"/><rect x="586" y="84" width="24" height="20"/>
+            <rect x="390" y="108" width="24" height="20"/><rect x="418" y="108" width="24" height="20"/><rect x="446" y="108" width="24" height="20"/><rect x="474" y="108" width="24" height="20"/><rect x="502" y="108" width="24" height="20"/><rect x="530" y="108" width="24" height="20"/><rect x="558" y="108" width="24" height="20"/><rect x="586" y="108" width="24" height="20"/>
+            <rect x="390" y="132" width="24" height="20"/><rect x="418" y="132" width="24" height="20"/><rect x="446" y="132" width="24" height="20"/><rect x="474" y="132" width="24" height="20"/><rect x="502" y="132" width="24" height="20"/><rect x="530" y="132" width="24" height="20"/><rect x="558" y="132" width="24" height="20"/><rect x="586" y="132" width="24" height="20"/>
+            <rect x="390" y="156" width="24" height="20"/><rect x="418" y="156" width="24" height="20"/><rect x="446" y="156" width="24" height="20"/><rect x="474" y="156" width="24" height="20"/><rect x="502" y="156" width="24" height="20"/><rect x="530" y="156" width="24" height="20"/><rect x="558" y="156" width="24" height="20"/><rect x="586" y="156" width="24" height="20"/>
+            <rect x="390" y="180" width="24" height="20"/><rect x="418" y="180" width="24" height="20"/><rect x="446" y="180" width="24" height="20"/><rect x="474" y="180" width="24" height="20"/><rect x="502" y="180" width="24" height="20"/><rect x="530" y="180" width="24" height="20"/><rect x="558" y="180" width="24" height="20"/><rect x="586" y="180" width="24" height="20"/>
+          </g>
+          <text x="500" y="222" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">小核只保留最简计算单元，数量换质量</text>
+          <text x="500" y="240" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">擅长：图形 · 矩阵运算 · AI 训练</text>
+          <text x="500" y="258" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">短板：逻辑复杂的串行任务</text>
+        </svg>
+        <figcaption>图 4：CPU 与 GPU 的架构哲学对比。CPU 把晶体管花在「聪明」上，GPU 把晶体管花在「数量」上——分工不同，没有谁更强。</figcaption>
+      </figure>
+
+      <p>2007 年 NVIDIA 推出 CUDA，把 GPU 的并行能力开放给通用计算，故事从此改写：
+      神经网络训练的本质是<strong>矩阵乘法</strong>——亿万个互不依赖的乘加运算，
+      正是 GPU 最擅长的那种「海量重复小任务」。今天 AI 时代的算力底座，依然是这个 1999 年为游戏设计的架构。</p>
+
+      <h2 id="s5">5. MCU：为了「塞进家电」而生</h2>
+
+      <p>你的电饭煲不需要跑 Windows。它需要的只是：读温度、看按键、控制加热和显示——
+      一个<strong>便宜、省电、可靠</strong>的小脑子。如果用通用 CPU 方案，还得外挂内存、存储和各种接口芯片，
+      成本和体积都吃不消。于是工程师把整台计算机<strong>压进一颗芯片</strong>，这就是 MCU（微控制器，俗称单片机）。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCU 内部结构框图">
+          <text x="340" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">一颗 MCU 芯片的内部</text>
+
+          <!-- 顶部：存储 -->
+          <rect x="140" y="48" width="130" height="52" rx="8" fill="var(--semi)" fill-opacity=".15" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="205" y="70" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">RAM</text>
+          <text x="205" y="88" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">临时数据</text>
+
+          <rect x="410" y="48" width="130" height="52" rx="8" fill="var(--semi)" fill-opacity=".15" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="475" y="70" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">Flash</text>
+          <text x="475" y="88" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">存放程序</text>
+
+          <!-- 中央 CPU -->
+          <rect x="270" y="128" width="140" height="58" rx="10" fill="var(--up)" fill-opacity=".16" stroke="var(--up)" stroke-width="1.6"/>
+          <text x="340" y="152" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">CPU 内核</text>
+          <text x="340" y="172" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">取指 · 译码 · 执行</text>
+
+          <line x1="205" y1="100" x2="305" y2="128" stroke="var(--text-mute)" stroke-width="1.1"/>
+          <line x1="475" y1="100" x2="375" y2="128" stroke="var(--text-mute)" stroke-width="1.1"/>
+
+          <!-- 底部外设 -->
+          <rect x="90" y="228" width="140" height="54" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="160" y="250" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">GPIO</text>
+          <text x="160" y="268" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">读写引脚电平</text>
+
+          <rect x="270" y="228" width="140" height="54" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="340" y="250" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">定时器 / ADC</text>
+          <text x="340" y="268" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">计时 · 读模拟量</text>
+
+          <rect x="450" y="228" width="140" height="54" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="520" y="250" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">UART / I2C / SPI</text>
+          <text x="520" y="268" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">与外界通信</text>
+
+          <line x1="160" y1="228" x2="300" y2="186" stroke="var(--text-mute)" stroke-width="1.1"/>
+          <line x1="340" y1="228" x2="340" y2="186" stroke="var(--text-mute)" stroke-width="1.1"/>
+          <line x1="520" y1="228" x2="380" y2="186" stroke="var(--text-mute)" stroke-width="1.1"/>
+
+          <text x="340" y="300" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">注意左下角的 ADC：它正是 MCU 里「模拟世界」与「数字世界」的翻译官</text>
+        </svg>
+        <figcaption>图 5：MCU = CPU 内核 + 存储器 + 外设的「全家桶」。一颗芯片就是一台完整的小计算机，这正是它能塞进电饭煲的原因。</figcaption>
+      </figure>
+
+      <p>MCU 与 CPU 不是竞争关系——<strong>每一颗 MCU 里面都有一颗 CPU</strong>。
+      区别在于系统形态：PC 的 CPU 需要主板、内存、硬盘搭台唱戏，而 MCU 一个顶一队，
+      上电即工作。你的车里通常藏着几十上百颗 MCU，负责车窗、雨刷、胎压、灯光——
+      物联网时代，MCU 是世界上数量最多的「计算机」。</p>
+
+      <h2 id="s6">6. FPGA：为了「改硬件不改版图」而生</h2>
+
+      <p>1985 年，Xilinx 卖出了世界上第一颗 FPGA。它解决的是一个芯片行业的老大难：
+      <strong>硬件逻辑一旦流片就永久固化</strong>——设计改一个 bug，就要重新走一遍几个月、上千万成本的制造流程。
+      FPGA 的回答是：<strong>把芯片做成一片「可重新接线的逻辑海洋」</strong>，
+      出厂之后，你还能随时决定里面布什么电路。</p>
+      <p>它靠两样东西实现魔法：</p>
+      <ol>
+        <li><strong>查找表（LUT）</strong>：不造固定的逻辑门，而是把任意逻辑函数的<strong>真值表直接存进存储单元</strong>——输入当作地址，查表即得输出。想换逻辑？换一张表就行；</li>
+        <li><strong>可编程互连</strong>：成千上万个 LUT 之间的「导线」也是可配置的开关阵，软件工具自动帮你布线连接。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LUT 查找表原理">
+          <text x="340" y="28" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">LUT：把真值表存进芯片，逻辑随写随换</text>
+
+          <!-- 左：真值表 -->
+          <rect x="60" y="52" width="170" height="170" rx="8" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.3"/>
+          <text x="145" y="76" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">你想要的逻辑（真值表）</text>
+          <text x="145" y="102" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">A B C  →  Y</text>
+          <text x="145" y="124" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">0 0 0  →  0</text>
+          <text x="145" y="144" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">0 0 1  →  1</text>
+          <text x="145" y="164" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">……　　…</text>
+          <text x="145" y="184" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">1 1 0  →  1</text>
+          <text x="145" y="204" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">1 1 1  →  0</text>
+
+          <!-- 中：SRAM 单元 -->
+          <g>
+            <rect x="285" y="60" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <rect x="285" y="88" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <rect x="285" y="116" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <rect x="285" y="144" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <rect x="285" y="172" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <rect x="285" y="200" width="30" height="22" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1"/>
+            <text x="300" y="76" text-anchor="middle" font-size="10" fill="var(--text)">0</text>
+            <text x="300" y="104" text-anchor="middle" font-size="10" fill="var(--text)">1</text>
+            <text x="300" y="132" text-anchor="middle" font-size="10" fill="var(--text)">…</text>
+            <text x="300" y="160" text-anchor="middle" font-size="10" fill="var(--text)">1</text>
+            <text x="300" y="188" text-anchor="middle" font-size="10" fill="var(--text)">0</text>
+            <text x="300" y="216" text-anchor="middle" font-size="10" fill="var(--text)">…</text>
+          </g>
+          <text x="300" y="245" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">SRAM 存储输出列</text>
+
+          <!-- 右：MUX -->
+          <path d="M420 70 L420 210 L490 172 L490 108 Z" fill="var(--up)" fill-opacity=".16" stroke="var(--up)" stroke-width="1.5"/>
+          <text x="452" y="145" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">8 选 1</text>
+          <text x="452" y="162" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">选择器</text>
+          <line x1="315" y1="71" x2="420" y2="88" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="315" y1="99" x2="420" y2="104" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="315" y1="127" x2="420" y2="121" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="315" y1="155" x2="420" y2="139" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="315" y1="183" x2="420" y2="156" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="315" y1="211" x2="420" y2="172" stroke="var(--text-mute)" stroke-width="1"/>
+
+          <!-- 输入输出 -->
+          <text x="555" y="90" font-size="12" fill="var(--fin)" font-weight="700">A B C</text>
+          <text x="555" y="108" font-size="10.5" fill="var(--text-mute)">输入作地址</text>
+          <line x1="490" y1="140" x2="545" y2="140" stroke="var(--up)" stroke-width="1.6"/>
+          <text x="555" y="145" font-size="13" fill="var(--up)" font-weight="700">Y 输出</text>
+
+          <text x="340" y="252" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">同一个 LUT 硬件，写入不同真值表，就是不同的逻辑门——这就是「可重构」的本质</text>
+        </svg>
+        <figcaption>图 6：FPGA 查找表（LUT）原理。真值表存进 SRAM，输入当地址查表出结果——任意逻辑即插即用，改逻辑只需改表。</figcaption>
+      </figure>
+
+      <p>代价同样明显：实现同样的功能，FPGA 要比专用芯片（ASIC）多花 10~20 倍的面积和功耗，单价也贵得多。
+      所以它的舞台是<strong>小批量、多变、需要灵活</strong>的场景：芯片设计前的原型验证、通信基站协议、
+      传感器接口「胶水逻辑」、AI 算法定型前的硬件加速试验。量大了、逻辑定死了，就该交给 ASIC 了。</p>
+
+      <h2 id="s7">7. 一张表看懂整个家族</h2>
+
+      <p>把「为了什么而出现」串起来，你会发现每颗芯片都是对一个具体时代问题的回答：</p>
+
+      <table>
+        <thead><tr><th>成员</th><th>出现的原因</th><th>核心思想</th><th>强项</th><th>弱项</th><th>典型场景</th></tr></thead>
+        <tbody>
+          <tr><td>模拟电路</td><td>真实世界是连续的</td><td>电压连续变化、放大滤波</td><td>高保真、高速、连接物理世界</td><td>噪声累积、难复制</td><td>电源、射频、音响、传感器</td></tr>
+          <tr><td>数字电路</td><td>信号要可靠、可复制、可编程</td><td>0/1 两档 + 逻辑门</td><td>抗噪、可集成、可编程</td><td>需要 ADC/DAC 与真实世界换气</td><td>一切现代计算与存储</td></tr>
+          <tr><td>CPU</td><td>一台机器要运行任意程序</td><td>存储程序 + 取指译码执行</td><td>通用灵活、擅长复杂串行逻辑</td><td>海量并行任务效率低</td><td>电脑手机主控、服务器</td></tr>
+          <tr><td>GPU</td><td>图形像素每帧百万级重复运算</td><td>数千小核大规模并行</td><td>吞吐量巨大、能效高（并行时）</td><td>分支复杂的串行任务</td><td>图形、AI 训练与推理、科学计算</td></tr>
+          <tr><td>MCU</td><td>嵌入式控制要便宜省电可靠</td><td>CPU+存储+外设单芯片</td><td>成本极低、上电即工作、实时</td><td>算力与内存有限</td><td>家电、汽车、物联网终端</td></tr>
+          <tr><td>FPGA</td><td>硬件逻辑要能修改、要快速验证</td><td>LUT 真值表 + 可编程互连</td><td>硬件级并行、出厂后可重构</td><td>同功能面积功耗高 10 倍以上</td><td>原型验证、通信基站、定制加速</td></tr>
+        </tbody>
+      </table>
+
+      <div class="kv">
+        <div><div class="v">1971</div><div class="l">Intel 4004：第一颗微处理器，CPU 从机房走进芯片</div></div>
+        <div><div class="v">1974</div><div class="l">TMS 1000：早期单片机，MCU 思路成型</div></div>
+        <div><div class="v">1985</div><div class="l">Xilinx XC2064：世界上第一颗 FPGA</div></div>
+        <div><div class="v">1999 / 2007</div><div class="l">GeForce 256 首冠 GPU 之名 / CUDA 打开通用并行大门</div></div>
+      </div>
+
+      <p>它们的关系至此可以一锤定音：<strong>不是食物链，而是生态位</strong>。
+      CPU 管全局调度，GPU 干并行重活，MCU 看守每一个廉价终端，FPGA 在原型与专用之间灵活补位，
+      模拟电路在底下默默供电连天线。一块现代电路板上，它们全部同时在岗——
+      你的手机里，这五位一个都不少。</p>
+
+      <h2 id="s8">8. 易错点与自测</h2>
+
+      <div class="note">
+        <b>三个高频误区：</b><br>
+        ① 以为「MCU 是低配 CPU，早晚被替代」——MCU 内部就有一颗 CPU，它们是<strong>系统形态</strong>的区别（全家桶 vs 单干户），不是性能高低之争；<br>
+        ② 以为「GPU 是更强的 CPU」——GPU 只是换了一种分工：<strong>并行吞吐</strong>换<strong>串行灵活</strong>，跑操作系统还得靠 CPU；<br>
+        ③ 以为「FPGA 是廉价的入门芯片」——恰恰相反，FPGA 单价高于同功能 ASIC，它卖的是<strong>灵活性和上市速度</strong>，不是便宜。
+      </div>
+
+      <details class="quiz"><summary>自测 1：为什么数字电路的抗噪声能力远强于模拟电路？</summary>
+        <div class="answer">数字信号只在高、低两个电平区间内被判为 1 和 0，只要噪声没有把电压推出各自的判定区间，逻辑值就完全不受影响（噪声容限，见图 2）；
+        而模拟信号的每一级电压都携带信息，任何噪声都直接叠加进信号，且逐级累积、无法彻底去除。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：CPU 和 GPU 同样都在「算」，为什么架构差异如此之大？</summary>
+        <div class="answer">任务特征不同。CPU 面向<strong>串行、逻辑复杂、分支多</strong>的任务，需要分支预测、乱序执行、大缓存等复杂控制逻辑，
+        少量大核各配豪华资源；GPU 面向<strong>海量相互独立的重复运算</strong>（像素、矩阵元素），砍掉复杂控制、堆出数千个精简小核。
+        晶体管预算一个花在「聪明」，一个花在「数量」。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：为什么说 LUT 是 FPGA「可重构」的关键？</summary>
+        <div class="answer">LUT 不实现固定逻辑门，而是把任意逻辑函数的<strong>真值表存进 SRAM 单元</strong>，输入信号作为地址查表输出（见图 6）。
+        改变存储内容就等于改变了硬件逻辑——再加上可编程互连阵列把这些 LUT 灵活连起来，
+        同一片硅片就能在出厂后反复「变成」不同的电路。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：一个新产品从原型到量产百万台，芯片方案怎么演进？</summary>
+        <div class="answer">典型路径：<strong>FPGA 验证原型</strong>（逻辑随时改、上市快）→ 算法定型、产量上来后<strong>流片 ASIC</strong>（面积、功耗、单位成本大幅优化）；
+        若功能通用、软件迭代频繁（如手机 SoC），则留在 <strong>CPU + 加速器</strong>的可编程架构上。选型核心是：灵活性值多少钱、量能摊薄多少成本。</div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 21 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 22 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 23 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 24 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li class="current">第 25 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#数字电路</span>
+      <span class="chip">#模拟电路</span>
+      <span class="chip">#CPU</span>
+      <span class="chip">#GPU</span>
+      <span class="chip">#MCU</span>
+      <span class="chip">#FPGA</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

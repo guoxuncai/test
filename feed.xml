@@ -5,13 +5,20 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 00:24:40 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 00:53:43 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</guid>
       <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从雅卡尔的提花机到贝尔实验室的晶体管，从巴贝奇的失败到图灵的悲剧，从 ENIAC 的 18000 只电子管到你口袋里的手机——沿着人物与故事，讲清计算机的底层原理：开关如何学会做加法，存储程序如何改变一切]]></description>
+    </item>
+    <item>
+      <title>数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[模拟电路、数字电路、MCU、FPGA、CPU、GPU 分别是什么、为了什么而出现、彼此有什么关系——用波形图、家族图谱、框图和 LUT 原理图讲透芯片家族]]></description>
     </item>
     <item>
       <title>雷达信号处理全链路：从回波到目标</title>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-17每日财经早报_.html</guid>
       <pubDate>Thu, 17 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[央行拟在MPA框架中新增限制银行过度持有长期债券的指标，后续关注政策落地对长端利率的影响。美国30年期国债收益率昨日盘中触及5.40%，创2007年以来新高。]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月16日 周三</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-16财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-16财经早报_.html</guid>
-      <pubDate>Wed, 16 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[央行重启隔夜逆回购： 9月15日7天期逆回购操作量为零，同时开展5970亿元隔夜逆回购操作，当日净投放920亿元。10年期国债收益率1.686%： 债市收益率维持低位，资金面延续宽松格局，市场静待今日8月经济数据发布。]]></description>
     </item>
   </channel>
 </rss>
