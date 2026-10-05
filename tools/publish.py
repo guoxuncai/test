@@ -354,9 +354,9 @@ def write_index(posts, cats):
     js += "/* 生成时间: %s  共 %d 篇 */\n" % (stamp, len(posts))
     js += "window.SITE_POSTS = " + json.dumps(posts, ensure_ascii=False, indent=2) + ";\n\n"
     js += "window.SITE_CATS = " + json.dumps(cats, ensure_ascii=False, indent=2) + ";\n"
-    with io.open(os.path.join(DATA_DIR, "posts.js"), "w", encoding="utf-8") as f:
+    with io.open(os.path.join(DATA_DIR, "posts.js"), "w", encoding="utf-8", newline="\n") as f:
         f.write(js)
-    with io.open(os.path.join(DATA_DIR, "posts.json"), "w", encoding="utf-8") as f:
+    with io.open(os.path.join(DATA_DIR, "posts.json"), "w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps({"updated": stamp, "posts": posts, "categories": cats},
                            ensure_ascii=False, indent=2))
     return stamp
@@ -390,7 +390,7 @@ def write_feeds(posts, base):
         u'  </channel>\n'
         u'</rss>\n'
     ).format(base=base, now=now, items=u"\n".join(items))
-    with io.open(os.path.join(ROOT, "feed.xml"), "w", encoding="utf-8") as f:
+    with io.open(os.path.join(ROOT, "feed.xml"), "w", encoding="utf-8", newline="\n") as f:
         f.write(rss)
 
     urls = [u"    <url><loc>{base}</loc><priority>1.0</priority></url>".format(base=base)]
@@ -400,7 +400,7 @@ def write_feeds(posts, base):
     sm = (u'<?xml version="1.0" encoding="UTF-8"?>\n'
           u'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           u'{urls}\n</urlset>\n'.format(urls=u"\n".join(urls)))
-    with io.open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
+    with io.open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8", newline="\n") as f:
         f.write(sm)
 
 
@@ -433,7 +433,7 @@ def new_draft(category, name):
     today = datetime.date.today().isoformat()
     content = read_text(src)
     content = content.replace("{{TITLE}}", os.path.splitext(name)[0]).replace("{{DATE}}", today)
-    with io.open(target, "w", encoding="utf-8") as f:
+    with io.open(target, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
     print("+ 已创建草稿：posts/%s/%s" % (category, name))
     return target
