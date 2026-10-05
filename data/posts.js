@@ -1,5 +1,5 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-02 22:06:06  共 46 篇 */
+/* 生成时间: 2026-10-05 12:51:43  共 46 篇 */
 window.SITE_POSTS = [
   {
     "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
@@ -16,7 +16,7 @@ window.SITE_POSTS = [
       "GAA",
       "HKMG"
     ],
-    "size": 55.4
+    "size": 55.0
   },
   {
     "title": "存储器 · DRAM、NAND 与新型存储",
@@ -33,7 +33,7 @@ window.SITE_POSTS = [
       "3D",
       "浮栅"
     ],
-    "size": 85.4
+    "size": 84.6
   },
   {
     "title": "半导体设备与产业链 · 核心装备全景",
@@ -67,7 +67,7 @@ window.SITE_POSTS = [
       "碳化硅",
       "氮化镓"
     ],
-    "size": 155.5
+    "size": 154.3
   },
   {
     "title": "先进封装与系统级集成 · 2.5D、3D 与 Chiplet",
@@ -84,7 +84,7 @@ window.SITE_POSTS = [
       "TSV",
       "hybrid"
     ],
-    "size": 70.4
+    "size": 69.8
   },
   {
     "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
@@ -101,7 +101,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 76.4
+    "size": 75.6
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -118,7 +118,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 20.6
+    "size": 20.3
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -135,7 +135,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 21.7
+    "size": 21.4
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -152,7 +152,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 25.1
+    "size": 24.7
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -169,7 +169,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 70.2
+    "size": 69.3
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -196,7 +196,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 24.4
+    "size": 24.1
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -213,7 +213,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 69.8
+    "size": 68.9
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -230,7 +230,7 @@ window.SITE_POSTS = [
       "PN结基础",
       "半导体物理"
     ],
-    "size": 21.0
+    "size": 20.6
   },
   {
     "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
@@ -247,7 +247,7 @@ window.SITE_POSTS = [
       "选择比",
       "各向异性"
     ],
-    "size": 75.4
+    "size": 74.5
   },
   {
     "title": "光刻工艺详解 · 从光学原理到 EUV",
@@ -264,7 +264,7 @@ window.SITE_POSTS = [
       "EUV",
       "High-NA"
     ],
-    "size": 59.7
+    "size": 59.0
   },
   {
     "title": "PN 结原理与特性",
@@ -281,7 +281,7 @@ window.SITE_POSTS = [
       "齐纳击穿",
       "雪崩击穿"
     ],
-    "size": 19.0
+    "size": 18.7
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -298,7 +298,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 21.2
+    "size": 20.9
   },
   {
     "title": "CMP 平坦化、量测与良率控制",
@@ -315,7 +315,7 @@ window.SITE_POSTS = [
       "终点检测",
       "椭偏仪"
     ],
-    "size": 85.7
+    "size": 84.7
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -332,7 +332,7 @@ window.SITE_POSTS = [
       "动态功耗",
       "建立时间"
     ],
-    "size": 19.9
+    "size": 19.6
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -438,7 +438,7 @@ window.SITE_POSTS = [
       "可视化",
       "教学动画"
     ],
-    "size": 31.0
+    "size": 30.0
   },
   {
     "title": "瑾年财经早报 | 2026年9月20日 周日",
@@ -594,7 +594,7 @@ window.SITE_POSTS = [
       "版图设计",
       "流片"
     ],
-    "size": 14.4
+    "size": 14.2
   },
   {
     "title": "集成电路半导体器件 · 考前复习精要",
@@ -610,7 +610,7 @@ window.SITE_POSTS = [
       "MOSFET",
       "考前复习"
     ],
-    "size": 25.5
+    "size": 25.1
   }
 ];
 

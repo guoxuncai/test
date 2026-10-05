@@ -311,7 +311,9 @@ def scan():
                 "categoryLabel": CATEGORY_LABELS.get(cat_id, cat_dir),
                 "desc": build_summary(src, title=title),
                 "tags": build_tags(src),
-                "size": round(os.path.getsize(path) / 1024.0, 1),
+                # 用文本内容的 UTF-8 字节数，而非磁盘字节数：后者受行尾符
+                # （CRLF/LF）影响，会导致不同机器生成的索引体积不一致。
+                "size": round(len(src.encode("utf-8")) / 1024.0, 1),
             })
     posts.sort(key=lambda p: (p["date"], p["title"]), reverse=True)
     return posts
