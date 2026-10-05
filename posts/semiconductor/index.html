@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -107,6 +107,17 @@
           这条路径会随着更新继续生长。
         </p>
         <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--border)">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">🌏 时代坐标：为什么值得投入</div>
+          <p style="font-size:14px;line-height:1.9;color:var(--text-soft);margin:0">
+            集成电路是信息产业的核心，也是国家重点布局的<strong style="color:var(--text)">战略性、基础性和先导性产业</strong>。
+            2014 年《国家集成电路产业发展推进纲要》发布，国家集成电路产业投资基金（"大基金"）一期、二期、三期相继设立，
+            累计投向设计、制造、设备与材料全链条；2020 年底，"集成电路科学与工程"升格为一级学科，
+            人才培养与产业需求正式并轨；"十四五"规划将集成电路列为科技前沿攻关的关键领域。
+            政策、资金与人才三线并进，国产替代正从"补短板"走向"建体系"——
+            对学习者而言，这意味着一条需求明确、天花板足够高的长期赛道，也是这份学习路线的现实坐标。
+          </p>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--border)">
           <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">✍️ 作者介绍</div>
           <p style="font-size:14px;line-height:1.9;color:var(--text-soft);margin:0">
             北邮硕士，一名半导体技术爱好者。整理笔记一方面用于自身知识巩固，另一方面希望和大家交流学习。
@@ -212,7 +223,7 @@
   /* ---------- 主题（与首页共用 localStorage 键） ---------- */
   (function initTheme() {
     var saved = localStorage.getItem('site-theme');
-    var t = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var t = saved || 'dark';  // 默认暗黑主题；用户手动切换后以 localStorage 为准
     document.documentElement.setAttribute('data-theme', t);
     $('#themeBtn').textContent = t === 'dark' ? '☀' : '☾';
     $('#themeBtn').addEventListener('click', function () {

@@ -29,8 +29,7 @@
   /* ---------- 主题 ---------- */
   function initTheme() {
     var saved = localStorage.getItem('site-theme');
-    var sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(saved || (sysDark ? 'dark' : 'light'));
+    applyTheme(saved || 'dark');   // 默认暗黑主题；用户手动切换后以 localStorage 为准
     $('#themeBtn').addEventListener('click', function () {
       var cur = document.documentElement.getAttribute('data-theme');
       var next = cur === 'dark' ? 'light' : 'dark';
