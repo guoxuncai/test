@@ -273,6 +273,24 @@ def run_git(args, check=True):
     return r.stdout.strip()
 
 
+def git_sync():
+    """多机协作：把远端最新改动 rebase 进本机。
+
+    工作区若有未提交改动会自动 stash 并在同步后恢复；
+    一旦出现冲突则回滚到同步前状态再抛出，绝不留下 rebase 中间态。
+    """
+    branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], check=False) or "main"
+    upstream = run_git(["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"], check=False)
+    if not upstream:
+        run_git(["branch", "--set-upstream-to", "origin/%s" % branch, branch], check=False)
+    run_git(["fetch", "origin", branch])
+    try:
+        return run_git(["pull", "--rebase", "--autostash", "origin", branch])
+    except RuntimeError:
+        run_git(["rebase", "--abort"], check=False)
+        raise
+
+
 def site_url():
     try:
         remote = run_git(["remote", "get-url", "origin"], check=False)
@@ -443,6 +461,8 @@ def new_draft(category, name):
 def main():
     ap = argparse.ArgumentParser(description="扫描 posts/ 生成索引并提交推送")
     ap.add_argument("--no-push", action="store_true", help="只生成索引，不执行 git 提交推送")
+    ap.add_argument("--no-pull", action="store_true", help="跳过开工前的远端自动同步（离线时使用）")
+    ap.add_argument("--sync-only", action="store_true", help="只同步远端最新改动，不生成索引也不推送")
     ap.add_argument("--serve", action="store_true", help="生成索引后启动本地预览服务 http://127.0.0.1:8000")
     ap.add_argument("--draft", nargs=2, metavar=("分类", "文件名"), help="从模板新建草稿，如 --draft finance 2026-10-01-早报")
     ap.add_argument("--message", "-m", default=None, help="自定义提交信息")
@@ -456,6 +476,29 @@ def main():
         new_draft(args.draft[0], args.draft[1])
         print("=" * 56)
         return
+
+    # 多机协作：先把远端最新改动同步到本地，再扫描生成索引，避免历史分叉
+    if args.no_pull and args.sync_only:
+        print("! --sync-only 与 --no-pull 不能同时使用。")
+        print("=" * 56)
+        return
+
+    if not args.no_pull:
+        print("\n同步远端最新改动 …")
+        try:
+            out = git_sync()
+            print("  %s" % (out.splitlines()[-1] if out else "本机已是最新"))
+        except Exception as e:
+            print("! 自动同步失败：%s" % e)
+            print("  请手动执行 git pull --rebase 处理冲突后重试。")
+            print("  如需离线继续，可加 --no-pull 参数。")
+            print("=" * 56)
+            return
+
+        if args.sync_only:
+            print("同步完成。")
+            print("=" * 56)
+            return
 
     old_count = -1
     old_js = os.path.join(DATA_DIR, "posts.js")

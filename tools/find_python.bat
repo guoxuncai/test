@@ -7,26 +7,24 @@ rem
 rem  NOTE: python.exe / py.exe under WindowsApps are Microsoft Store
 rem        app-execution aliases. They cannot run scripts, so they
 rem        must be skipped.
+rem
+rem  All paths are captured with "delims=" so install locations that
+rem  contain spaces (e.g. C:\Program Files\Python38) stay intact.
+rem  Parsing "py -0p" output is avoided on purpose: its last line has
+rem  no trailing newline, which makes "for /f" drop it entirely.
 rem ============================================================
 set "PYEXE="
 
-rem 1) Use the py launcher if present; "py -0p" lists real interpreter paths.
-for /f "usebackq tokens=2*" %%a in (`py -0p 2^>nul`) do (
-    if not defined PYEXE (
-        echo %%b | findstr /i "python.exe" >nul
-        if not errorlevel 1 set "PYEXE=%%b"
-        if not defined PYEXE (
-            echo %%a | findstr /i "python.exe" >nul
-            if not errorlevel 1 set "PYEXE=%%a"
-        )
-    )
+rem 1) py launcher: let Python itself report its absolute path.
+for /f "delims=" %%p in ('py -3 -c "import sys; print(sys.executable)" 2^>nul') do (
+    if not defined PYEXE if exist "%%p" set "PYEXE=%%p"
 )
 
 rem 2) Fall back to "where python", skipping the WindowsApps alias.
 if not defined PYEXE (
     for /f "delims=" %%i in ('where python 2^>nul') do (
         echo %%i | findstr /i "WindowsApps" >nul
-        if errorlevel 1 if not defined PYEXE set "PYEXE=%%i"
+        if errorlevel 1 if not defined PYEXE if exist "%%i" set "PYEXE=%%i"
     )
 )
 
@@ -40,11 +38,14 @@ if not defined PYEXE (
     ) do (
         if not defined PYEXE (
             for /f "delims=" %%p in ('dir /b /s "%%~d\python.exe" 2^>nul') do (
-                if not defined PYEXE set "PYEXE=%%p"
+                if not defined PYEXE if exist "%%p" set "PYEXE=%%p"
             )
         )
     )
 )
+
+rem Final check: the resolved path must exist.
+if defined PYEXE if not exist "%PYEXE%" set "PYEXE="
 
 if not defined PYEXE (
     echo [ERROR] No usable Python interpreter found.

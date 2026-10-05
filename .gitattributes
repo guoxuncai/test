@@ -1,0 +1,7 @@
+# 所有文本文件按 LF 存入仓库，检出时也用 LF（跨 Windows/macOS 保持一致）
+* text=auto eol=lf
+
+# Windows 批处理与脚本必须用 CRLF：纯 LF 会导致 cmd 解析 for / if 块时出错
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
