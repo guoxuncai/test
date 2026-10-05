@@ -5,7 +5,14 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 05 Oct 2026 23:03:04 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 23:39:03 +0800</lastBuildDate>
+    <item>
+      <title>雷达信号处理全链路：从回波到目标</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-雷达信号处理全链路-从回波到目标.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-雷达信号处理全链路-从回波到目标.html</guid>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从蝙蝠回声讲到 CFAR 恒虚警检测：一条信号如何走完发射、接收、脉冲压缩、多普勒滤波、目标检测与识别的完整链路。由浅入深讲清现代雷达]]></description>
+    </item>
     <item>
       <title>量子计算：从量子比特到量子优越性</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html</link>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-15每日财经早报_.html</guid>
       <pubDate>Tue, 15 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[数据截止：2026年9月14日收盘 全球市场速览 A股市场 上证指数 −0.07% 报7792.81亿 深证成指 −0.64% 报8498.94亿 创业板指 −1.10% 沪深300 −0.67% 涨跌家数 3126家上涨 / 2224家下…]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月14日 周一</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-14瑾年财经早报_4.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-14瑾年财经早报_4.html</guid>
-      <pubDate>Mon, 14 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[主要指数表现 上证指数 -1.18% ↓ 深证成指 -1.08% ↓ 创业板指 -0.49% ↓ 沪深300 -0.84% ↓ 中证500 -1.78% ↓ 科创50 -1.01% ↓ 两市成交额 上证 9,582亿 / 深证 10,137…]]></description>
     </item>
   </channel>
 </rss>

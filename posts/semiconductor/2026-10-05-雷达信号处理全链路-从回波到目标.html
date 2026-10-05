@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>雷达信号处理全链路：从回波到目标</title>
+<meta name="description" content="从蝙蝠回声讲到 CFAR 恒虚警检测：一条信号如何走完发射、接收、脉冲压缩、多普勒滤波、目标检测与识别的完整链路。由浅入深讲清现代雷达'看得见、测得准、认得出'的每一步。">
+<meta name="keywords" content="雷达,信号处理,脉冲压缩,匹配滤波,MTI,MTD,CFAR,多普勒,相控阵,目标识别">
+<meta name="date" content="2026-10-05">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">跨领域 · 拓展与其他</span>
+    <h1 class="title">雷达信号处理全链路：从回波到目标</h1>
+    <div class="meta">
+      <span>2026-10-05</span><span class="sep"></span>
+      <span>跨领域拓展 · 第 23 篇</span><span class="sep"></span>
+      <span>阅读约 17 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        黑夜里伸手不见五指，雷达却能告诉你 300 公里外有一架飞机、飞多快、往哪去、
+        <strong>甚至是什么机型</strong>——它不发光、不发热，靠的只是"喊一嗓子、听回声"。
+        这一篇沿着一条完整的信号流水线走一遍：
+        信号产生发射 → 天线接收回波 → 混入噪声杂波 → 模拟滤波 → ADC 采样 →
+        数字滤波与脉冲压缩 → MTI/MTD 多普勒滤波 → CFAR 目标检测 → 提取目标特征 →
+        算法模型识别 → 输出目标参数与类别。
+        读完你会明白：雷达的每一级都在回答同一个问题——<strong>怎么把淹没在噪声里的那一点回波，变成一个有名字的目标</strong>。
+      </div>
+
+      <h2 id="s1">1. 直觉入门：蝙蝠的生存智慧</h2>
+
+      <p>
+        蝙蝠在漆黑的岩洞里高速飞行、互相不撞、还能精准捕蚊。它靠的不是眼睛，而是
+        <strong>回声定位</strong>：发出一声超声波尖叫，声波碰到蚊子反弹回来，
+        蝙蝠比较"喊"和"听"的时间差，就知道蚊子有多远；比较回声音调的变化，就知道蚊子正在接近还是远离。
+        这套机制有三个要素：<strong>主动发射、接收回波、从时间与频率差里提取信息</strong>。
+      </p>
+
+      <p>
+        雷达（Radio Detection and Ranging，无线电探测与测距）做的事情一模一样，
+        只是把声波换成了电磁波，把耳朵换成了天线。它的任务可以概括为三问：
+      </p>
+
+      <table>
+        <thead><tr><th>问题</th><th>雷达术语</th><th>靠什么回答</th></tr></thead>
+        <tbody>
+          <tr><td>有没有东西？</td><td>检测（Detection）</td><td>回波功率是否超过门限</td></tr>
+          <tr><td>在哪里、多快？</td><td>参数估计（Estimation）</td><td>回波时延、频移、到达角</td></tr>
+          <tr><td>它是什么？</td><td>识别（Recognition）</td><td>回波特征 + 算法分类</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        一个来自生活的类比：你对着山谷喊一声，2.9 秒后听到回声——声速 340 m/s，
+        山壁距离约 340 × 2.9 ÷ 2 ≈ <strong>493 米</strong>（注意除以 2：声音走了一个来回）。
+        救护车驶近时警笛音调变高、远离时变低——这就是<strong>多普勒效应</strong>，
+        它泄露了目标的运动速度。雷达的全部魔法，都建立在这两个日常直觉之上。
+      </p>
+
+      <h2 id="s2">2. 物理原理：时间换距离，频率换速度</h2>
+
+      <h3>2.1 测距：电磁波尺子</h3>
+      <p>
+        电磁波以光速 c = 3×10<sup>8</sup> m/s 传播，回波时延 τ 与目标距离 R 的关系为：
+        <strong>R = c·τ / 2</strong>。除以 2 同样是"往返"修正。数字很惊人：
+        1 微秒的时延对应 150 米距离——雷达要在纳秒级精度上计时，才能做到米级测距。
+      </p>
+
+      <p>
+        更关键的是<strong>距离分辨率</strong>：两个目标要能被分开，回波时延至少差一个脉宽 τ，
+        即 <strong>ΔR = c·τ / 2</strong>。想让分辨率达到 15 米，脉宽得压到 0.1 微秒；
+        但脉宽越窄，脉冲携带的能量越少，探测距离就越近——
+        <strong>"看得远"和"分得开"在简单脉冲体制下是一对死敌</strong>。
+        这个矛盾要等到第 5 章的"脉冲压缩"才被漂亮地化解。
+      </p>
+
+      <h3>2.2 测速：多普勒频移</h3>
+      <p>
+        目标径向速度 v（朝雷达飞为正）会使回波频率偏移 <strong>f<sub>d</sub> = 2v / λ</strong>，
+        系数 2 来自"雷达与目标互为运动的收发双方"。代入感受一下：
+        X 波段雷达波长 λ = 3 cm，一架 300 m/s 的战机带来 20 kHz 的频移——
+        这个量级在射频里很小，却是数字信号处理最擅长捕捉的东西。
+      </p>
+
+      <h3>2.3 雷达方程：四次方根的残酷</h3>
+      <p>
+        回波功率由<strong>雷达方程</strong>决定：
+        P<sub>r</sub> = P<sub>t</sub>G²λ²σ / [(4π)³R⁴]。最刺眼的是 R⁴——
+        距离翻倍，回波只剩 1/16。想靠加大功率把探测距离翻倍，功率得加到 16 倍。
+        这就是为什么雷达工程师对"每一分信噪比"都锱铢必较，也是后面一长串处理增益存在的原因。
+      </p>
+
+      <p>
+        方程里的 σ 是<strong>雷达散射截面积（RCS）</strong>：目标"看起来有多大"。
+        它与几何尺寸并不成正比——大型轰炸机约 10–100 m²，战斗机 1–10 m²，
+        而精心外形的隐身战机可低至 0.01 m² 量级（外形散射+吸波材料双重压制）。
+        隐身与反隐身的攻防，本质上就是围绕这个 σ 的持续军备竞赛。
+      </p>
+
+      <h2 id="s3">3. 信号链全貌：一条 11 级的流水线</h2>
+
+      <p>
+        现代雷达从"喊一嗓子"到"报出目标"，信号要经过一条严格的流水线。
+        我们把它画成一张全景图，本篇后面各章就按这张图逐级展开：
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="雷达信号处理全链路：从发射到输出的十一级流水线">
+          <!-- 域标签 -->
+          <text x="30" y="42" font-size="12" font-weight="700" fill="var(--fin)">射频 / 模拟域</text>
+          <text x="30" y="142" font-size="12" font-weight="700" fill="var(--semi)">数字信号域</text>
+          <text x="30" y="242" font-size="12" font-weight="700" fill="var(--up)">信息域</text>
+
+          <!-- 第一行：波形产生·发射 / 天线接收回波 / 混入噪声杂波 / 模拟滤波 -->
+          <rect x="30" y="56" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="100" y="75" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">① 波形产生·发射</text>
+          <text x="100" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">波形生成 / 上变频 / 功放</text>
+
+          <rect x="185" y="56" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="255" y="75" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">② 天线接收回波</text>
+          <text x="255" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">低噪放 / 收发开关</text>
+
+          <rect x="340" y="56" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--up)" stroke-dasharray="4 3"/>
+          <text x="410" y="75" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">③ 混入噪声·杂波</text>
+          <text x="410" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">热噪声 / 地物海面散射</text>
+
+          <rect x="495" y="56" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="565" y="75" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">④ 模拟滤波</text>
+          <text x="565" y="92" text-anchor="middle" font-size="11" fill="var(--text-mute)">带通选信道 / 抗混叠</text>
+
+          <!-- 行内箭头 -->
+          <line x1="171" y1="78" x2="182" y2="78" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M182 78 L175 74 M182 78 L175 82" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <line x1="326" y1="78" x2="337" y2="78" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M337 78 L330 74 M337 78 L330 82" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <line x1="481" y1="78" x2="492" y2="78" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M492 78 L485 74 M492 78 L485 82" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 换行箭头 1：④ 底部 → ⑤ 顶部 -->
+          <path d="M565 100 V128 H100 V152" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <path d="M100 156 L96 149 M100 156 L104 149" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 第二行：ADC / 数字滤波+脉冲压缩 / MTI/MTD / CFAR -->
+          <rect x="30" y="156" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="100" y="175" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑤ ADC 采样</text>
+          <text x="100" y="192" text-anchor="middle" font-size="11" fill="var(--text-mute)">奈奎斯特 / 量化位数</text>
+
+          <rect x="185" y="156" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="255" y="175" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑥ 数字滤波+脉冲压缩</text>
+          <text x="255" y="192" text-anchor="middle" font-size="11" fill="var(--text-mute)">匹配滤波 / FFT 快卷积</text>
+
+          <rect x="340" y="156" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="410" y="175" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑦ MTI/MTD 滤波</text>
+          <text x="410" y="192" text-anchor="middle" font-size="11" fill="var(--text-mute)">对消杂波 / 多普勒滤波器组</text>
+
+          <rect x="495" y="156" width="140" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="565" y="175" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑧ CFAR 目标检测</text>
+          <text x="565" y="192" text-anchor="middle" font-size="11" fill="var(--text-mute)">自适应门限 / 恒虚警</text>
+
+          <line x1="171" y1="178" x2="182" y2="178" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M182 178 L175 174 M182 178 L175 182" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <line x1="326" y1="178" x2="337" y2="178" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M337 178 L330 174 M337 178 L330 182" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <line x1="481" y1="178" x2="492" y2="178" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M492 178 L485 174 M492 178 L485 182" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 换行箭头 2：⑧ 底部 → ⑨ 顶部 -->
+          <path d="M565 200 V228 H120 V252" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <path d="M120 256 L116 249 M120 256 L124 249" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 第三行：特征 / 识别 / 输出 -->
+          <rect x="50" y="256" width="170" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="135" y="275" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑨ 提取目标特征</text>
+          <text x="135" y="292" text-anchor="middle" font-size="11" fill="var(--text-mute)">距离 / 速度 / RCS / 微多普勒</text>
+
+          <rect x="255" y="256" width="170" height="44" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="340" y="275" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑩ 算法·模型识别</text>
+          <text x="340" y="292" text-anchor="middle" font-size="11" fill="var(--text-mute)">航迹跟踪 / 分类器 / 深度学习</text>
+
+          <rect x="460" y="256" width="170" height="44" rx="6" fill="var(--surface-2)" stroke="var(--semi)"/>
+          <text x="545" y="275" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">⑪ 输出参数与类别</text>
+          <text x="545" y="292" text-anchor="middle" font-size="11" fill="var(--text-mute)">距离·方位·速度·机型·置信度</text>
+
+          <line x1="221" y1="278" x2="252" y2="278" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M252 278 L245 274 M252 278 L245 282" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <line x1="426" y1="278" x2="457" y2="278" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M457 278 L450 274 M457 278 L450 282" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 底部注释 -->
+          <text x="340" y="328" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">
+            每一级都在做同一件事：提高信噪比、压缩无关维度——把"一根毛刺"逐步变成"一个有名字的目标"
+          </text>
+        </svg>
+        <figcaption>图 1：雷达信号处理全链路。虚线框代表不需要任何动作就会自动混入的噪声与杂波——它们是与目标信号同在的"背景"，后续每一级都为压制它们而生。</figcaption>
+      </figure>
+
+      <p>
+        注意流水线的一个结构性事实：<strong>前三步几乎不消耗算力，后八步几乎全是算力</strong>。
+        现代雷达的竞争，一大半是信号处理芯片与算法的竞争——这也是它出现在一个半导体学习笔记里的原因。
+      </p>
+
+      <h2 id="s4">4. 模拟前端：在"最脏"的世界里先活下来</h2>
+
+      <h3>4.1 波形产生与发射：干净的开始</h3>
+      <p>
+        一切从<strong>波形产生器</strong>开始：晶体振荡器提供极其稳定的基准频率
+        （秒级漂移仅 10<sup>-11</sup> 量级——这是全相参体制的根基），
+        频率综合器在其上生成载波，再由波形存储器输出预先设计好的调制波形
+        （简单脉冲、线性调频 LFM、相位编码等）。
+        发射机随后把这份"温和"的小信号放大到千瓦甚至兆瓦级——
+        老式雷达用磁控管（一个管子包办振荡+放大，但波形不可控），
+        现代雷达用<strong>全相参固态发射</strong>：每个收发组件（T/R module）独立放大，
+        波形、相位完全可控。相控阵雷达把上千个 T/R 组件铺成阵列，
+        靠控制每个组件的发射相位让波束"电扫"——机械转动一个自由度都不需要。
+      </p>
+
+      <h3>4.2 天线接收回波：弱势群体的诞生</h3>
+      <p>
+        发射结束后天线切换到接收（收发开关 T/R duplexer 防止大功率烧毁接收机）。
+        此刻回波有多弱？发射 1 MW、目标 200 km 外、RCS 5 m²——
+        按雷达方程算回来，回波功率约 <strong>10<sup>-15</sup> 瓦量级</strong>，
+        比发射弱了 10<sup>18</sup> 倍（180 dB）。接收机的第一级是
+        <strong>低噪声放大器（LNA）</strong>，它的噪声系数几乎决定了整个系统的灵敏度——
+        这也是为什么雷达 T/R 组件的 GaN LNA 是兵家必争之地（与本站
+        《半导体材料全景》中 GaN 的高功率密度特性直接呼应）。
+      </p>
+
+      <h3>4.3 噪声与杂波：两种完全不同的"坏人"</h3>
+      <p>
+        回波在路上和机器里被两类干扰污染，性质截然不同：
+      </p>
+      <table>
+        <thead><tr><th>类型</th><th>来源</th><th>统计特性</th><th>对抗手段</th></tr></thead>
+        <tbody>
+          <tr><td><strong>噪声</strong></td><td>电阻热、接收机内部</td><td>宽带、不可预测、功率低（kTB，毫微瓦级）</td><td>滤波、累积、处理增益</td></tr>
+          <tr><td><strong>杂波</strong></td><td>地物、海面、云雨、鸟群</td><td><strong>强相关</strong>、多普勒集中于零频附近、功率可高出噪声 60 dB 以上</td><td>动目标处理（MTI/MTD）</td></tr>
+        </tbody>
+      </table>
+      <p>
+        这个区分是全篇最重要的概念之一：噪声是"随机背景"，杂波是"缓慢的同伙"——
+        它们听起来都是干扰，但统计行为完全不同，所以后面的数字处理会用<strong>两种完全不同的武器</strong>分别对付。
+      </p>
+
+      <h3>4.4 模拟滤波与 ADC：模拟世界的交接仪式</h3>
+      <p>
+        下变频到中频后，<strong>模拟滤波</strong>做两件事：带通滤波选出信号信道、
+        抑制邻道干扰；<strong>抗混叠低通</strong>保证进入 ADC 前带宽受限。
+        然后 ADC 完成模拟到数字的不可逆交接。两个关键参数：
+      </p>
+      <ul>
+        <li><strong>采样率</strong>：奈奎斯特定理要求 fs ≥ 2B（B 为信号带宽），否则频谱折叠、信息永久损失。带宽 B 同时决定了距离分辨率 ΔR = c/2B——<strong>带宽就是分辨率，分辨率就是采样率，采样率就是钱</strong>。</li>
+        <li><strong>量化位数</strong>：12 bit 动态范围约 72 dB，14 bit 约 84 dB。为什么需要这么大？因为杂波可比弱目标强几万倍——<strong>位数不够，强杂波直接把 ADC 顶到饱和，弱目标连被量化的机会都没有</strong>。高动态范围 ADC 是雷达数字化的核心瓶颈之一。</li>
+      </ul>
+      <p>
+        从 ADC 输出那一刻起，信号变成一串复数样本，物理世界退场，数学登场。
+      </p>
+
+      <h2 id="s5">5. 数字处理三部曲：脉冲压缩、MTI/MTD、CFAR</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="脉冲压缩与 CFAR 滑窗检测示意">
+          <!-- 左：脉冲压缩 -->
+          <text x="185" y="28" text-anchor="middle" font-size="13.5" fill="var(--text)" font-weight="700">脉冲压缩：能量与分辨率的和解</text>
+          <!-- 发射长脉冲 -->
+          <rect x="60" y="48" width="250" height="22" fill="var(--semi)" opacity="0.75"/>
+          <text x="185" y="88" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">发射：宽脉冲 τ（能量大 → 传得远）</text>
+          <line x1="185" y1="94" x2="185" y2="112" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M185 116 L181 109 M185 116 L189 109" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <!-- 匹配滤波器 -->
+          <rect x="105" y="118" width="160" height="34" rx="6" fill="var(--surface)" stroke="var(--fin)"/>
+          <text x="185" y="139" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">匹配滤波器</text>
+          <text x="290" y="139" font-size="11" fill="var(--text-mute)">= 与波形副本做相关</text>
+          <line x1="185" y1="152" x2="185" y2="170" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M185 174 L181 167 M185 174 L189 167" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+          <!-- 输出窄峰 -->
+          <path d="M85 262 L175 262 L183 200 L191 262 L285 262" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <text x="185" y="286" text-anchor="middle" font-size="11.5" fill="var(--text-soft)">输出：窄峰 1/B（ΔR = c/2B → 分得开）</text>
+          <text x="185" y="304" text-anchor="middle" font-size="11" fill="var(--text-mute)">增益 ≈ 时宽带宽积 BT，旁瓣用加窗压制</text>
+
+          <!-- 分隔线 -->
+          <line x1="345" y1="20" x2="345" y2="295" stroke="var(--border)" stroke-width="1"/>
+
+          <!-- 右：CFAR -->
+          <text x="510" y="28" text-anchor="middle" font-size="13.5" fill="var(--text)" font-weight="700">CFAR：门限跟着环境走</text>
+          <!-- 噪声底线 + 尖峰 -->
+          <path d="M380 205 L395 198 L410 207 L425 199 L440 206 L455 197 L470 205 L485 200 L500 206 L515 110 L530 204 L545 198 L560 207 L575 200 L590 205 L605 198 L620 206 L635 200"
+                stroke="var(--text-soft)" stroke-width="1.8" fill="none"/>
+          <text x="515" y="98" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="700">目标尖峰</text>
+          <!-- 自适应门限 -->
+          <path d="M380 172 L505 168 L520 170 L640 172" stroke="var(--fin)" stroke-width="1.8" stroke-dasharray="6 4" fill="none"/>
+          <text x="392" y="158" font-size="11.5" fill="var(--fin)">自适应门限 = α × 参考单元均值</text>
+          <!-- 单元格 -->
+          <g font-size="9.5" fill="var(--text-mute)">
+            <rect x="380" y="216" width="16" height="14" fill="var(--surface)" stroke="var(--border)"/>
+            <rect x="398" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="416" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="434" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="452" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="470" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="488" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="506" y="216" width="16" height="14" fill="var(--fin)" opacity="0.7"/>
+            <rect x="524" y="216" width="16" height="14" fill="var(--up)" opacity="0.85"/>
+            <rect x="542" y="216" width="16" height="14" fill="var(--fin)" opacity="0.7"/>
+            <rect x="560" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="578" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="596" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+            <rect x="614" y="216" width="16" height="14" fill="var(--down)" opacity="0.55"/>
+          </g>
+          <text x="445" y="248" font-size="11" fill="var(--down)">参考单元（估本底）</text>
+          <text x="532" y="248" text-anchor="middle" font-size="10.5" fill="var(--fin)">保护</text>
+          <text x="532" y="261" text-anchor="middle" font-size="10.5" fill="var(--up)">待检</text>
+          <text x="600" y="248" font-size="11" fill="var(--down)">参考单元</text>
+          <text x="510" y="288" text-anchor="middle" font-size="11" fill="var(--text-mute)">保护单元防止目标能量泄漏抬门限；滑窗逐格移动</text>
+        </svg>
+        <figcaption>图 2：数字域的两个代表性操作。左：脉冲压缩用"宽带宽换分辨率、长时宽换能量"，两者不再矛盾；右：CFAR 用参考单元实时估计噪声本底，让虚警概率在不同杂波环境下保持恒定。</figcaption>
+      </figure>
+
+      <h3>5.1 脉冲压缩：鱼与熊掌的和解协议</h3>
+      <p>
+        第 2 章留下的死结——窄脉冲分辨率高但能量小——由<strong>脉冲压缩</strong>解开。
+        思路堪称优雅：发射一个<strong>宽脉冲</strong>（能量足、传得远），但让它的频率在脉宽内
+        线性扫过一大段带宽（线性调频 LFM）。接收端用<strong>匹配滤波器</strong>处理——
+        数学上就是与发射波形的副本做相关：波形内部各处与副本相关得参差不齐，
+        唯有对齐时刻相关值叠加出一个又窄又高的峰。
+      </p>
+      <p>
+        效果：测距分辨率由带宽决定（ΔR = c/2B，B = 100 MHz → 1.5 米），
+        探测能量由脉宽决定（τ = 100 μs），两者彻底解耦，
+        处理增益约为时宽带宽积 BT（本例 10⁴，即 40 dB）。
+        实现上不必逐点做相关——用 FFT 把信号变到频域乘上匹配谱再变回来
+        （快速卷积），工程上就是一块 DSP/FPGA 的日常。
+        唯一的副作用是<strong>距离旁瓣</strong>：强目标的旁瓣可能盖住旁边的弱目标，
+        常用加窗（Hamming/Taylor）压制到 −40 dB 以下，代价是主瓣略微展宽、
+        信噪比损失 1–2 dB——雷达工程里"没有免费午餐"的又一次体现。
+      </p>
+
+      <h3>5.2 MTI/MTD：利用速度 signatures 区分敌我背景</h3>
+      <p>
+        杂波（地物、山）是静止的，多普勒为零；飞机是动的，多普勒非零——
+        这就是动目标显示（MTI）的全部依据。<strong>两脉冲对消器</strong>把相邻两个脉冲重复周期的
+        回波相减：静止杂波每个周期都一样，相减归零；运动目标的回波相位在周期间持续变化，
+        相减后有剩余。继续升级：三个脉冲双对消、再叠加反馈，杂波抑制可达 40 dB 以上。
+      </p>
+      <p>
+        MTI 的软肋是<strong>盲速</strong>：当多普勒频移恰好等于脉冲重复频率 PRF 的整数倍时，
+        相邻周期相位差为零，动目标被当成杂波一起对消（这就是骑自行车的人速度恰好"对消"时会从屏幕上消失的原因）。
+        工程解法是参差 PRF（周期间故意不等间隔，让盲速错开）。
+        更现代的方案是<strong>MTD（动目标检测）</strong>：在一个相干处理间隔（CPI）内对同一距离门的
+        多个脉冲做 FFT，得到一组<strong>多普勒滤波器组</strong>——静止杂波掉进零频滤波器，
+        不同速度的目标各占一个滤波器，配合杂波图自适应选择通道。MTD 本质上是
+        "MTI + 多普勒滤波 + 杂波图"三位一体的框架，是 20 世纪 70 年代以后雷达的标配。
+      </p>
+
+      <h3>5.3 CFAR：承认不知道噪声多大，就让门限自己学</h3>
+      <p>
+        经过脉冲压缩与 MTD，信噪比已经大幅改善，现在要回答"有没有目标"。
+        检测的本质是设门限：信号超过门限判为目标。门限定多高是个两难——
+        定低了<strong>虚警</strong>（把噪声当目标，系统被假目标淹没），定高了<strong>漏警</strong>（错过真目标）。
+        更麻烦的是噪声与杂波功率随环境变化达几个数量级：固定门限在 clean 环境合适，
+        进了强地物区就满屏虚警。
+      </p>
+      <p>
+        <strong>恒虚警（CFAR）</strong>的答案：门限不是常数，而是随环境实时自适应。
+        最经典的单元平均 CA-CFAR（图 2 右）：在待检测单元两侧各取一排
+        <strong>参考单元</strong>估计当前本底功率，乘上系数 α 得到门限——
+        本底强则门限自动抬高，本底弱则自动降低，虚警概率保持恒定。
+        两个工程细节见功力：参考单元与待检单元之间隔 1–2 个
+        <strong>保护单元</strong>，防止目标能量泄漏进参考集、把自己的门限垫高；
+        杂波边缘和多目标场景下 CA-CFAR 会失灵，改用<strong>有序统计 OS-CFAR</strong>
+        （对参考单元排序后取第 k 大，天然抗野值）。
+        CFAR 的代价是<strong> CFAR 损失</strong>：用有限个样本估计噪声本底不如真值准，
+        等效于损失约 1–3 dB 信噪比——用一点检测灵敏度，换全环境虚警可控，划算。
+      </p>
+
+      <h2 id="s6">6. 从检测到识别：给毛刺一个名字</h2>
+
+      <h3>6.1 点迹 → 航迹：时间维度的第二次增益</h3>
+      <p>
+        CFAR 输出的是一个个孤立的<strong>点迹</strong>（某距离、某方位、某速度上有个东西）。
+        下一步是把跨扫描周期间的点迹串成<strong>航迹</strong>：先做数据关联
+        （新点迹和已有航迹预测位置作比较，最近邻或全局最近邻算法），再用
+        <strong>跟踪滤波器</strong>平滑估计——经典的 α-β 滤波到卡尔曼滤波，
+        机动目标则用交互多模型（IMM）在"匀速"与"机动"假设间软切换。
+        航迹还解决了一个隐蔽问题：单帧的虚假点迹下一帧对不上，会被"航迹起始/终止"逻辑自然淘汰——
+        <strong>时间维度的关联，本身就是一次免费的虚警过滤</strong>。
+      </p>
+
+      <h3>6.2 特征提取：回波里的指纹</h3>
+      <p>
+        确认了"有个目标"之后，识别需要特征。雷达回波可提取的"指纹"相当丰富：
+      </p>
+      <table>
+        <thead><tr><th>特征</th><th>物理来源</th><th>能区分什么</th></tr></thead>
+        <tbody>
+          <tr><td>运动参数</td><td>位置、速度、航向、加速度</td><td>飞行剖面：客机巡航 vs 战机机动</td></tr>
+          <tr><td>RCS 及其起伏</td><td>目标尺寸、外形、姿态角</td><td>大目标 / 小目标；起伏周期反映结构</td></tr>
+          <tr><td><strong>微多普勒</strong></td><td>旋翼、发动机叶片、人体肢体的微运动</td><td>直升机（叶片调制线谱）vs 固定翼；步态识别人</td></tr>
+          <tr><td>高分辨距离像（HRRP）</td><td>宽带波形下各散射中心的距离分布</td><td>目标长度与结构骨架</td></tr>
+          <tr><td>ISAR 二维像</td><td>目标自转 + 宽带合成孔径</td><td>二维轮廓，接近"照片"级</td></tr>
+        </tbody>
+      </table>
+      <p>
+        微多普勒尤其巧妙：直升机的旋翼在主体运动之上叠加周期性微运动，
+        在多普勒谱上形成特征的调制边带——像一个声音签名。
+        人走路的肢体摆动同样在谱上留下"步态纹"，远距离非接触识别行人的研究正基于此。
+      </p>
+
+      <h3>6.3 算法识别：从模板匹配到深度学习</h3>
+      <p>
+        有了特征，分类器接管。传统路线是<strong>特征工程 + 浅层模型</strong>：
+        手工设计统计特征（谱熵、旁瓣结构、尺寸估计），再用决策树、SVM 或最近邻做模板匹配——
+        可解释性强、小样本友好，至今仍是主用体制。现代路线是<strong>深度学习</strong>：
+        一维 CNN 直接吃 HRRP 序列，二维 CNN 处理 ISAR 像或多普勒谱图，
+        循环/注意力结构处理微多普勒时序——在公开数据集上，识别率普遍越过 95%。
+        但雷达识别有两大独特难点：<strong>样本稀缺</strong>（真实军机回波密不可得，
+        仿真数据与现实存在域差距）与<strong>可信度要求</strong>（把民航机误判为威胁的代价不可承受），
+        所以工程上深度学习常以"置信度输出 + 人工复核"的辅助角色落地。
+        另有一条独立的硬通道不能忘记：<strong>敌我识别（IFF）</strong>——询问机发出加密询问，
+        己方应答机回答，配合雷达航迹使用。算法再好，也替代不了这一条制度性通道。
+      </p>
+
+      <h3>6.4 输出：一个目标的完整档案</h3>
+      <p>
+        流水线的终点不是"滴滴"一声，而是一份结构化档案：
+        目标批号、斜距 / 方位 / 俯仰（或经纬度与高度）、径向速度、航向航速、
+        RCS 估计、类别与置信度，随后送往显示器、指挥系统与数据链。
+        从 10<sup>-15</sup> 瓦的一缕回波到这份档案，整条链路历经十一级，
+        每一级都贡献了属于自己的那几分贝。
+      </p>
+
+      <h2 id="s7">7. 工程边界、易错点与自测</h2>
+
+      <h3>7.1 这套链路的边界在哪里</h3>
+      <ul>
+        <li><strong>模糊问题</strong>：PRF 高了测速不模糊但测距模糊（远目标回波"迟到"被算近），PRF 低了反之——距离-多普勒模糊是体制级权衡，参差 PRF / 多 PRF 交错解算只是缓解而非消除；</li>
+        <li><strong>低角与海杂波</strong>：掠海目标与海面杂波在角度上不可分，海尖峰杂波非高斯，CFAR 与 MTD 都会退化——反舰导弹末段探测至今是难题；</li>
+        <li><strong>隐身与电子战</strong>：RCS 压缩 30 dB 意味着探测距离缩到 18%，防御方以低频雷达（隐身外形对低频失效）、多基地（从侧面看 σ 大）反制；干扰与抗干扰（捷变频、旁瓣对消、波形捷变）是永不落幕的博弈；</li>
+        <li><strong>与半导体行业的联系</strong>：AESA 相控阵的 GaN T/R 组件、高动态范围 ADC、FPGA/GPU 实时处理——现代雷达的军备竞赛已完全落在宽禁带半导体与数字芯片上，与本站《半导体材料全景》《存储器》多篇内容互为注脚。</li>
+      </ul>
+
+      <h3>7.2 三个常见误区</h3>
+      <ul>
+        <li><strong>"雷达测的是反射，目标反射越强越容易发现"</strong>：检测看的是<strong>信噪比</strong>而非绝对回波强度——强杂波背景里的大目标，可能不如干净背景里的小目标好检；</li>
+        <li><strong>"脉冲压缩让回波变强了"</strong>：回波本身没变，是处理把分散在宽脉冲里的能量<strong>重新聚焦</strong>成一个窄峰——能量守恒，分布改变了而已；</li>
+        <li><strong>"CFAR 检测出的一定是目标"</strong>：CFAR 只保证虚警<strong>概率</strong>恒定，不保证为零——每次检测都有虚警率，航迹关联再兜底；恒虚警 ≠ 无虚警。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：脉冲压缩为什么能同时做到"看得远"和"分得开"？代价是什么？</summary>
+        <div class="answer">发射宽脉冲保能量（看得远），脉内调频展宽带宽，接收端匹配滤波把宽脉冲
+        相关聚焦成 1/B 的窄峰（分得开，ΔR=c/2B）——能量与分辨率解耦，增益约 BT。
+        代价是距离旁瓣：需加窗压制到 −40 dB，付出主瓣展宽与 1–2 dB 信噪比损失。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：MTI 为什么能消地物杂波？"盲速"是怎么产生的、如何缓解？</summary>
+        <div class="answer">静止杂波相邻周期回波完全相同，两脉冲相减归零；动目标相位周期间变化，相减有剩余。
+        当多普勒频移恰为 PRF 整数倍时，相邻周期相位差为零，动目标被当杂波对消——即盲速。
+        缓解：参差 PRF 使盲速点错开，或改用 MTD 多普勒滤波器组直接在频域分离。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：CFAR"恒虚警"的代价是什么？保护单元起什么作用？</summary>
+        <div class="answer">用有限参考单元估计噪声本底，估计误差等效损失约 1–3 dB 信噪比（CFAR 损失），
+        且杂波边缘处估计失真会造成虚警尖峰或漏检。保护单元隔开待检与参考单元，
+        防止目标能量泄漏进参考集抬高本底估计、把"自己"的门限垫高导致漏检。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：雷达 ADC 为什么需要 12–14 bit 的高位数？位数不足会发生什么？</summary>
+        <div class="answer">杂波可比弱目标强 60 dB（几千到几万倍），ADC 动态范围必须容纳强杂波。
+        位数不足时强杂波占满量化区间甚至饱和，弱目标的量化层次被吞掉——
+        信号还在，但信息已被"削顶"，数字域再强的算法也无法恢复。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：为什么说现代雷达的竞争"一半在半导体"？举出至少两个器件层面。</summary>
+        <div class="answer">① GaN/SiC 功率器件：AESA 每个 T/R 组件的功放与低噪放，GaN 高功率密度
+        直接提升发射功率与接收灵敏度；② 高动态范围 ADC：决定数字化的信息上限；
+        ③ FPGA/GPU/专用 DSP：脉冲压缩、MTD、CFAR 的实时算力载体。
+        每一 dB 的系统性能，最终都落到半导体器件的某一参数上。</div>
+      </details>
+
+      <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 21 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 22 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li class="current">第 23 篇：雷达信号处理全链路 · 从回波到目标</li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 23 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#雷达</span>
+      <span class="chip">#信号处理</span>
+      <span class="chip">#脉冲压缩</span>
+      <span class="chip">#MTI-MTD</span>
+      <span class="chip">#CFAR</span>
+      <span class="chip">#多普勒</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

@@ -1,6 +1,23 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-05 23:03:04  共 48 篇 */
+/* 生成时间: 2026-10-05 23:39:03  共 49 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "雷达信号处理全链路：从回波到目标",
+    "url": "posts/semiconductor/2026-10-05-雷达信号处理全链路-从回波到目标.html",
+    "date": "2026-10-05",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "从蝙蝠回声讲到 CFAR 恒虚警检测：一条信号如何走完发射、接收、脉冲压缩、多普勒滤波、目标检测与识别的完整链路。由浅入深讲清现代雷达",
+    "tags": [
+      "雷达",
+      "信号处理",
+      "脉冲压缩",
+      "匹配滤波",
+      "MTI",
+      "MTD"
+    ],
+    "size": 40.7
+  },
   {
     "title": "量子计算：从量子比特到量子优越性",
     "url": "posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html",
@@ -16,7 +33,7 @@ window.SITE_POSTS = [
       "Shor算法",
       "量子优越性"
     ],
-    "size": 23.0
+    "size": 23.2
   },
   {
     "title": "类脑计算与存算一体：后摩尔时代的两条突围路线",
@@ -33,7 +50,7 @@ window.SITE_POSTS = [
       "忆阻器",
       "脉冲神经网络"
     ],
-    "size": 30.4
+    "size": 30.5
   },
   {
     "title": "光计算：用光子代替电子的算力革命",
@@ -50,7 +67,7 @@ window.SITE_POSTS = [
       "微环谐振器",
       "CPO"
     ],
-    "size": 24.6
+    "size": 24.7
   },
   {
     "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
@@ -67,7 +84,7 @@ window.SITE_POSTS = [
       "GAA",
       "HKMG"
     ],
-    "size": 55.5
+    "size": 55.7
   },
   {
     "title": "存储器 · DRAM、NAND 与新型存储",
@@ -84,7 +101,7 @@ window.SITE_POSTS = [
       "3D",
       "浮栅"
     ],
-    "size": 85.1
+    "size": 85.3
   },
   {
     "title": "半导体设备与产业链 · 核心装备全景",
@@ -101,7 +118,7 @@ window.SITE_POSTS = [
       "离子注入",
       "CMP"
     ],
-    "size": 120.8
+    "size": 121.0
   },
   {
     "title": "半导体材料全景 · Si、SiC、GaN 与宽禁带",
@@ -118,7 +135,7 @@ window.SITE_POSTS = [
       "碳化硅",
       "氮化镓"
     ],
-    "size": 180.1
+    "size": 180.2
   },
   {
     "title": "先进封装与系统级集成 · 2.5D、3D 与 Chiplet",
@@ -135,7 +152,7 @@ window.SITE_POSTS = [
       "TSV",
       "hybrid"
     ],
-    "size": 70.3
+    "size": 70.4
   },
   {
     "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
@@ -152,7 +169,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 76.1
+    "size": 76.2
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -169,7 +186,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 20.8
+    "size": 20.9
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -186,7 +203,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 21.9
+    "size": 22.1
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -203,7 +220,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 25.3
+    "size": 25.4
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -220,7 +237,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 69.8
+    "size": 70.0
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -247,7 +264,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 24.6
+    "size": 24.7
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -264,7 +281,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 69.4
+    "size": 69.6
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -281,7 +298,7 @@ window.SITE_POSTS = [
       "PN结基础",
       "半导体物理"
     ],
-    "size": 21.2
+    "size": 21.3
   },
   {
     "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
@@ -298,7 +315,7 @@ window.SITE_POSTS = [
       "选择比",
       "各向异性"
     ],
-    "size": 75.0
+    "size": 75.2
   },
   {
     "title": "光刻工艺详解 · 从光学原理到 EUV",
@@ -315,7 +332,7 @@ window.SITE_POSTS = [
       "EUV",
       "High-NA"
     ],
-    "size": 59.5
+    "size": 59.6
   },
   {
     "title": "PN 结原理与特性",
@@ -332,7 +349,7 @@ window.SITE_POSTS = [
       "齐纳击穿",
       "雪崩击穿"
     ],
-    "size": 19.2
+    "size": 19.3
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -349,7 +366,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 21.4
+    "size": 21.6
   },
   {
     "title": "CMP 平坦化、量测与良率控制",
@@ -366,7 +383,7 @@ window.SITE_POSTS = [
       "终点检测",
       "椭偏仪"
     ],
-    "size": 85.2
+    "size": 85.4
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -383,7 +400,7 @@ window.SITE_POSTS = [
       "动态功耗",
       "建立时间"
     ],
-    "size": 20.1
+    "size": 20.3
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -653,7 +670,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 24
+    "count": 25
   },
   {
     "id": "finance",
