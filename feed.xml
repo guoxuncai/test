@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 00:12:09 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 00:24:40 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
@@ -158,7 +158,7 @@
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-PN结原理与特性.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电]]></description>
+      <description><![CDATA[从电子管到 PN 结的历史脉络讲起，内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电、为什么改变世界]]></description>
     </item>
     <item>
       <title>MOSFET 工作原理与特性曲线</title>

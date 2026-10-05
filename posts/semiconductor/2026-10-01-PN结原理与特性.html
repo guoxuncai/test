@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PN 结原理与特性</title>
-<meta name="description" content="内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电。">
-<meta name="keywords" content="PN结,内建电势,耗尽层,二极管方程,齐纳击穿,雪崩击穿,半导体">
+<meta name="description" content="从电子管到 PN 结的历史脉络讲起，内建电势、耗尽层宽度、理想二极管方程与击穿机制全推导，配结构图与能带图，讲清 PN 结为什么单向导电、为什么改变世界。">
+<meta name="keywords" content="PN结,电子管,真空二极管,晶体管,内建电势,耗尽层,二极管方程,齐纳击穿,雪崩击穿,半导体">
 <meta name="date" content="2026-10-01">
 
 <link rel="stylesheet" href="../../assets/css/article.css">
@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 3 篇</span><span class="sep"></span>
-      <span>阅读约 12 分钟</span>
+      <span>阅读约 15 分钟</span>
     </div>
 
     <div class="content">
@@ -42,17 +42,126 @@
       <div class="toc">
         <div class="toc-title">目录</div>
         <ol>
-          <li><a href="#s1">PN 结是怎么形成的</a></li>
-          <li><a href="#s2">内建电势与耗尽层宽度</a></li>
-          <li><a href="#s3">正向偏置：势垒降低、电流指数增长</a></li>
-          <li><a href="#s4">反向偏置与击穿</a></li>
-          <li><a href="#s5">电容效应</a></li>
-          <li><a href="#s6">从特性到应用</a></li>
-          <li><a href="#s7">易错点与自测</a></li>
+          <li><a href="#s1">从电子管到 PN 结：一段改变世界的历史</a></li>
+          <li><a href="#s2">PN 结是怎么形成的</a></li>
+          <li><a href="#s3">内建电势与耗尽层宽度</a></li>
+          <li><a href="#s4">正向偏置：势垒降低、电流指数增长</a></li>
+          <li><a href="#s5">反向偏置与击穿</a></li>
+          <li><a href="#s6">电容效应</a></li>
+          <li><a href="#s7">从特性到应用</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
         </ol>
       </div>
 
-      <h2 id="s1">1. PN 结是怎么形成的</h2>
+      <h2 id="s1">1. 从电子管到 PN 结：一段改变世界的历史</h2>
+
+      <p>在半导体登场之前，电子世界的「心脏」是电子管。理解了它为什么辉煌、又为什么被淘汰，
+      你才能真正掂量出 PN 结这项发现的分量。</p>
+
+      <h3>1.1 真空二极管（1904）：人类第一个「单向阀门」</h3>
+      <p>故事的起点是一盏灯泡。1883 年，爱迪生在改良白炽灯时发现：在灯泡里封入一块金属板并接上正电，
+      板极和灯丝之间会流过微弱电流——这就是「爱迪生效应」。爱迪生本人不明其所以然（电子要到 1897 年才被汤姆孙发现），
+      但它记录了一个事实：<strong>热灯丝发射出的电荷，只朝一个方向流动</strong>。</p>
+      <p>1904 年，英国工程师弗莱明（John Ambrose Fleming）把这个效应做成了器件——<strong>真空二极管</strong>：
+      热阴极发射电子，只有板极接正电位时电子才能飞过去，反接即截止。人类第一次拥有了没有活动部件的整流与检波元件，
+      无线电通信从此有了「耳朵」。你会发现，它的核心特征正是几十年后 PN 结二极管的同款本领——<em>单向导电</em>。</p>
+
+      <h3>1.2 真空三极管（1906）：放大时代与电子管的黄金三十年</h3>
+      <p>1906 年，德福雷斯特（Lee de Forest）在真空二极管的阴极与板极之间插入一根栅状电极，造出三极管（Audion）：
+      栅极电压的微小变化，可以成倍地控制板极电流——<strong>电信号放大</strong>就此诞生。
+      放大 + 开关 + 振荡，电子管撑起了广播、长途电话、雷达和第一代电子计算机的整整三十年。</p>
+
+      <div class="kv">
+        <div><div class="v">17,468 只</div><div class="l">ENIAC 使用的电子管数量</div></div>
+        <div><div class="v">167 ㎡</div><div class="l">ENIAC 占地面积</div></div>
+        <div><div class="v">150 kW</div><div class="l">ENIAC 功耗（够一个小镇照明）</div></div>
+        <div><div class="v">每几天</div><div class="l">就要烧坏更换一次电子管</div></div>
+      </div>
+
+      <h3>1.3 电子管的天花板</h3>
+      <p>电子管本质上是在<em>真空中搬运电子</em>：必须维持加热阴极、维持真空封装，因此体积大、功耗高、寿命短、需要预热。
+      更致命的是规模问题——电路越复杂，所需器件数量越多，而电子管的尺寸和可靠性都无法随之进步。
+      二战后计算机、雷达数字化对器件数量的需求指数级膨胀，真空技术撞上了物理天花板。
+      出路只剩一条：<strong>到固体里去找电子的开关</strong>。</p>
+
+      <h3>1.4 固体的回答（1947–1949）：从点接触晶体管到 PN 结理论</h3>
+      <p>其实「猫须检波器」这种半导体二极管早在电子管之前就存在，只是没人说得清它为什么工作。
+      战时雷达对锗、硅检波器的迫切需求，把半导体物理推到了聚光灯下。1947 年 12 月，贝尔实验室的
+      巴丁（Bardeen）与布拉顿（Brattain）在锗表面做出<strong>点接触晶体管</strong>，第一次实现固态放大；
+      1948 年肖克利（Shockley）提出结型晶体管理论，并在 1949 年发表划时代论文
+      《半导体中 PN 结与结型晶体管的理论》——用能带图、费米统计和连续性方程，
+      把 PN 结的正反向电流<strong>定量地算了出来</strong>。</p>
+      <p>这三次标志性突破背后，是同一个物理核心：<strong>PN 结中载流子的注入与控制</strong>。
+      固体器件没有真空、不需要预热、可以微型化——集成电路的大门由此打开。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="从电子管到 PN 结的时间线">
+          <!-- 时代背景带 -->
+          <rect x="50" y="66" width="270" height="104" rx="8" fill="var(--down)" fill-opacity=".07"/>
+          <rect x="320" y="66" width="315" height="104" rx="8" fill="var(--semi)" fill-opacity=".09"/>
+          <text x="60" y="56" font-size="12" fill="var(--down)" font-weight="700">电子管时代 · 真空器件</text>
+          <text x="625" y="56" text-anchor="end" font-size="12" fill="var(--semi)" font-weight="700">半导体时代</text>
+
+          <!-- 主时间轴 -->
+          <line x1="55" y1="120" x2="630" y2="120" stroke="var(--text-mute)" stroke-width="1.5"/>
+          <path d="M630 120 L621 115.5 M630 120 L621 124.5" stroke="var(--text-mute)" stroke-width="1.5" fill="none"/>
+
+          <!-- 1883 爱迪生效应 -->
+          <circle cx="95" cy="120" r="5" fill="var(--down)"/>
+          <line x1="95" y1="120" x2="95" y2="136" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="95" y="152" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1883</text>
+          <text x="95" y="168" text-anchor="middle" font-size="11" fill="var(--text-mute)">爱迪生效应</text>
+
+          <!-- 1904 真空二极管 -->
+          <circle cx="190" cy="120" r="5" fill="var(--down)"/>
+          <line x1="190" y1="120" x2="190" y2="104" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="190" y="98" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1904</text>
+          <text x="190" y="82" text-anchor="middle" font-size="11" fill="var(--text-mute)">真空二极管 · 弗莱明</text>
+
+          <!-- 1906 真空三极管 -->
+          <circle cx="290" cy="120" r="5" fill="var(--down)"/>
+          <line x1="290" y1="120" x2="290" y2="136" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="290" y="152" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1906</text>
+          <text x="290" y="168" text-anchor="middle" font-size="11" fill="var(--text-mute)">真空三极管 · 德福雷斯特</text>
+
+          <!-- 1947 点接触晶体管 -->
+          <circle cx="410" cy="120" r="5" fill="var(--semi)"/>
+          <line x1="410" y1="120" x2="410" y2="104" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="410" y="98" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1947</text>
+          <text x="410" y="82" text-anchor="middle" font-size="11" fill="var(--text-mute)">点接触晶体管 · 贝尔实验室</text>
+
+          <!-- 1949 PN 结理论（重点强调） -->
+          <circle cx="505" cy="120" r="6" fill="var(--up)"/>
+          <circle cx="505" cy="120" r="10" fill="none" stroke="var(--up)" stroke-width="1.2"/>
+          <line x1="505" y1="120" x2="505" y2="136" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="505" y="152" text-anchor="middle" font-size="12" fill="var(--up)" font-weight="700">1949</text>
+          <text x="505" y="168" text-anchor="middle" font-size="11" fill="var(--up)">肖克利 PN 结理论</text>
+
+          <!-- 1959 集成电路 -->
+          <circle cx="595" cy="120" r="5" fill="var(--semi)"/>
+          <line x1="595" y1="120" x2="595" y2="104" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="595" y="98" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1959</text>
+          <text x="595" y="82" text-anchor="middle" font-size="11" fill="var(--text-mute)">集成电路</text>
+        </svg>
+        <figcaption>图 1：从电子管到 PN 结的关键节点。肖克利的 PN 结理论把器件设计从经验试错变成了可计算的科学。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>PN 结发现为什么是里程碑？</b>三个理由：<br>
+        ① <strong>可计算</strong>——电子管的特性靠经验调试，PN 结的特性可以由掺杂浓度和偏置电压直接推导（见本章后续公式），
+        器件设计第一次成为一门「先算后造」的科学；<br>
+        ② <strong>多能</strong>——同一个结，正偏导通是整流管，反偏击穿是稳压管，注入复合发光是 LED，
+        光生载流子被内建电场分离是太阳能电池（详见第 7 节表格）；<br>
+        ③ <strong>可集成</strong>——无真空、无预热、微米级尺寸，才有后来把亿万个结刻进一枚芯片的集成电路时代。
+      </div>
+
+      <h3>1.5 应用前景：从一枚结到万亿产业</h3>
+      <p>PN 结是所有半导体器件的「公共底座」：MOSFET 的源漏是两个背靠背的结，BJT 是两个结对叠，
+      激光二极管驱动了整个光纤通信时代，宽禁带材料（SiC/GaN）做的结正在改写功率电子与射频的格局，
+      光伏结则在能源转型中承担越来越大的发电份额。可以说：看懂一个 PN 结，就看懂了从手机充电器
+      到国家电网、从 LED 灯泡到卫星通信的底层钥匙。</p>
+
+      <h2 id="s2">2. PN 结是怎么形成的</h2>
 
       <p>把 P 型和 N 型半导体做到同一块硅上，交界处会发生三件事：</p>
 
@@ -103,10 +212,10 @@
           <line x1="405" y1="46" x2="405" y2="58" stroke="var(--text-mute)" stroke-width="1.2"/>
           <text x="340" y="34" text-anchor="middle" font-size="13" fill="var(--text)">W（耗尽层宽度）</text>
         </svg>
-        <figcaption>图 1：PN 结结构。交界面两侧留下不能移动的电离杂质，形成空间电荷区与内建电场。</figcaption>
+        <figcaption>图 2：PN 结结构。交界面两侧留下不能移动的电离杂质，形成空间电荷区与内建电场。</figcaption>
       </figure>
 
-      <h2 id="s2">2. 内建电势与耗尽层宽度</h2>
+      <h2 id="s3">3. 内建电势与耗尽层宽度</h2>
 
       <div class="formula-block">
         <span class="fl">V<sub>bi</sub> = (kT/q) · ln( N<sub>A</sub> N<sub>D</sub> / n<sub>i</sub>² )</span>
@@ -128,7 +237,7 @@
         <div><div class="v">11.7 ε₀</div><div class="l">硅的介电常数 ε<sub>s</sub></div></div>
       </div>
 
-      <h2 id="s3">3. 正向偏置：势垒降低，电流指数增长</h2>
+      <h2 id="s4">4. 正向偏置：势垒降低，电流指数增长</h2>
 
       <p>正向偏置（P 接正、N 接负）时，外电场削弱内建电场 → 势垒从 qV<sub>bi</sub> 降到 q(V<sub>bi</sub> − V<sub>A</sub>) →
       扩散电流急剧增大，而漂移电流基本不变 → 净电流呈指数增长。</p>
@@ -168,7 +277,7 @@
           <line x1="122" y1="205" x2="122" y2="215" stroke="var(--text)" stroke-width="1.2"/>
           <text x="96" y="232" font-size="12" fill="var(--text)">−V<sub>BR</sub></text>
         </svg>
-        <figcaption>图 2：二极管 I-V 特性。正向呈指数增长、反向仅有微安级饱和电流，超过击穿电压后电流急剧上升。</figcaption>
+        <figcaption>图 3：二极管 I-V 特性。正向呈指数增长、反向仅有微安级饱和电流，超过击穿电压后电流急剧上升。</figcaption>
       </figure>
 
       <div class="note">
@@ -176,7 +285,7 @@
         所以硅二极管正向电压每增加约 60 mV，电流就增大 10 倍 —— 这个数量感在估算电路时极其好用。
       </div>
 
-      <h2 id="s4">4. 反向偏置与击穿</h2>
+      <h2 id="s5">5. 反向偏置与击穿</h2>
 
       <p>反偏时耗尽层变宽、势垒升高，只剩下由少子漂移形成的微小电流 I<sub>S</sub>（理想情况下几乎与电压无关）。
       但电压加到一定程度会发生<strong>击穿</strong>，两种机制完全不同：</p>
@@ -195,7 +304,7 @@
         真正烧毁器件的是<em>热击穿</em>：功耗使结温升高 → 载流子增多 → 电流更大 → 温度更高，形成正反馈。
       </div>
 
-      <h2 id="s5">5. 电容效应</h2>
+      <h2 id="s6">6. 电容效应</h2>
 
       <table>
         <thead><tr><th>类型</th><th>公式</th><th>主导条件</th><th>工程意义</th></tr></thead>
@@ -210,7 +319,7 @@
         也是射频电路中用电压调谐频率的基础。
       </div>
 
-      <h2 id="s6">6. 从特性到应用</h2>
+      <h2 id="s7">7. 从特性到应用</h2>
 
       <table>
         <thead><tr><th>器件</th><th>利用的特性</th><th>偏置状态</th></tr></thead>
@@ -224,7 +333,7 @@
         </tbody>
       </table>
 
-      <h2 id="s7">7. 易错点与自测</h2>
+      <h2 id="s8">8. 易错点与自测</h2>
 
       <div class="note">
         <b>三个高频误区：</b><br>
