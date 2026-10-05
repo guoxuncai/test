@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>光计算：用光子代替电子的算力革命</title>
+<meta name="description" content="光已经统治了通信，为什么计算还握在电子手里？从马赫-曾德尔干涉仪到光子张量核，讲清光计算做矩阵乘法的物理原理、关键器件、产业进展与冷静的短板分析。">
+<meta name="keywords" content="光计算,光子芯片,硅光,马赫曾德尔干涉仪,微环谐振器,CPO,共封装光学,光互连">
+<meta name="date" content="2026-10-05">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 产业与前沿</span>
+    <h1 class="title">光计算：用光子代替电子的算力革命</h1>
+    <div class="meta">
+      <span>2026-10-05</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 21 篇</span><span class="sep"></span>
+      <span>阅读约 18 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        光纤已经承载了全球 99% 以上的洲际数据流量，你的家庭宽带走的也是光——
+        <strong>在"传数据"这件事上，光子早就战胜了电子</strong>。可在芯片内部，计算仍由电子完成。
+        为什么不让光来算？这一篇从生活直觉讲到马赫-曾德尔干涉仪的矩阵乘法，
+        讲清光计算的原理、器件、产业进展，以及它离取代 GPU 还差哪几步。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">直觉入门：光子为什么快</a></li>
+          <li><a href="#s2">物理原理：干涉就是乘法，波导汇流就是加法</a></li>
+          <li><a href="#s3">核心器件：一条光路需要的四样东西</a></li>
+          <li><a href="#s4">技术路线：从光互连到光子张量核</a></li>
+          <li><a href="#s5">产业进展：谁在做光计算</a></li>
+          <li><a href="#s6">冷静的短板分析</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 直觉入门：光子为什么快</h2>
+
+      <p>先建立三个生活级直觉：</p>
+
+      <ol>
+        <li><strong>光子不付"电阻税"</strong>。电子在导线里流动会遇到电阻，发热是功耗的源头，
+        芯片越快越烫。光子在波导里传播几乎不发热——数据中心里 80% 的功耗花在数据搬运与散热上，
+        光正是冲着这笔账来的；</li>
+        <li><strong>光可以"并行不堵车"</strong>。不同波长的光在同一根波导里互不干扰（波分复用），
+        一条光路同时跑几十个颜色通道，等于几十条平行车道；</li>
+        <li><strong>光天生会做乘法</strong>。这是最反直觉也最核心的一点——
+        光波相干叠加时，振幅相乘、能量相加，<em>一束光穿过一片光学结构，矩阵乘法已经完成了</em>。
+        第 2 节展开。</li>
+      </ol>
+
+      <p>一句话总结动机：<strong>AI 时代的算力瓶颈从"算得慢"变成了"搬数据贵"，
+      而光最擅长的恰好是又快又省地传数据</strong>。这与《类脑计算与存算一体》是同一个问题的不同解法：
+      存算一体把计算搬向数据，光计算让数据换一种介质流动。</p>
+
+      <h2 id="s2">2. 物理原理：干涉就是乘法，波导汇流就是加法</h2>
+
+      <p>光计算的心脏是一个叫<strong>马赫-曾德尔干涉仪（MZI）</strong>的结构。
+      它的工作方式可以用一个比喻理解：把一束光分成两路，走两条不同长度的走廊再汇合——
+      两路波峰对波峰则相互增强（相长干涉），波峰对波谷则相互抵消（相消干涉）。
+      走廊里放一个"移相器"，控制两路的相位差，就能精确决定输出光的强度比例。</p>
+
+      <p>数学上，一个 MZI 实现了一个 2×2 的旋转矩阵：输出的两个光强分量，
+      是输入分量做一次"旋转"的结果。<strong>N 个输入、N 个输出的光子网格
+      （把 MZI 像乐高一样排成三角或矩形阵列，即 Clements / Reck 分解架构），
+      可以拼出任意 N×N 酉矩阵——光穿过网格的瞬间，乘加全部完成</strong>。
+      理论上这就是一次光学矩阵-向量乘（GEMV），延迟只有光穿过芯片的飞秒~皮秒级，
+      且几乎不耗电。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MZI 干涉仪与光子网格做矩阵乘法">
+          <!-- 左：单个 MZI -->
+          <text x="170" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">马赫-曾德尔干涉仪（MZI）</text>
+          <!-- 输入 -->
+          <line x1="40" y1="90" x2="100" y2="90" stroke="var(--up)" stroke-width="2.5"/>
+          <path d="M100 90 L90 85 M100 90 L90 95" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <text x="55" y="78" font-size="11" fill="var(--up)">输入光</text>
+          <!-- 分束器1 -->
+          <rect x="100" y="82" width="26" height="16" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1.4"/>
+          <!-- 两臂 -->
+          <path d="M126 90 L170 90 L170 65 L230 65 L230 82" stroke="var(--up)" stroke-width="2.2" fill="none"/>
+          <path d="M126 90 L170 90 L170 115 L230 115 L230 98" stroke="var(--fin)" stroke-width="2.2" fill="none"/>
+          <!-- 移相器 -->
+          <circle cx="170" cy="90" r="0" />
+          <rect x="160" y="48" width="20" height="12" rx="3" fill="var(--fin)" fill-opacity=".2" stroke="var(--fin)" stroke-width="1.2"/>
+          <text x="228" y="52" font-size="10" fill="var(--fin)">移相器 φ</text>
+          <!-- 分束器2 -->
+          <rect x="230" y="82" width="26" height="16" rx="3" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1.4"/>
+          <!-- 输出 -->
+          <line x1="256" y1="90" x2="316" y2="90" stroke="var(--up)" stroke-width="2.5"/>
+          <path d="M316 90 L306 85 M316 90 L306 95" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <text x="300" y="78" font-size="11" fill="var(--up)">输出</text>
+          <text x="170" y="145" text-anchor="middle" font-size="11" fill="var(--text-soft)">两路光波汇合干涉：强度 = f(相位差)</text>
+          <text x="170" y="163" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="600">一个 MZI = 一次 2×2 旋转</text>
+
+          <!-- 分隔 -->
+          <line x1="345" y1="45" x2="345" y2="285" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="5 5"/>
+
+          <!-- 右：网格 -->
+          <text x="520" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">MZI 网格 = 任意矩阵</text>
+          <g fill="var(--semi)" fill-opacity=".22" stroke="var(--semi)" stroke-width="1.3">
+            <rect x="420" y="60" width="20" height="20" rx="3"/>
+            <rect x="470" y="60" width="20" height="20" rx="3"/>
+            <rect x="520" y="60" width="20" height="20" rx="3"/>
+            <rect x="445" y="100" width="20" height="20" rx="3"/>
+            <rect x="495" y="100" width="20" height="20" rx="3"/>
+            <rect x="545" y="100" width="20" height="20" rx="3"/>
+            <rect x="420" y="140" width="20" height="20" rx="3"/>
+            <rect x="470" y="140" width="20" height="20" rx="3"/>
+            <rect x="520" y="140" width="20" height="20" rx="3"/>
+          </g>
+          <g stroke="var(--text-mute)" stroke-width="1">
+            <line x1="440" y1="70" x2="470" y2="70"/><line x1="490" y1="70" x2="520" y2="70"/>
+            <line x1="540" y1="70" x2="560" y2="70"/><line x1="430" y1="80" x2="445" y2="100"/>
+            <line x1="465" y1="110" x2="495" y2="110"/><line x1="515" y1="110" x2="545" y2="110"/>
+            <line x1="440" y1="150" x2="470" y2="150"/><line x1="490" y1="150" x2="520" y2="150"/>
+            <line x1="565" y1="110" x2="580" y2="120"/>
+          </g>
+          <text x="500" y="190" text-anchor="middle" font-size="11" fill="var(--text-soft)">MZI 阵列（Clements 架构示意）</text>
+          <text x="500" y="212" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="600">光穿过即完成 N×N 矩阵乘</text>
+          <text x="500" y="230" text-anchor="middle" font-size="11" fill="var(--text-soft)">延迟 ~皮秒 · 几乎零功耗</text>
+
+          <!-- 底部结论 -->
+          <rect x="60" y="252" width="560" height="44" rx="8" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="340" y="270" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">类比：电子电路用电压代表数、用晶体管算；</text>
+          <text x="340" y="288" text-anchor="middle" font-size="12" fill="var(--text)">光计算用光的振幅与相位代表数、用干涉来算 —— 算术发生在波里，不在开关里。</text>
+        </svg>
+        <figcaption>图 1：MZI 干涉仪与光子网格。移相器设定权重，光波干涉完成乘加，网格整体实现任意酉矩阵。</figcaption>
+      </figure>
+
+      <p>三个补充，避免理解偏差：</p>
+
+      <ul>
+        <li><strong>复数与实数</strong>：光的振幅天然是复数，MZI 网格直接实现的是酉矩阵；
+        实数权重矩阵通过 SVD 分解（W = U·Σ·V<sup>T</sup>）拆成几个酉矩阵加一段对角缩放实现——
+        类比《类脑计算》里的"阵列一步完成 GEMV"，光子版用的是波，存算一体用的是电流；</li>
+        <li><strong>权重怎么"写进去"</strong>：移相器是可调的（热光效应、载流子注入、压电/铌酸锂电光效应），
+        神经网络的权重加载到每个 MZI 上。光子芯片更像一个"<em>可编程棱镜</em>"：
+        结构不变，调相位就换了模型；</li>
+        <li><strong>波长并行</strong>：同一网格可同时跑多个波长，每个波长乘一个不同的矩阵
+        （微环谐振器对不同波长加权不同），这是电子电路没有的并行维度。</li>
+      </ul>
+
+      <h2 id="s3">3. 核心器件：一条光路需要的四样东西</h2>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>器件</th><th>角色</th><th>主流实现</th><th>难点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>光源</strong></td>
+            <td>提供载波（光的"时钟与画笔"）</td>
+            <td>片外激光器 + 耦合，或片上集成 III-V 族增益区</td>
+            <td>硅不发光，激光器难与硅工艺单片集成</td>
+          </tr>
+          <tr>
+            <td><strong>调制器</strong></td>
+            <td>把电信号写上光（输入编码）</td>
+            <td>MZM（马赫-曾德尔调制器）、微环谐振器 MRR</td>
+            <td>带宽 vs 功耗 vs 尺寸的三角权衡</td>
+          </tr>
+          <tr>
+            <td><strong>波导 / 干涉结构</strong></td>
+            <td>承载与操纵光（计算本体）</td>
+            <td>硅光波导、氮化硅 SiN 低损耗波导、MZI 网格</td>
+            <td>相位对温度极其敏感，需要校准与温控</td>
+          </tr>
+          <tr>
+            <td><strong>探测器</strong></td>
+            <td>把光读回电（输出还原）</td>
+            <td>锗硅（Ge-on-Si）光电探测器</td>
+            <td>后接 ADC 的功耗常吃掉光带来的能效收益</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <strong>一个关键观察</strong>：光源、调制、探测三个环节都涉及"光电转换"，
+        每次转换都有功耗与延迟。所以工程上的第一原则是——
+        <strong>尽可能少地转换</strong>：让数据以光的形式走尽量长的路、做尽量多的运算，
+        这正是"光互连先行、光计算殿后"路线（第 4 节）的由来。
+      </div>
+
+      <h2 id="s4">4. 技术路线：从光互连到光子张量核</h2>
+
+      <p>光计算不是一个单点技术，而是按"光参与深度"分层的谱系，从易到难：</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>层级</th><th>光做什么</th><th>成熟度</th><th>代表形态</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>光互连</strong><br><span class="mut">Optical Interconnect</span></td>
+            <td>只在芯片/服务器之间传数据</td>
+            <td><strong>已规模商用</strong></td>
+            <td>800G/1.6T 光模块；CPO 共封装光学（把光引擎与交换芯片封装在一起，缩短电通道）</td>
+          </tr>
+          <tr>
+            <td><strong>近光计算 / 光子线性引擎</strong></td>
+            <td>矩阵乘法交给光，非线性与控制仍用电子</td>
+            <td>小批量商用 / 落地验证</td>
+            <td>Lightmatter Envise、曦智科技光子加速卡（MZI/微环张量核）</td>
+          </tr>
+          <tr>
+            <td><strong>全光计算</strong></td>
+            <td>从输入到输出全在光域，含非线性</td>
+            <td>研究阶段</td>
+            <td>衍射光网络（D²NN）、光学神经元（含相变材料/饱和吸收体做非线性）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>为什么"非线性"是分水岭？神经网络的表达力来自激活函数（ReLU、Sigmoid）——
+      它是非线性的。电子晶体管天生是非线性开关；而<strong>线性介质中的光波叠加仍是线性</strong>，
+      光子之间几乎不相互作用（这正是它不堵车的原因）。要造"光晶体管"需要强非线性材料
+      （铌酸锂薄膜 TFLN、相变材料 PCM、饱和吸收体）或用电子环节补足——
+      这是全光路线多年来停留在论文层面的根本原因。</p>
+
+      <p>当前工程共识：<strong>线性部分给光（矩阵乘，占大模型算力 90% 以上），
+      非线性与存储留给电子</strong>——"光算矩阵、电管开关"的异构组合。</p>
+
+      <h2 id="s5">5. 产业进展：谁在做光计算</h2>
+
+      <ul>
+        <li><strong>Lightmatter</strong>（美国，融资额领先）：Envise 光子推理引擎 +
+        Passage 光互连晶圆级方案；2024 年后战略重心转向光互连——印证"互联先行"；</li>
+        <li><strong>曦智科技 Lightelligence</strong>（中国，上海）：光子计算加速卡与
+        光互连产品线，业界最早一批 MZI 阵列验证者；</li>
+        <li><strong>NTT</strong>（日本）：光子电子融合（PETRA）架构，目标把激光器、调制器、
+        电路单片融合，LPO/CPO 路线激进；</li>
+        <li><strong>英伟达 / 博通 / Marvell</strong>：CPO 共封装光学交换机 2024-2025 年进入产品化，
+        <strong>硅光从"计算"之外先在"互联"上赚到了钱</strong>——这是光计算产业的真实节奏；</li>
+        <li><strong>学术界</strong>：MIT 2017 年《Nature》光子加速器（56 个 MZI 做语音识别推理）
+        是现代光计算复兴的起点；清华、北大、上海交大在衍射计算与光子卷积加速器上持续出成果。</li>
+      </ul>
+
+      <p><strong>成熟度判断</strong>：光<em>互连</em>已是千亿级现实市场（每个 AI 数据中心都在买光模块）；
+      光子<em>计算</em>引擎在端侧/推理场景小批量落地；全光计算仍是研究前沿。
+      《电子信息制造业发展"十五五"规划》把光计算列为新型计算范式——与存算一体、量子计算并列，
+      属于国家布局的"换道"选项。</p>
+
+      <h2 id="s6">6. 冷静的短板分析</h2>
+
+      <p>光计算要诚实地面对四个"但是"：</p>
+
+      <ol>
+        <li><strong>精度墙</strong>：模拟光计算受激光噪声、热漂移、探测器散粒噪声限制，
+        再叠加 DAC/ADC 量化损耗，实际有效精度多在 4~8 bit——
+        对推理尚可，对训练很勉强；</li>
+        <li><strong>非线性缺失</strong>：如第 4 节，没有理想的"光晶体管"，
+        全光网络要靠材料创新或混合架构；</li>
+        <li><strong>存储难题</strong>：光子无法静止存放（没有"光内存"），
+        权重必须物理固化在器件里（移相器调谐/相变材料），换模型要重新写芯片状态，
+        灵活性不如 GPU；</li>
+        <li><strong>生态空白</strong>：没有 CUDA。编译器要把神经网络映射到具体 MZI 拓扑，
+        涉及物理校准、容错与重训练，软件栈是比硬件更大的门槛。</li>
+      </ol>
+
+      <p><strong>合理的预期</strong>：光计算不会"取代 GPU"，而是先在
+      <em>数据中心内部互联 → 推理专用加速 → 训练加速</em>的顺序上逐层渗透。
+      判断它成败的先行指标不是论文能效比，而是 <strong>CPO 渗透率与光子芯片的良率曲线</strong>。</p>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <p>三个高频误区：</p>
+
+      <ul>
+        <li><strong>"光计算 = 用光跑 CPU 指令"</strong>：不是。光子不擅长布尔逻辑与分支跳转，
+        它擅长的是线性代数（矩阵乘/卷积/傅里叶变换），替代的是 <em>GPU 的矩阵引擎</em>，不是整个处理器；</li>
+        <li><strong>"光速所以零延迟"</strong>：片上光路延迟确实是皮秒级，但系统瓶颈在
+        电光转换与 ADC，端到端加速比远小于"光速/电子速度"的比值；</li>
+        <li><strong>"光子芯片不需要制程微缩"</strong>：波导与谐振器尺寸决定波长选择性，
+        器件密度同样受光学串扰限制——微缩逻辑不同，但"密度换性能"的竞争依然存在。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：一个 MZI 为什么能当"乘法器"？N×N 矩阵乘靠什么拼出来？</summary>
+        <div class="answer">MZI 把光分成两路，移相器控制相位差，汇合时相长/相消干涉决定输出振幅——
+        这等效于一次 2×2 旋转（乘法+加法同时完成）。把 MZI 按 Clements/Reck 方案排成网格，
+        可以合成任意 N×N 酉矩阵；实数矩阵再用 SVD 分解拆成酉矩阵组合。
+        光穿过整个网格的时间即完成一次 GEMV。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：为什么说"非线性"是全光计算的拦路虎？当前主流架构怎么绕？</summary>
+        <div class="answer">线性介质中光波叠加仍是线性的，而神经网络的表达力依赖非线性激活；
+        光子间几乎不相互作用，缺理想"光晶体管"。主流做法是异构：
+        光做线性部分（矩阵乘），非线性激活与存储、控制交给电子——
+        "光算矩阵、电管开关"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：光互连为什么先于光计算商用？CPO 是什么？</summary>
+        <div class="answer">互连只需解决"传"，不涉及计算精度与编程生态，且需求刚性
+        （AI 集群带宽爆炸、电互连功耗触顶），价值立即可兑现。CPO（共封装光学）
+        把光引擎与交换/计算芯片放进同一封装，把原本数厘米的电通道缩短到毫米级，
+        大幅降低互连功耗——它是光计算产业化的"先行军"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：模拟光计算的有效精度为什么上不去？瓶颈链路上谁"吃"掉了能效？</summary>
+        <div class="answer">激光相对强度噪声、热光漂移、MZI 校准误差、探测器散粒噪声
+        共同限制了模拟计算的保真度；输入输出必须经过 DAC/ADC 转换，
+        其量化与功耗开销常常吃掉光学部分省下的能量——所以实际有效精度约 4~8 bit，
+        ADC 是隐蔽的功耗大户。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：判断一家光计算公司是否真有前景，你先看什么指标？</summary>
+        <div class="answer">不看论文能效比，先看三点：① 光互连产品（CPO/光模块）是否有真实订单——
+        证明工程化与良率；② 光子芯片良率与温度稳定性数据；③ 软件栈（编译器/校准工具）
+        的完整度。三者齐备，计算产品才有落地基础。</div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li class="current">第 21 篇：光计算 · 用光子代替电子的算力革命</li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 22 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#光计算</span>
+      <span class="chip">#硅光</span>
+      <span class="chip">#MZI干涉仪</span>
+      <span class="chip">#CPO</span>
+      <span class="chip">#光子芯片</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

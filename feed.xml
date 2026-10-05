@@ -5,13 +5,27 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 05 Oct 2026 22:25:16 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 23:03:04 +0800</lastBuildDate>
+    <item>
+      <title>量子计算：从量子比特到量子优越性</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html</guid>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[这一篇先破除误区建立正确直觉，再深入到物理载体、算法原理、纠错工程与产业地图， 让你既能向朋友讲明白，也能看清哪些新闻是真突破、哪些是标题党。目录 入门：量子比特到底特殊在哪 算法的本质：不是并行，是干涉 物理实现：五种造比特的路线 里程碑…]]></description>
+    </item>
     <item>
       <title>类脑计算与存算一体：后摩尔时代的两条突围路线</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[从冯 诺依曼瓶颈到大脑的存算一体机制，讲清近存计算、存内计算、存内逻辑三档技术谱系，SRAM/Flash/忆阻器等材料实现，以及 TrueNorth、天机、HBM-PIM 等最新研究进展]]></description>
+    </item>
+    <item>
+      <title>光计算：用光子代替电子的算力革命</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-光计算-用光子代替电子的算力革命.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-光计算-用光子代替电子的算力革命.html</guid>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[光已经统治了通信，为什么计算还握在电子手里？从马赫-曾德尔干涉仪到光子张量核，讲清光计算做矩阵乘法的物理原理、关键器件、产业进展与冷静的短板分析]]></description>
     </item>
     <item>
       <title>摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</title>
@@ -271,20 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-14瑾年财经早报_4.html</guid>
       <pubDate>Mon, 14 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[主要指数表现 上证指数 -1.18% ↓ 深证成指 -1.08% ↓ 创业板指 -0.49% ↓ 沪深300 -0.84% ↓ 中证500 -1.78% ↓ 科创50 -1.01% ↓ 两市成交额 上证 9,582亿 / 深证 10,137…]]></description>
-    </item>
-    <item>
-      <title>每日财经早报 | 2026年9月13日 周日</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-13财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-13财经早报_.html</guid>
-      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[▎涨幅前5行业（申万一级） 行业 涨跌幅 通信 +1.41% 建筑材料 +0.13% 公用事业 -0.27% 国防军工 -0.43% 银行 -0.43% ▎跌幅前5行业（申万一级） 行业 涨跌幅 有色金属 -3.98% 基础化工 -2.98…]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月11日 周五</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-11瑾年财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-11瑾年财经早报_.html</guid>
-      <pubDate>Fri, 11 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[成交额维持1.65万亿，市场整体交投活跃但结构性分化加剧，成长板块承压而红利资产获青睐。二、资金市场 2026年9月10日 银行间质押式回购（DR） 品种 利率 变动(BP) DR001 1.3507% -2.96 DR007 1.4116…]]></description>
     </item>
   </channel>
 </rss>

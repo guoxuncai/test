@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>量子计算：从量子比特到量子优越性</title>
+<meta name="description" content="破除'同时算所有答案'的误区，从布洛赫球讲到超导/离子阱/光量子三大物理路线，再到 Shor 算法、量子优越性、纠错与产业地图，一篇建立对量子计算的完整认知。">
+<meta name="keywords" content="量子计算,量子比特,叠加,纠缠,Shor算法,量子优越性,表面码,超导量子,离子阱,光量子">
+<meta name="date" content="2026-10-05">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 产业与前沿</span>
+    <h1 class="title">量子计算：从量子比特到量子优越性</h1>
+    <div class="meta">
+      <span>2026-10-05</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 22 篇</span><span class="sep"></span>
+      <span>阅读约 20 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        量子计算是被神话与误解包围最重的领域——"同时算所有答案""秒破所有密码"都是流行但错误的说法。
+        这一篇先破除误区建立正确直觉，再深入到物理载体、算法原理、纠错工程与产业地图，
+        让你既能向朋友讲明白，也能看清哪些新闻是真突破、哪些是标题党。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">入门：量子比特到底特殊在哪</a></li>
+          <li><a href="#s2">算法的本质：不是并行，是干涉</a></li>
+          <li><a href="#s3">物理实现：五种造比特的路线</a></li>
+          <li><a href="#s4">里程碑：从量子优越性到纠错拐点</a></li>
+          <li><a href="#s5">产业地图与冷静预期</a></li>
+          <li><a href="#s6">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 入门：量子比特到底特殊在哪</h2>
+
+      <p>经典比特是开关：0 <em>或</em> 1。量子比特（qubit）是一个可以"斜着站"的状态：</p>
+
+      <div class="formula-block">
+        <span class="fl">|ψ⟩ = α|0⟩ + β|1⟩　（|α|² + |β|² = 1）</span>
+        <span class="fnote">α、β 是复数振幅。测量时，以 |α|² 的概率得到 0、|β|² 的概率得到 1，
+        且测量后状态坍缩——原叠加信息不可恢复。</span>
+      </div>
+
+      <p>几何图像：每个量子比特是三维空间里的一个箭头——<strong>布洛赫球（Bloch Sphere）</strong>，
+      北极是 |0⟩、南极是 |1⟩，量子比特可以指向球面上任意方向。
+      经典比特只能站在两极；量子比特的连续自由度，就是可被算法利用的资源。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布洛赫球与叠加干涉示意">
+          <!-- 左：布洛赫球 -->
+          <text x="170" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">布洛赫球：一个量子比特的几何</text>
+          <circle cx="170" cy="160" r="90" fill="none" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <ellipse cx="170" cy="160" rx="90" ry="26" fill="none" stroke="var(--text-mute)" stroke-width="0.9" stroke-dasharray="4 4"/>
+          <circle cx="170" cy="70" r="5" fill="var(--semi)"/>
+          <text x="170" y="58" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">|0⟩</text>
+          <circle cx="170" cy="250" r="5" fill="var(--fin)"/>
+          <text x="170" y="272" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">|1⟩</text>
+          <!-- 态矢量 -->
+          <line x1="170" y1="160" x2="235" y2="105" stroke="var(--up)" stroke-width="2.5"/>
+          <path d="M235 105 L224 107 M235 105 L228 114" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <circle cx="235" cy="105" r="5" fill="var(--up)"/>
+          <text x="252" y="100" font-size="12" fill="var(--up)" font-weight="700">|ψ⟩</text>
+          <text x="170" y="292" text-anchor="middle" font-size="11" fill="var(--text-soft)">经典比特只能站两极；量子比特可指向球面任意方向</text>
+
+          <!-- 右：干涉 -->
+          <text x="500" y="30" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">干涉：让错误答案相消</text>
+          <!-- 波1 -->
+          <path d="M400 90 Q415 60 430 90 T460 90 T490 90 T520 90 T550 90" stroke="var(--semi)" stroke-width="2" fill="none"/>
+          <text x="565" y="95" font-size="11" fill="var(--semi)">+1 振幅</text>
+          <!-- 波2 反相 -->
+          <path d="M400 130 Q415 160 430 130 T460 130 T490 130 T520 130 T550 130" stroke="var(--fin)" stroke-width="2" fill="none"/>
+          <text x="565" y="135" font-size="11" fill="var(--fin)">−1 振幅</text>
+          <!-- 相加 -->
+          <line x1="400" y1="180" x2="550" y2="180" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="475" y="200" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="600">错误路径的振幅相加 = 0（相消）</text>
+          <text x="475" y="222" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="600">正确路径的振幅同相叠加 = 放大</text>
+          <text x="475" y="252" text-anchor="middle" font-size="11" fill="var(--text-soft)">测量时按 |振幅|² 出现 —— 答案几乎必然正确</text>
+        </svg>
+        <figcaption>图 2：量子比特的布洛赫球表示；量子算法的胜负手是设计干涉——错的路相消、对的路增强。</figcaption>
+      </figure>
+
+      <p><strong>第二个资源：纠缠</strong>。两个量子比特可以处于无法单独描述的关联态
+      （例如贝尔态 (|00⟩+|11⟩)/√2：测得其中一个，另一个瞬时确定）。
+      n 个纠缠的量子比特，其状态由 2<sup>n</sup> 个复振幅共同描述——
+      300 个量子比特对应的振幅数超过宇宙原子总数。这是量子计算潜力的来源，
+      但注意：利用它需要算法精心设计干涉（第 2 节），<em>不是免费的并行计算</em>。</p>
+
+      <h2 id="s2">2. 算法的本质：不是并行，是干涉</h2>
+
+      <p>最流行的误解："量子计算机对 2<sup>n</sup> 个输入同时计算，所以快。"
+      错。叠加确实让你"同时摸到所有路径"，但测量只能随机得到<em>一个</em>结果——
+      如果只是并行然后测量，你得到的是随机垃圾。</p>
+
+      <p>量子算法的真正结构是一个三步舞：</p>
+
+      <ol>
+        <li><strong>制造叠加</strong>（Hadamard 门）：让所有计算路径同时存在；</li>
+        <li><strong>编码相位</strong>：让答案携带相位信息，错误的路径获得相消的相位关系；</li>
+        <li><strong>干涉读出</strong>：设计幺正变换，使错误路径振幅相消、正确路径增强，
+        最后测量以高概率得到正确答案。</li>
+      </ol>
+
+      <p>两个里程碑算法都遵循这个结构：</p>
+
+      <ul>
+        <li><strong>Shor 算法（1994）</strong>：大数分解从指数时间降到多项式时间。
+        核心是把"求周期"转化为量子傅里叶变换中的干涉增强——
+        这直接威胁 RSA 与椭圆曲线密码（它们的安全性建立在大数分解/离散对数不可解上）。
+        分解 RSA-2048 约需数百万个纠错后的物理量子比特，今天还远达不到，
+        但"<em>先窃取、后解密</em>"的数据收集已经开始，所以密码迁移刻不容缓；</li>
+        <li><strong>Grover 算法（1996）</strong>：无序搜索平方加速（N 次 → √N 次）。
+        通用但加速温和，且经典侧并行化可部分抵消。</li>
+      </ul>
+
+      <p><strong>对半导体人的类比</strong>：经典芯片用电压幅值表示比特、用晶体管开关做逻辑；
+      量子处理器用微波脉冲"转动"布洛赫球上的箭头、用量子门编排干涉。
+      前者是开关的时序艺术，后者是<strong>振幅与相位的编排艺术</strong>——
+      控制系统、微波电子学、低温线缆，恰恰是半导体工程的强项。</p>
+
+      <h2 id="s3">3. 物理实现：五种造比特的路线</h2>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>路线</th><th>物理载体</th><th>优势</th><th>短板</th><th>代表玩家</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>超导</strong></td>
+            <td>约瑟夫森结电路（transmon），10 mK 稀释制冷机</td>
+            <td>门速度快（ns 级）、可借用半导体光刻工艺扩展</td>
+            <td>相干时间有限、需极低温、布线与串扰困难</td>
+            <td>Google、IBM、Intel、本源量子</td>
+          </tr>
+          <tr>
+            <td><strong>离子阱</strong></td>
+            <td>电磁阱中的镱/钙离子，激光操控</td>
+            <td>保真度最高（双比特门 99.9%+）、全同性好</td>
+            <td>门速度慢（μs~ms）、扩展依赖离子输运</td>
+            <td>IonQ、Quantinuum</td>
+          </tr>
+          <tr>
+            <td><strong>光量子</strong></td>
+            <td>光子模式，线性光学 + 单光子探测</td>
+            <td>室温运行、天然抗退相干、与光通信产业同源</td>
+            <td>概率性门操作、光子损耗、探测昂贵</td>
+            <td>中科大九章、Xanadu</td>
+          </tr>
+          <tr>
+            <td><strong>中性原子</strong></td>
+            <td>光镊阵列中的铷/锶原子，里德堡激发</td>
+            <td>原子全同、阵列可缩放至千级、可重构拓扑</td>
+            <td>门速度与保真度仍在追赶</td>
+            <td>QuEra、Pasqal</td>
+          </tr>
+          <tr>
+            <td><strong>拓扑</strong></td>
+            <td>马约拉纳零能模（非阿贝尔任意子）</td>
+            <td>拓扑保护，天生抗噪声（理论）</td>
+            <td>存在性验证仍在争议，工程最远</td>
+            <td>Microsoft（Majorana 1）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>三条工程观察：</p>
+
+      <ul>
+        <li><strong>超导路线与半导体产业血缘最近</strong>：芯片用电子束光刻与薄膜工艺制造约瑟夫森结，
+        封装、测控、EDA 都能复用半导体供应链——这是它能快速堆到千比特的原因，
+        也是"量子工厂"将建在半导体厂区内的原因；</li>
+        <li><strong>真正的竞争维度不是比特数，而是保真度 × 连通性 × 相干时间</strong>。
+        1000 个 99% 保真度的比特，不如 100 个 99.9% 的比特能算出结果；</li>
+        <li><strong>测控系统是隐形战场</strong>：室温微波源、低温放大器、FPGA 时序控制——
+        每个量子比特背后是一整条经典电子学链路，这部分市场规模常被低估。</li>
+      </ul>
+
+      <h2 id="s4">4. 里程碑：从量子优越性到纠错拐点</h2>
+
+      <p>按时间轴梳理关键节点：</p>
+
+      <ul>
+        <li><strong>2019 · 谷歌悬铃木（Sycamore）</strong>：53 比特随机线路采样 200 秒，
+        宣称超算需万年——"量子优越性"首次宣示（IBM 随后反驳经典模拟 2.5 天可完成，
+        争议本身就是行业成熟的标志）；</li>
+        <li><strong>2020 · 九章</strong>：中国科大团队用 76 个光子完成玻色取样，
+        光量子路线的优越性实验；后续九章三号进一步提速；</li>
+        <li><strong>2023 · 祖冲之号 &amp; 本源悟空</strong>：超导路线国内进展，
+        本源悟空（72 比特）2024 年上线开放算力；IBM Condor 达到 1121 比特
+        （同时其路线图重点转向高保真 Heron）；</li>
+        <li><strong>2024 · 谷歌 Willow（纠错拐点）</strong>：105 比特芯片上首次演示
+        <strong>错误率随码距增大而指数下降</strong>（表面码 d=7，逻辑错误率减半）——
+        这被称为"低于阈值"，是量子纠错从理论走向工程的分水岭，
+        也是近年来最重要的一篇真实突破；</li>
+        <li><strong>2024-2025 · 纠错逻辑比特竞赛</strong>：Quantinuum + 微软联合演示
+        高保真逻辑比特；微软发布拓扑路线 Majorana 1（科学界对其证据仍有争议）；
+        IBM 公布 2029 年容错量子计算机 Starling 路线图。</li>
+      </ul>
+
+      <p><strong>为什么纠错是唯一的分水岭？</strong>量子态无法复制（不可克隆定理），
+      不能像经典通信那样重传；退相干让每个门都出错。
+      表面码（Surface Code）用约 1000 个物理比特编码 1 个逻辑比特，
+      通过奇偶校验反复测量错误征候而不破坏数据本身。
+      只有"低于阈值"（物理错误率低于纠错开销可承受的临界值），
+      加比特才有意义——<strong>2024 年之前，整个领域都在为这一天准备</strong>。</p>
+
+      <h2 id="s5">5. 产业地图与冷静预期</h2>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>环节</th><th>国际</th><th>国内</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>整机 / 云</td><td>IBM、Google、Quantinuum、IonQ、IQM</td><td>本源量子、中电信量子集团、量旋科技</td></tr>
+          <tr><td>低温与测控</td><td>Bluefors（稀释制冷机）、Quantum Machines</td><td>中船鹏力、本源测控</td></tr>
+          <tr><td>软件 / 算法</td><td>Zapata（已重组）、Q-CTRL、Strangeworks</td><td>本源司南、量子计算云平台</td></tr>
+          <tr><td>后量子密码</td><td>NIST 标准 ML-KEM/ML-DSA（2024 定稿）</td><td>商用密码迁移试点推进</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>四个冷静预期</strong>：</p>
+
+      <ol>
+        <li><strong>量子计算机不会取代经典计算机</strong>。它不擅长数据库、浏览、打游戏；
+        它是特定问题的加速器——模拟量子系统（化学、材料）、优化、密码学；
+        </li>
+        <li><strong>最近的真实商业价值是"量子启发"与后量子密码</strong>：
+        银行和政府的密码迁移是确定性订单；化学/材料模拟（催化剂、电池、药物）
+        是容错量子计算的首个战场，预计在 2030 年代逐步兑现；</li>
+        <li><strong>警惕比特数营销</strong>："X 千比特"若无保真度与纠错说明，
+        商业意义有限。看新闻先问三个数：双比特门保真度？逻辑比特还是物理比特？是否低于阈值？</li>
+        <li><strong>对个人学习者的建议</strong>：量子计算的最佳入场点不是物理，
+        而是<strong>线性代数 + Python（Qiskit / Cirq）</strong>——
+        本站前面的能带、PN 结、CMOS 知识则在超导器件与测控方向直接复用。</li>
+      </ol>
+
+      <h2 id="s6">6. 易错点与自测</h2>
+
+      <p>三个高频误区：</p>
+
+      <ul>
+        <li><strong>"量子比特同时是 0 和 1，所以同时算所有答案"</strong>——
+        叠加是振幅的连续自由度，测量只给一个随机结果；
+        快的来源是<strong>干涉编排</strong>，不是并行遍历；</li>
+        <li><strong>"量子纠缠可以超光速传信息"</strong>——纠缠关联是即时的，
+        但单边测量结果随机，无法编码信息；不违反相对论；</li>
+        <li><strong>"比特数越多越强"</strong>——无纠错的物理比特堆再多也算不出长电路；
+        逻辑比特数 + 保真度才是硬指标。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：为什么"量子并行计算所有答案"是错误的通俗说法？正确的加速机制是什么？</summary>
+        <div class="answer">叠加让所有路径的振幅共存，但测量只能随机得到一个结果；
+        若无干涉设计，输出是均匀随机垃圾。真正的加速机制是：编码相位 →
+        设计幺正变换使错误路径振幅相消、正确路径增强 → 高概率测量到正确答案。
+        Shor 与 Grover 都是这一结构。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：超导、离子阱、光量子三条路线各自的头号优势与头号短板？</summary>
+        <div class="answer">超导：优势是门速度快 + 可用半导体光刻工艺扩展（易堆比特数）；
+        短板是需 10 mK 极低温、相干时间有限。离子阱：优势是保真度最高、比特全同；
+        短板是门速度慢、扩展靠离子输运难。光量子：优势是室温运行、抗退相干、
+        与光通信产业同源；短板是门操作概率性、光子损耗与探测成本。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：为什么量子纠错不能像经典一样"备份重传"？表面码的基本思路是什么？</summary>
+        <div class="answer">不可克隆定理禁止复制未知量子态，测量的坍缩效应又让你不能"看一眼再放回去"。
+        表面码把 1 个逻辑比特编码进二维网格上的大量物理比特，
+        周期性测量相邻比特的奇偶校验（错误征候）而不直接测量数据比特，
+        据此推断并纠正错误；当物理错误率低于阈值时，码距越大逻辑错误率指数下降
+        （2024 年谷歌 Willow 首次实验演示）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：Shor 算法威胁哪些密码体系？为什么"现在就要迁移"？</summary>
+        <div class="answer">威胁基于大数分解困难（RSA）与离散对数困难（ECC/椭圆曲线）的公钥体系。
+        分解 RSA-2048 需数百万纠错物理比特，短期内无法实现；
+        但攻击者可现在截存加密数据、待量子机成熟后解密（先存储后解密），
+        长期敏感数据必须现在迁移到 NIST 2024 定稿的后量子密码（ML-KEM 等）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：看到"某公司发布 2000 比特量子计算机"的新闻，你先查哪三个数字？</summary>
+        <div class="answer">① 双比特门保真度（≥99.9% 才有纠错资格）；
+        ② 是物理比特还是逻辑比特（逻辑比特才有可比性）；
+        ③ 是否演示"低于阈值"的错误率缩放。三者缺失，比特数只是营销数字。</div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 21 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li class="current">第 22 篇：量子计算 · 从量子比特到量子优越性</li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 21 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 22 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#量子计算</span>
+      <span class="chip">#量子比特</span>
+      <span class="chip">#量子纠错</span>
+      <span class="chip">#Shor算法</span>
+      <span class="chip">#后量子密码</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
