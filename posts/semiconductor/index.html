@@ -50,7 +50,7 @@
   .stage-theme{padding-left:22px}
   .prow-tags,.arch-tags{display:none}
   .stage-head{flex-wrap:wrap}
-  #professionSection .stage,#neuroSection .stage{grid-template-columns:1fr !important}
+  #professionSection .stage{grid-template-columns:1fr !important}
 }
 </style>
 </head>
@@ -170,61 +170,6 @@
     </div>
   </section>
 
-  <section id="neuroSection" style="margin:0 0 60px">
-    <h2 class="sec-title">类脑计算与存算一体</h2>
-    <p class="sec-sub">后摩尔时代的两条核心突围路径：让计算靠近存储，让芯片模仿大脑。它们也是"十五五"规划明确布局的新型计算范式——本篇章作为专题导读，覆盖背景、原理、技术、材料与进展五个维度。</p>
-    <div class="stage-list" style="gap:14px">
-
-      <div class="stage" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden">
-        <div style="background:var(--surface);padding:18px 22px">
-          <div style="font-weight:700;color:var(--text);margin-bottom:8px">🧭 背景和意义</div>
-          <ul style="font-size:13.5px;line-height:1.85;color:var(--text-soft);padding-left:18px;margin:0">
-            <li><strong style="color:var(--text)">冯·诺依曼瓶颈</strong>：经典架构中存储与计算物理分离，AI 大模型推理时数据在内存与处理器之间来回搬运，能耗与延迟的主要来源常占六成以上——"内存墙"成为算力增长的第一约束。</li>
-            <li><strong style="color:var(--text)">需求倒逼</strong>：大模型参数两年增长两个数量级，而摩尔定律红利放缓、功耗墙逼近，能效比（TOPS/W）取代峰值算力成为核心指标。</li>
-            <li><strong style="color:var(--text)">两条路线</strong>：存算一体（重构计算架构，把乘加搬进存储阵列）与类脑计算（重构计算模型，用脉冲神经网络逼近大脑机制），在端侧智能、边缘 AI、自动驾驶等场景已进入落地期。</li>
-            <li><strong style="color:var(--text)">战略意义</strong>：《电子信息制造业发展"十五五"规划》明确布局存算一体等新型计算范式——它与光计算、量子计算并列，是绕开传统制程竞争、换道超车的国家级选项。</li>
-          </ul>
-        </div>
-        <div style="background:var(--surface);padding:18px 22px">
-          <div style="font-weight:700;color:var(--text);margin-bottom:8px">🧠 大脑的工作原理</div>
-          <ul style="font-size:13.5px;line-height:1.85;color:var(--text-soft);padding-left:18px;margin:0">
-            <li><strong style="color:var(--text)">规模与功耗</strong>：约 860 亿个神经元、百万亿量级突触，整体功耗仅约 20W——不到一台笔记本的十分之一。</li>
-            <li><strong style="color:var(--text)">存算一体</strong>：突触既是存储单元（保存权重）又是计算单元（完成加权求和），从物理上消除了"取指令—取数据"的搬运开销。</li>
-            <li><strong style="color:var(--text)">事件驱动</strong>：神经元以稀疏的动作电位（脉冲）通信，无事件时不耗电，天然稀疏计算；编码方式包括频率编码与时序编码。</li>
-            <li><strong style="color:var(--text)">可塑性与学习</strong>：突触强度随活动动态调整（如 STDP 规则：前后脉冲时间差决定权重增减），学习即连接的重组，兼具容错性与自适应能力。</li>
-          </ul>
-        </div>
-        <div style="background:var(--surface);padding:18px 22px">
-          <div style="font-weight:700;color:var(--text);margin-bottom:8px">⚙️ 技术基础</div>
-          <ul style="font-size:13.5px;line-height:1.85;color:var(--text-soft);padding-left:18px;margin:0">
-            <li><strong style="color:var(--text)">存算一体三档</strong>：近存计算（Near-Memory，把计算搬到存储旁）、存内计算（CIM/PIM，存储阵列直接完成计算）、存内逻辑（Logic-in-Memory），距离越近能效越高、通用性越低。</li>
-            <li><strong style="color:var(--text)">数学本质</strong>：利用欧姆定律做乘法、基尔霍夫电流定律做求和，一个存储阵列一步完成矩阵-向量乘（GEMV）——AI 计算的最重负载。</li>
-            <li><strong style="color:var(--text)">模拟 vs 数字</strong>：模拟 CIM 能效比最高但受噪声与精度限制；数字 CIM 精度与生态兼容性好，是大算力场景的主流选择。</li>
-            <li><strong style="color:var(--text)">类脑算法栈</strong>：脉冲神经网络（SNN）模型、STDP 等局部学习规则、ANN 转 SNN / 代理梯度训练方法，以及配套的编程框架与工具链。</li>
-          </ul>
-        </div>
-        <div style="background:var(--surface);padding:18px 22px">
-          <div style="font-weight:700;color:var(--text);margin-bottom:8px">🧪 材料实现</div>
-          <ul style="font-size:13.5px;line-height:1.85;color:var(--text-soft);padding-left:18px;margin:0">
-            <li><strong style="color:var(--text)">成熟阵营</strong>：SRAM/DRAM 存内计算（数字精度高，最接近商用）、嵌入式 Flash（浮栅存储权重，端侧低成本方案）。</li>
-            <li><strong style="color:var(--text)">忆阻器家族</strong>：RRAM（阻变）、PCM（相变）、MRAM（磁阻）、FeFET（铁电）——阻值连续可调，单个器件即可模拟一个突触，是模拟 CIM 与神经形态器件的主力。</li>
-            <li><strong style="color:var(--text)">前沿方向</strong>：电化学随机存储器 ECRAM（更接近生物突触动态）、2D 材料与有机突触器件、3D 堆叠集成（存算单元立体互联）。</li>
-            <li><strong style="color:var(--text)">产业组合</strong>：HBM 配合近存计算（HBM-PIM）服务大模型推理，宽禁带/超宽禁带功率器件支撑能耗约束下的供电重构——材料创新与架构创新必须协同。</li>
-          </ul>
-        </div>
-        <div style="background:var(--surface);padding:18px 22px;grid-column:1 / -1">
-          <div style="font-weight:700;color:var(--text);margin-bottom:8px">🚀 研究进展</div>
-          <ul style="font-size:13.5px;line-height:1.85;color:var(--text-soft);padding-left:18px;margin:0">
-            <li><strong style="color:var(--text)">神经拟态芯片</strong>：IBM TrueNorth（2014，百万神经元/70mW）与 NorthPole（2023，推理能效大幅领先）；Intel Loihi 1/2（脉冲片上学习）；国内清华大学天机芯片（Tianjic，2019 年《Nature》封面，混合 ANN/SNN 架构驱动无人自行车）、浙江大学达尔文系列（达尔文 2 代支持百万级神经元）。</li>
-            <li><strong style="color:var(--text)">存算一体芯片</strong>：三星 HBM-PIM（2021）与 SK 海力士 AiM 把计算嵌入 DRAM；Mythic 以 Flash 模拟存内计算切入端侧推理；国内知存科技（Flash CIM）、后摩智能（大算力存算一体）、亿铸科技（数字 ReRAM）等初创梯队成形。</li>
-            <li><strong style="color:var(--text)">成熟度判断</strong>：端侧小算力 CIM 已规模商用，大算力数字 CIM 是当前主战场，神经拟态芯片仍以科研与专用场景为主；忆阻器阵列的良率、漂移与精度校准是材料侧待解的关键问题。</li>
-            <li><strong style="color:var(--text)">与本站笔记的衔接</strong>：该方向横跨《半导体材料全景》（新型存储材料）、《存储器》（DRAM/NAND 架构）与《摩尔定律与器件微缩》（后微缩时代的替代路径），是理解"后摩尔时代"的必答题。</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section id="pathSection" style="margin:0 0 60px">
     <h2 class="sec-title">学习路径</h2>
     <p class="sec-sub">建议自上而下按阶段推进；每个阶段内的笔记按发表时间正序排列，适合顺次阅读。</p>
@@ -280,7 +225,7 @@
     { num: '05', title: '设计与封测', theme: 'EDA 工具链、版图实战，封装与失效分析。',
       keys: ['EDA', '版图', '芯片封装'] },
     { num: '06', title: '产业与前沿', theme: '产业链全景、先进封装与 Chiplet，从技术走向产业。',
-      keys: ['产业链', '先进封装', 'Chiplet'] }
+      keys: ['产业链', '先进封装', 'Chiplet', '类脑', '存算'] }
   ];
   var OTHER = { num: '∞', title: '拓展与其他', theme: '暂未归入主线的笔记与跨领域延伸。' };
 

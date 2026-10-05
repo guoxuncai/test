@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>类脑计算与存算一体：后摩尔时代的两条突围路线</title>
+<meta name="description" content="从冯·诺依曼瓶颈到大脑的存算一体机制，讲清近存计算、存内计算、存内逻辑三档技术谱系，SRAM/Flash/忆阻器等材料实现，以及 TrueNorth、天机、HBM-PIM 等最新研究进展。">
+<meta name="keywords" content="类脑计算,存算一体,冯诺依曼瓶颈,存内计算,忆阻器,脉冲神经网络,神经拟态芯片,后摩尔时代">
+<meta name="date" content="2026-10-05">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 产业与前沿</span>
+    <h1 class="title">类脑计算与存算一体：后摩尔时代的两条突围路线</h1>
+    <div class="meta">
+      <span>2026-10-05</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 20 篇</span><span class="sep"></span>
+      <span>阅读约 18 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        当摩尔定律红利放缓、功耗墙逼近，算力还能从哪里来？答案是两条路线：
+        <strong>存算一体</strong>重构计算架构——把乘加运算搬进存储阵列；
+        <strong>类脑计算</strong>重构计算模型——让芯片模仿大脑的工作方式。
+        《电子信息制造业发展"十五五"规划》已明确把它们与光计算、量子计算并列为新型计算范式。
+        这一篇把背景、脑原理、技术谱系、材料实现与研究进展一次讲清。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">背景和意义：冯·诺依曼瓶颈与内存墙</a></li>
+          <li><a href="#s2">大脑的工作原理：20W 的超级计算机</a></li>
+          <li><a href="#s3">技术基础：存算一体的三档谱系</a></li>
+          <li><a href="#s4">材料实现：从 SRAM 到忆阻器</a></li>
+          <li><a href="#s5">研究进展：芯片地图与成熟度判断</a></li>
+          <li><a href="#s6">如何继续学习</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 背景和意义：冯·诺依曼瓶颈与内存墙</h2>
+
+      <p>经典计算机沿用 1945 年提出的冯·诺依曼架构：<strong>存储单元与计算单元物理分离</strong>，
+      数据放在内存里，计算发生在 CPU/GPU 中，两者之间靠总线搬运。这个架构在算力需求温和的年代运转良好，
+      但 AI 大模型把它推向了极限——训练和推理的主体运算就是矩阵乘法，权重矩阵动辄几十 GB，
+      每一次乘加都要把数据从内存"搬"到计算单元再"搬"回去。</p>
+
+      <p>业界用两个词概括这个困境：</p>
+
+      <ul>
+        <li><strong>冯·诺依曼瓶颈</strong>：数据搬运本身消耗的能量和时间，常常超过计算本身。
+        对大模型推理，内存访问能耗可占总能耗的六成以上；</li>
+        <li><strong>内存墙（Memory Wall）</strong>：过去二十年处理器速度的增长远快于内存带宽的增长，
+        差距越拉越大，内存成了算力增长的第一约束。</li>
+      </ul>
+
+      <p>与此同时，大模型参数量约两年增长两个数量级，而摩尔定律红利放缓、功耗墙逼近。
+      评价标准悄然改变：<strong>能效比（TOPS/W）取代峰值算力，成为核心指标</strong>。
+      需求倒逼之下出现了两条突围路线：</p>
+
+      <ol>
+        <li><strong>存算一体（Compute-in-Memory）</strong>——重构<em>计算架构</em>：
+        把乘加运算直接搬进存储阵列，从物理上消灭"搬运"；</li>
+        <li><strong>类脑计算（Brain-inspired Computing）</strong>——重构<em>计算模型</em>：
+        用脉冲神经网络（SNN）逼近大脑的事件驱动、存算一体机制。</li>
+      </ol>
+
+      <p>两条路线高度相关：大脑本身就是"存算一体"的极致范本。
+      在端侧智能、边缘 AI、自动驾驶等对能效敏感的场景，它们已进入落地期。
+      《电子信息制造业发展"十五五"规划》明确布局存算一体等新型计算范式——
+      它与光计算、量子计算并列，是绕开传统制程竞争、<strong>换道超车</strong>的国家级选项。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="冯诺依曼架构与存算一体架构对比">
+          <!-- 左：冯诺依曼 -->
+          <rect x="50" y="70" width="130" height="90" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="115" y="110" text-anchor="middle" font-size="14" fill="var(--fin)" font-weight="700">存储</text>
+          <text x="115" y="132" text-anchor="middle" font-size="11" fill="var(--text-soft)">内存 / 权重</text>
+
+          <rect x="300" y="70" width="130" height="90" rx="8" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="365" y="110" text-anchor="middle" font-size="14" fill="var(--semi)" font-weight="700">计算</text>
+          <text x="365" y="132" text-anchor="middle" font-size="11" fill="var(--text-soft)">CPU / GPU / NPU</text>
+
+          <!-- 双向搬运箭头 -->
+          <line x1="184" y1="103" x2="296" y2="103" stroke="var(--up)" stroke-width="2.5"/>
+          <path d="M296 103 L285 98 M296 103 L285 108" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <line x1="296" y1="125" x2="184" y2="125" stroke="var(--up)" stroke-width="2.5"/>
+          <path d="M184 125 L195 120 M184 125 L195 130" stroke="var(--up)" stroke-width="2.5" fill="none"/>
+          <text x="240" y="90" text-anchor="middle" font-size="11" fill="var(--up)">数据来回搬运</text>
+          <text x="240" y="152" text-anchor="middle" font-size="11" fill="var(--text-soft)">能耗 / 延迟主要来源</text>
+
+          <text x="240" y="196" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">冯·诺依曼架构</text>
+          <text x="240" y="216" text-anchor="middle" font-size="11" fill="var(--text-soft)">计算与存储分离</text>
+
+          <!-- 分隔线 -->
+          <line x1="452" y1="55" x2="452" y2="230" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="5 5"/>
+
+          <!-- 右：存算一体 -->
+          <rect x="490" y="70" width="150" height="90" rx="8" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.8"/>
+          <text x="565" y="102" text-anchor="middle" font-size="14" fill="var(--up)" font-weight="700">存储 = 计算</text>
+          <text x="565" y="124" text-anchor="middle" font-size="11" fill="var(--text-soft)">阵列内完成乘加</text>
+          <text x="565" y="143" text-anchor="middle" font-size="11" fill="var(--text-soft)">一步完成矩阵乘</text>
+
+          <text x="565" y="196" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">存算一体架构</text>
+          <text x="565" y="216" text-anchor="middle" font-size="11" fill="var(--text-soft)">消灭搬运，能效跃升</text>
+
+          <!-- 标题 -->
+          <text x="340" y="32" text-anchor="middle" font-size="15" fill="var(--text)" font-weight="700">架构对比：把计算搬到数据身边</text>
+        </svg>
+        <figcaption>图 1：冯·诺依曼架构 vs 存算一体架构。前者的能效损耗在"搬运"，后者的权重就地参与运算。</figcaption>
+      </figure>
+
+      <h2 id="s2">2. 大脑的工作原理：20W 的超级计算机</h2>
+
+      <p>理解类脑计算，先要理解它想模仿的对象。人脑是一台极端"不对称"的计算机：</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>维度</th><th>人脑</th><th>传统 AI 算力集群</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>规模</td><td>约 860 亿神经元、百万亿量级突触</td><td>数万张 GPU 互联</td></tr>
+          <tr><td>功耗</td><td>约 20 W（不到一台笔记本的十分之一）</td><td>兆瓦级</td></tr>
+          <tr><td>通信方式</td><td>稀疏动作电位（脉冲），事件驱动</td><td>同步时钟，密集矩阵搬运</td></tr>
+          <tr><td>存储与计算</td><td><strong>突触 = 存储 + 计算</strong>，物理一体</td><td>存储与计算分离</td></tr>
+          <tr><td>学习方式</td><td>局部可塑性规则（如 STDP）</td><td>全局反向传播，数据中心训练</td></tr>
+        </tbody>
+      </table>
+
+      <p>四个关键机制值得展开：</p>
+
+      <ol>
+        <li><strong>存算一体</strong>：突触既是存储单元（保存连接权重），又是计算单元（完成加权求和）。
+        神经元收到上游脉冲时，权重就地参与积分运算——不存在"从内存取权重"这一步；
+        </li>
+        <li><strong>事件驱动</strong>：神经元只在膜电位越过阈值时发出一个短暂的动作电位（脉冲），
+        无事件时几乎不耗电。信息编码在脉冲的<em>时间</em>里（频率编码 / 时序编码），
+        而不是像数字电路那样每拍全量计算；
+        </li>
+        <li><strong>稀疏性</strong>：任一时刻只有极小比例的神经元在发放。天然稀疏计算，
+        与 AI 推理中"激活值大量为零"的稀疏特性呼应；
+        </li>
+        <li><strong>局部可塑性（STDP）</strong>：脉冲时间依赖可塑性——前神经元先于后神经元发放则连接增强，
+        反之减弱。学习不需要把误差信号传遍全网，在突触本地即可完成，兼具容错与自适应。
+        </li>
+      </ol>
+
+      <div class="note">
+        <strong>为什么这很难在硅上实现？</strong>
+        数字电路的晶体管是"开关"——要么导通要么关断，天然擅长布尔逻辑而不擅长"连续可调的连接强度"。
+        要模拟一个突触，传统方案需要十几个晶体管组成电容+电路，面积与功耗都不划算。
+        这正是第 4 节"材料实现"要解决的问题：找到<strong>单个器件就能扮演一个突触</strong>的物理结构。
+      </div>
+
+      <h2 id="s3">3. 技术基础：存算一体的三档谱系</h2>
+
+      <p>"存算一体"是一个谱系，按计算与存储的<em>物理距离</em>分三档，距离越近能效越高、通用性越低：</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>档位</th><th>思路</th><th>典型实现</th><th>特点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>近存计算</strong><br><span class="mut">Near-Memory</span></td>
+            <td>把计算单元搬到存储芯片旁边</td>
+            <td>HBM-PIM、AiM（DRAM 内置 ALU）</td>
+            <td>改动最小、兼容现有生态，能效提升数倍</td>
+          </tr>
+          <tr>
+            <td><strong>存内计算</strong><br><span class="mut">CIM / PIM</span></td>
+            <td>存储阵列<em>内部</em>直接完成计算</td>
+            <td>SRAM/RRAM/Flash 阵列做矩阵乘</td>
+            <td>能效提升 1~2 个数量级，需专用编译栈</td>
+          </tr>
+          <tr>
+            <td><strong>存内逻辑</strong><br><span class="mut">Logic-in-Memory</span></td>
+            <td>逻辑与存储彻底融合，单元即电路</td>
+            <td>神经拟态芯片的突触阵列</td>
+            <td>最激进，通用性最低，面向专用场景</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>数学本质：为什么存储阵列天生会算矩阵？</strong>
+      AI 计算的最重负载是矩阵-向量乘（GEMV）：y = W·x。
+      在存储阵列里，把权重 W 存为电导（欧姆定律：I = G·V，乘法免费完成），
+      同一列的电流沿金属线自然汇流（基尔霍夫电流定律：求和免费完成）——
+      <strong>整个阵列一步输出 y</strong>，不需要任何"搬运"。
+      模拟 CIM 能效比最高，但受器件噪声、漂移与 ADC 精度限制；
+      数字 CIM 用位行拆分加移位累加保精度，与现有数字生态兼容，是大算力场景的主流选择。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="存算一体谱系与矩阵乘原理">
+          <!-- 阵列示意 -->
+          <text x="160" y="34" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">存储阵列一步完成 y = W·x</text>
+          <!-- 输入电压 -->
+          <g font-size="11" fill="var(--semi)">
+            <text x="52" y="78">V₁</text><text x="52" y="118">V₂</text><text x="52" y="158">V₃</text>
+          </g>
+          <!-- 电导格点 -->
+          <g stroke="var(--up)" stroke-width="1.5" fill="var(--up)" fill-opacity=".12">
+            <rect x="90" y="64" width="56" height="26" rx="4"/>
+            <rect x="90" y="104" width="56" height="26" rx="4"/>
+            <rect x="90" y="144" width="56" height="26" rx="4"/>
+          </g>
+          <g font-size="12" fill="var(--up)" text-anchor="middle" font-weight="700">
+            <text x="118" y="82">G₁₁</text><text x="118" y="122">G₂₁</text><text x="118" y="162">G₃₁</text>
+          </g>
+          <g stroke="var(--up)" stroke-width="1.5" fill="var(--up)" fill-opacity=".12">
+            <rect x="158" y="64" width="56" height="26" rx="4"/>
+            <rect x="158" y="104" width="56" height="26" rx="4"/>
+            <rect x="158" y="144" width="56" height="26" rx="4"/>
+          </g>
+          <g font-size="12" fill="var(--up)" text-anchor="middle" font-weight="700">
+            <text x="186" y="82">G₁₂</text><text x="186" y="122">G₂₂</text><text x="186" y="162">G₃₂</text>
+          </g>
+          <!-- 位线求和 -->
+          <line x1="230" y1="64" x2="230" y2="170" stroke="var(--fin)" stroke-width="3"/>
+          <text x="243" y="60" font-size="11" fill="var(--fin)">列电流 I<tspan dy="3" font-size="8">j</tspan><tspan dy="-3"> = Σ G</tspan><tspan dy="3" font-size="8">ij</tspan><tspan dy="-3">·V</tspan><tspan dy="3" font-size="8">i</tspan><tspan dy="-3">（基尔霍夫求和）</tspan></text>
+          <text x="252" y="120" font-size="11" fill="var(--text-soft)">↓ ADC</text>
+          <rect x="268" y="104" width="76" height="30" rx="6" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+          <text x="306" y="124" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">y 输出</text>
+
+          <!-- 右：三档谱系 -->
+          <text x="500" y="34" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">三档谱系：越近越快，越窄越专</text>
+          <line x1="420" y1="210" x2="640" y2="210" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <path d="M640 210 L628 205 M640 210 L628 215" stroke="var(--text-mute)" stroke-width="1.4" fill="none"/>
+          <text x="530" y="232" text-anchor="middle" font-size="11" fill="var(--text-soft)">← 能效升高　通用性降低 →</text>
+          <g font-size="12" text-anchor="middle" font-weight="700">
+            <circle cx="450" cy="180" r="16" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.5"/>
+            <text x="450" y="150" fill="var(--semi)">近存</text>
+            <circle cx="530" cy="150" r="16" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.5"/>
+            <text x="530" y="120" fill="var(--up)">存内</text>
+            <circle cx="610" cy="120" r="16" fill="var(--fin)" fill-opacity=".18" stroke="var(--fin)" stroke-width="1.5"/>
+            <text x="610" y="92" fill="var(--fin)">存内逻辑</text>
+          </g>
+        </svg>
+        <figcaption>图 2：欧姆定律做乘、基尔霍夫定律做和——存储阵列一步完成矩阵乘；右侧为按物理距离划分的三档谱系。</figcaption>
+      </figure>
+
+      <p><strong>类脑算法栈</strong>则解决"用什么模型跑在这样的硬件上"：
+      脉冲神经网络（SNN）以脉冲序列传递信息、以膜电位积分-发放（Integrate-and-Fire）建模神经元；
+      训练上，STDP 等局部规则适合在线学习，ANN 转 SNN 与代理梯度（Surrogate Gradient）
+      则让主流深度学习框架的训练成果迁移到 SNN；配套的编程框架（如 Lava、BrainPy）与工具链
+      是生态成熟度的关键短板。</p>
+
+      <h2 id="s4">4. 材料实现：从 SRAM 到忆阻器</h2>
+
+      <p>存算一体落地的第一问是：用什么器件存权重？不同材料器件决定了能效、精度与量产节奏：</p>
+
+      <table class="tbl">
+        <thead>
+          <tr><th>器件家族</th><th>原理</th><th>优势</th><th>短板与定位</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SRAM</strong></td>
+            <td>6T 单元位行充放电，数字加法树求和</td>
+            <td>与先进 CMOS 工艺完全兼容，精度高、速度快</td>
+            <td>6T 面积大、密度低；<strong>数字 CIM 首选</strong>，最接近商用</td>
+          </tr>
+          <tr>
+            <td><strong>DRAM</strong></td>
+            <td>1T1C 电容存储，近存计算内置 ALU</td>
+            <td>容量大、成本低，带宽提升立竿见影</td>
+            <td>需刷新；定位<strong>近存计算</strong>（HBM-PIM / AiM）</td>
+          </tr>
+          <tr>
+            <td><strong>嵌入式 Flash</strong></td>
+            <td>浮栅阈值电压存权重，电导直接参与乘加</td>
+            <td>单管多比特、成本极低、掉电非易失</td>
+            <td>写入慢、 endurance 有限；<strong>端侧低成本推理</strong></td>
+          </tr>
+          <tr>
+            <td><strong>忆阻器家族</strong><br>RRAM / PCM / MRAM / FeFET</td>
+            <td>阻值连续可调，单器件模拟一个突触</td>
+            <td>模拟突触的理想载体，3D 堆叠潜力大</td>
+            <td>良率、电导漂移与精度校准是待解难题；<strong>研究最热</strong></td>
+          </tr>
+          <tr>
+            <td><strong>ECRAM / 2D 材料</strong></td>
+            <td>电化学离子插入调制电导，动态更像生物突触</td>
+            <td>低功耗、多态、更贴近 STDP 动态</td>
+            <td>实验室阶段；面向<strong>神经拟态专用器件</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>三条工程观察：</p>
+
+      <ul>
+        <li><strong>成熟度排序</strong>：SRAM/DRAM（数字）→ eFlash（端侧模拟）→ 忆阻器（模拟大阵列）。
+        越靠前越兼容现有工艺，越靠后理论能效越高；</li>
+        <li><strong>模拟路线的命门在校准</strong>：忆阻器电导会随时间与温度漂移，阵列规模越大，
+        IR 压降与器件差异越显著，需要写验证、冗余与片上校准协同解决；</li>
+        <li><strong>材料创新与架构创新必须协同</strong>：HBM 配合近存计算服务大模型推理，
+        宽禁带 / 超宽禁带功率器件支撑数据中心能耗约束下的供电重构——
+        单点器件突破并不等于系统落地。</li>
+      </ul>
+
+      <h2 id="s5">5. 研究进展：芯片地图与成熟度判断</h2>
+
+      <p><strong>神经拟态芯片（类脑路线）</strong>：</p>
+
+      <ul>
+        <li><strong>IBM TrueNorth</strong>（2014）：100 万神经元 / 2.56 亿突触，功耗仅 70mW，
+        事件驱动架构的里程碑；后续 <strong>NorthPole</strong>（2023）转向推理能效，
+        在同等精度下能效大幅领先 GPU；</li>
+        <li><strong>Intel Loihi 1/2</strong>：128 核脉冲网格，支持片上脉冲学习，
+        配套 Lava 开源框架，是学术研究的主力平台；</li>
+        <li><strong>清华天机（Tianjic）</strong>：2019 年《Nature》封面，混合 ANN/SNN 的
+        异构架构，驱动无人自行车演示，展示了通用性与类脑机制的兼容路径；</li>
+        <li><strong>浙大达尔文系列</strong>：达尔文 2 代支持百万级神经元在线部署，
+        面向机器人与边缘场景，达尔文 3 代进一步扩展规模。</li>
+      </ul>
+
+      <p><strong>存算一体芯片（CIM 路线）</strong>：</p>
+
+      <ul>
+        <li><strong>三星 HBM-PIM</strong>（2021）与 <strong>SK 海力士 AiM</strong>：
+        在 DRAM 逻辑 die 上内置计算单元，近存计算进入存储大厂主产品线，
+        是"最小改动、最大带宽收益"的路线；</li>
+        <li><strong>Mythic / 知存科技</strong>：以 Flash 模拟存内计算切入端侧推理，
+        主打低成本、低功耗的语音与视觉场景；</li>
+        <li><strong>后摩智能、亿铸科技</strong>等国内梯队：分别押注大算力存算一体与数字 ReRAM 路线，
+        与"十五五"新型计算范式布局同频。</li>
+      </ul>
+
+      <p><strong>成熟度判断</strong>——三个梯队在解决不同的问题：</p>
+
+      <ol>
+        <li><strong>端侧小算力 CIM 已规模商用</strong>：语音唤醒、可穿戴健康监测是成熟市场；</li>
+        <li><strong>大算力数字 CIM 是当前主战场</strong>：目标是大模型推理的能效翻倍，
+        数字化精度与软件生态是竞争焦点；</li>
+        <li><strong>神经拟态芯片仍以科研与专用场景为主</strong>：SNN 训练方法、工具链与"杀手级应用"
+        三者缺一，距离通用化尚有距离。</li>
+      </ol>
+
+      <h2 id="s6">6. 如何继续学习</h2>
+
+      <p>这个方向横跨本站多篇笔记，建议按需跳读：</p>
+
+      <ul>
+        <li>想理解<strong>新型存储材料</strong>（RRAM/PCM/MRAM/FeFET 的物理机制）→
+        <a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">半导体材料全景</a>；</li>
+        <li>想理解 <strong>DRAM/NAND 阵列架构</strong>（近存计算的载体）→
+        <a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">存储器 · DRAM、NAND 与新型存储</a>；</li>
+        <li>想理解<strong>为什么需要换道</strong>（微缩的物理极限）→
+        <a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">摩尔定律与器件微缩</a>；</li>
+        <li>想理解 <strong>CIM 芯片怎么造出来</strong>（SRAM 阵列与逻辑工艺）→
+        <a href="2026-10-01-芯片制造工艺流程详解.html">芯片制造工艺流程详解</a>。</li>
+      </ul>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <p>三个高频误区：</p>
+
+      <ul>
+        <li><strong>"存算一体 = 类脑计算"</strong>：前者是架构（把计算搬进存储），后者是模型（模仿大脑）。
+        两者交集在于大脑本身就是存算一体的，但 CIM 芯片完全可以跑传统 ANN，不必是脉冲的；</li>
+        <li><strong>"模拟 CIM 一定更省"</strong>：模拟阵列省了 ADC 之外的一切，但 ADC 本身可能吃掉
+        一半以上功耗；阵列规模与精度要求上来后，数字 CIM 反而占优；</li>
+        <li><strong>"能效比是唯一指标"</strong>：精度、可编程性、软件生态、良率同样决定商用与否——
+        实验室 100 倍能效提升，落到产品里常常只剩个位数。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：冯·诺依曼瓶颈的物理本质是什么？为什么大模型推理把它放大了？</summary>
+        <div class="answer">计算单元与存储单元物理分离，数据必须经总线搬运，搬运的能耗与延迟超过计算本身。
+        大模型推理的主体是矩阵乘法，权重远大于片上缓存，几乎每一步都要从片外搬运——
+        所以内存访问能耗可占总能耗六成以上，"内存墙"成为第一约束。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：用欧姆定律和基尔霍夫定律解释：为什么存储阵列能"一步"完成矩阵乘？</summary>
+        <div class="answer">把权重存为电导 G、输入施加电压 V，欧姆定律 I = G·V 天然完成乘法；
+        同一列的电流沿位线汇流，基尔霍夫电流定律天然完成求和。整列输出 Iⱼ = Σᵢ Gᵢⱼ·Vᵢ，
+        即矩阵-向量乘的一行结果，无需任何数据搬运。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3：近存计算、存内计算、存内逻辑三档的区别是什么？为什么距离越近通用性越低？</summary>
+        <div class="answer">近存计算把计算单元放在存储芯片旁（HBM-PIM），仍用标准接口，兼容性最好；
+        存内计算让存储阵列直接算（SRAM/RRAM 阵列做 GEMV），需要专用编译栈；
+        存内逻辑把逻辑与存储彻底融合，电路按算法定制。
+        越接近存储单元本身，硬件与算法耦合越深，能换的负载就越少，故通用性下降。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：为什么说忆阻器是"模拟突触的理想载体"，它离商用还差什么？</summary>
+        <div class="answer">突触需要"连续可调的连接强度"，而忆阻器阻值可连续多态调节，单个器件即可存储并
+        计算一个权重，面积功耗远优于十几个晶体管搭出的 CMOS 突触。
+        离商用还差：阵列良率、电导随时间/温度的漂移、大规模阵列的 IR 压降与精度校准方案。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：TrueNorth、天机、HBM-PIM 分别代表哪条路线？成熟度如何排序？</summary>
+        <div class="answer">TrueNorth 与天机属神经拟态芯片（脉冲、事件驱动，天机为 ANN/SNN 混合架构）；
+        HBM-PIM 属近存计算（DRAM 内置计算单元）。
+        成熟度：HBM-PIM（已进存储大厂主产品线）&gt; 端侧 Flash/SRAM CIM（已商用）&gt;
+        大算力数字 CIM（主战场）&gt; 神经拟态芯片（科研与专用为主）。</div>
+      </details>
+
+        <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li class="current">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#类脑计算</span>
+      <span class="chip">#存算一体</span>
+      <span class="chip">#冯诺依曼瓶颈</span>
+      <span class="chip">#忆阻器</span>
+      <span class="chip">#神经拟态芯片</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
