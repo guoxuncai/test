@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>计算机发展史：计算机是如何工作的</title>
+<meta name="description" content="从雅卡尔的提花机到贝尔实验室的晶体管，从巴贝奇的失败到图灵的悲剧，从 ENIAC 的 18000 只电子管到你口袋里的手机——沿着人物与故事，讲清计算机的底层原理：开关如何学会做加法，存储程序如何改变一切。">
+<meta name="keywords" content="计算机发展史,计算机原理,电子管,晶体管,巴贝奇,图灵,冯诺依曼,ENIAC,仙童,摩尔定律,开源,Linux,存储程序">
+<meta name="date" content="2026-10-06">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 学习路线</span>
+    <h1 class="title">计算机发展史：计算机是如何工作的</h1>
+    <div class="meta">
+      <span>2026-10-06</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 24 篇</span><span class="sep"></span>
+      <span>阅读约 21 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        你的手机比把人类送上月球的计算机强十万倍，但它的工作原理和一个半世纪前的设想没有本质区别。
+        这一篇沿着真实的人物与故事，回答三个问题：
+        <strong>计算机到底是怎么"算"的（开关如何学会做加法）</strong>；
+        <strong>它经历了什么才走到今天（电子管 → 晶体管 → 集成电路）</strong>；
+        <strong>那些改变世界的发现和人物，背后发生了什么</strong>。
+        读完这一篇，再看本站后面的 MOSFET 与存储器，你会明白它们各自在计算机这部机器里扮演哪个零件。
+      </div>
+
+      <h2 id="s1">1. 直觉入门：计算机不过是一台"开关机器"</h2>
+
+      <p>
+        先抛开一切术语。计算机的本质可以用一句话说清：
+        <strong>用大量极快、极小的开关，按照写好的步骤，摆弄一串"是/否"</strong>。
+        一切复杂功能——放视频、跑游戏、训练大模型——都由这两个状态的排列组合涌现出来。
+      </p>
+
+      <p>
+        这个思想并不诞生于电子学。1804 年，法国里昂的织匠雅卡尔造出了
+        <strong>提花机</strong>：织物的花纹由一串打孔卡片控制，卡上有孔的地方针穿过、布面留下经线，
+        无孔的地方被顶开、纬线换色——<strong>打孔卡片就是最早的"程序"，织机就是最早按程序执行的机器</strong>。
+        里昂的织工们当时干了一件事：把抗议失业的提花机卡片扔进河里。
+        "机器抢走工作"的恐慌，第一次登上历史舞台，主角恰好就是程序控制思想本身。
+      </p>
+
+      <p>
+        更早的算盘证明人类会"算"，帕斯卡 1642 年为收税的父亲造的齿轮加法器、
+        莱布尼茨 1673 年的四则运算器证明人类会"用机器算"——但它们每一步都要人摇。
+        真正的飞跃是让机器<strong>自己按步骤走完全程</strong>：这就是"程序"概念的诞生。
+        而支撑这一切的数学地基，要到两百年后才由一位英国数学家打好。
+      </p>
+
+      <h2 id="s2">2. 梦想的起点：巴贝奇的失败与爱达的预言</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="计算机发展史时间线：1804 提花机到 1991 Linux">
+          <!-- 主轴 -->
+          <line x1="40" y1="165" x2="645" y2="165" stroke="var(--border)" stroke-width="3"/>
+          <path d="M648 165 L640 161 M648 165 L640 169" stroke="var(--border)" stroke-width="3" fill="none"/>
+
+          <!-- 上方节点 -->
+          <g font-size="11" fill="var(--text-soft)">
+            <circle cx="70" cy="165" r="5" fill="var(--fin)"/>
+            <line x1="70" y1="158" x2="70" y2="118" stroke="var(--border)"/>
+            <text x="70" y="108" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1804 雅卡尔提花机</text>
+            <text x="70" y="94" text-anchor="middle">打孔卡片 = 第一个程序</text>
+
+            <circle cx="210" cy="165" r="5" fill="var(--fin)"/>
+            <line x1="210" y1="158" x2="210" y2="118" stroke="var(--border)"/>
+            <text x="210" y="108" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1854 布尔代数</text>
+            <text x="210" y="94" text-anchor="middle">把逻辑变成代数</text>
+
+            <circle cx="350" cy="165" r="5" fill="var(--fin)"/>
+            <line x1="350" y1="158" x2="350" y2="118" stroke="var(--border)"/>
+            <text x="350" y="108" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1936 图灵机</text>
+            <text x="350" y="94" text-anchor="middle">划出"可计算"的边界</text>
+
+            <circle cx="490" cy="165" r="5" fill="var(--semi)"/>
+            <line x1="490" y1="158" x2="490" y2="118" stroke="var(--border)"/>
+            <text x="490" y="108" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1945 存储程序</text>
+            <text x="490" y="94" text-anchor="middle">ENIAC / EDVAC 报告</text>
+
+            <circle cx="620" cy="165" r="5" fill="var(--semi)"/>
+            <line x1="620" y1="158" x2="620" y2="118" stroke="var(--border)"/>
+            <text x="620" y="108" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1958/59 集成电路</text>
+            <text x="620" y="94" text-anchor="middle">基尔比 / 诺伊斯</text>
+          </g>
+
+          <!-- 下方节点 -->
+          <g font-size="11" fill="var(--text-soft)">
+            <circle cx="140" cy="165" r="5" fill="var(--fin)"/>
+            <line x1="140" y1="172" x2="140" y2="212" stroke="var(--border)"/>
+            <text x="140" y="228" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1837 巴贝奇分析机</text>
+            <text x="140" y="242" text-anchor="middle">百年超前，至死未成</text>
+
+            <circle cx="280" cy="165" r="5" fill="var(--fin)"/>
+            <line x1="280" y1="172" x2="280" y2="212" stroke="var(--border)"/>
+            <text x="280" y="228" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1937 香农联姻</text>
+            <text x="280" y="242" text-anchor="middle">布尔 × 继电器电路</text>
+
+            <circle cx="420" cy="165" r="5" fill="var(--semi)"/>
+            <line x1="420" y1="172" x2="420" y2="212" stroke="var(--border)"/>
+            <text x="420" y="228" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1947 晶体管</text>
+            <text x="420" y="242" text-anchor="middle">贝尔实验室</text>
+
+            <circle cx="555" cy="165" r="5" fill="var(--semi)"/>
+            <line x1="555" y1="172" x2="555" y2="212" stroke="var(--border)"/>
+            <text x="555" y="228" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1971 微处理器</text>
+            <text x="555" y="242" text-anchor="middle">Intel 4004</text>
+
+            <circle cx="645" cy="165" r="5" fill="var(--up)"/>
+            <line x1="645" y1="172" x2="645" y2="212" stroke="var(--border)"/>
+            <text x="645" y="228" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">1991 Linux</text>
+            <text x="630" y="242" text-anchor="middle">开源时代</text>
+          </g>
+
+          <!-- 阶段底色标注 -->
+          <text x="70" y="286" font-size="11.5" fill="var(--fin)">● 机械与数学时代</text>
+          <text x="230" y="286" font-size="11.5" fill="var(--semi)">● 电子时代</text>
+          <text x="430" y="286" font-size="11.5" fill="var(--up)">● 晶体管与开源时代</text>
+          <text x="340" y="312" text-anchor="middle" font-size="11" fill="var(--text-mute)">从织机的卡片到手机芯片：思想先行一个多世纪，器件追赶了一百年</text>
+        </svg>
+        <figcaption>图 1：计算机发展史十座里程碑。注意时间轴的密度——从 1804 到 1936 思想酝酿了 132 年，而从晶体管到微处理器只用了 24 年。</figcaption>
+      </figure>
+
+      <p>
+        1837 年，英国数学家<strong>查尔斯·巴贝奇</strong>设想出一台"分析机"：
+        用蒸汽驱动的齿轮做运算，用打孔卡输入指令与数据，
+        有"仓库"（存储）和"磨坊"（运算器）——这就是现代计算机的完整蓝图，
+        比电子管早了一百多年。英国政府为他的差分机投入了巨额资金（约当时一艘战舰的造价），
+        却在十年拖延与超高精度齿轮的工艺要求面前失去耐心，项目下马。
+        巴贝奇至死都没看到任何一台完整机器运转，1871 年在失望中去世，
+        伦敦《泰晤士报》的讣告不无刻薄地写道他"一生中最有价值的产出是与社会习惯势力的争吵"。
+      </p>
+
+      <p>
+        但故事有个更动人的分支。<strong>爱达·洛芙莱斯</strong>——诗人拜伦唯一合法的女儿——
+        1843 年为分析机翻译意大利学者的文章时，加上了比原文长三倍的注释。
+        在"注释 G"里，她写下了用分析机计算伯努利数的完整步骤——被公认为<strong>历史上第一个计算机程序</strong>。
+        更惊人的是她的洞察力：她预见这台机器"不仅能算数字，还能操纵任何可以符号化的东西"——
+        织出花纹、谱写音乐。一百年后图灵写"机器能思考吗"时，引用的第一个反对者就是爱达。
+        1979 年美国国防部把一门新语言命名为 Ada，纪念这位 36 岁病逝的"程序之母"。
+      </p>
+
+      <p>
+        失败的巴贝奇并非毫无遗产。1890 年美国人口普查面临灾难：上一轮普查用 8 年才统计完，
+        等结果出来人口早已变化。工程师<strong>霍列瑞斯</strong>用打孔卡制表机把这一轮压缩到两年内完成，
+        他创办的公司几经合并，1924 年改名——<strong>国际商业机器公司，IBM</strong>。
+        计算机产业的第一家巨头，竟然是从"数人头"起家的。
+      </p>
+
+      <h2 id="s3">3. 底层原理：开关如何学会做加法</h2>
+
+      <p>
+        现在回答核心问题：一堆开关凭什么能算 1+1？答案分三层，每一层都对应一位关键人物。
+      </p>
+
+      <p>
+        <strong>第一层：把逻辑变成代数。</strong>1854 年，自学成才的数学教师
+        <strong>乔治·布尔</strong>出版《思维规律的研究》，证明逻辑推理可以用代数运算表达：
+        AND（与）、OR（或）、NOT（非）三种运算，就能描述一切演绎推理。
+        当时这只是一位教师对亚里士多德逻辑学的优雅整理，无人预见到它七十年后会成为机器的"母语"。
+      </p>
+
+      <p>
+        <strong>第二层：把代数接上电流。</strong>1937 年，MIT 硕士生<strong>克劳德·香农</strong>
+        在硕士论文里做了一件被后世称为"本世纪最重要硕士论文"的事：
+        他证明开关电路（串联=AND，并联=OR，常闭触点=NOT）与布尔代数完全同构——
+        于是<strong>任何逻辑判断都能用开关电路搭出来，而布尔代数就是化简电路的数学工具</strong>。
+        电子计算机的理论基础，在这一刻才真正齐备。
+      </p>
+
+      <p>
+        <strong>第三层：造一台加法器。</strong>计算机内部只有二进制（0 和 1——正好对应开关的断与通）。
+        一位二进制加法的全部真值：0+0=00，0+1=01，1+0=01，1+1=10。
+        观察规律：和位（右一位）是"输入相异则 1"——恰好是<strong>异或（XOR）</strong>；
+        进位是"输入同为 1 才 1"——恰好是<strong>与门（AND）</strong>。
+        于是两个门就能搭出<strong>半加器</strong>；把进位再接一级全加器，逐位串联，就得到任意位数的加法器：
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半加器：异或门产生和，与门产生进位">
+          <!-- 输入 -->
+          <text x="40" y="88" font-size="13" fill="var(--text)" font-weight="700">A</text>
+          <text x="40" y="188" font-size="13" fill="var(--text)" font-weight="700">B</text>
+          <line x1="52" y1="84" x2="120" y2="84" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <line x1="52" y1="184" x2="120" y2="184" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <!-- 分支 -->
+          <circle cx="86" cy="84" r="3.5" fill="var(--fin)"/>
+          <line x1="86" y1="84" x2="86" y2="152" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <line x1="86" y1="152" x2="120" y2="152" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <circle cx="86" cy="184" r="3.5" fill="var(--fin)"/>
+          <line x1="86" y1="184" x2="102" y2="184" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <line x1="102" y1="184" x2="102" y2="120" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <line x1="102" y1="120" x2="120" y2="120" stroke="var(--text-mute)" stroke-width="1.8"/>
+
+          <!-- 异或门 -->
+          <rect x="120" y="64" width="130" height="40" rx="20" fill="var(--surface)" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="185" y="89" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">异或门 XOR</text>
+          <!-- 与门 -->
+          <rect x="120" y="132" width="130" height="40" rx="6" fill="var(--surface)" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="185" y="157" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">与门 AND</text>
+
+          <!-- 输出 -->
+          <line x1="250" y1="84" x2="330" y2="84" stroke="var(--semi)" stroke-width="2"/>
+          <path d="M334 84 L327 80 M334 84 L327 88" stroke="var(--semi)" stroke-width="2" fill="none"/>
+          <text x="345" y="89" font-size="13" fill="var(--semi)" font-weight="700">S 和位</text>
+          <line x1="250" y1="152" x2="330" y2="152" stroke="var(--fin)" stroke-width="2"/>
+          <path d="M334 152 L327 148 M334 152 L327 156" stroke="var(--fin)" stroke-width="2" fill="none"/>
+          <text x="345" y="157" font-size="13" fill="var(--fin)" font-weight="700">C 进位</text>
+
+          <!-- 真值表 -->
+          <g font-size="11.5" fill="var(--text-soft)">
+            <rect x="460" y="52" width="190" height="152" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+            <text x="555" y="76" text-anchor="middle" fill="var(--text)" font-weight="700">真值表</text>
+            <text x="500" y="98" text-anchor="middle">A  B</text>
+            <text x="580" y="98" text-anchor="middle">S  C</text>
+            <line x1="472" y1="106" x2="638" y2="106" stroke="var(--border)"/>
+            <text x="500" y="126" text-anchor="middle">0  0</text><text x="580" y="126" text-anchor="middle">0  0</text>
+            <text x="500" y="148" text-anchor="middle">0  1</text><text x="580" y="148" text-anchor="middle" fill="var(--semi)">1  0</text>
+            <text x="500" y="170" text-anchor="middle">1  0</text><text x="580" y="170" text-anchor="middle" fill="var(--semi)">1  0</text>
+            <text x="500" y="192" text-anchor="middle" fill="var(--fin)">1  1</text><text x="580" y="192" text-anchor="middle" fill="var(--fin)">0  1</text>
+          </g>
+
+          <text x="185" y="212" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">1+1=10：和 0 进 1——两个门就"算"出了一次加法</text>
+          <text x="340" y="252" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">半加器 + 半加器 = 全加器；全加器串联 32 级 = 32 位加法器；</text>
+          <text x="340" y="272" text-anchor="middle" font-size="11.5" fill="var(--text-mute)">加法器 + 寄存器 + 时钟 = 处理器的心脏——再复杂的运算最终都拆成加法与移位</text>
+        </svg>
+        <figcaption>图 2：半加器——计算机最底层的算术。香农的洞见在此兑现：逻辑（异或、与）就是电路，电路就是逻辑。存"0/1"的锁存器（一个带反馈的门回路）补上记忆，计算机的全部硬件就凑齐了。</figcaption>
+      </figure>
+
+      <p>
+        最后一块拼图是<strong>记忆</strong>：把两个或非门首尾相连成一个闭环（触发器），
+        电路就能"记住"一个比特——输出翻转后自己喂养自己，直到下一个信号来改写它。
+        开关会做加法、会记事，剩下的只是规模：1940 年代的人要用上千个继电器或电子管去堆，
+        而今天一颗手机芯片里塞着一百多亿个这样的开关。原理，从未变过。
+      </p>
+
+      <h2 id="s4">4. 电子管时代：巨人苏醒的十年</h2>
+
+      <h3>4.1 三极管：给电流装上"阀门"</h3>
+      <p>
+        电子管的源头是一次失败的爱迪生：1883 年他在灯泡里加了一根电极，发现灯丝会向电极
+        泄漏电流（爱迪生效应），百思不解，注册专利后搁置。1904 年英国工程师弗莱明把它做成
+        <strong>真空二极管</strong>（检波）；1906 年美国的德福雷斯特在灯丝与极板之间插入第三极
+        （栅极）——小小的栅压变化可以控制大得多的极板电流：<strong>真空三极管</strong>。
+        它既是放大器也是电子开关，而且开关速度是继电器的千倍。
+        计算机从"机械"跨入"电子"，靠的就是这只玻璃管。
+      </p>
+
+      <h3>4.2 三台机器，三段命运</h3>
+      <p>
+        电子计算机的"第一台"归属是一桩著名的公案，三台机器各有各的精彩：
+      </p>
+      <table>
+        <thead><tr><th>机器</th><th>时间 / 国别</th><th>关键事实</th><th>命运的注脚</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Z3</strong></td><td>1941，德国</td><td>楚泽在父母公寓客厅用约 2600 个继电器造出可编程计算机，程序打孔在报废电影胶片上</td><td>战时孤立无人知晓；1998 年被证明图灵完备。楚泽几乎独立发明了整个体系，却与诺奖级荣耀绝缘</td></tr>
+          <tr><td><strong>ABC</strong></td><td>1942，美国</td><td>阿塔纳索夫与贝里造出第一台电子数字计算装置（专用、不可编程），解线性方程组</td><td>1973 年联邦法院据此判决 ENIAC 专利无效——"第一台电子计算机"的法律名分属于 ABC</td></tr>
+          <tr><td><strong>ENIAC</strong></td><td>1945，美国</td><td>约 18000 只电子管、重 30 吨、耗电 150 千瓦，加法每秒 5000 次，比继电器快千倍</td><td>为弹道表而生的"巨人"，公布当天报纸头版；电子管每天烧坏几个，工程师捧着备用管跑动换修</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        ENIAC 还藏着计算机史上最不该被遗忘的群体：机器没有编程语言，"编程"意味着
+        拖动线缆、设置三千个开关、让 18000 只管子协同工作——军方雇了六位女数学家完成这件事，
+        后世称她们 <strong>ENIAC Six</strong>。但 1946 年那场庆功宴上没有她们的名字，
+        甚至合影里连一张脸都模糊不可辨。她们被当作"接线员"半个世纪，
+        直到 1990 年代历史学者重访，才把"程序员"这个职业的起点还给她们。
+      </p>
+
+      <h3>4.3 图灵与冯·诺依曼：一纸报告，两段人生</h3>
+      <p>
+        <strong>艾伦·图灵</strong> 1936 年的那篇论文《论可计算数》做了两件划时代的事：
+        用一台假想的"纸带机器"（图灵机）给"什么是可计算的"划出了数学边界——
+        有些问题（如停机问题）<strong>原理上</strong>就无解，任何计算机都无解；
+        并顺手证明通用图灵机可以通过读入"描述表"模拟任何其他机器——
+        这就是<strong>"存储程序"的思想雏形</strong>。二战中他在布莱切利园主持破译德军 Enigma 密码，
+        历史学家估计至少缩短战争两年。而结局令人心碎：1952 年他因同性恋身份被定罪、强制激素治疗，
+        1954 年死于氰化物中毒，枕边放着一只咬了一口的苹果。2013 年英国女王赦免，
+        2021 年他的头像被印上 50 英镑纸币——迟到了近七十年的道歉。
+      </p>
+      <p>
+        <strong>冯·诺依曼</strong>——那位据说心算八位数除法比同事手摇计算器还快的数学怪物——
+        1944 年以顾问身份加入 ENIAC 团队，1945 年 6 月起草了 101 页的
+        《EDVAC 报告初稿》：把程序与数据一起放进存储器、用统一的二进制表示、
+        按序取指执行——<strong>存储程序体系结构</strong>从此定型，今天一切计算机仍是"冯·诺依曼机"。
+        但报告上只署了他一个人的名字，把埃克特与莫奇利积累数年的工程构想写成"冯的独创"，
+        团队就此决裂——两人后来出走创办 UNIVAC，而"冯·诺依曼结构"这个名字，
+        成了计算机史上最著名的一桩署名公案。1951 年交付的 UNIVAC I 是第一台商用计算机，
+        1952 年大选夜它从 1% 的提前样本算出艾森豪威尔大胜，CBS 主播不敢播报——
+        凌晨开票结果与机器预测吻合，美国观众第一次意识到：机器算的东西，可以比人靠谱。
+      </p>
+
+      <h2 id="s5">5. 晶体管革命：1947 年 12 月的那个下午</h2>
+
+      <p>
+        电子管把计算机带进了电子时代，但它的缺陷致命：玻璃壳、灯丝、瓦级功耗、小时级预热、按天计的故障率。
+        修复它的是贝尔实验室的三个人。1947 年 12 月 16 日，<strong>约翰·巴丁</strong>与
+        <strong>沃尔特·布拉顿</strong>把一枚金箔触点压在锗片上，观察到输入信号被放大了一个量级——
+        <strong>点接触晶体管</strong>诞生。一周后他们向实验室管理层演示，记录里的措辞谨慎而克制，
+        但在场的人都明白：继电器与电子管的时代结束了。理论推手是团队领导
+        <strong>威廉·肖克利</strong>——他当场被这道"场效应" puzzle 刺激，随后闭门一个月推导出更可靠、
+        更易制造的<strong>结型晶体管</strong>理论。1956 年三人同获诺贝尔物理学奖；
+        巴丁更成为史上唯一两获物理学诺奖的人（第二次是超导 BCS 理论）。
+      </p>
+
+      <p>
+        晶体管比电子管小百倍、功耗千分之一、寿命近乎无限，而且生来就适合批量制造。
+        命运的齿轮开始转动：1955 年肖克利离开贝尔实验室，回到加州老家帕罗奥图创办半导体公司——
+        却因管理粗暴，八位顶尖年轻人在 1957 年 9 月集体辞职，报纸称他们
+        <strong>"八叛逆"</strong>。八人拿到仙童摄影器材公司 150 万美元投资，创办
+        <strong>仙童半导体</strong>——两年内做出硅晶体管与平面工艺，"硅谷"的"硅"由此得名。
+        1958 年夏，德州仪器的<strong>杰克·基尔比</strong>趁全员休假独自值班时，把晶体管、电阻、电容
+        直接做在同一块锗片上——<strong>集成电路</strong>；1959 年初，仙童的<strong>罗伯特·诺伊斯</strong>
+        独立想出用硅与平面工艺实现同样思路（并解决了互连），两家为此打了十年专利战，最终交叉授权握手言和。
+        基尔比 2000 年拿了诺贝尔奖，领奖时说："如果诺伊斯还在世，这个奖应该两个人分。"
+      </p>
+
+      <table>
+        <thead><tr><th>维度</th><th>电子管（ENIAC，1945）</th><th>晶体管（1960 年代起）</th></tr></thead>
+        <tbody>
+          <tr><td>开关速度</td><td>万次/秒级</td><td>百万次/秒起步，今天吉赫兹时钟</td></tr>
+          <tr><td>功耗</td><td>每管瓦级，整机 150 kW</td><td>微瓦级；单芯片百瓦级跑亿万只</td></tr>
+          <tr><td>可靠性</td><td>灯丝烧毁按天计</td><td>固态无寿命极限，失效率按 FIT 计</td></tr>
+          <tr><td>体积</td><td>30 吨占满一屋子</td><td>指甲盖芯片容纳百亿只</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        1965 年，仙童的<strong>戈登·摩尔</strong>应《电子学》杂志之邀写短文，顺手画了一条观测曲线：
+        芯片上的元件数<strong>每年翻倍</strong>（1975 年修正为两年）。"摩尔定律"不是物理定律，
+        而是一场自我实现的预言——整个产业按这条曲线排定研发节奏，五十年未曾失约。
+        1968 年诺伊斯与摩尔出走创办 Intel；1971 年 11 月，Intel 4004 发布：2300 只晶体管、
+        740 kHz，把"整台处理器"塞进一枚芯片——<strong>微处理器</strong>问世（背后还有个精彩商业故事：
+        日本 Busicom 计算器公司的定制芯片订单，Intel 花一万美元买断版权反而成就了自己）。
+        1975 年 Altair 8800 激发了比尔·盖茨，1977 年 Apple II 开辟个人计算机市场，
+        1981 年 IBM PC 落地——计算机从恒温机房里的"国家重器"，变成了每个人的桌面工具。
+        这条线继续向前，就是我们本站的主题：FinFET、GAA、EUV 光刻与百亿晶体管芯片。
+      </p>
+
+      <h2 id="s6">6. 存储程序与今天：一条指令的一生</h2>
+
+      <p>
+        现代计算机（包括你的手机）依然严格运行 1945 年定下的那份流程。
+        以一条加法指令为例，跟随它走完一生：
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="取指-译码-执行循环与存储程序结构">
+          <!-- 内存 -->
+          <rect x="30" y="60" width="170" height="180" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="115" y="86" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">内存（存储程序）</text>
+          <line x1="45" y1="98" x2="185" y2="98" stroke="var(--border)"/>
+          <g font-size="11" fill="var(--text-soft)">
+            <text x="55" y="120">0x100: LOAD A</text>
+            <text x="55" y="140">0x101: LOAD B</text>
+            <text x="55" y="160" fill="var(--semi)" font-weight="700">0x102: ADD A,B</text>
+            <text x="55" y="180">0x103: STORE C</text>
+            <text x="55" y="205" fill="var(--fin)">数据: A=3, B=5</text>
+          </g>
+
+          <!-- CPU -->
+          <rect x="280" y="60" width="240" height="180" rx="8" fill="var(--surface-2)" stroke="var(--semi)"/>
+          <text x="400" y="86" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">CPU</text>
+          <rect x="300" y="104" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="345" y="125" text-anchor="middle" font-size="11.5" fill="var(--text)">控制器（译码）</text>
+          <rect x="410" y="104" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="455" y="125" text-anchor="middle" font-size="11.5" fill="var(--text)">ALU（运算）</text>
+          <g font-size="11" fill="var(--text-soft)">
+            <text x="310" y="168">程序计数器 PC → 0x102</text>
+            <text x="310" y="188">寄存器: A=3, B=5</text>
+            <text x="310" y="212" fill="var(--fin)">执行后 C=8 写回寄存器</text>
+          </g>
+
+          <!-- 取指 箭头 -->
+          <line x1="200" y1="105" x2="276" y2="105" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <path d="M280 105 L273 101 M280 105 L273 109" stroke="var(--text-mute)" stroke-width="1.8" fill="none"/>
+          <text x="238" y="96" text-anchor="middle" font-size="11" fill="var(--text-soft)">① 取指</text>
+          <!-- 写回箭头 -->
+          <line x1="280" y1="210" x2="204" y2="210" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <path d="M200 210 L207 206 M200 210 L207 214" stroke="var(--text-mute)" stroke-width="1.8" fill="none"/>
+          <text x="240" y="226" text-anchor="middle" font-size="11" fill="var(--text-soft)">④ 写回</text>
+
+          <!-- 循环 -->
+          <g font-size="12" fill="var(--text)" font-weight="700">
+            <text x="400" y="278" text-anchor="middle">② 译码 → ③ 执行：ALU 取出 A、B 相加 → PC 自增指向 0x103</text>
+            <text x="400" y="296" text-anchor="middle" font-size="11" fill="var(--text-mute)" font-weight="400">每秒重复数十亿次——这就是"计算机在运行"的全部含义</text>
+          </g>
+        </svg>
+        <figcaption>图 3：存储程序体系结构。程序与数据同住在内存里，CPU 永无止境地循环"取指—译码—执行—写回"。ENIAC 时代"编程"要重插一天线缆，存储程序让它变成往内存里放几个字——软件产业由此诞生。</figcaption>
+      </figure>
+
+      <p>
+        这个循环之上的故事同样精彩，而且和你正在读的这篇笔记直接相关：
+        1983 年，MIT 的<strong>理查德·斯托曼</strong>发起 GNU 计划，主张软件应当自由使用、修改、分享，
+        1989 年发布 GPL 许可证；1991 年 8 月 25 日，赫尔辛基的 21 岁学生
+        <strong>林纳斯·托瓦兹</strong>在新闻组发帖："我在做一个（免费的）操作系统……只是爱好，
+        不会像 GNU 那样庞大专业。"——<strong>Linux</strong> 内核 0.01 版一个月后放出，
+        全球志愿者通过邮件列表协作，最终占领了全球服务器、安卓手机和几乎所有超级计算机。
+        2005 年托瓦兹又写出分布式版本控制工具 <strong>Git</strong>，2008 年 GitHub 上线。
+        你此刻读的这套笔记，正是托管在 GitHub 开源仓库里自动部署的——
+        从雅卡尔的打孔卡片到 Git 的提交记录，"把步骤写给机器与众人共享"这条线索，
+        贯穿了计算机两百四十年的全部历史。
+      </p>
+
+      <h2 id="s7">7. 遗产、误区与自测</h2>
+
+      <h3>7.1 两百年演进留下的三条启示</h3>
+      <ul>
+        <li><strong>思想领先器件一个世纪</strong>：程序控制（1804）、布尔代数（1854）、通用机器（1837/1936）全部先于能实现它们的器件出现——产业的瓶颈常常不是"想不到"，而是"造不出"；</li>
+        <li><strong>失败的英雄塑造了今天</strong>：巴贝奇至死未见机器运转，楚泽的发明淹没在战火里，ENIAC Six 被遗忘半个世纪——技术的史书只登胜利者，但每一级台阶都真实存在；</li>
+        <li><strong>抽象分层是计算机最伟大的发明</strong>：开关 → 门 → 部件 → 指令 → 语言 → 应用，每层只需理解相邻层。今天写 Python 的人不必懂晶体管，正如当年织工不必懂卡片机——这种"分层封装"的思想，值得移植到任何复杂系统里。</li>
+      </ul>
+
+      <h3>7.2 三个常见误区</h3>
+      <ul>
+        <li><strong>"ENIAC 是第一台计算机"</strong>：它是第一台通用电子数字计算机，但 Z3（可编程、图灵完备）与 ABC（电子式）都更早；法律上（1973 年判决）"第一台电子数字计算机"属于 ABC；</li>
+        <li><strong>"冯·诺依曼一个人发明了存储程序结构"</strong>：报告确实由他执笔，但核心构想来自埃克特与莫奇利的工程实践——署名公案提醒我们，把集体创造记在一个人名下是多么容易；</li>
+        <li><strong>"晶体管只是更小的电子管"</strong>：电子管靠加热阴极发射电子，晶体管靠固体内的载流子（电子/空穴）受电场控制——物理机制完全不同。后者没有灯丝、不需要预热，且天生适合光刻批量制造，这才有了集成电路与摩尔定律。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：半加器为什么只需要异或门和与门？1+1 的输出是什么？</summary>
+        <div class="answer">一位二进制加法的真值表里，和位恰好是"输入相异为 1"（异或），进位恰好是
+        "输入同为 1"（与门）。1+1=10：和位 0、进位 1。全加器再多处理一个进位输入，
+        逐位串联即得任意位宽的加法器——处理器的一切算术都由它扩展而来。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 2：香农的硕士论文解决了什么问题？为什么说它是"计算机的理论地基"？</summary>
+        <div class="answer">它证明开关电路与布尔代数同构：串并联/常闭触点分别对应 AND/OR/NOT。
+        从此"逻辑推理"可以物理化为电路，布尔代数又反过来成为化简电路的数学工具——
+        没有这座桥，就没有后来的逻辑门、加法器与一切数字硬件。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 3："存储程序"相比 ENIAC 的插线编程，革命性在哪里？</summary>
+        <div class="answer">程序与数据同存于内存、同为二进制编码：改程序=改内存里的几个字，
+        不再是重插一天线缆；机器自动取指执行，还能把程序当数据处理（这正是编译器、
+        操作系统乃至病毒存在的可能性）。软件产业——包括你现在读的这篇文章——都建立在它之上。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：晶体管为什么能取代电子管？请说出至少两个物理层面的差异。</summary>
+        <div class="answer">① 无需加热阴极：电子管靠热发射，晶体管靠固态半导体内载流子受控，功耗低千倍；
+        ② 固态结构无灯丝老化与真空封装，寿命近乎无限、可靠性高；
+        ③ 尺寸由掺杂与光刻定义，可光刻批量制造且可微缩——这是集成电路与摩尔定律的前提。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：摩尔定律为什么不是物理定律？它靠什么维持了五十年？</summary>
+        <div class="answer">它是对产业节奏的经验观测（元件密度每约两年翻倍），没有任何物理机制强制它成立。
+        它得以延续靠的是全产业链的自我实现：设备商按曲线排光刻机路线图、
+        芯片厂按曲线排建厂计划、软件按曲线吞掉硬件红利——直到物理极限（原子尺度漏电、
+        光刻波长）逼近，才有了 FinFET/GAA 这些"绕过经典微缩"的新结构，也就是本站后续各篇的主题。</div>
+      </details>
+
+      <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 2 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 3 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 4 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 5 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 6 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 7 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 8 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 9 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 10 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 11 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 12 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 13 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 14 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 15 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计流程与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装、测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 20 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 21 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 22 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 23 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 23 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li class="current">第 24 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 24 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#计算机发展史</span>
+      <span class="chip">#布尔代数</span>
+      <span class="chip">#晶体管</span>
+      <span class="chip">#存储程序</span>
+      <span class="chip">#ENIAC</span>
+      <span class="chip">#开源</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
