@@ -1,0 +1,23 @@
+#!/bin/sh
+# pre-push：多机协作保护。
+# 当远端存在本机尚未同步的提交时（历史已分叉），阻止本次推送并提示先同步，
+# 避免两台电脑互相覆盖。此处只做拦截，不在钩子内改写引用。
+
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+[ -z "$branch" ] && exit 0
+
+upstream=$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null)
+[ -z "$upstream" ] && exit 0
+
+git fetch origin "$branch" >/dev/null 2>&1 || exit 0
+
+behind=$(git rev-list --count HEAD.."$upstream" 2>/dev/null || echo 0)
+if [ "$behind" -gt 0 ] 2>/dev/null; then
+    echo ""
+    echo "[pre-push] 远端有 $behind 个本机尚未同步的提交，已阻止本次推送。"
+    echo "[pre-push] 请先执行： git pull --rebase    或双击 sync.bat"
+    echo ""
+    exit 1
+fi
+
+exit 0
