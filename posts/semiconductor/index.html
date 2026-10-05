@@ -50,6 +50,7 @@
   .stage-theme{padding-left:22px}
   .prow-tags,.arch-tags{display:none}
   .stage-head{flex-wrap:wrap}
+  #professionSection .stage{grid-template-columns:1fr !important}
 }
 </style>
 </head>
@@ -87,7 +88,58 @@
 </header>
 
 <div class="wrap layout" style="display:block">
-  <section id="pathSection" style="margin:44px 0 60px">
+  <section id="prefaceSection" style="margin:44px 0 60px">
+    <h2 class="sec-title">前言</h2>
+    <div class="stage-list" style="gap:18px">
+      <div class="stage" style="padding:22px 26px">
+        <p style="font-size:15px;line-height:1.9;color:var(--text-soft)">
+          这份目录整理了本站全部半导体与集成电路方向的学习笔记。这些笔记记录的是同一个问题的答案：
+          <strong style="color:var(--text)">一颗芯片是如何从沙子变成智慧中枢的</strong>——
+          从固体物理与能带理论出发，经过 PN 结、MOSFET 等器件原理，走进光刻、刻蚀、沉积的制造车间，
+          再延伸到 EDA 设计、封装测试与产业链全景。它既不是教科书，也不是新闻合集，
+          而是一条<strong style="color:var(--text)">可以照着走完的学习路线</strong>。
+        </p>
+        <p style="font-size:15px;line-height:1.9;color:var(--text-soft);margin-top:12px">
+          使用建议分三步：<strong style="color:var(--text)">①</strong> 先读「学习路线」阶段的路径地图，建立整体框架；
+          <strong style="color:var(--text)">②</strong> 沿 01 → 06 的阶段顺序推进，每个阶段内按日期顺次阅读；
+          <strong style="color:var(--text)">③</strong> 每完成一个阶段，回到对应的笔记末尾做自测，
+          并在下方「全部笔记」里用标签检索补漏。新笔记发布后会按关键词自动归入对应阶段，
+          这条路径会随着更新继续生长。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="professionSection" style="margin:0 0 60px">
+    <h2 class="sec-title">专业介绍</h2>
+    <p class="sec-sub">半导体是一门横跨物理、材料与电子工程的一级学科方向，也是现代信息产业的物理底座。它的职业版图大致由六个角色构成——本站的七个学习阶段，正是沿着这些真实岗位的知识边界展开的。</p>
+    <div class="stage-list" style="gap:14px">
+      <div class="stage" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="background:var(--surface);padding:18px 22px">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px">🔬 器件与物理 <span style="font-weight:400;font-size:12.5px;color:var(--text-mute)">对应阶段 01–02</span></div>
+          <div style="font-size:13.5px;line-height:1.8;color:var(--text-soft)">研究晶体管为什么能工作、极限在哪里。岗位如器件工程师、TCAD 仿真工程师，要求扎实的半导体物理功底，是理解一切工艺与设计决策的地基。</div>
+        </div>
+        <div style="background:var(--surface);padding:18px 22px">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px">🧱 材料与衬底 <span style="font-weight:400;font-size:12.5px;color:var(--text-mute)">对应阶段 03</span></div>
+          <div style="font-size:13.5px;line-height:1.8;color:var(--text-soft)">从单晶生长到宽禁带材料（SiC/GaN）。岗位如材料工程师、衬底研发，决定芯片的成本与性能天花板，是国产替代最活跃的环节之一。</div>
+        </div>
+        <div style="background:var(--surface);padding:18px 22px">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px">🏭 制造工艺 <span style="font-weight:400;font-size:12.5px;color:var(--text-mute)">对应阶段 04</span></div>
+          <div style="font-size:13.5px;line-height:1.8;color:var(--text-soft)">光刻、刻蚀、沉积、CMP 等数百道工序的组合艺术。岗位如工艺整合（PIE）、设备工程师，聚集在晶圆厂，是半导体制造的核心生产力。</div>
+        </div>
+        <div style="background:var(--surface);padding:18px 22px">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px">💻 设计与封测 <span style="font-weight:400;font-size:12.5px;color:var(--text-mute)">对应阶段 05</span></div>
+          <div style="font-size:13.5px;line-height:1.8;color:var(--text-soft)">从 EDA 工具链、版图设计到封装测试与失效分析。岗位如数字/模拟 IC 设计、版图工程师、封测工程师，是芯片从图纸到实物的最后一公里。</div>
+        </div>
+        <div style="background:var(--surface);padding:18px 22px;grid-column:1 / -1">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px">🌐 产业与前沿 <span style="font-weight:400;font-size:12.5px;color:var(--text-mute)">对应阶段 06</span></div>
+          <div style="font-size:13.5px;line-height:1.8;color:var(--text-soft)">设备、材料、制造、设计在产业链上的分工与博弈——先进封装、Chiplet 等方向正在改写摩尔定律的延续方式。适合希望以投资、市场、战略视角理解半导体的人。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pathSection" style="margin:0 0 60px">
     <h2 class="sec-title">学习路径</h2>
     <p class="sec-sub">建议自上而下按阶段推进；每个阶段内的笔记按发表时间正序排列，适合顺次阅读。</p>
     <div class="stage-list" id="stageList"></div>

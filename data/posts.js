@@ -1,5 +1,5 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-05 20:31:42  共 46 篇 */
+/* 生成时间: 2026-10-05 20:50:00  共 45 篇 */
 window.SITE_POSTS = [
   {
     "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
@@ -101,7 +101,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 75.6
+    "size": 75.5
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -196,7 +196,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 24.1
+    "size": 24.0
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -586,7 +586,7 @@ window.SITE_POSTS = [
     "date": "2026-06-01",
     "category": "semiconductor",
     "categoryLabel": "半导体",
-    "desc": "从理论学习、软件安装、仿真练习到版图设计、MPW 流片与实验测试的完整行动清单，含每月可执行步骤与资源工具",
+    "desc": "从理论学习、软件安装、仿真练习到版图设计、MPW 流片、实验测试与进阶方向的完整行动清单，附站内配套笔记导航与技能自测表",
     "tags": [
       "半导体",
       "学习路径",
@@ -594,23 +594,7 @@ window.SITE_POSTS = [
       "版图设计",
       "流片"
     ],
-    "size": 14.2
-  },
-  {
-    "title": "集成电路半导体器件 · 考前复习精要",
-    "url": "posts/semiconductor/2026-05-21-集成电路半导体器件考前复习精要.html",
-    "date": "2026-05-21",
-    "category": "semiconductor",
-    "categoryLabel": "半导体",
-    "desc": "重点梳理 PN 结、能带理论、MOSFET 核心参数与物理机制，含二极管原理、单向导电性与典型考题推导",
-    "tags": [
-      "半导体",
-      "PN结",
-      "能带理论",
-      "MOSFET",
-      "考前复习"
-    ],
-    "size": 25.1
+    "size": 20.4
   }
 ];
 
@@ -618,7 +602,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 22
+    "count": 21
   },
   {
     "id": "finance",
