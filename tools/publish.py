@@ -315,6 +315,8 @@ def scan():
         for fn in sorted(os.listdir(full)):
             if not fn.lower().endswith((".html", ".htm")):
                 continue
+            if fn.lower() in ("index.html", "index.htm"):
+                continue  # 分类目录页（如半导体目录），不属于文章，不进索引
             path = os.path.join(full, fn)
             if not os.path.isfile(path):
                 continue

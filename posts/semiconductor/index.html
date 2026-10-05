@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>半导体 · 集成电路 学习目录</title>
+<meta name="description" content="半导体与集成电路学习笔记总览：按学习路径组织的全部笔记索引，随文章发布自动更新。">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+/* ============ 目录页专属样式（变量全部取自 site.css，自动适配双主题） ============ */
+.crumb{font-size:14px;color:var(--text-mute);margin-bottom:14px}
+.crumb a{color:var(--semi);text-decoration:none}
+.stage-list{display:flex;flex-direction:column;gap:22px;max-width:860px;margin:0 auto}
+.stage{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);overflow:hidden}
+.stage-head{display:flex;align-items:baseline;gap:14px;padding:18px 22px 4px}
+.stage-num{font-size:26px;font-weight:800;color:var(--semi);opacity:.55;letter-spacing:1px;flex:none}
+.stage-title{font-size:19px;font-weight:700;color:var(--text)}
+.stage-count{margin-left:auto;font-size:13px;color:var(--text-mute);white-space:nowrap}
+.stage-theme{padding:0 22px 12px 64px;font-size:13.5px;color:var(--text-soft)}
+.stage-rows{border-top:1px dashed var(--border)}
+.prow{display:flex;align-items:baseline;gap:12px;padding:11px 22px;border-bottom:1px solid var(--border);
+  text-decoration:none;transition:background .15s}
+.prow:last-child{border-bottom:none}
+.prow:hover{background:var(--semi-soft)}
+.prow-date{flex:none;font-size:12.5px;color:var(--text-mute);font-variant-numeric:tabular-nums}
+.prow-title{font-size:15px;font-weight:600;color:var(--text)}
+.prow:hover .prow-title{color:var(--semi)}
+.prow-tags{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.prow-tags .chip{font-size:11px;padding:1px 8px}
+.prow-size{flex:none;font-size:12px;color:var(--text-mute)}
+.more-link{display:inline-block;margin:4px 0 0;font-size:13.5px;color:var(--semi);text-decoration:none}
+.roadmap-note{max-width:860px;margin:18px auto 0;font-size:13px;color:var(--text-mute);
+  padding:10px 16px;border-left:3px solid var(--semi);background:var(--surface-2);border-radius:0 10px 10px 0}
+.arch-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+.arch-count{font-size:13.5px;color:var(--text-mute)}
+.arch-list{display:flex;flex-direction:column;gap:10px;max-width:860px;margin:0 auto}
+.arch-item{display:flex;gap:14px;align-items:baseline;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;padding:13px 18px;text-decoration:none;
+  transition:border-color .15s, transform .15s}
+.arch-item:hover{border-color:var(--semi);transform:translateX(3px)}
+.arch-date{flex:none;font-size:12.5px;color:var(--text-mute);font-variant-numeric:tabular-nums;min-width:76px}
+.arch-title{font-size:15px;font-weight:600;color:var(--text)}
+.arch-item:hover .arch-title{color:var(--semi)}
+.arch-tags{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.sec-title{max-width:860px;margin:0 auto 18px;font-size:24px;font-weight:800;color:var(--text)}
+.sec-sub{max-width:860px;margin:-10px auto 22px;font-size:14px;color:var(--text-soft)}
+.empty-block{max-width:860px;margin:0 auto}
+@media (max-width:640px){
+  .stage-theme{padding-left:22px}
+  .prow-tags,.arch-tags{display:none}
+  .stage-head{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <div class="brand-mark">S&amp;C</div>
+      <div>
+        半导体 · 集成电路 学习目录
+        <small>SEMICONDUCTOR NOTES INDEX</small>
+      </div>
+    </div>
+    <div class="nav-spacer"></div>
+    <a class="nav-link" href="../../">← 返回首页</a>
+    <a class="nav-link" href="https://github.com/guoxuncai/test" target="_blank" rel="noopener">GitHub ↗</a>
+    <button class="icon-btn" id="themeBtn" title="切换深色/浅色">☾</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="crumb"><a href="../../">首页</a> / 半导体 · 集成电路</div>
+    <h1>从物理到产业的一条<em>学习路径</em></h1>
+    <p>半导体与集成电路方向的全部学习笔记，按推荐阅读顺序组织成七个阶段。
+       新文章发布后会按关键词自动归入对应阶段，无需手工维护本页。</p>
+    <div class="stats">
+      <div><div class="stat-num" id="statNotes">0</div><div class="stat-label">学习笔记</div></div>
+      <div><div class="stat-num" id="statStages">7</div><div class="stat-label">学习阶段</div></div>
+      <div><div class="stat-num" id="statKw">0</div><div class="stat-label">收录关键词</div></div>
+      <div><div class="stat-num" id="statLast">—</div><div class="stat-label">最近更新</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout" style="display:block">
+  <section id="pathSection" style="margin:44px 0 60px">
+    <h2 class="sec-title">学习路径</h2>
+    <p class="sec-sub">建议自上而下按阶段推进；每个阶段内的笔记按发表时间正序排列，适合顺次阅读。</p>
+    <div class="stage-list" id="stageList"></div>
+    <div class="roadmap-note" id="roadmapNote">
+      本页由 <code>data/posts.js</code> 驱动：每篇新笔记发布时，
+      <code>publish.py</code> 会重建索引，本页按各阶段的关键词规则自动归位，无需编辑本文件。
+    </div>
+  </section>
+
+  <section id="archiveSection" style="margin:0 0 60px">
+    <h2 class="sec-title">全部笔记</h2>
+    <div class="sec-sub arch-head">
+      <input id="searchInput" type="search" class="search" style="max-width:340px"
+             placeholder="搜索标题或标签…" autocomplete="off">
+      <span class="arch-count" id="archCount"></span>
+    </div>
+    <div class="arch-list" id="archList"></div>
+    <noscript>
+      <div class="empty empty-block"><strong>需要启用 JavaScript</strong>本目录由 JS 动态渲染，请开启 JavaScript 后刷新。</div>
+    </noscript>
+  </section>
+</div>
+
+<footer class="wrap footer">
+  <div>© 2026 半导体 · 财经 学习笔记 · 由 GitHub Pages 托管</div>
+  <div>索引由 <code>tools/publish.py</code> 自动生成 · 本页按关键词规则自动归类</div>
+</footer>
+
+<script src="../../data/posts.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  /* ---------- 学习路径定义：按关键词自动归类（顺序匹配，先中先得） ---------- */
+  var STAGES = [
+    { num: '00', title: '学习路线', theme: '先看地图再上路：整体脉络梳理与复习索引。',
+      keys: ['路径地图', '复习'] },
+    { num: '01', title: '物理基础', theme: '固体物理 → 半导体物理 → PN 结，一切器件的根基。',
+      keys: ['固体物理', '半导体物理', 'PN 结'] },
+    { num: '02', title: '器件与电路', theme: '从 MOSFET、CMOS 到存储器，理解器件如何工作、如何变小。',
+      keys: ['MOSFET', 'CMOS', '存储器', '摩尔定律'] },
+    { num: '03', title: '材料与衬底', theme: 'Si / SiC / GaN 材料全景，单晶生长与衬底制备。',
+      keys: ['材料全景', '硅单晶'] },
+    { num: '04', title: '制造工艺', theme: '光刻、刻蚀、沉积、CMP 与整线流程，一颗芯片的诞生。',
+      keys: ['光刻', '刻蚀', '薄膜沉积', 'CMP', '芯片制造'] },
+    { num: '05', title: '设计与封测', theme: 'EDA 工具链、版图实战，封装与失效分析。',
+      keys: ['EDA', '版图', '芯片封装'] },
+    { num: '06', title: '产业与前沿', theme: '产业链全景、先进封装与 Chiplet，从技术走向产业。',
+      keys: ['产业链', '先进封装', 'Chiplet'] }
+  ];
+  var OTHER = { num: '∞', title: '拓展与其他', theme: '暂未归入主线的笔记与跨领域延伸。' };
+
+  var kwCount = STAGES.reduce(function (n, s) { return n + s.keys.length; }, 0);
+
+  /* ---------- 主题（与首页共用 localStorage 键） ---------- */
+  (function initTheme() {
+    var saved = localStorage.getItem('site-theme');
+    var t = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+    $('#themeBtn').textContent = t === 'dark' ? '☀' : '☾';
+    $('#themeBtn').addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('site-theme', next);
+      this.textContent = next === 'dark' ? '☀' : '☾';
+    });
+  })();
+
+  /* ---------- 数据 ---------- */
+  var POSTS = (window.SITE_POSTS || []).filter(function (p) {
+    return p.category === 'semiconductor';
+  });
+  POSTS.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+
+  function matchStage(p) {
+    // 仅按标题匹配：标题是最可靠的阶段信号，tags 中的跨阶段词（如 CMP 设备）会干扰归类
+    var hay = p.title || '';
+    for (var i = 0; i < STAGES.length; i++) {
+      var keys = STAGES[i].keys;
+      for (var j = 0; j < keys.length; j++) {
+        if (hay.indexOf(keys[j]) !== -1) return i;
+      }
+    }
+    return -1;
+  }
+
+  var buckets = STAGES.map(function () { return []; });
+  var others = [];
+  POSTS.forEach(function (p) {
+    var i = matchStage(p);
+    if (i === -1) others.push(p); else buckets[i].push(p);
+  });
+
+  /* ---------- 渲染：学习路径 ---------- */
+  function rowHtml(p) {
+    var tags = (p.tags || []).slice(0, 3).map(function (g) {
+      return '<span class="chip">' + esc(g) + '</span>';
+    }).join('');
+    // p.url 形如 posts/semiconductor/xxx.html，本页位于 posts/semiconductor/，需上跳两级
+    return '<a class="prow" href="../../' + esc(p.url) + '">' +
+      '<span class="prow-date">' + esc(p.date) + '</span>' +
+      '<span class="prow-title">' + esc(p.title) + '</span>' +
+      '<span class="prow-tags">' + tags + '</span>' +
+      '<span class="prow-size">' + (p.size ? p.size + ' KB' : '') + '</span>' +
+      '</a>';
+  }
+
+  var stageBox = $('#stageList');
+  var html = '';
+  STAGES.forEach(function (st, i) {
+    var list = buckets[i];
+    html += '<div class="stage">' +
+      '<div class="stage-head"><span class="stage-num">' + st.num + '</span>' +
+      '<span class="stage-title">' + esc(st.title) + '</span>' +
+      '<span class="stage-count">' + list.length + ' 篇</span></div>' +
+      '<div class="stage-theme">' + esc(st.theme) + '</div>' +
+      '<div class="stage-rows">';
+    if (!list.length) {
+      html += '<div class="prow" style="cursor:default"><span class="prow-title" style="color:var(--text-mute);font-weight:400">暂无笔记 — 新文章命中关键词后会自动出现在这里</span></div>';
+    } else {
+      list.forEach(function (p) { html += rowHtml(p); });
+    }
+    html += '</div></div>';
+  });
+  if (others.length) {
+    html += '<div class="stage"><div class="stage-head"><span class="stage-num">' + OTHER.num + '</span>' +
+      '<span class="stage-title">' + esc(OTHER.title) + '</span>' +
+      '<span class="stage-count">' + others.length + ' 篇</span></div>' +
+      '<div class="stage-theme">' + esc(OTHER.theme) + '</div><div class="stage-rows">';
+    others.forEach(function (p) { html += rowHtml(p); });
+    html += '</div></div>';
+  }
+  stageBox.innerHTML = html;
+
+  /* ---------- 渲染：全部笔记（默认倒序 + 搜索） ---------- */
+  var DESC = POSTS.slice().reverse();
+  var archBox = $('#archList');
+  function renderArch(q) {
+    q = (q || '').trim().toLowerCase();
+    var list = DESC.filter(function (p) {
+      if (!q) return true;
+      return (p.title + ' ' + (p.tags || []).join(' ') + ' ' + p.date).toLowerCase().indexOf(q) !== -1;
+    });
+    $('#archCount').textContent = '共 ' + list.length + ' 篇' + (q ? '（匹配 “' + q + '”）' : '');
+    if (!list.length) {
+      archBox.innerHTML = '<div class="empty"><strong>没有匹配的笔记</strong>换个关键词试试。</div>';
+      return;
+    }
+    archBox.innerHTML = list.map(function (p) {
+      var tags = (p.tags || []).slice(0, 3).map(function (g) {
+        return '<span class="chip">' + esc(g) + '</span>';
+      }).join('');
+      return '<a class="arch-item" href="../../' + esc(p.url) + '">' +
+        '<span class="arch-date">' + esc(p.date) + '</span>' +
+        '<span class="arch-title">' + esc(p.title) + '</span>' +
+        '<span class="arch-tags">' + tags + '</span></a>';
+    }).join('');
+  }
+  renderArch('');
+  $('#searchInput').addEventListener('input', function () { renderArch(this.value); });
+
+  /* ---------- 统计 ---------- */
+  $('#statNotes').textContent = POSTS.length;
+  $('#statStages').textContent = STAGES.length + (others.length ? '+1' : '');
+  $('#statKw').textContent = kwCount;
+  if (POSTS.length) $('#statLast').textContent = POSTS[POSTS.length - 1].date.slice(5).replace('-', '/');
+})();
+</script>
+</body>
+</html>
