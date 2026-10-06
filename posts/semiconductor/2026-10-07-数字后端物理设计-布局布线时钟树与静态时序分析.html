@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数字后端物理设计：布局布线、时钟树与静态时序分析</title>
+<meta name="description" content="逻辑综合给出的网表怎么变成 GDS？用后端全流程、时钟树综合、建立/保持时间与 STA、以及低功耗三板斧（时钟门控/电源门控/DVFS），讲透数字芯片物理设计。">
+<meta name="keywords" content="物理设计,布局布线,时钟树综合,CTS,静态时序分析,STA,时钟门控,电源门控,DVFS,低功耗">
+<meta name="date" content="2026-10-07">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 设计</span>
+    <h1 class="title">数字后端物理设计：布局布线、时钟树与静态时序分析</h1>
+    <div class="meta">
+      <span>2026-10-07</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 29 篇</span><span class="sep"></span>
+      <span>阅读约 27 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        EDA 篇讲到「逻辑综合」：RTL + 约束 → 门级网表。但网表只是「一张零件清单 + 连接关系」，
+        离能流片的 GDS 还差一半路——把上百万个标准单元<strong>摆到哪、怎么连、时钟怎么发、时序怎么兜底</strong>。
+        这就是后端物理设计（Physical Design），数字芯片流片前最后、也最「细节控」的一段旅程。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">后端全景：从网表到 GDS 的五步</a></li>
+          <li><a href="#s2">布局规划 Floorplan：先划地盘再盖楼</a></li>
+          <li><a href="#s3">布局与布线：把百万单元各就各位</a></li>
+          <li><a href="#s4">时钟树综合 CTS：全芯片最娇贵的信号</a></li>
+          <li><a href="#s5">静态时序分析 STA：不跑仿真怎么算时序</a></li>
+          <li><a href="#s6">低功耗三板斧：门控、电源门控与 DVFS</a></li>
+          <li><a href="#s7">签核与 ECO：最后一公里</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 后端全景：从网表到 GDS 的五步</h2>
+
+      <p>逻辑综合的输出是一份<strong>门级网表</strong>：上面写着「一个 DFF、两个 NAND、三万个与非门，
+      谁连谁」。但「谁连谁」只是逻辑意图——每个单元放在芯片哪个坐标、用什么金属层连过去、
+      时钟怎么送达每个触发器，通通还没定。后端物理设计就是把这份「抽象清单」落地成
+      「具体物理版图」的全过程，主线只有五步：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="后端物理设计全流程">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">后端物理设计五步：每一步都在「物理化」一点</text>
+          <g text-anchor="middle">
+            <rect x="26" y="70" width="112" height="66" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.5"/>
+            <text x="82" y="94" font-size="12" fill="var(--fin)" font-weight="700">布局规划</text>
+            <text x="82" y="112" font-size="10.5" fill="var(--text-soft)">Floorplan</text>
+            <text x="82" y="127" font-size="9" fill="var(--text-mute)">划地盘·放宏·电网</text>
+            <rect x="158" y="70" width="112" height="66" rx="8" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.5"/>
+            <text x="214" y="94" font-size="12" fill="var(--semi)" font-weight="700">布局</text>
+            <text x="214" y="112" font-size="10.5" fill="var(--text-soft)">Placement</text>
+            <text x="214" y="127" font-size="9" fill="var(--text-mute)">标准单元就位</text>
+            <rect x="290" y="70" width="112" height="66" rx="8" fill="var(--accent)" fill-opacity=".14" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="346" y="94" font-size="12" fill="var(--accent)" font-weight="700">时钟树综合</text>
+            <text x="346" y="112" font-size="10.5" fill="var(--text-soft)">CTS</text>
+            <text x="346" y="127" font-size="9" fill="var(--text-mute)">时钟均衡送达</text>
+            <rect x="422" y="70" width="112" height="66" rx="8" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.5"/>
+            <text x="478" y="94" font-size="12" fill="var(--up)" font-weight="700">布线</text>
+            <text x="478" y="112" font-size="10.5" fill="var(--text-soft)">Routing</text>
+            <text x="478" y="127" font-size="9" fill="var(--text-mute)">真金属连线</text>
+            <rect x="554" y="70" width="100" height="66" rx="8" fill="var(--down)" fill-opacity=".14" stroke="var(--down)" stroke-width="1.5"/>
+            <text x="604" y="94" font-size="12" fill="var(--down)" font-weight="700">签核</text>
+            <text x="604" y="112" font-size="10.5" fill="var(--text-soft)">Signoff</text>
+            <text x="604" y="127" font-size="9" fill="var(--text-mute)">STA·DRC·LVS</text>
+          </g>
+          <g stroke="var(--text)" stroke-width="1.8">
+            <line x1="138" y1="103" x2="156" y2="103"/><line x1="270" y1="103" x2="288" y2="103"/>
+            <line x1="402" y1="103" x2="420" y2="103"/><line x1="534" y1="103" x2="552" y2="103"/>
+          </g>
+          <text x="82" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">虚拟</text>
+          <text x="214" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">有坐标没线</text>
+          <text x="346" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">时钟成树</text>
+          <text x="478" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">全部成形</text>
+          <text x="604" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">签了才流片</text>
+          <text x="340" y="196" text-anchor="middle" font-size="11" fill="var(--text-mute)">物理化程度：从「逻辑意图」逐步降到「几何实体的 GDS」</text>
+          <text x="340" y="220" text-anchor="middle" font-size="11" fill="var(--text-soft)">每一步之间都有迭代：布线发现拥塞 → 回退改布局；CTS 后时序恶化 → 回退优化 —— 后端是螺旋逼近的艺术</text>
+        </svg>
+        <figcaption>图 1：后端五步。综合给「清单」，后端负责把清单变成一张真实可制造的芯片版图。</figcaption>
+      </figure>
+
+      <h2 id="s2">2. 布局规划 Floorplan：先划地盘再盖楼</h2>
+
+      <p>楼盖得好不好，一半取决于规划。Floorplan 回答三个问题：<strong>芯片多大？大块头放哪？电从哪来？</strong></p>
+
+      <ul>
+        <li><strong>划区</strong>：整个硅片叫 die，中间留给逻辑的区域叫 core。先根据门数、单元利用率（典型 70%~85%）算出 core 尺寸。</li>
+        <li><strong>放宏</strong>：存储器、PLL 这类硬核（Macro）像「承重墙」要先定位——它们不可分割，走线必须绕行或从下方穿越。宏的位置直接决定后面布线的通畅度。</li>
+        <li><strong>铺电网</strong>：在 cell 行之间纵横铺开 VDD/GND 金属网格。供电网络（PG）要从 Bump/Pad 一路送到每个单元，既要低电阻（IR 压降），又要留出布线通道。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布局规划示意">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">Floorplan：地盘、承重墙与电网</text>
+          <!-- die -->
+          <rect x="60" y="50" width="560" height="180" rx="6" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+          <text x="80" y="70" font-size="10" fill="var(--text-mute)">die 边界</text>
+          <!-- core -->
+          <rect x="90" y="76" width="500" height="140" fill="none" stroke="var(--border)" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <text x="100" y="94" font-size="9.5" fill="var(--text-mute)">core</text>
+          <!-- 宏 -->
+          <rect x="120" y="104" width="150" height="46" rx="3" fill="var(--fin)" fill-opacity=".3" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="195" y="131" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">SRAM 宏</text>
+          <rect x="450" y="104" width="110" height="46" rx="3" fill="var(--fin)" fill-opacity=".3" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="505" y="131" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">PLL 宏</text>
+          <!-- cell 行 -->
+          <g stroke="var(--semi)" stroke-width="1">
+            <line x1="120" y1="162" x2="430" y2="162"/><line x1="120" y1="170" x2="430" y2="170"/>
+            <line x1="120" y1="178" x2="430" y2="178"/><line x1="120" y1="186" x2="430" y2="186"/>
+            <line x1="120" y1="194" x2="430" y2="194"/>
+          </g>
+          <text x="275" y="158" text-anchor="middle" font-size="9.5" fill="var(--semi)">标准单元行（数百万个逻辑门将填进来）</text>
+          <!-- 电网 -->
+          <g stroke="var(--up)" stroke-width="3" opacity=".55">
+            <line x1="300" y1="76" x2="300" y2="216"/><line x1="430" y1="76" x2="430" y2="216"/>
+            <line x1="90" y1="100" x2="590" y2="100"/><line x1="90" y1="206" x2="590" y2="206"/>
+          </g>
+          <text x="610" y="196" font-size="9.5" fill="var(--up)">VDD/GND 电网</text>
+          <!-- IO pads -->
+          <g fill="var(--text-mute)">
+            <rect x="76" y="52" width="30" height="10"/><rect x="140" y="52" width="30" height="10"/>
+            <rect x="204" y="52" width="30" height="10"/><rect x="268" y="52" width="30" height="10"/>
+            <rect x="332" y="52" width="30" height="10"/><rect x="396" y="52" width="30" height="10"/>
+            <rect x="460" y="52" width="30" height="10"/><rect x="524" y="52" width="30" height="10"/>
+          </g>
+          <text x="620" y="62" font-size="9.5" fill="var(--text-mute)">IO Pad</text>
+          <text x="340" y="256" text-anchor="middle" font-size="11" fill="var(--text-mute)">宏放错了 → 布线绕行导致时序崩坏；电网铺薄了 → IR drop 让远处单元「供不上血」</text>
+        </svg>
+        <figcaption>图 2：布局规划。先定 die/core 边界，再摆不可分割的宏单元，最后纵横铺开供电网络。</figcaption>
+      </figure>
+
+      <h2 id="s3">3. 布局与布线：把百万单元各就各位</h2>
+
+      <p><strong>布局（Placement）</strong>把综合出的几十万~几千万个标准单元，一个个放进 cell 行的格子里。
+      目标函数听起来朴素：连线总长最短、时序关键路径最紧、布线资源不挤爆。但这是 NP 难问题，
+      EDA 工具用「全局布局 → 粗 legalize → 细布局」的多层迭代逼近。布局的黄金法则只有一条：
+      <strong>关键路径上的单元要挨得近</strong>——距离即寄生电容，寄生电容即延迟。</p>
+
+      <p><strong>布线（Routing）</strong>在布局后的空隙里，按版图篇讲过的金属层规则把所有连接真正画出来：
+      底层金属管短距离、高层金属跑长距离和时钟，打孔逐层换线。布线工具要同时满足：
+      不短路（DRC）、每条线都通（开放检查）、时钟线优先走专用资源、天线效应不超标。
+      千万级线网的「迷宫布线」全靠多层粗细粒度配合，是 EDA 算法含金量最高的环节之一。</p>
+
+      <div class="note"><b>布局布线是一对冤家：</b>
+        布局时工具按「估计的线长」算时序，真布线后寄生参数才落地——时序往往恶化 10%~20%。
+        所以现代流程是「布线后反标寄生 → 重新优化布局 → 再布线」的循环，直到收敛。
+        综合篇讲过的 PPA 三角，在后端每一步都在重新谈判。
+      </div>
+
+      <h2 id="s4">4. 时钟树综合 CTS：全芯片最娇贵的信号</h2>
+
+      <p>时钟是芯片里<strong>特殊到近乎苛刻</strong>的信号：它要同一瞬间到达全芯片几十万个触发器——
+      但它自己也是一根走线，也有 RC 延迟，越传越晚。所有触发器「看到时钟的时刻差」叫
+      <strong>时钟偏斜（Skew）</strong>。Skew 不是想清零就清零的，它是时序债务的搬运工：</p>
+
+      <ul>
+        <li><strong>正偏斜（捕获端时钟晚到）</strong>：给建立时间「送时间」，但吃掉保持余量。</li>
+        <li><strong>负偏斜</strong>：帮保持时间，但压缩建立时间。</li>
+      </ul>
+
+      <p>CTS 的任务就是构造一棵<strong>平衡的时钟树</strong>：从时钟源出发，像树的枝杈一样逐级分裂缓冲，
+      让每个叶子（触发器时钟端）到根的距离尽量相等。经典结构是 <strong>H 树</strong>——路径天然对称；
+      实际芯片因为负载不均匀，工具用「插入缓冲器配平」来逼近零偏斜。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="H 树时钟分配网络">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">H 树时钟网络：让每条路径一样长</text>
+          <!-- 时钟源 -->
+          <circle cx="340" cy="70" r="9" fill="var(--accent)"/>
+          <text x="340" y="52" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">时钟源 PLL</text>
+          <!-- 一级 -->
+          <g stroke="var(--accent)" stroke-width="2.2" fill="none">
+            <path d="M340 79 L340 110 M340 110 L220 110 L220 140 M340 110 L460 110 L460 140"/>
+            <!-- 二级 -->
+            <path d="M220 149 L220 168 M220 168 L160 168 L160 196 M220 168 L280 168 L280 196"/>
+            <path d="M460 149 L460 168 M460 168 L400 168 L400 196 M460 168 L520 168 L520 196"/>
+            <!-- 三级 -->
+            <path d="M160 205 L160 218 M160 218 L130 218 L130 240 M160 218 L190 218 L190 240"/>
+            <path d="M280 205 L280 218 M280 218 L250 218 L250 240 M280 218 L310 218 L310 240"/>
+            <path d="M400 205 L400 218 M400 218 L370 218 L370 240 M400 218 L430 218 L430 240"/>
+            <path d="M520 205 L520 218 M520 218 L490 218 L490 240 M520 218 L550 218 L550 240"/>
+          </g>
+          <!-- 叶子触发器 -->
+          <g fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.6">
+            <circle cx="130" cy="250" r="8"/><circle cx="190" cy="250" r="8"/>
+            <circle cx="250" cy="250" r="8"/><circle cx="310" cy="250" r="8"/>
+            <circle cx="370" cy="250" r="8"/><circle cx="430" cy="250" r="8"/>
+            <circle cx="490" cy="250" r="8"/><circle cx="550" cy="250" r="8"/>
+          </g>
+          <text x="340" y="276" text-anchor="middle" font-size="10.5" fill="var(--up)">全部触发器：到源的总延迟相等 → Skew ≈ 0</text>
+          <text x="105" y="250" text-anchor="end" font-size="9.5" fill="var(--text-mute)">DFF×8</text>
+          <text x="566" y="250" font-size="9.5" fill="var(--text-mute)">真实芯片是百万级</text>
+        </svg>
+        <figcaption>图 3：H 树时钟分配。逐级二分、路径对称，让时钟「同时」敲响全芯片的每一个触发器。</figcaption>
+      </figure>
+
+      <div class="warn"><b>CTS 之后再谈时序才有意义：</b>
+        CTS 之前，工具把时钟当「理想网络」处理（零延迟）；CTS 插入了真实的缓冲器后，
+        时钟树上多了实实在在的延迟和偏斜，时序图景完全改变。这也是为什么后端流程里
+        CTS 前后的时序报告要分开看——CTS 后的时钟网络才算「活」了。
+      </div>
+
+      <h2 id="s5">5. 静态时序分析 STA：不跑仿真怎么算时序</h2>
+
+      <p>芯片里可能有上亿条时序路径，功能仿真永远跑不全——怎么证明<strong>每一条路径</strong>都满足时序？
+      答案是 <strong>静态时序分析（STA）</strong>：不依赖输入向量，把电路按「寄存器到寄存器」拆成有限条路径，
+      对每条路径做最坏情况的加法运算。它快到能全路径覆盖，也因此成为数字签核的基石。</p>
+
+      <p>一对触发器之间的路径，要同时满足两个「方向相反」的约束：</p>
+
+      <ul>
+        <li><strong>建立时间（Setup）</strong>：新数据必须<strong>在下一次时钟沿到来之前</strong>提前稳定。
+        约束：T<sub>clk</sub> ≥ T<sub>c-q</sub> + T<sub>logic</sub> + T<sub>net</sub> + T<sub>setup</sub> − Skew。
+        这是「别太慢」的约束——跑不满频率就是它拦着。</li>
+        <li><strong>保持时间（Hold）</strong>：新数据必须<strong>在时钟沿之后</strong>再变化，别把旧数据提前冲掉。
+        约束：T<sub>c-q</sub> + T<sub>logic(min)</sub> ≥ T<sub>hold</sub> + Skew。
+        这是「别太快」的约束——它<strong>与频率无关</strong>， violation 了连降频都救不了。</li>
+      </ul>
+
+      <p>两项要求的差值叫<strong>松弛量（Slack）</strong>：Slack ≥ 0 通过，&lt; 0 违例。
+      最负的那条路径叫<strong>关键路径</strong>，它的 Slack 决定了芯片的最高频率。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="建立与保持时间窗口">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">建立时间与保持时间：一慢一快两个方向相反的约束</text>
+          <!-- 时钟波形 -->
+          <g stroke="var(--accent)" stroke-width="2.2" fill="none">
+            <path d="M60 120 L100 120 L100 70 L180 70 L180 120 L260 120 L260 70 L340 70 L340 120"/>
+          </g>
+          <text x="140" y="60" text-anchor="middle" font-size="10.5" fill="var(--accent)">时钟沿（发射）</text>
+          <text x="300" y="60" text-anchor="middle" font-size="10.5" fill="var(--accent)">时钟沿（捕获）</text>
+          <line x1="260" y1="120" x2="260" y2="130" stroke="var(--text-mute)" stroke-width="1"/>
+          <line x1="100" y1="120" x2="100" y2="130" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M100 132 L260 132" stroke="var(--text-mute)" stroke-width="1.2" marker-start="url(#arT1)" marker-end="url(#arT1)"/>
+          <text x="180" y="148" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">一个时钟周期 T<tspan dy="3" font-size="72%">clk</tspan></text>
+          <!-- 数据稳定窗口 -->
+          <rect x="60" y="180" width="120" height="34" rx="4" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="120" y="201" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">旧数据有效</text>
+          <rect x="205" y="180" width="135" height="34" rx="4" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.4"/>
+          <text x="272" y="201" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">新数据已稳定</text>
+          <!-- setup/hold 标注 -->
+          <path d="M196 180 L196 168" stroke="var(--down)" stroke-width="1.6"/>
+          <path d="M340 70 L340 120" stroke="var(--down)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="196" y="160" text-anchor="end" font-size="10.5" fill="var(--down)" font-weight="700">Setup 窗口</text>
+          <text x="196" y="232" text-anchor="end" font-size="9.5" fill="var(--text-mute)">沿前必须已稳定</text>
+          <path d="M346 180 L346 168" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="352" y="160" font-size="10.5" fill="var(--fin)" font-weight="700">Hold 窗口</text>
+          <text x="352" y="232" font-size="9.5" fill="var(--text-mute)">沿后短期内别变</text>
+          <!-- 两个不等式 -->
+          <rect x="390" y="70" width="264" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="402" y="94" font-size="11" fill="var(--down)" font-weight="700">建立（别太慢）· 决定最高频率</text>
+          <text x="402" y="116" font-size="10.5" fill="var(--text-soft)">T<tspan dy="3" font-size="72%">clk</tspan><tspan dy="-3"> ≥ T</tspan><tspan dy="3" font-size="72%">c-q</tspan><tspan dy="-3"> + T</tspan><tspan dy="3" font-size="72%">logic</tspan><tspan dy="-3"> + T</tspan><tspan dy="3" font-size="72%">setup</tspan><tspan dy="-3"> − Skew</tspan></text>
+          <text x="402" y="146" font-size="11" fill="var(--fin)" font-weight="700">保持（别太快）· 与频率无关</text>
+          <text x="402" y="168" font-size="10.5" fill="var(--text-soft)">T<tspan dy="3" font-size="72%">c-q</tspan><tspan dy="-3"> + T</tspan><tspan dy="3" font-size="72%">logic,min</tspan><tspan dy="-3"> ≥ T</tspan><tspan dy="3" font-size="72%">hold</tspan><tspan dy="-3"> + Skew</tspan></text>
+          <text x="402" y="198" font-size="10" fill="var(--text-mute)">Slack = 允许值 − 实际值；最负的路径</text>
+          <text x="402" y="214" font-size="10" fill="var(--text-mute)">= 关键路径，决定 Fmax</text>
+          <text x="340" y="262" text-anchor="middle" font-size="11" fill="var(--text-mute)">建立违例可以降频苟活；保持违例在任何频率下都错——后端宁可多插延迟单元也要先修保持</text>
+          <defs>
+            <marker id="arT1" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>图 4：建立/保持时间窗口。时钟沿前的窗口是「别迟到」，沿后的窗口是「别抢跑」。</figcaption>
+      </figure>
+
+      <div class="note"><b>STA 为什么敢「不用仿真向量」：</b>
+        它不做功能判断，只做「最坏情况算术」：对每条路径，把各级单元延迟（查时序库）与线延迟（查寄生参数）
+        逐级累加，再和时钟周期比较。只要库是签核过的、寄生是提取过的，这个上界就是数学上可信的。
+        代价是它假设信号「逐级稳态传播」，不看逻辑功能——所以功能对不对仍要靠仿真和验证。
+      </div>
+
+      <h2 id="s6">6. 低功耗三板斧：门控、电源门控与 DVFS</h2>
+
+      <p>手机芯片 5 W 的热预算、数据中心兆瓦级的电费，把功耗变成了和时序平起平坐的第一性约束。
+      功耗只有两笔账，三板斧各自针对一笔：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>动态功耗</span><span>P = α·C·V²·f —— 每次翻转都要给电容充放电，与时钟翻转率 α 直接挂钩</span></div>
+        <div class="kv-row"><span>静态功耗</span><span>晶体管关不干净的漏电流 —— 工艺越先进、温度越高，漏电越凶</span></div>
+      </div>
+
+      <p><strong>第一板斧：时钟门控（Clock Gating）——砍动态功耗。</strong>
+      触发器 30% 以上的翻转功耗花在「数据没变、时钟照样敲」上。在闲置模块的时钟入口插一个
+      锁存器 + 与门（lockup latch 保证无毛刺），时钟停敲，整个子树零翻转。
+      这是综合/CTS 阶段就能自动化完成、性价比最高的省电手段，也是前面 0 覆盖却无处不在的技术。</p>
+
+      <p><strong>第二板斧：电源门控（Power Gating）+ 多阈值——砍静态功耗。</strong>
+      待机模块直接断电：在模块与地之间串入大尺寸的「睡眠晶体管」（footer switch），
+      睡时切断漏电路径。代价是唤醒有延迟、断电状态丢失（寄存器需 retention 保持）。
+      器件层面配套多阈值库（HVT/SVT/LVT）：快单元用 LVT，不忙的路径用 HVT 换低漏电。</p>
+
+      <p><strong>第三板斧：DVFS + 多电压域——按需供电。</strong>
+      动态功耗与 V² 成正比——降压 20%，动态功耗直降 36%。负载重时升压升频冲刺，
+      轻载时降压降频省电，这就是手机 SoC 里每个 CPU cluster 一个「电压域」、操作系统动态调度的原因。
+      跨电压域的信号必须插入电平移位器（Level Shifter）。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="低功耗三板斧对比">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">低功耗三板斧：各砍一笔账</text>
+          <g text-anchor="middle">
+            <rect x="26" y="60" width="196" height="160" rx="9" fill="var(--up)" fill-opacity=".08" stroke="var(--up)" stroke-width="1.5"/>
+            <text x="124" y="86" font-size="12.5" fill="var(--up)" font-weight="700">① 时钟门控</text>
+            <text x="124" y="106" font-size="10" fill="var(--text-soft)">时钟入口插 latch+与门</text>
+            <text x="124" y="124" font-size="10" fill="var(--text-soft)">闲时停敲 → 子树零翻转</text>
+            <text x="124" y="150" font-size="10.5" fill="var(--up)" font-weight="700">砍动态功耗</text>
+            <text x="124" y="172" font-size="9.5" fill="var(--text-mute)">自动化程度最高</text>
+            <text x="124" y="188" font-size="9.5" fill="var(--text-mute)">省 20%~40% 动态很常见</text>
+            <text x="124" y="208" font-size="9.5" fill="var(--down)">注意：门控时钟可能引入毛刺</text>
+            <rect x="242" y="60" width="196" height="160" rx="9" fill="var(--fin)" fill-opacity=".08" stroke="var(--fin)" stroke-width="1.5"/>
+            <text x="340" y="86" font-size="12.5" fill="var(--fin)" font-weight="700">② 电源门控</text>
+            <text x="340" y="106" font-size="10" fill="var(--text-soft)">地端串「睡眠晶体管」</text>
+            <text x="340" y="124" font-size="10" fill="var(--text-soft)">睡时切断漏电路径</text>
+            <text x="340" y="150" font-size="10.5" fill="var(--fin)" font-weight="700">砍静态功耗</text>
+            <text x="340" y="172" font-size="9.5" fill="var(--text-mute)">配套：retention 寄存器</text>
+            <text x="340" y="188" font-size="9.5" fill="var(--text-mute)">保存断电时的状态</text>
+            <text x="340" y="208" font-size="9.5" fill="var(--down)">注意：唤醒延迟 + 电积塌陷</text>
+            <rect x="458" y="60" width="196" height="160" rx="9" fill="var(--accent)" fill-opacity=".08" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="556" y="86" font-size="12.5" fill="var(--accent)" font-weight="700">③ DVFS / 电压域</text>
+            <text x="556" y="106" font-size="10" fill="var(--text-soft)">重载升压升频</text>
+            <text x="556" y="124" font-size="10" fill="var(--text-soft)">轻载降压降频（V² 效应）</text>
+            <text x="556" y="150" font-size="10.5" fill="var(--accent)" font-weight="700">动态静态一起砍</text>
+            <text x="556" y="172" font-size="9.5" fill="var(--text-mute)">每个 cluster 一个电压岛</text>
+            <text x="556" y="188" font-size="9.5" fill="var(--text-mute)">跨域插电平移位器</text>
+            <text x="556" y="208" font-size="9.5" fill="var(--down)">注意：降压后时序余量变小</text>
+          </g>
+          <text x="340" y="254" text-anchor="middle" font-size="11" fill="var(--text-mute)">三板斧不是三选一，而是逐层叠加：RTL 团队负责「少翻转」，后端负责「关电源」，OS 负责「调档位」</text>
+          <text x="340" y="278" text-anchor="middle" font-size="11" fill="var(--text-soft)">省电的本质：让每个晶体管在每一纳秒都「只干当前必须干的活」</text>
+        </svg>
+        <figcaption>图 5：低功耗三板斧。时钟门控砍翻转、电源门控砍漏电、DVFS 按需供电，三者叠加使用。</figcaption>
+      </figure>
+
+      <h2 id="s7">7. 签核与 ECO：最后一公里</h2>
+
+      <p>布线完成不等于能流片。签核（Signoff）阶段用「最坏 PVT 角 + 最精确的寄生提取」重跑一遍全部检查：
+      STA（建立/保持双角）、功耗与 IR drop、EM 电迁移（详见下一篇可靠性）、DRC/LVS（版图篇）。
+      任何一项不绿，就要打回重修。</p>
+
+      <p>实际项目里，最常见的小修叫 <strong>ECO（Engineering Change Order）</strong>：
+      时序差 10 ps 时不重新综合整颗芯片，而是局部替换单元格（换 LVT 管）、插 buffer、微调尺寸——
+      增量式修改，一晚上就能重签核。ECO 是后端工程师的「创可贴」，也是流片前最后的救命稻草。</p>
+
+      <div class="warn"><b>一个容易被忽视的真相：</b>
+        后端不是「软件自动跑完就完事」的黑盒。同样的工具、同样的库，熟练的后端工程师能把频率
+        再挤 5%~10%、面积再省 3%。工具给的是 80 分的底稿，最后 20 分全靠对时序路径、拥塞分布、
+        时钟树形态的手工判断。
+      </div>
+
+      <h2 id="s8">8. 易错点与自测</h2>
+
+      <div class="warn"><b>五个高频易错点：</b></div>
+      <ul>
+        <li><strong>Skew 不是越小越好</strong>：恰到好处的正偏斜能白送建立时间。目标是「可控」，不是「为零」。</li>
+        <li><strong>保持违例降频没用</strong>：hold 约束与 T<sub>clk</sub> 无关。快速路径的病，只能靠插延迟单元治。</li>
+        <li><strong>时钟门控不是随时可插</strong>：必须用锁存器在时钟低电平时采样使能信号，否则切出「半脉冲」毛刺，整个子树集体出错。</li>
+        <li><strong>功耗是 V² 的函数</strong>：降频省电是线性，降压省电是平方。DVFS 先降频再降压，因为降压后最高频率会掉。</li>
+        <li><strong>布局时的时序是「估算」</strong>：真寄生要等布线后提取。布局报告全绿不代表签核绿，后端永远以布线后反标为准。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：后端五步各解决什么问题？为什么 CTS 必须在布线之前完成？</summary>
+        <div>Floorplan 划地盘（宏与电网）、Placement 放单元、CTS 平衡时钟、Routing 真连线、Signoff 兜底检查。CTS 要在布线前，因为时钟树自身的缓冲器也是要布线的单元——先建树，布线才能给时钟线分配专用资源；而树建好后时钟延迟落地，才能做有意义的时序优化。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：建立违例 0.2 ns、保持违例 0.05 ns，两条病各开什么药？降频能治哪个？</summary>
+        <div>建立：换 LVT 单元、缩短路径、重排逻辑、升压——本质是让数据早点到；实在不行降频也能治（T<sub>clk</sub> 变大）。保持：沿路径插延迟单元/buffer 拖住快数据——与频率无关，降频无效。先修保持，后修建立是铁律。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：为什么 H 树能让偏斜趋近于零？换成「一颗大 buffer 直接驱动所有触发器」行不行？</summary>
+        <div>H 树让每条源到叶的路径几何对称、RC 相同，延迟天然相等。一颗大 buffer 直驱：负载可达数千 pF，buffer 要做得巨大且驱动波形单点故障；且到各触发器的线长不等，偏斜完全失控。CTS 的本质是「用多级小 buffer 换取路径平衡 + 逐级放大驱动」。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：一个模块 50% 时间闲置。分别用时钟门控和电源门控省电，各省哪笔账？各付出什么代价？</summary>
+        <div>时钟门控：省的是这 50% 时间里的动态功耗（时钟停敲、无翻转），代价极小、状态保留、唤醒即时。电源门控：连静态漏电一起归零，但要 retention 寄存器保状态、唤醒有延迟、睡眠管本身占面积且导通有 IR 压降。短时空闲用门控，长时待机才值得断电。</div>
+      </details>
+      <details class="quiz"><summary>自测 5：把核心电压从 1.0 V 降到 0.8 V，动态功耗理论上降多少？为什么降压的同时往往必须降频？</summary>
+        <div>(0.8/1.0)² = 0.64，动态功耗降约 36%。降压后晶体管驱动电流变小、门延迟变大，原本的时序余量被吃掉，最高安全频率下降——所以 DVFS 调度器会按「电压档-频率档」配对表工作，先定频再定压（或同步调节）。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：签核要在多个 PVT 角下跑 STA。同一条路径，「建立时间」和「保持时间」各自该用哪个角检查？</summary>
+        <div>建立：最慢角（SS 工艺 + 低压 + 高温）——延迟最大时数据最容易迟到。保持：最快角（FF 工艺 + 高压 + 低温）——延迟最小时数据最容易抢跑。两个方向相反的病，要在两个相反的角上分别签核，这就是 EDA 篇讲的 PVT Corner 的意义。</div>
+      </details>
+
+      <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li class="current">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#物理设计</span>
+      <span class="chip">#布局布线</span>
+      <span class="chip">#时钟树</span>
+      <span class="chip">#STA</span>
+      <span class="chip">#低功耗</span>
+      <span class="chip">#DVFS</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

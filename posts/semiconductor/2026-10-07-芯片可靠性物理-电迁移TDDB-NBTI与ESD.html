@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD</title>
+<meta name="description" content="芯片出厂合格不等于十年后还活着。用浴盆曲线、电迁移 Black 方程、栅氧 TDDB、NBTI/HCI 老化与 ESD 静电防护，讲透芯片可靠性的物理根源。">
+<meta name="keywords" content="芯片可靠性,电迁移,TDDB,NBTI,HCI,ESD,浴盆曲线,老化,寿命">
+<meta name="date" content="2026-10-07">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 可靠性</span>
+    <h1 class="title">芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD</h1>
+    <div class="meta">
+      <span>2026-10-07</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 30 篇</span><span class="sep"></span>
+      <span>阅读约 25 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        一颗芯片通过 CP/FT 测试出厂，只说明它<strong>今天</strong>是好的。可手机要用五年、
+        汽车芯片要扛十五年、基站要连续运转二十年——凭什么相信它们不会中途坏掉？
+        这一篇讲芯片「变老、变慢、变坏」的四种物理机制：电迁移、栅氧击穿、阈值漂移、静电损伤，
+        以及工程师怎么用「物理规律 + 统计方法 + 设计防御」把十年寿命焊进一颗指甲盖大的硅片。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">浴盆曲线：芯片怎么「死」</a></li>
+          <li><a href="#s2">电迁移 EM：电子风把金属吹断</a></li>
+          <li><a href="#s3">栅氧击穿 TDDB：绝缘层的慢性病</a></li>
+          <li><a href="#s4">阈值漂移 NBTI / HCI：晶体管的衰老</a></li>
+          <li><a href="#s5">ESD 静电防护：出厂前的第一杀手</a></li>
+          <li><a href="#s6">从物理到设计：可靠性签核与降额</a></li>
+          <li><a href="#s7">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 浴盆曲线：芯片怎么「死」</h2>
+
+      <p>把一万颗芯片放进高温高压的老化箱里盯五年，统计出的失效率随时间的变化，长成一个经典形状——
+      <strong>浴盆曲线（Bathtub Curve）</strong>。它不是芯片独有，灯泡、机械、人类死亡率都长这样：</p>
+
+      <ul>
+        <li><strong>早期失效（Infant Mortality）</strong>：出厂时就有先天缺陷的个体（工艺毛刺、污染、弱栅氧）率先阵亡。失效率随时间<strong>快速下降</strong>。对策：出厂前 burn-in 高温老化筛掉它们——「烧掉病秧子，留下壮劳力」。</li>
+        <li><strong>随机失效期</strong>：失效率低且平稳，来自偶发的过应力（浪涌、宇宙射线翻转）。这一段决定产品的「标称寿命」。</li>
+        <li><strong>损耗期（Wear-out）</strong>：长期应力的累积损伤集中爆发（电迁移空洞、栅氧磨穿），失效率<strong>指数上升</strong>。设计目标：把损耗期推迟到「用户换机之后」。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="可靠性浴盆曲线">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">浴盆曲线：失效率 × 时间</text>
+          <line x1="70" y1="230" x2="640" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="628" y="248" font-size="10" fill="var(--text-mute)">时间</text>
+          <line x1="70" y1="50" x2="70" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="60" y="60" font-size="10" fill="var(--text-mute)">λ</text>
+          <path d="M70 70 Q 130 210 220 196 Q 340 182 470 190 Q 560 194 600 120 L610 90"
+                fill="none" stroke="var(--accent)" stroke-width="2.6"/>
+          <g font-size="10.5">
+            <text x="90" y="96" fill="var(--down)" font-weight="700">早期失效</text>
+            <text x="92" y="112" fill="var(--text-mute)">先天缺陷者</text>
+            <text x="92" y="126" fill="var(--text-mute)">先阵亡 → burn-in 筛除</text>
+            <text x="280" y="160" fill="var(--up)" font-weight="700">随机失效期（有用寿命）</text>
+            <text x="282" y="176" fill="var(--text-mute)">低平稳定 → 标称可靠性</text>
+            <text x="470" y="130" fill="var(--fin)" font-weight="700">损耗期</text>
+            <text x="470" y="146" fill="var(--text-mute)">EM/TDDB 累积爆发</text>
+            <text x="470" y="160" fill="var(--text-mute)">→ 设计目标：推到寿命之外</text>
+          </g>
+          <text x="340" y="278" text-anchor="middle" font-size="11" fill="var(--text-soft)">可靠性工作的全部内容：筛掉早期的、防住随机的、算清并推迟损耗的</text>
+        </svg>
+        <figcaption>图 1：浴盆曲线。三个失效区各有对策：老化筛查、防过应力设计、寿命物理建模。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>FIT（失效率单位）</span><span>10⁹ 器件小时里失效 1 次；1000 FIT ≈ 百万颗芯片年均坏 87 颗</span></div>
+        <div class="kv-row"><span>车规 AEC-Q100</span><span>消费级 0~70 ℃ → 车规 −40~125 ℃，寿命目标 15 年</span></div>
+        <div class="kv-row"><span>加速试验逻辑</span><span>高温高压试几天 ≈ 常温用几年，用 Arrhenius 方程换算</span></div>
+      </div>
+
+      <h2 id="s2">2. 电迁移 EM：电子风把金属吹断</h2>
+
+      <p>芯片里的金属互连线不是永恒的。当电流密度大到一定程度（现代工艺每平方厘米上百万安培），
+      流动的电子会不断撞击金属原子，像一阵<strong>「电子风」</strong>推动铝/铜原子顺着电流方向缓慢迁移。
+      天长日久：</p>
+
+      <ul>
+        <li>原子被吹走的一端形成<strong>空洞（Void）</strong>——导线变细、电阻变大，最终断裂开路；</li>
+        <li>原子堆积的一端形成<strong>小丘（Hillock）</strong>——可能顶穿层间介质，造成短路。</li>
+      </ul>
+
+      <p>这就是<strong>电迁移（Electromigration, EM）</strong>，1859 年就已观察到的现象在芯片里的翻版。
+      它的规律由 <strong>Black 方程</strong>描述：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>Black 方程</span><span>MTTF = A · J⁻ⁿ · exp(Ea / kT)</span></div>
+        <div class="kv-row"><span>J</span><span>电流密度 —— 寿命对它负相关（n≈1~2）：电流加倍，寿命约砍半到 1/4</span></div>
+        <div class="kv-row"><span>Ea（激活能）</span><span>铜约 0.9 eV —— 温度每升 10~15 ℃，寿命约减半</span></div>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="电迁移空洞生长与 Black 方程">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">电迁移：电子风推原子，阴极端长空洞</text>
+          <!-- 导线 -->
+          <rect x="60" y="100" width="330" height="46" rx="4" fill="var(--semi)" fill-opacity=".25" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="225" y="127" text-anchor="middle" font-size="10" fill="var(--text-soft)">金属互连线（Cu）</text>
+          <!-- 电子流向 -->
+          <g stroke="var(--accent)" stroke-width="1.8" fill="none">
+            <path d="M75 145 L340 145"/>
+          </g>
+          <path d="M340 145 L330 141 L330 149 Z" fill="var(--accent)"/>
+          <text x="75" y="166" font-size="10.5" fill="var(--accent)">电子流方向 →</text>
+          <text x="288" y="94" font-size="10.5" fill="var(--down)">阳极端：原子堆积成小丘（短路风险）</text>
+          <circle cx="305" cy="108" r="6" fill="var(--fin)" fill-opacity=".7"/>
+          <circle cx="318" cy="104" r="4" fill="var(--fin)" fill-opacity=".7"/>
+          <!-- 阴极空洞 -->
+          <path d="M92 100 Q 112 116 92 128 Q 108 136 96 146 Q 112 132 98 122 Q 114 112 92 100" fill="var(--surface)" stroke="var(--down)" stroke-width="1.6"/>
+          <text x="96" y="92" text-anchor="middle" font-size="10.5" fill="var(--down)">阴极端：空洞长大 → 断路</text>
+          <!-- 右侧：寿命 vs 温度 -->
+          <rect x="430" y="70" width="220" height="160" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="540" y="94" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">Black 方程两条铁律</text>
+          <text x="444" y="120" font-size="10.5" fill="var(--text-soft)">① 电流密度 J 越大，寿命越短</text>
+          <text x="444" y="140" font-size="10.5" fill="var(--text-soft)">　 （供电网络首当其冲）</text>
+          <text x="444" y="168" font-size="10.5" fill="var(--text-soft)">② 温度越高，寿命指数下降</text>
+          <text x="444" y="188" font-size="10.5" fill="var(--text-soft)">　 （每 +10~15 ℃ 寿命减半）</text>
+          <text x="540" y="216" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">直流（单向电流）最危险；交流可部分恢复</text>
+          <text x="340" y="252" text-anchor="middle" font-size="11" fill="var(--text-mute)">设计防御：EM 规则限制每条线的最大电流密度；电源网络加宽加倍打孔；热设计降结温</text>
+          <text x="340" y="274" text-anchor="middle" font-size="11" fill="var(--text-soft)">为什么 FinFET 更怕它：线更细电流密度更高，且热导差自热严重 —— EM 与散热是老搭档</text>
+        </svg>
+        <figcaption>图 2：电迁移。电子风把金属原子从阴极搬向阳极——阴极断路、阳极短路，双向信号线反而不易死。</figcaption>
+      </figure>
+
+      <h2 id="s3">3. 栅氧击穿 TDDB：绝缘层的慢性病</h2>
+
+      <p>MOSFET 的栅极下面那几纳米厚的氧化层，是全芯片最「劳苦功高」也最脆弱的介质。
+      正常工作电压下不该被击穿——但载流子在强电场里年复一年地<strong>隧穿</strong>进氧化层，
+      每次都可能在介质里留下一个陷阱缺陷。缺陷随机积累，当密度达到临界值时，
+      缺陷恰好「连点成线」，形成一条导电渗流路径——氧化层突然短路。
+      这个「与时间相关的介质击穿」就是 <strong>TDDB（Time-Dependent Dielectric Breakdown）</strong>。</p>
+
+      <p>两个关键词决定它的统计形态：</p>
+
+      <ul>
+        <li><strong>随机性</strong>：同样的氧化层、同样的电压，有的几小时穿、有的几十年不穿。
+        一批器件的击穿时间服从 <strong>Weibull 分布</strong>——签核不看「平均寿命」，看「百万分之一失效率」对应的寿命。</li>
+        <li><strong>电场加速</strong>：工作电压每降一档，寿命呈数量级延长。这是为什么先进工艺都要「降压保命」，
+        也是为什么厂家对栅极过压如此敏感。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TDDB 渗流路径与 Weibull 分布">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">TDDB：缺陷随机积累，连点成线即击穿</text>
+          <!-- 栅极堆叠 -->
+          <rect x="60" y="70" width="260" height="34" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="190" y="91" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">多晶/金属栅极</text>
+          <rect x="60" y="104" width="260" height="22" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="190" y="119" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">栅氧化层 ~1~2 nm（先进节点）</text>
+          <rect x="60" y="126" width="260" height="30" fill="var(--semi)" fill-opacity=".25" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="190" y="145" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">沟道（衬底）</text>
+          <!-- 缺陷点积累 -->
+          <g fill="var(--down)">
+            <circle cx="100" cy="112" r="2.5"/><circle cx="150" cy="108" r="2"/>
+            <circle cx="200" cy="114" r="2.5"/><circle cx="250" cy="107" r="2"/>
+          </g>
+          <text x="330" y="112" font-size="10" fill="var(--text-mute)">① 缺陷随机出现</text>
+          <path d="M150 108 L200 114 L250 107 L268 107" stroke="var(--down)" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+          <text x="330" y="132" font-size="10" fill="var(--down)">② 渗流路径连通 → 击穿</text>
+          <text x="190" y="180" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">载流子隧穿留下陷阱，缺陷密度随时间增长</text>
+          <text x="190" y="200" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">栅氧越薄、电场越强，积累越快</text>
+          <!-- 右：Weibull -->
+          <line x1="430" y1="220" x2="640" y2="220" stroke="var(--text-mute)" stroke-width="1.3"/>
+          <text x="628" y="238" font-size="9.5" fill="var(--text-mute)">时间</text>
+          <line x1="430" y1="60" x2="430" y2="220" stroke="var(--text-mute)" stroke-width="1.3"/>
+          <text x="420" y="70" font-size="9.5" fill="var(--text-mute)">累计失效率</text>
+          <path d="M436 214 Q 490 210 520 196 Q 570 172 600 110 Q 615 78 620 64" fill="none" stroke="var(--down)" stroke-width="2.4"/>
+          <line x1="430" y1="150" x2="640" y2="150" stroke="var(--up)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="636" y="144" font-size="9" fill="var(--up)">1 ppm 线</text>
+          <circle cx="590" cy="150" r="4.5" fill="var(--up)"/>
+          <text x="488" y="166" font-size="10" fill="var(--up)" font-weight="700">签核点：1 ppm 失效率的寿命</text>
+          <text x="535" y="256" text-anchor="middle" font-size="10" fill="var(--text-mute)">同一批器件寿命极分散 —— Weibull 分布</text>
+          <text x="340" y="278" text-anchor="middle" font-size="11" fill="var(--text-soft)">工作电压降 0.1~0.2 V，TDDB 寿命常常延长一个数量级 —— 「降压保命」的物理依据</text>
+        </svg>
+        <figcaption>图 3：TDDB。缺陷连成渗流路径的瞬间就是击穿；签核目标是「百万分之一器件在标称寿命内击穿」。</figcaption>
+      </figure>
+
+      <h2 id="s4">4. 阈值漂移 NBTI / HCI：晶体管的衰老</h2>
+
+      <p>前两种失效是「猝死」，还有两种是「慢性衰老」——晶体管没坏，但阈值电压 V<sub>th</sub> 悄悄漂移，
+      电流变小、电路变慢。五年后的芯片跑不动当年的主频，很大程度是它们的「功劳」。</p>
+
+      <h3>4.1 NBTI：负偏置温度不稳定</h3>
+
+      <p>PMOS 管栅极长期加负偏压（即导通状态）+ 温度较高时，硅/氧化层界面的 Si-H 键被电场拆断，
+      产生界面态，|V<sub>th</sub>| 上升、空穴迁移率下降。它的两个特征：</p>
+
+      <ul>
+        <li><strong>应力即退化，撤压可部分恢复</strong>：信号是 50% 占空比的方波，NBTI 是「工作时退化、空闲时修复」的动态平衡；</li>
+        <li><strong>对时序的实际影响</strong>：关键路径上一直导通的那只 PMOS 老得最快——五年后路径延迟可能恶化 5%~15%，这就是老款手机「越用越卡」的硬件因素之一。</li>
+      </ul>
+
+      <h3>4.2 HCI：热载流子注入</h3>
+
+      <p>NMOS 开关瞬间，漏端强电场把载流子加速成「热电子」，部分越过势垒注入氧化层留下电荷，
+      V<sub>th</sub> 单调上升——<strong>不恢复、与翻转频率成正比</strong>：活动率越高的电路老得越快。
+      长沟道老工艺以 HCI 为主，短沟道先进工艺以 NBTI 为主。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NBTI 与 HCI 的阈值漂移对比">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">两种衰老曲线：NBTI 可恢复，HCI 单调走</text>
+          <line x1="70" y1="230" x2="640" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="628" y="248" font-size="10" fill="var(--text-mute)">时间</text>
+          <line x1="70" y1="60" x2="70" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="56" y="72" font-size="10" fill="var(--text-mute)">|Vth|</text>
+          <!-- NBTI 锯齿 + 漂移 -->
+          <path d="M70 200 L110 188 L118 194 L160 178 L168 185 L210 168 L218 176 L260 160 L268 169 L310 152 L318 162 L360 148 L368 158 L410 144 L418 155 L460 141 L468 153 L510 139 L518 151 L560 137 L568 149 L610 136 L618 148"
+                fill="none" stroke="var(--down)" stroke-width="2.2"/>
+          <text x="130" y="120" font-size="10.5" fill="var(--down)" font-weight="700">NBTI（PMOS）</text>
+          <text x="130" y="136" font-size="9.5" fill="var(--text-mute)">导通退化 / 空闲恢复</text>
+          <text x="130" y="150" font-size="9.5" fill="var(--text-mute)">锯齿上行，长期净漂移</text>
+          <!-- HCI 单调 -->
+          <path d="M70 210 Q 200 200 340 184 Q 480 166 610 138" fill="none" stroke="var(--fin)" stroke-width="2.2"/>
+          <text x="470" y="210" font-size="10.5" fill="var(--fin)" font-weight="700">HCI（NMOS）</text>
+          <text x="470" y="226" font-size="9.5" fill="var(--text-mute)">与翻转频率成正比，不恢复</text>
+          <line x1="70" y1="90" x2="640" y2="90" stroke="var(--up)" stroke-width="1" stroke-dasharray="5 4"/>
+          <text x="636" y="84" font-size="9.5" fill="var(--up)">签核上限</text>
+          <text x="340" y="262" text-anchor="middle" font-size="11" fill="var(--text-mute)">设计对策：签核时给关键路径加「老化余量」（guardband），按 5~10 年老化后的慢库重新过 STA</text>
+          <text x="340" y="282" text-anchor="middle" font-size="11" fill="var(--text-soft)">「越用越卡」不全是软件的锅 —— 晶体管真的在物理意义上变慢了</text>
+        </svg>
+        <figcaption>图 4：NBTI 锯齿式净漂移 vs HCI 单调漂移。两者共同吃掉时序余量，签核必须用「老化后的库」。</figcaption>
+      </figure>
+
+      <h2 id="s5">5. ESD 静电防护：出厂前的第一杀手</h2>
+
+      <p>前面四种失效要「用几年」才发作，而<strong>ESD（静电放电）</strong>可能在你摸到芯片引脚的那一瞬间
+      就宣判死刑。冬天脱毛衣的几千伏静电、流水线上无接地的人员接触——放电在纳秒级把数安培电流灌进
+      芯片，让栅氧、结、金属当场报废。ESD 防护的目标：在芯片每个对外引脚都布下「泄洪通道」，
+      让静电能量在进入内部电路之前被安全泄放。</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>HBM 人体模型</span><span>100 pF + 1.5 kΩ，标准等级 2 kV —— 最基本的量产门槛</span></div>
+        <div class="kv-row"><span>CDM 器件充放电模型</span><span>芯片自身带电再放电，纳秒级，先进封装的主要威胁</span></div>
+        <div class="kv-row"><span>主防护结构</span><span>GGNMOS（栅-源-衬底短接的 NMOS）：雪崩击穿后进入负阻 snapback 区，把电流泄到地</span></div>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ESD 保护电路与 snapback 曲线">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">ESD 泄洪通道：让静电绕过核心电路</text>
+          <!-- 左：电路 -->
+          <rect x="40" y="66" width="250" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <line x1="60" y1="96" x2="270" y2="96" stroke="var(--up)" stroke-width="2"/>
+          <text x="278" y="100" font-size="10" fill="var(--up)">VDD</text>
+          <line x1="60" y1="186" x2="270" y2="186" stroke="var(--text-mute)" stroke-width="2"/>
+          <text x="278" y="190" font-size="10" fill="var(--text-mute)">GND</text>
+          <line x1="150" y1="96" x2="150" y2="141" stroke="var(--text)" stroke-width="1.6"/>
+          <text x="100" y="126" font-size="9.5" fill="var(--down)">上拉保护 GGNMOS(P)</text>
+          <circle cx="150" cy="96" r="3" fill="var(--up)"/>
+          <line x1="150" y1="156" x2="150" y2="186" stroke="var(--text)" stroke-width="1.6"/>
+          <line x1="165" y1="96" x2="165" y2="186" stroke="var(--accent)" stroke-width="2"/>
+          <text x="172" y="120" font-size="9.5" fill="var(--accent)">PAD</text>
+          <text x="172" y="170" font-size="9.5" fill="var(--accent)">→ 核心电路</text>
+          <line x1="150" y1="96" x2="165" y2="96" stroke="var(--text)" stroke-width="1.6"/>
+          <line x1="150" y1="186" x2="165" y2="186" stroke="var(--text)" stroke-width="1.6"/>
+          <text x="165" y="228" text-anchor="middle" font-size="10" fill="var(--text-mute)">PAD 上并联双向保护管，</text>
+          <text x="165" y="244" text-anchor="middle" font-size="10" fill="var(--text-mute)">静电被就地泄放到电源轨</text>
+          <!-- 右：snapback I-V -->
+          <line x1="400" y1="220" x2="640" y2="220" stroke="var(--text-mute)" stroke-width="1.3"/>
+          <text x="628" y="238" font-size="9.5" fill="var(--text-mute)">V</text>
+          <line x1="400" y1="60" x2="400" y2="220" stroke="var(--text-mute)" stroke-width="1.3"/>
+          <text x="388" y="70" font-size="9.5" fill="var(--text-mute)">I</text>
+          <path d="M436 220 L470 220 Q 492 214 508 190 Q 522 168 546 162 L632 152" fill="none" stroke="var(--down)" stroke-width="2.4"/>
+          <circle cx="470" cy="219" r="4" fill="var(--down)"/>
+          <text x="452" y="208" font-size="9.5" fill="var(--down)">触发 V<tspan dy="3" font-size="72%">t1</tspan></text>
+          <circle cx="546" cy="162" r="4" fill="var(--fin)"/>
+          <text x="556" y="156" font-size="9.5" fill="var(--fin)">维持（hold）区</text>
+          <text x="410" y="98" font-size="10" fill="var(--text-soft)">雪崩击穿后进入负阻区：</text>
+          <text x="410" y="116" font-size="10" fill="var(--text-soft)">电压回落、电流大增——</text>
+          <text x="410" y="134" font-size="10" fill="var(--text-soft)">自我泄洪，直到能量放完</text>
+          <text x="340" y="272" text-anchor="middle" font-size="11" fill="var(--text-soft)">hold 电压必须高于核心工作电压（不误触发）、泄放路径电阻必须极低 —— 全是版图篇讲过的物理</text>
+        </svg>
+        <figcaption>图 5：ESD 防护。GGNMOS 的 snapback 负阻特性让保护管「先泄洪后恢复」，把静电挡在核心电路门外。</figcaption>
+      </figure>
+
+      <div class="note"><b>ESD 与闩锁是表亲：</b>
+        版图篇讲过 CMOS 的闩锁效应（Latch-up）——寄生晶闸管被触发后电源对地短路。
+        ESD 保护管恰恰利用了类似的雪崩/负阻物理，只是设计目标是「可控地触发、可控地恢复」。
+        同一套器件物理，防御与自毁只有一线之隔。
+      </div>
+
+      <h2 id="s6">6. 从物理到设计：可靠性签核与降额</h2>
+
+      <p>四种失效机制最终都要落回设计规则和签核流程，形成一条完整的「可靠性预算」链条：</p>
+
+      <table>
+        <thead><tr><th>机制</th><th>驱动因素</th><th>设计对策</th><th>签核手段</th></tr></thead>
+        <tbody>
+          <tr><td>EM 电迁移</td><td>电流密度 × 温度</td><td>加宽供电线、加倍通孔、限制信号线 DC 电流</td><td>EM 签核工具逐线检查（呼应后端篇 IR/EM 分析）</td></tr>
+          <tr><td>TDDB</td><td>栅压 × 温度 × 时间</td><td>降工作电压、避免栅过压</td><td>按 Weibull 1 ppm 目标外推寿命</td></tr>
+          <tr><td>NBTI/HCI</td><td>占空比 × 温度 × 活动率</td><td>降活动率（呼应低功耗）、降 V<sub>DD</sub></td><td>老化后的时序库重跑 STA，加 guardband</td></tr>
+          <tr><td>ESD</td><td>外部静电脉冲</td><td>全引脚保护结构、版图规则（大金属、多孔）</td><td>HBM/CDM 放电测试抽检</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn"><b>降额（Derating）：可靠性工程的核心思想：</b>
+        没人按物理极限用芯片。电压留余量、温度留余量、电流密度留余量——每一项都让寿命按指数规律
+        换来数量级的延长。消费级、车规级、航天级的差别，本质上就是「降额深度」的差别：
+        同一颗物理定律，不同的保险系数。
+      </div>
+
+      <h2 id="s7">7. 易错点与自测</h2>
+
+      <div class="warn"><b>五个高频易错点：</b></div>
+      <ul>
+        <li><strong>EM 只威胁直流线？</strong>恰恰相反：时钟等双向（AC）信号线正反电流互相「搬运回去」，最抗 EM；供电网络的单向大电流才是头号受害者。</li>
+        <li><strong>TDDB 不是过压才发生</strong>：额定电压下的长期隧穿同样积累缺陷——它问的是「多久」，不是「会不会」。</li>
+        <li><strong>NBTI 会部分恢复</strong>：按最坏情况恒定应力算寿命会过度悲观，签核用实际占空比的动态模型。</li>
+        <li><strong>保持时间违例与老化无关</strong>：老化让电路变慢（坏建立时间），保持时间由最短路径决定——老芯片反而更安全。</li>
+        <li><strong>ESD 保护管平时是「死负载」</strong>：它增加 PAD 电容影响信号完整性，高速接口（如 SerDes）需要专门的低容 ESD 方案——防护与性能又是一对 PPA 式权衡。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：为什么供电网络是 EM 的重灾区，而时钟线反而不太怕电迁移？</summary>
+        <div>供电网络走恒定方向的大电流（DC），原子被单向持续搬运，空洞只增不减。时钟是双向摆动的 AC 电流，正向搬走的原子会被反向部分搬回，净迁移近似抵消。所以 EM 规则对信号线管「DC 分量」，对电源线最严。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：Black 方程里温度每升高约 15 ℃ 寿命减半。某芯片 105 ℃ 时 EM 寿命 10 年，若散热改善降到 90 ℃，寿命大约多少？</summary>
+        <div>15 ℃ 一档、减半一档，降 15 ℃ 就翻倍：约 20 年。这就是为什么散热设计和 EM 寿命必须一起算——结温每降一档，寿命指标直接翻倍，比任何版图优化都划算。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：TDDB 签核为什么不用「平均击穿时间」，而用 Weibull 分布的 1 ppm 点？</summary>
+        <div>同一批栅氧的击穿时间极度分散（对数正态/Weibull），平均值附近个体差异达几个数量级。一颗百万门芯片有上亿个栅——哪怕百万分之一的失效率，也意味着全芯片不可接受的概率。可靠性指标永远按「尾部概率」定义，不看平均。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：NBTI 和 HCI 都让电路变慢，两者的应力条件有什么本质区别？一个占空比 10% 的慢速电路和一个满翻转的高速电路，各主要怕哪个？</summary>
+        <div>NBTI 是「负偏置 + 温度」的静态应力，看的是导通时间占比（占空比），且撤压可恢复；HCI 是开关瞬间的动态应力，与翻转次数（活动率）成正比、不恢复。10% 占空比的慢电路主要被 NBTI 折磨；满翻转的高速电路 HCI 更凶。两者签核都要做，但权重按电路活动特征分配。</div>
+      </details>
+      <details class="quiz"><summary>自测 5：ESD 保护管的 snapback 曲线里，「维持电压（hold）」为什么必须高于核心电路的工作电压？</summary>
+        <div>如果 hold 电压低于工作电压，正常上电或信号摆幅就可能把保护管「按进」负阻导通区——保护管变成一条常开的低阻通路，芯片直接锁死或烧毁。hold 电压是「平时装死、事来泄洪」的开关阈值，必须卡在两者之间。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：把一颗消费级芯片（0~70 ℃）直接用在发动机舱（125 ℃）会先死在哪个机制上？为什么？</summary>
+        <div>几乎全部机制同时恶化，但最先崩的多半是 EM 与 TDDB：温度每 +10~15 ℃ 寿命减半，从 70 ℃ 到 125 ℃ 跨了约 4 档，寿命缩到 1/16 以下；再叠加 125 ℃ 已逼近栅氧与铜互连的老化加速区。这正是车规芯片要重新设计规则、加严降额、按 AEC-Q100 重新认证的原因。</div>
+      </details>
+
+      <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li class="current">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#可靠性</span>
+      <span class="chip">#电迁移</span>
+      <span class="chip">#TDDB</span>
+      <span class="chip">#NBTI</span>
+      <span class="chip">#ESD</span>
+      <span class="chip">#浴盆曲线</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

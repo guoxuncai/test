@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模拟集成电路设计：电流镜、带隙基准与运放</title>
+<meta name="description" content="模拟 IC 与数字 IC 有什么本质不同？用 PVT 漂移、电流镜、带隙基准、两级运放与相位裕度，讲透模拟芯片设计的核心套路与混合信号速览。">
+<meta name="keywords" content="模拟集成电路,电流镜,带隙基准,运算放大器,相位裕度,ADC,混合信号">
+<meta name="date" content="2026-10-07">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 设计</span>
+    <h1 class="title">模拟集成电路设计：电流镜、带隙基准与运放</h1>
+    <div class="meta">
+      <span>2026-10-07</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 28 篇</span><span class="sep"></span>
+      <span>阅读约 26 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        前面把数字电路讲透了：反相器、逻辑门、标准单元、综合与签核。但集成电路还有半壁江山是
+        <strong>模拟</strong>——你手机里给芯片供电的电源管理芯片、把麦克风声音变成数字的音频芯片、
+        连接天线的射频收发机，全是模拟的天下。为什么模拟工程师比数字工程师稀缺得多？
+        这一篇讲清楚模拟设计的三大件：<strong>电流镜、带隙基准、运算放大器</strong>，
+        以及模拟设计真正的灵魂——<strong>反馈与稳定性</strong>。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">模拟设计为什么难：PVT 三座大山</a></li>
+          <li><a href="#s2">电流镜：模拟电路的「复制粘贴」</a></li>
+          <li><a href="#s3">带隙基准：在全温度范围钉住 1.2 V</a></li>
+          <li><a href="#s4">运算放大器：模拟世界的万用积木</a></li>
+          <li><a href="#s5">反馈与稳定性：相位裕度决定生死</a></li>
+          <li><a href="#s6">混合信号速览：ADC 与 DAC</a></li>
+          <li><a href="#s7">一条模拟信号链，串起所有模块</a></li>
+          <li><a href="#s8">易错点与自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 模拟设计为什么难：PVT 三座大山</h2>
+
+      <p>数字电路只关心两件事：这个节点是高于 V<sub>DD</sub>/2 还是有漏电流。
+      模拟电路关心的是<strong>一个精确的数值</strong>：这个电压是 1.200 V 还是 1.213 V，
+      这个增益是 100.0 倍还是 97.5 倍。正是这种「要精确值」的执念，让模拟设计的难度本质性地高了一档。</p>
+
+      <p>因为任何模拟电路的性能都会随三样东西漂移，行业里称为 <strong>PVT</strong>：</p>
+
+      <table>
+        <thead>
+          <tr><th>维度</th><th>含义</th><th>典型影响</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>P（Process）</td><td>工艺角：同一张版图造出来的晶体管，阈值电压、氧化层厚度各有 ±10%~20% 的随机波动</td><td>同一个运放，快角下增益带宽 +30%，慢角下 −30%</td></tr>
+          <tr><td>V（Voltage）</td><td>电源电压：电池从满电 4.2 V 掉到 3.3 V，供电网还有 IR 压降</td><td>偏置电流随电源电压变化，基准跟着漂</td></tr>
+          <tr><td>T（Temperature）</td><td>−40 ℃（冬天车外）到 125 ℃（发动机舱），芯片自身还发热</td><td>载流子迁移率、阈值电压、双极管 V<sub>BE</sub> 全都在随温度漂</td></tr>
+        </tbody>
+      </table>
+
+      <p>三个维度组合起来，就是一个「PVT 立方体」：任何一款模拟芯片，都必须在立方体的
+      <strong>8 个角、乃至每一条棱</strong>上都满足指标。数字电路同样受 PVT 影响，但 0 和 1 的宽容度极大；
+      模拟电路的性能指标是连续值，漂 5% 可能就是「不合格」。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PVT 立方体与性能漂移">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">同一个电路，在 PVT 立方体的每个角上性能都不一样</text>
+          <!-- 立方体（斜投影） -->
+          <g stroke="var(--text)" stroke-width="1.6" fill="none">
+            <rect x="200" y="90" width="160" height="130" fill="var(--surface-2)" stroke="var(--border)"/>
+            <path d="M200 90 L250 55 L410 55 L360 90"/>
+            <path d="M410 55 L410 185 L360 220"/>
+          </g>
+          <text x="280" y="45" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">T：−40 ~ 125 ℃</text>
+          <text x="150" y="150" text-anchor="middle" font-size="12" fill="var(--up)" font-weight="700">V：3.0 ~ 3.6 V</text>
+          <text x="290" y="240" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">P：SS / TT / FF 工艺角</text>
+          <!-- 八个角 -->
+          <g font-size="10" fill="var(--text-mute)">
+            <circle cx="200" cy="90" r="4" fill="var(--down)"/><text x="188" y="82">SS·3.0·−40℃</text>
+            <circle cx="360" cy="90" r="4" fill="var(--up)"/><text x="352" y="82">FF·3.6·125℃</text>
+            <circle cx="200" cy="220" r="4" fill="var(--down)"/><text x="120" y="240">SS·3.0·125℃</text>
+            <circle cx="360" cy="220" r="4" fill="var(--up)"/><text x="368" y="242">FF·3.6·−40℃</text>
+          </g>
+          <!-- 右侧结论 -->
+          <rect x="470" y="80" width="180" height="140" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="560" y="104" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">数字 vs 模拟</text>
+          <text x="482" y="130" font-size="10.5" fill="var(--text-soft)">数字：只问 0/1，宽容度大</text>
+          <text x="482" y="150" font-size="10.5" fill="var(--text-soft)">漂 20% 照样分得清高低电平</text>
+          <text x="482" y="178" font-size="10.5" fill="var(--semi)">模拟：要精确数值</text>
+          <text x="482" y="198" font-size="10.5" fill="var(--semi)">基准漂 10 mV、增益掉 5%</text>
+          <text x="482" y="214" font-size="10.5" fill="var(--semi)">就可能整片报废</text>
+          <text x="340" y="280" text-anchor="middle" font-size="11" fill="var(--text-mute)">模拟设计的全部技巧，本质上都是在跟 PVT 漂移作斗争</text>
+        </svg>
+        <figcaption>图 1：PVT 立方体。工艺 × 电压 × 温度三个维度组合出无数工作点，模拟电路必须在每一个点上都不越界。</figcaption>
+      </figure>
+
+      <div class="note"><b>稀缺性的来源：</b>
+        数字设计的工具链高度自动化——RTL 进，网表出，标准单元库替你扛下了器件层的全部细节。
+        模拟电路没有这种「自动化红利」：每一个偏置点、每一对管子的尺寸，都要工程师亲手掰扯。
+        这也是为什么资深模拟工程师的培养周期普遍以十年计。
+      </div>
+
+      <h2 id="s2">2. 电流镜：模拟电路的「复制粘贴」</h2>
+
+      <p>模拟电路里到处需要<strong>偏置电流</strong>：差分对的尾电流、共源级的负载电流、基准源的启动电流……
+      一个芯片里几十上百处要用电流，总不能每处都造一套基准。于是有了模拟设计的第一件兵器：
+      <strong>电流镜（Current Mirror）</strong>——用一路参考电流，精确地「复印」出 N 路一样的电流。</p>
+
+      <p>原理一句话：<strong>两只 MOS 管栅极连在一起（V<sub>GS</sub> 相同）、尺寸相同，漏电流就相同</strong>。
+      由 MOS 的平方律 I<sub>D</sub> ∝ (W/L)·(V<sub>GS</sub> − V<sub>th</sub>)² 可知：
+      相同的 V<sub>GS</sub> 下，电流之比就等于宽长比之比。想要 1:4 的电流？把复制管的宽度做成 4 倍即可。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="电流镜电路原理">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">电流镜：同 V<tspan dy="3" font-size="72%">GS</tspan><tspan dy="-3">、按 W/L 比例复制电流</tspan></text>
+          <!-- 电源轨 -->
+          <line x1="80" y1="60" x2="600" y2="60" stroke="var(--up)" stroke-width="2"/>
+          <text x="612" y="64" font-size="11" fill="var(--up)">VDD</text>
+          <!-- 参考支路 -->
+          <line x1="200" y1="60" x2="200" y2="95" stroke="var(--text)" stroke-width="1.8"/>
+          <circle cx="200" cy="118" r="23" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+          <text x="200" y="122" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">M1</text>
+          <line x1="200" y1="141" x2="200" y2="180" stroke="var(--text)" stroke-width="1.8"/>
+          <!-- 二极管接法：D-S 短接 -->
+          <line x1="200" y1="95" x2="224" y2="95" stroke="var(--text)" stroke-width="1.8"/>
+          <line x1="224" y1="95" x2="224" y2="150" stroke="var(--text)" stroke-width="1.8"/>
+          <line x1="224" y1="150" x2="200" y2="150" stroke="var(--text)" stroke-width="1.8"/>
+          <!-- 电流源 -->
+          <line x1="200" y1="180" x2="200" y2="192" stroke="var(--down)" stroke-width="1.8"/>
+          <circle cx="200" cy="207" r="15" fill="none" stroke="var(--down)" stroke-width="1.8"/>
+          <line x1="192" y1="207" x2="208" y2="207" stroke="var(--down)" stroke-width="1.8"/>
+          <text x="168" y="212" font-size="11" fill="var(--down)">I<tspan dy="3" font-size="72%">REF</tspan></text>
+          <line x1="200" y1="222" x2="200" y2="240" stroke="var(--text-mute)" stroke-width="1.8"/>
+          <line x1="120" y1="240" x2="560" y2="240" stroke="var(--text-mute)" stroke-width="2"/>
+          <text x="570" y="244" font-size="11" fill="var(--text-mute)">GND</text>
+          <!-- 栅极连线 -->
+          <line x1="224" y1="118" x2="420" y2="118" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="300" y="110" font-size="10.5" fill="var(--accent)">同栅极 → 同 V<tspan dy="3" font-size="72%">GS</tspan></text>
+          <!-- 复制支路 -->
+          <line x1="420" y1="60" x2="420" y2="95" stroke="var(--text)" stroke-width="1.8"/>
+          <circle cx="420" cy="118" r="23" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="2.2"/>
+          <text x="420" y="122" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">M2</text>
+          <text x="452" y="112" font-size="10.5" fill="var(--accent)">W/L = 4 倍</text>
+          <line x1="420" y1="141" x2="420" y2="178" stroke="var(--text)" stroke-width="1.8"/>
+          <text x="436" y="168" font-size="11.5" fill="var(--up)" font-weight="700">I<tspan dy="3" font-size="72%">OUT</tspan><tspan dy="-3"> = 4 · I</tspan><tspan dy="3" font-size="72%">REF</tspan></text>
+          <line x1="420" y1="185" x2="420" y2="240" stroke="var(--text)" stroke-width="1.8"/>
+          <text x="340" y="272" text-anchor="middle" font-size="11" fill="var(--text-mute)">M1 二极管接法自锁 VGS；M2 只复制不参与环路 —— 「输入」是电流，「输出」也是电流</text>
+        </svg>
+        <figcaption>图 2：电流镜。M1 接成二极管把参考电流「翻译」成 V<sub>GS</sub>，M2 用同样的 V<sub>GS</sub> 按宽长比反译回电流。</figcaption>
+      </figure>
+
+      <p>但真实世界里「同样的管子」并不存在。<strong>失配（Mismatch）</strong>是电流镜的头号敌人：
+      两只管子的阈值电压天然有毫伏级的随机偏差（由掺杂涨落决定），由此造成的相对电流误差约为：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>失配经验公式（Pelgrom）</span><span>σ(ΔI/I) ∝ A<sub>VT</sub> / [ √(W·L) · (V<sub>GS</sub>−V<sub>th</sub>) ]</span></div>
+        <div class="kv-row"><span>典型值 A<sub>VT</sub>（65 nm）</span><span>约 5 mV·μm</span></div>
+        <div class="kv-row"><span>两条出路</span><span>把 W·L 做大（面积换精度）；把过驱动电压做大（牺牲电压余量）</span></div>
+      </div>
+
+      <p>再回看版图篇的<strong>共质心 + Dummy</strong>布局——那正是为了把系统性失配归零。
+      模拟设计从来是「电路 + 版图」一体两面：电路里留出余量，版图里消灭梯度。</p>
+
+      <h2 id="s3">3. 带隙基准：在全温度范围钉住 1.2 V</h2>
+
+      <p>模拟系统里所有电压和电流的「标尺」，来自<strong>基准源（Voltage Reference）</strong>。
+      ADC 拿它当满量程，LDO 拿它当反馈目标，温度传感器拿它当零点——标尺自己漂了，全系统跟着漂。
+      而芯片上最稳定的电压参考，来自一个巧妙的物理组合：<strong>带隙基准（Bandgap Reference）</strong>。</p>
+
+      <p>它利用了两个天然温漂方向相反的「原材料」：</p>
+
+      <ul>
+        <li><strong>双极管 V<sub>BE</sub>：负温漂</strong>，约 −2 mV/℃——温度越高，V<sub>BE</sub> 越低。</li>
+        <li><strong>热电压 V<sub>T</sub> = kT/q：正温漂</strong>，严格正比于绝对温度（300 K 时约 25.9 mV）。
+        把两只电流密度相差 N 倍的双极管的 V<sub>BE</sub> 相减，得到 ΔV<sub>BE</sub> = V<sub>T</sub>·ln N——一个纯 PTAT（正比于绝对温度）的电压。</li>
+      </ul>
+
+      <p>一个是 −2 mV/℃ 的下坡，一个是 +0.19 mV/℃（N=8 时）的上坡，
+      按约 10.8 倍放大后者再相加，两条斜率恰好抵消——剩下的就是一条几乎平坦的直线，
+      落在 <strong>1.2 V 附近</strong>。这个数值不是巧合：它约等于硅的带隙电压（1.205 V）外推到 0 K 的值，
+      这就是「带隙」名字的由来。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="带隙基准原理与温度曲线">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">带隙基准：负温漂 + 正温漂，按比例相加 → 平坦</text>
+          <!-- 左：结构框图 -->
+          <rect x="30" y="50" width="270" height="180" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <circle cx="85" cy="95" r="16" fill="none" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="85" y="99" text-anchor="middle" font-size="10" fill="var(--fin)">Q1</text>
+          <text x="85" y="128" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">高电流密度</text>
+          <circle cx="85" cy="165" r="16" fill="none" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="85" y="169" text-anchor="middle" font-size="10" fill="var(--fin)">Q2</text>
+          <text x="85" y="198" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1/N 电流密度</text>
+          <line x1="105" y1="95" x2="180" y2="95" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="105" y1="165" x2="180" y2="165" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <circle cx="196" cy="130" r="14" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="196" y="134" text-anchor="middle" font-size="10" fill="var(--accent)">+×11</text>
+          <text x="160" y="90" font-size="10" fill="var(--text-soft)">V<tspan dy="3" font-size="72%">BE</tspan><tspan dy="-3"> ≈ 0.65 V</tspan></text>
+          <text x="120" y="185" font-size="10" fill="var(--text-soft)">ΔV<tspan dy="3" font-size="72%">BE</tspan><tspan dy="-3"> = V</tspan><tspan dy="3" font-size="72%">T</tspan><tspan dy="-3">·ln8 ≈ 54 mV</tspan></text>
+          <line x1="212" y1="130" x2="240" y2="130" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="248" y="134" font-size="12" fill="var(--accent)" font-weight="700">V<tspan dy="3" font-size="72%">REF</tspan><tspan dy="-3"> ≈ 1.23 V</tspan></text>
+          <text x="165" y="220" text-anchor="middle" font-size="10" fill="var(--text-mute)">−2 mV/℃ × 1 + 0.19 mV/℃ × 11 ≈ 0</text>
+          <!-- 右：温度曲线 -->
+          <line x1="360" y1="210" x2="640" y2="210" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="360" y1="60" x2="360" y2="210" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="350" y="70" font-size="10" fill="var(--text-mute)">V</text>
+          <text x="628" y="228" font-size="10" fill="var(--text-mute)">T/℃</text>
+          <g font-size="9" fill="var(--text-mute)">
+            <text x="352" y="222">0</text>
+            <text x="452" y="222">40</text>
+            <text x="552" y="222">120</text>
+          </g>
+          <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="360" y1="130" x2="640" y2="130"/>
+          </g>
+          <text x="644" y="134" font-size="9" fill="var(--text-mute)">1.2</text>
+          <path d="M380 112 Q 470 128 500 130 Q 540 132 620 118" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+          <text x="455" y="112" font-size="10.5" fill="var(--accent)">V<tspan dy="3" font-size="72%">REF</tspan><tspan dy="-3"> ≈ 1.23 V，全温区漂移 &lt; ±10 mV</tspan></text>
+          <text x="492" y="262" text-anchor="middle" font-size="11" fill="var(--text-mute)">二次曲率（约 ±3 mV 量级）是残余误差主要来源，高精度场合需曲率校正</text>
+          <text x="340" y="292" text-anchor="middle" font-size="11" fill="var(--text-soft)">输出 ≈ 1.2 V 恰好是硅带隙电压外推到 0 K 的值 —— 故名「带隙」</text>
+        </svg>
+        <figcaption>图 3：带隙基准。V<sub>BE</sub> 的负温漂与 ΔV<sub>BE</sub> 的正温漂加权相消，得到全温度范围平坦的 1.2 V。</figcaption>
+      </figure>
+
+      <div class="warn"><b>别被名字骗了：</b>
+        带隙基准的输出不是「硅带隙能量 1.12 eV」——它是<strong>人为设计</strong>的相加结果，只是数值恰好接近带隙电压。
+        真正让它神奇的是「用两种物理效应互相抵消温漂」这一思想：不追求某个元件稳定，
+        而是让两个不稳定的量<strong>按已知比例互相抵消</strong>。这是模拟设计里最优雅的招式之一。
+      </div>
+
+      <h2 id="s4">4. 运算放大器：模拟世界的万用积木</h2>
+
+      <p>有了偏置（电流镜）和标尺（带隙基准），就可以搭模拟电路的「万用积木」——
+      <strong>运算放大器</strong>。运放本身几乎不能独立完成任何任务，它只有一个本事：
+      <strong>把两个输入端的电压差放大成千上万倍</strong>。但配上不同的反馈网络，它就什么都能干：
+      加法、减法、积分、滤波、缓冲、放大——「运算放大器」这个名字就是这么来的。</p>
+
+      <h3>4.1 虚短与虚断：负反馈的两大推论</h3>
+
+      <p>理想运放有三个「无穷」：开环增益 A<sub>OL</sub> → ∞、输入阻抗 → ∞、带宽 → ∞。
+      在深度负反馈下（输出经网络接回反相输入端），推出两条万能口诀：</p>
+
+      <ul>
+        <li><strong>虚断</strong>：输入阻抗无穷 → 流进输入端的电流为零。</li>
+        <li><strong>虚短</strong>：输出 = A<sub>OL</sub> × (v<sub>+</sub> − v<sub>−</sub>)，而输出是有限值、A<sub>OL</sub> 是天文数字 →
+        v<sub>+</sub> − v<sub>−</sub> ≈ 0，两输入端「像短路一样等电位」，但并没有真的短接。</li>
+      </ul>
+
+      <p>比如同相放大器：信号进 v<sub>+</sub>，输出经 R2/R1 分压回 v<sub>−</sub>。虚短使 v<sub>−</sub> = v<sub>+</sub>，
+      于是闭环增益 = 1 + R2/R1 —— <strong>只由电阻比决定，与运放自身参数无关</strong>。
+      这就是负反馈的魔法：用 100 dB 的开环增益，买来一个精度只取决于电阻匹配的放大器。</p>
+
+      <h3>4.2 两级运放：真实运放长什么样</h3>
+
+      <p>真实的 CMOS 运放通常是两级结构：第一级差分对（抑制共模干扰、提供增益），
+      第二级共源级（再抬一截增益、扩大输出摆幅）。一二级各贡献一个主极点，合计相移接近 180°——
+      这为后面的稳定性问题埋下伏笔。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="两级运放结构框图">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">两级运放：差分对 → 共源级，增益 80~100 dB</text>
+          <rect x="40" y="70" width="180" height="130" rx="8" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="130" y="96" text-anchor="middle" font-size="12.5" fill="var(--semi)" font-weight="700">第一级：差分对</text>
+          <text x="130" y="120" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">+ / − 差分输入</text>
+          <text x="130" y="140" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">电流镜作负载</text>
+          <text x="130" y="168" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">增益 ≈ g<tspan dy="3" font-size="72%">m1</tspan><tspan dy="-3">·(r</tspan><tspan dy="3" font-size="72%">o2</tspan><tspan dy="-3">∥r</tspan><tspan dy="3" font-size="72%">o4</tspan><tspan dy="-3">)</tspan></text>
+          <text x="130" y="188" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">尾电流来自电流镜</text>
+          <line x1="220" y1="135" x2="290" y2="135" stroke="var(--accent)" stroke-width="2" marker-end="url(#arAmp)"/>
+          <rect x="295" y="70" width="180" height="130" rx="8" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="385" y="96" text-anchor="middle" font-size="12.5" fill="var(--fin)" font-weight="700">第二级：共源级</text>
+          <text x="385" y="120" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">再放大一级</text>
+          <text x="385" y="140" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">输出摆幅接近满轨</text>
+          <text x="385" y="168" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">增益 ≈ g<tspan dy="3" font-size="72%">m2</tspan><tspan dy="-3">·(r</tspan><tspan dy="3" font-size="72%">o</tspan><tspan dy="-3">)</tspan></text>
+          <line x1="475" y1="135" x2="545" y2="135" stroke="var(--accent)" stroke-width="2" marker-end="url(#arAmp)"/>
+          <circle cx="570" cy="135" r="22" fill="var(--surface)" stroke="var(--up)" stroke-width="2"/>
+          <text x="570" y="139" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">V<tspan dy="3" font-size="72%">OUT</tspan></text>
+          <!-- 密勒补偿 -->
+          <path d="M300 190 Q 385 240 470 190" fill="none" stroke="var(--down)" stroke-width="2" stroke-dasharray="5 3"/>
+          <text x="385" y="238" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">密勒补偿电容 C<tspan dy="3" font-size="72%">c</tspan><tspan dy="-3">：把两个极点推开（极点分裂）</tspan></text>
+          <text x="340" y="266" text-anchor="middle" font-size="11" fill="var(--text-mute)">总增益 = 两级相乘 ≈ 80~100 dB；单位增益带宽 GBW = g<tspan dy="3" font-size="72%">m1</tspan><tspan dy="-3">/C</tspan><tspan dy="3" font-size="72%">c</tspan></text>
+          <defs>
+            <marker id="arAmp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>图 4：两级运放。两级相乘出高增益；密勒电容 C<sub>c</sub> 是稳定性的保险丝，下一节揭晓原因。</figcaption>
+      </figure>
+
+      <h2 id="s5">5. 反馈与稳定性：相位裕度决定生死</h2>
+
+      <p>负反馈不是白给的。放大器在频率升高时会<strong>延迟相位</strong>——每经过一个极点，相位最多滞后 90°。
+      两级运放天生两个极点：如果反馈信号绕一圈回来时相位已经滞后 180°，
+      「负反馈」在数学上就变成了<strong>正反馈</strong>——输出被自己放大着推自己，环路震荡起来。
+      这就是为什么有些音频设备一开机就啸叫。</p>
+
+      <p>衡量「离振荡多远」的指标叫<strong>相位裕度（Phase Margin, PM）</strong>：
+      在环路增益恰好降到 0 dB（=1 倍，失去放大能力）的频率处，相位距 −180° 还差多少度。
+      行业经验值：</p>
+
+      <table>
+        <thead><tr><th>相位裕度</th><th>行为</th><th>结论</th></tr></thead>
+        <tbody>
+          <tr><td>&lt; 0°</td><td>起振，输出自激振荡</td><td>设计报废</td></tr>
+          <tr><td>≈ 30°</td><td>阶跃响应剧烈振铃，需十几个周期才稳</td><td>不可接受</td></tr>
+          <tr><td>≈ 45°</td><td>轻微振铃，过冲明显</td><td>勉强可用</td></tr>
+          <tr><td><strong>≈ 60°</strong></td><td>轻微过冲、快速稳定</td><td>黄金取值</td></tr>
+          <tr><td>≈ 90°</td><td>无过冲但响应偏慢</td><td>过于保守</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="波特图与相位裕度">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">波特图：在增益穿越 0 dB 处量相位裕度</text>
+          <!-- 幅频曲线 -->
+          <line x1="70" y1="150" x2="640" y2="150" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="630" y="166" font-size="10" fill="var(--text-mute)">log f</text>
+          <line x1="70" y1="50" x2="70" y2="150" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <text x="60" y="60" font-size="10" fill="var(--text-mute)">|T|dB</text>
+          <path d="M70 60 L360 60 L520 148" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+          <line x1="70" y1="148" x2="640" y2="148" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="614" y="142" font-size="9.5" fill="var(--text-mute)">0 dB</text>
+          <circle cx="520" cy="148" r="4.5" fill="var(--accent)"/>
+          <line x1="520" y1="148" x2="520" y2="290" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="520" y="306" text-anchor="middle" font-size="10" fill="var(--accent)">穿越频率 f<tspan dy="3" font-size="72%">c</tspan></text>
+          <!-- 相频曲线 -->
+          <path d="M70 200 L340 200 Q 430 200 470 232 Q 510 264 560 270 L640 270" fill="none" stroke="var(--fin)" stroke-width="2.2"/>
+          <text x="580" y="192" font-size="10" fill="var(--fin)">相位 ∠T</text>
+          <line x1="70" y1="270" x2="640" y2="270" stroke="var(--down)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="600" y="284" font-size="9.5" fill="var(--down)">−180°（振荡线）</text>
+          <circle cx="520" cy="245" r="4.5" fill="var(--fin)"/>
+          <text x="530" y="240" font-size="10.5" fill="var(--fin)" font-weight="700">−135°</text>
+          <path d="M520 245 L520 270" fill="none" stroke="var(--up)" stroke-width="3"/>
+          <text x="534" y="266" font-size="11" fill="var(--up)" font-weight="700">PM = 45° → 目标 60°</text>
+          <text x="340" y="322" text-anchor="middle" font-size="11" fill="var(--text-mute)">补偿的思路：用密勒电容把主极点压到低频，让增益在相位还没来得及滞后 180° 之前就先穿越 0 dB</text>
+        </svg>
+        <figcaption>图 5：波特图上的相位裕度。穿越 0 dB 时相位距 −180° 的余量，就是环路「离失控还有多远」。</figcaption>
+      </figure>
+
+      <div class="note"><b>密勒补偿为什么有效：</b>
+        密勒电容 C<sub>c</sub> 跨接在第二级放大器的输入与输出之间，密勒效应把它的等效容值放大 (1+A₂) 倍，
+        把第一级输出节点的极点<strong>狠狠压向低频</strong>（主极点）；同时第二级输出极点被推向高频（次极点）——
+        这就是「极点分裂」。结果：穿越 0 dB 时，第二个极点还远未发威，相位只滞后了约 90°+，
+        裕度自然充足。
+      </div>
+
+      <h2 id="s6">6. 混合信号速览：ADC 与 DAC</h2>
+
+      <p>真实世界是模拟的，处理世界的是数字的，中间必须有人翻译——<strong>ADC</strong>（模数转换器）
+      和 <strong>DAC</strong>（数模转换器）。它们是模拟设计与数字设计握手的地方，也是混合信号芯片的心脏。
+      两条最重要的物理约束先立好：</p>
+
+      <ul>
+        <li><strong>奈奎斯特定律</strong>：采样率必须大于信号最高频率的 2 倍，否则频谱折叠（混叠），信息永久丢失。</li>
+        <li><strong>量化误差</strong>：N bit 只能把量程切成 2<sup>N</sup> 份，理想信噪比上限 ≈ 6.02N + 1.76 dB——每加 1 bit，精度翻倍。</li>
+      </ul>
+
+      <p>ADC 的架构谱系里，两个端点最值得记住：</p>
+
+      <ul>
+        <li><strong>SAR（逐次逼近）</strong>：像「猜数字游戏」——先猜量程一半，比较器告诉你大了还是小了，再猜剩余区间的一半……
+        N bit 需要 N 次比较。中等速度、中等精度、功耗极低，是 MCU 内置 ADC 的绝对主流。</li>
+        <li><strong>Σ-Δ（Sigma-Delta）</strong>：反其道而行——用极低的位数（1 bit！）但超高速采样，
+        再用噪声整形把量化噪声<strong>推到带外</strong>滤掉。用速度换精度，是音频 24 bit 和体重秤传感器的选择。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SAR ADC 逐次逼近过程">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">SAR 逐次逼近：4 bit 猜出 0.69 × 满量程</text>
+          <line x1="60" y1="220" x2="620" y2="220" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="632" y="224" font-size="10" fill="var(--text-mute)">bit</text>
+          <line x1="60" y1="60" x2="60" y2="220" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <!-- 0.69 位置 -->
+          <line x1="334" y1="60" x2="334" y2="220" stroke="var(--down)" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <text x="334" y="52" text-anchor="middle" font-size="10.5" fill="var(--down)">输入电平 0.69×FS</text>
+          <!-- 猜测序列 -->
+          <g stroke="var(--accent)" stroke-width="2.2" fill="none">
+            <path d="M60 100 L330 100"/>
+            <path d="M330 100 L330 170 L82 170"/>
+            <path d="M206 170 L206 205 L330 205"/>
+            <path d="M268 205 L268 140 L330 140"/>
+            <path d="M299 140 L299 186 L330 186"/>
+          </g>
+          <g font-size="9.5" fill="var(--text-soft)">
+            <text x="100" y="92">第1猜 0.50 → 小了</text>
+            <text x="96" y="162">第2猜 0.25 → 小了</text>
+            <text x="216" y="196">第3猜 0.625 → 小了</text>
+            <text x="216" y="132">第4猜 0.875 → 大了</text>
+            <text x="248" y="178">第5猜 0.75</text>
+            <text x="300" y="178">…</text>
+          </g>
+          <circle cx="330" cy="100" r="4" fill="var(--accent)"/>
+          <text x="340" y="94" font-size="10.5" fill="var(--accent)">每猜一次砍掉一半区间</text>
+          <text x="340" y="248" text-anchor="middle" font-size="11" fill="var(--text-mute)">N bit 就要 N 次比较 —— SAR 是「用时间换电路简单」，功耗极低，MCU 内置 ADC 的主流</text>
+          <text x="340" y="268" text-anchor="middle" font-size="11" fill="var(--text-soft)">对照：Σ-Δ 反着来 —— 1 bit + 超高速采样 + 噪声整形，用速度换精度（24 bit 音频的选择）</text>
+        </svg>
+        <figcaption>图 6：SAR 逐次逼近。二分搜索的电路版——比较器是裁判，内部 DAC 负责出价，SAR 逻辑记录战果。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>ADC 两大性能轴</span><span>速度（采样率）× 精度（ENOB 有效位数），全都要 = 又贵又烫</span></div>
+        <div class="kv-row"><span>SAR</span><span>kS/s ~ 10 MS/s，8~16 bit，功耗最低</span></div>
+        <div class="kv-row"><span>Σ-Δ</span><span>Hz ~ 百 kS/s 带宽，16~24 bit，精度之王</span></div>
+        <div class="kv-row"><span>Pipeline</span><span>百 MS/s ~ GS/s，8~14 bit，通信/视频主流</span></div>
+      </div>
+
+      <h2 id="s7">7. 一条模拟信号链，串起所有模块</h2>
+
+      <p>把这一篇的模块串起来，就是一颗典型混合信号芯片里模拟部分的真实样貌：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="模拟信号链全景">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">从传感器到数字世界：一条信号链 = 全部模拟基本功</text>
+          <g font-size="11.5" text-anchor="middle" font-weight="700">
+            <rect x="30" y="70" width="88" height="52" rx="7" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="74" y="92" fill="var(--fin)">传感器</text>
+            <text x="74" y="110" font-size="9" fill="var(--text-mute)" font-weight="400">μV ~ mV 级</text>
+            <rect x="150" y="70" width="96" height="52" rx="7" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="198" y="92" fill="var(--semi)">放大器</text>
+            <text x="198" y="110" font-size="9" fill="var(--text-mute)" font-weight="400">运放 + 反馈</text>
+            <rect x="278" y="70" width="88" height="52" rx="7" fill="var(--accent)" fill-opacity=".14" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="322" y="92" fill="var(--accent)">滤波器</text>
+            <text x="322" y="110" font-size="9" fill="var(--text-mute)" font-weight="400">抗混叠</text>
+            <rect x="398" y="70" width="88" height="52" rx="7" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="442" y="92" fill="var(--up)">ADC</text>
+            <text x="442" y="110" font-size="9" fill="var(--text-mute)" font-weight="400">SAR / Σ-Δ</text>
+            <rect x="518" y="70" width="96" height="52" rx="7" fill="var(--text-mute)" fill-opacity=".14" stroke="var(--text-mute)" stroke-width="1.4"/>
+            <text x="566" y="92" fill="var(--text-soft)">数字处理</text>
+            <text x="566" y="110" font-size="9" fill="var(--text-mute)" font-weight="400">DSP / MCU</text>
+          </g>
+          <g stroke="var(--text)" stroke-width="1.8">
+            <line x1="118" y1="96" x2="148" y2="96"/><line x1="246" y1="96" x2="276" y2="96"/>
+            <line x1="366" y1="96" x2="396" y2="96"/><line x1="486" y1="96" x2="516" y2="96"/>
+          </g>
+          <!-- 底座 -->
+          <rect x="30" y="158" width="584" height="46" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="322" y="177" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">底座：带隙基准（提供标尺）+ 电流镜阵列（提供偏置）+ LDO（提供干净电源）</text>
+          <text x="322" y="195" text-anchor="middle" font-size="10" fill="var(--text-mute)">任何一个环节的精度上限，都被底座「钉死」——这就是为什么基准和偏置排在最前面讲</text>
+          <text x="340" y="232" text-anchor="middle" font-size="11" fill="var(--text-soft)">信号链思维：模拟工程师看到的不是一个个孤立电路，而是一条「精度预算」的接力赛</text>
+        </svg>
+        <figcaption>图 7：模拟信号链全景。带隙基准与电流镜是看不见的地基，运放与 ADC 是台前的主角。</figcaption>
+      </figure>
+
+      <h2 id="s8">8. 易错点与自测</h2>
+
+      <div class="warn"><b>五个高频易错点：</b></div>
+      <ul>
+        <li><strong>虚短不是真短路</strong>：它成立于「深度负反馈 + 高开环增益」时。一旦运放出饱和区或增益不足，虚短立刻失效——先判断是否闭环，再用口诀。</li>
+        <li><strong>电流镜复制的是电流</strong>：比例由 W/L 决定，不是靠「给不同的栅压」。而且精度要求高的电流镜宁可把 L 做大（失配 ∝ 1/√(WL)），而不是一味缩 W。</li>
+        <li><strong>带隙输出 ≠ 硅带隙能量</strong>：1.2 V 是「负温漂 + 正温漂按比例相消」的设计结果，名字只是纪念数值上的巧合。</li>
+        <li><strong>相位裕度不是越大越好</strong>：90° 稳是稳，但响应慢、带宽浪费；60° 是过冲与速度的黄金平衡点。</li>
+        <li><strong>先进工艺不是模拟的免费午餐</strong>：器件缩小对数字是提速，对模拟却意味着失配与噪声恶化（电源电压还更低了）——模拟电路常常故意用「老工艺 + 大器件」。</li>
+      </ul>
+
+      <details class="quiz"><summary>自测 1：电流镜要输出 4 倍参考电流，为什么推荐「W×4」或「L÷4」里优先动 W？复制管能不能靠「栅压加高一点」来实现？</summary>
+        <div>平方律下加 V<sub>GS</sub> 也能升电流，但参考与复制不再共享同一 V<sub>GS</sub>，就失去了「跟踪」能力——温漂、工艺漂移不再同步，镜子变成两套独立电路。比例复制必须靠几何尺寸（W/L）。至于为什么优先动 W：L 影响输出电阻与失配（失配 ∝ 1/√(WL)），通常先保住 L 再按比例铺 W。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：算一笔账——V<sub>BE</sub> 温漂约 −2 mV/℃，ΔV<sub>BE</sub>（N=8）温漂约 +0.19 mV/℃，要把温漂抵消，ΔV<sub>BE</sub> 需要放大多少倍？输出电压大概多少？</summary>
+        <div>2 ÷ 0.19 ≈ 10.8 倍。V<sub>REF</sub> = V<sub>BE</sub>(300K) + 10.8 × 54 mV ≈ 650 + 583 ≈ 1.23 V，几乎不随温度变化。这个「恰好 ≈ 硅带隙外推电压」的巧合，就是名字的来历。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：虚短和虚断各基于什么假设？开环增益从 100 dB 掉到 40 dB 时，闭环增益 100 倍的设计会发生什么？</summary>
+        <div>虚断基于输入阻抗无穷；虚短基于「输出有限 ÷ 开环增益巨大 → 输入差趋零」。开环 40 dB = 100 倍，而闭环要 100 倍——环路增益只剩 1 倍，反馈完全失效：实际增益远低于设计值、线性度和精度崩塌。闭环增益上限受开环增益硬性约束：A<sub>CL</sub> ≈ A<sub>OL</sub>/(1+T)。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：两级运放如果不加补偿电容，小信号阶跃响应会看到什么？补偿电容加在哪个位置、靠什么效应起作用？</summary>
+        <div>两个极点各贡献最多 90° 相移，环路相位裕度逼近甚至跌破 0° → 输出振铃乃至自激振荡。C<sub>c</sub> 跨在第二级输入输出之间，靠密勒效应等效放大 (1+A₂) 倍，实现「极点分裂」：主极点压低、次极点推高，让 0 dB 穿越发生在相位滞后恶化之前。</div>
+      </details>
+      <details class="quiz"><summary>自测 5：一个环路相位裕度只有 25°，单位增益带宽 10 MHz。它在 10 MHz 附近的频响和阶跃响应各是什么样子？</summary>
+        <div>频响：闭环峰值（peaking）明显，可能高出 6~10 dB；阶跃：剧烈衰减振荡、过冲 40% 以上，要很多个周期才稳定。PM &lt; 45° 时振铃在时域非常刺眼——这也是「PM≥60°」成为经验铁律的原因。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：心电监测仪要 24 bit 高分辨率但信号带宽只有几百 Hz；WiFi 芯片要在 100 MS/s 速度下工作、精度 10 bit 就够。各自选 SAR、Σ-Δ 还是 Pipeline？为什么？</summary>
+        <div>心电：Σ-Δ——带宽窄，用上百倍过采样 + 噪声整形把量化噪声推出带外，精度拉满。WiFi：Pipeline——每级 1~2 bit 流水作业，是「速度优先」与「精度中等」的最佳折中；SAR 到不了这个速度，Σ-Δ 带宽差几个量级。</div>
+      </details>
+
+      <div class="series">
+          <div class="series-title">集成电路学习路径 · 系列导航</div>
+          <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li class="current">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+          </ol>
+        </div>
+
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#模拟IC</span>
+      <span class="chip">#电流镜</span>
+      <span class="chip">#带隙基准</span>
+      <span class="chip">#运放</span>
+      <span class="chip">#相位裕度</span>
+      <span class="chip">#ADC</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

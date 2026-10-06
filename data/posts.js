@@ -1,6 +1,57 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-06 23:32:03  共 53 篇 */
+/* 生成时间: 2026-10-07 00:34:07  共 56 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD",
+    "url": "posts/semiconductor/2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html",
+    "date": "2026-10-07",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "芯片出厂合格不等于十年后还活着。用浴盆曲线、电迁移 Black 方程、栅氧 TDDB、NBTI/HCI 老化与 ESD 静电防护，讲透芯片可靠性的物理根源",
+    "tags": [
+      "芯片可靠性",
+      "电迁移",
+      "TDDB",
+      "NBTI",
+      "HCI",
+      "ESD"
+    ],
+    "size": 34.6
+  },
+  {
+    "title": "模拟集成电路设计：电流镜、带隙基准与运放",
+    "url": "posts/semiconductor/2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html",
+    "date": "2026-10-07",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "模拟 IC 与数字 IC 有什么本质不同？用 PVT 漂移、电流镜、带隙基准、两级运放与相位裕度，讲透模拟芯片设计的核心套路与混合信号速览",
+    "tags": [
+      "模拟集成电路",
+      "电流镜",
+      "带隙基准",
+      "运算放大器",
+      "相位裕度",
+      "ADC"
+    ],
+    "size": 46.0
+  },
+  {
+    "title": "数字后端物理设计：布局布线、时钟树与静态时序分析",
+    "url": "posts/semiconductor/2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html",
+    "date": "2026-10-07",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "逻辑综合给出的网表怎么变成 GDS？用后端全流程、时钟树综合、建立/保持时间与 STA、以及低功耗三板斧（时钟门控/电源门控/DVFS），讲透数字芯片物理设计",
+    "tags": [
+      "物理设计",
+      "布局布线",
+      "时钟树综合",
+      "CTS",
+      "静态时序分析",
+      "STA"
+    ],
+    "size": 38.7
+  },
   {
     "title": "计算机发展史：计算机是如何工作的",
     "url": "posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html",
@@ -16,7 +67,7 @@ window.SITE_POSTS = [
       "巴贝奇",
       "图灵"
     ],
-    "size": 40.4
+    "size": 40.9
   },
   {
     "title": "薛定谔方程、泡利不相容与费米-狄拉克分布：固体物理的量子三基石",
@@ -33,7 +84,7 @@ window.SITE_POSTS = [
       "费米能级",
       "量子隧穿"
     ],
-    "size": 38.3
+    "size": 38.8
   },
   {
     "title": "硅基的语言：从晶体管开关到编程语言与操作系统",
@@ -50,7 +101,7 @@ window.SITE_POSTS = [
       "解释器",
       "高级语言"
     ],
-    "size": 97.6
+    "size": 98.1
   },
   {
     "title": "数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么",
@@ -67,7 +118,7 @@ window.SITE_POSTS = [
       "CPU",
       "GPU"
     ],
-    "size": 42.6
+    "size": 43.1
   },
   {
     "title": "雷达信号处理全链路：从回波到目标",
@@ -84,7 +135,7 @@ window.SITE_POSTS = [
       "MTI",
       "MTD"
     ],
-    "size": 41.9
+    "size": 42.5
   },
   {
     "title": "量子计算：从量子比特到量子优越性",
@@ -101,7 +152,7 @@ window.SITE_POSTS = [
       "Shor算法",
       "量子优越性"
     ],
-    "size": 63.8
+    "size": 64.3
   },
   {
     "title": "类脑计算与存算一体：后摩尔时代的两条突围路线",
@@ -118,7 +169,7 @@ window.SITE_POSTS = [
       "忆阻器",
       "脉冲神经网络"
     ],
-    "size": 68.2
+    "size": 68.7
   },
   {
     "title": "光计算：用光子代替电子的算力革命",
@@ -135,7 +186,7 @@ window.SITE_POSTS = [
       "微环谐振器",
       "CPO"
     ],
-    "size": 62.7
+    "size": 63.2
   },
   {
     "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
@@ -152,7 +203,7 @@ window.SITE_POSTS = [
       "GAA",
       "HKMG"
     ],
-    "size": 56.5
+    "size": 57.0
   },
   {
     "title": "存储器 · DRAM、NAND 与新型存储",
@@ -169,7 +220,7 @@ window.SITE_POSTS = [
       "3D",
       "浮栅"
     ],
-    "size": 86.4
+    "size": 86.9
   },
   {
     "title": "半导体设备与产业链 · 核心装备全景",
@@ -186,7 +237,7 @@ window.SITE_POSTS = [
       "离子注入",
       "CMP"
     ],
-    "size": 121.9
+    "size": 122.5
   },
   {
     "title": "半导体材料全景 · Si、SiC、GaN 与宽禁带",
@@ -203,7 +254,7 @@ window.SITE_POSTS = [
       "碳化硅",
       "氮化镓"
     ],
-    "size": 181.2
+    "size": 181.7
   },
   {
     "title": "先进封装与系统级集成 · 2.5D、3D 与 Chiplet",
@@ -220,7 +271,7 @@ window.SITE_POSTS = [
       "TSV",
       "hybrid"
     ],
-    "size": 71.3
+    "size": 71.8
   },
   {
     "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
@@ -237,7 +288,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 77.5
+    "size": 78.0
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -254,7 +305,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 47.1
+    "size": 47.6
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -271,7 +322,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 63.2
+    "size": 69.5
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -288,7 +339,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 53.0
+    "size": 53.5
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -305,7 +356,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 71.0
+    "size": 71.5
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -332,7 +383,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 64.1
+    "size": 64.7
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -349,7 +400,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 70.8
+    "size": 71.3
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -366,7 +417,7 @@ window.SITE_POSTS = [
       "有效质量",
       "态密度"
     ],
-    "size": 87.4
+    "size": 87.9
   },
   {
     "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
@@ -383,7 +434,7 @@ window.SITE_POSTS = [
       "选择比",
       "各向异性"
     ],
-    "size": 76.0
+    "size": 76.5
   },
   {
     "title": "光刻工艺详解 · 从光学原理到 EUV",
@@ -400,7 +451,7 @@ window.SITE_POSTS = [
       "EUV",
       "High-NA"
     ],
-    "size": 60.5
+    "size": 61.0
   },
   {
     "title": "PN 结原理与特性",
@@ -417,7 +468,7 @@ window.SITE_POSTS = [
       "内建电势",
       "耗尽层"
     ],
-    "size": 29.3
+    "size": 29.8
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -434,7 +485,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 55.7
+    "size": 56.2
   },
   {
     "title": "CMP 平坦化、量测与良率控制",
@@ -451,7 +502,7 @@ window.SITE_POSTS = [
       "终点检测",
       "椭偏仪"
     ],
-    "size": 86.2
+    "size": 86.7
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -468,7 +519,7 @@ window.SITE_POSTS = [
       "或非门",
       "传输门"
     ],
-    "size": 101.3
+    "size": 101.8
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -738,7 +789,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 29
+    "count": 32
   },
   {
     "id": "finance",

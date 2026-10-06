@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 19 篇</span><span class="sep"></span>
-      <span>阅读约 30 分钟</span>
+      <span>阅读约 32 分钟</span>
     </div>
 
     <div class="content">
@@ -46,12 +46,13 @@
           <li><a href="#s2">CP 晶圆测试：探针台与测试机</a></li>
           <li><a href="#s3">封装：类型与选择</a></li>
           <li><a href="#s4">FT 成品测试与分档</a></li>
-          <li><a href="#s5">电学表征：IV / CV 怎么测</a></li>
-          <li><a href="#s6">从数据提取器件参数</a></li>
-          <li><a href="#s7">可靠性试验</a></li>
-          <li><a href="#s8">失效分析工具箱</a></li>
-          <li><a href="#s9">给新手的实操建议</a></li>
-          <li><a href="#s10">自测</a></li>
+          <li><a href="#s5">可测性设计 DFT：先设计，才好测</a></li>
+          <li><a href="#s6">电学表征：IV / CV 怎么测</a></li>
+          <li><a href="#s7">从数据提取器件参数</a></li>
+          <li><a href="#s8">可靠性试验</a></li>
+          <li><a href="#s9">失效分析工具箱</a></li>
+          <li><a href="#s10">给新手的实操建议</a></li>
+          <li><a href="#s11">自测</a></li>
         </ol>
       </div>
 
@@ -393,7 +394,72 @@
         而不是追求 100% —— 这是质量与成本的平衡。
       </div>
 
-      <h2 id="s5">5. 电学表征：IV / CV 怎么测</h2>
+      <h2 id="s5">5. 可测性设计 DFT：先设计，才好测</h2>
+
+      <p>前面四章默认芯片「天生可以被测」——测试机给激励、看输出、判好坏。但一颗几十亿晶体管的芯片，
+      内部节点根本摸不到：只有几百上千个 IO，却要判定亿万个门都对。如果设计时没为测试留门路，
+      CP/FT 就像隔着城墙查户口。于是有了 <strong>DFT（Design for Test，可测性设计）</strong>——
+      在设计阶段就把「测试电路」一并造进芯片。三件套如下：</p>
+
+      <ul>
+        <li><strong>扫描链（Scan Chain）</strong>：把每个触发器换成「扫描触发器」，平时当正常寄存器用；
+        进测试模式后，全部首尾相连成一条长移位寄存器——从链头「移入」测试向量，
+        拍一拍（capture），再从链尾「移出」响应。内部节点瞬间变成可观察、可控制的。</li>
+        <li><strong>ATPG（自动测试向量生成）</strong>：对门级网表按「固定 0 / 固定 1」故障模型逐个故障
+        自动生成激励，并计算故障覆盖率（量产标准 95% 以上）。没有 ATPG，扫描链只是一条空管子。</li>
+        <li><strong>BIST（内建自测试）</strong>：把测试机搬进芯片——用 LFSR（线性反馈移位寄存器）自己产生
+        伪随机激励、MISR 压缩响应签名。存储器类的 MBIST 已是 SoC 标配：数亿 bit 的存储阵列
+        靠外部测试机一个一个测是不可能的，只能「自己测自己」。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="扫描链移入移出原理">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">扫描链：把全芯片触发器串成一条移位寄存器</text>
+          <!-- 移入 -->
+          <g text-anchor="middle" font-size="11">
+            <rect x="70" y="80" width="70" height="44" rx="6" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="105" y="106" fill="var(--text)" font-weight="700">SFF1</text>
+            <rect x="170" y="80" width="70" height="44" rx="6" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="205" y="106" fill="var(--text)" font-weight="700">SFF2</text>
+            <rect x="270" y="80" width="70" height="44" rx="6" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="305" y="106" fill="var(--text)" font-weight="700">SFF3</text>
+            <rect x="370" y="80" width="70" height="44" rx="6" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="405" y="106" fill="var(--text)" font-weight="700">SFF4</text>
+            <rect x="470" y="80" width="70" height="44" rx="6" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="505" y="106" fill="var(--text)" font-weight="700">SFFn</text>
+          </g>
+          <g stroke="var(--accent)" stroke-width="2" fill="none">
+            <path d="M30 102 L68 102"/><path d="M140 102 L168 102"/><path d="M240 102 L268 102"/>
+            <path d="M340 102 L368 102"/><path d="M440 102 L468 102"/><path d="M540 102 L576 102"/>
+          </g>
+          <text x="30" y="88" font-size="10" fill="var(--accent)">SI</text>
+          <text x="560" y="88" font-size="10" fill="var(--accent)">SO</text>
+          <text x="323" y="66" text-anchor="middle" font-size="10" fill="var(--text-mute)">移入 shift：串行灌进测试向量 → 一拍组合逻辑 → 串行移出观察</text>
+          <!-- 逻辑云 -->
+          <ellipse cx="323" cy="180" rx="230" ry="34" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.4"/>
+          <text x="323" y="176" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">被测组合逻辑（数百万门）</text>
+          <text x="323" y="194" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">原本摸不到的内部节点，现在首尾都被扫描触发器夹住</text>
+          <g stroke="var(--text-mute)" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+            <path d="M105 124 L105 150 Q 105 158 130 158 L250 158"/>
+            <path d="M405 124 L405 150 Q 405 158 380 158 L420 158"/>
+          </g>
+          <text x="128" y="150" font-size="9.5" fill="var(--text-mute)">驱动</text>
+          <text x="412" y="150" font-size="9.5" fill="var(--text-mute)">观察</text>
+          <!-- 代价 -->
+          <rect x="80" y="232" width="520" height="46" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="340" y="251" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">代价：面积 +5%~10%（扫描触发器比普通贵）、引脚多几根、时序更难收敛</text>
+          <text x="340" y="269" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">换来的：故障覆盖率 &gt; 95%、量产测试时间从「不可能」变成「几秒」—— 全行业公认值得</text>
+        </svg>
+        <figcaption>图 6：扫描链原理。测试模式下触发器串联移位，让深藏芯片内部的每个节点都变得可控制、可观察。</figcaption>
+      </figure>
+
+      <div class="note"><b>为什么 CP/FT 测得快，DFT 功不可没：</b>
+        本篇第 1 章说「CP 用几秒筛掉坏 die」——能这么快，正是因为测试激励是 ATPG 按扫描链批量生成的：
+        一个万门电路的完整测试可能只要几百个时钟周期。没有 DFT，同样覆盖率的测试要跑几小时，
+        量产成本直接失控。测试与设计，从来是一体两面。
+      </div>
+
+      <h2 id="s6">6. 电学表征：IV / CV 怎么测</h2>
 
       <table>
         <thead><tr><th>测试项</th><th>怎么测</th><th>能看出什么</th></tr></thead>
@@ -448,7 +514,7 @@
             <text x="440" y="218" font-size="9" fill="var(--text-soft)">⑤ C–t 瞬态 → 少子寿命</text>
           </g>
         </svg>
-        <figcaption>图 6：MOS 电容 C–V 曲线的三个区。高频下反型区少子跟不上交流信号，电容停在 Cmin；低频下则回到 Cox —— 两条曲线之差本身就是信息。</figcaption>
+        <figcaption>图 7：MOS 电容 C–V 曲线的三个区。高频下反型区少子跟不上交流信号，电容停在 Cmin；低频下则回到 Cox —— 两条曲线之差本身就是信息。</figcaption>
       </figure>
 
       <div class="note">
@@ -459,7 +525,7 @@
       </div>
 
 
-      <h2 id="s6">6. 从数据提取器件参数</h2>
+      <h2 id="s7">7. 从数据提取器件参数</h2>
 
       <div class="formula-block">
         <span class="fl">V<sub>t</sub>：常用「最大跨导外推法」—— 取 g<sub>m</sub>–V<sub>GS</sub> 曲线最大斜率点作切线，与横轴交点即 V<sub>t</sub></span>
@@ -520,7 +586,7 @@
             <text x="452" y="214" text-anchor="middle" font-size="9" fill="var(--text-mute)">SS（每十倍电流）</text>
           </g>
         </svg>
-        <figcaption>图 7：器件参数的两种经典图解法。左：gm 最大点作切线外推求 Vt；右：半对数坐标下电流变化十倍所需的栅压增量即 SS。</figcaption>
+        <figcaption>图 8：器件参数的两种经典图解法。左：gm 最大点作切线外推求 Vt；右：半对数坐标下电流变化十倍所需的栅压增量即 SS。</figcaption>
       </figure>
 
       <div class="tip">
@@ -540,7 +606,7 @@
         ⑤ 封装与测试板引入的寄生。
       </div>
 
-      <h2 id="s7">7. 可靠性试验</h2>
+      <h2 id="s8">8. 可靠性试验</h2>
       <p>可靠性试验回答的不是一个"合格/不合格"，而是<strong>失效率随时间怎么变</strong>。
       半导体器件的失效率曲线有一个经典形状 —— 浴盆曲线（Bathtub Curve）：</p>
 
@@ -570,7 +636,7 @@
             <text x="60" y="228" font-size="9" fill="var(--text-soft)">可靠性试验的目标：把 ① 提前暴露在厂内，把 ③ 推到设计寿命之外</text>
           </g>
         </svg>
-        <figcaption>图 8：失效率浴盆曲线。早期失效靠老化筛选剔除，随机失效期失效率近似恒定，磨损失效期由 HCI / NBTI / TDDB / EM 等机理主导。</figcaption>
+        <figcaption>图 9：失效率浴盆曲线。早期失效靠老化筛选剔除，随机失效期失效率近似恒定，磨损失效期由 HCI / NBTI / TDDB / EM 等机理主导。</figcaption>
       </figure>
 
       <div class="note">
@@ -600,7 +666,7 @@
         寿命 15 年以上，且需完整的可靠性与失效分析报告。同样的芯片，车规认证周期和成本远高于消费级。
       </div>
 
-      <h2 id="s8">8. 失效分析工具箱</h2>
+      <h2 id="s9">9. 失效分析工具箱</h2>
 
       <table>
         <thead><tr><th>手段</th><th>全称 / 原理</th><th>擅长定位什么</th></tr></thead>
@@ -636,7 +702,7 @@
             <text x="30" y="278" font-size="9" fill="var(--text-mute)">蓝 = 非破坏　黄 = 半破坏（去封装）　红 = 破坏性剖切</text>
           </g>
         </svg>
-        <figcaption>图 9：失效分析的漏斗式流程。每一步都把可疑范围缩小一圈，代价是逐步不可逆 —— 所以必须严格按序推进。</figcaption>
+        <figcaption>图 10：失效分析的漏斗式流程。每一步都把可疑范围缩小一圈，代价是逐步不可逆 —— 所以必须严格按序推进。</figcaption>
       </figure>
 
       <div class="warn">
@@ -653,7 +719,7 @@
         顺序错了（比如一上来就剖片），可能永远丢失关键证据。
       </div>
 
-      <h2 id="s9">9. 给新手的实操建议</h2>
+      <h2 id="s10">10. 给新手的实操建议</h2>
 
       <ol>
         <li><strong>先设计可测性</strong>：版图阶段就规划好 Pad 位置与数量、留出独立的测试结构（分立 MOSFET、电阻、电容、环形振荡器），
@@ -667,7 +733,7 @@
         缺少条件的测试数据几乎没有复现与对比价值。</li>
       </ol>
 
-      <h2 id="s10">10. 自测</h2>
+      <h2 id="s11">11. 自测</h2>
 
       <details class="quiz"><summary>自测 1：为什么要先做 CP 再做封装，而不是直接封装完测一次？</summary>
         <div class="answer">封装是显著成本（尤其先进封装），若封装后才测，就要为所有坏 die 支付封装费用。
@@ -716,7 +782,7 @@
           <div class="series-title">集成电路学习路径 · 系列导航</div>
           <ol>
             <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
-<li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
             <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
             <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
             <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
@@ -725,23 +791,26 @@
             <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
             <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
             <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
-            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解（总览）</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
             <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
-            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</a></li>
-            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂 · CVD/ALD/PVD、注入与退火</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
             <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
-            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 16 篇：半导体设备与产业链 · 核心装备全景</a></li>
-            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 17 篇：芯片设计流程与 EDA 工具链</a></li>
-            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 18 篇：版图设计实战 · DRC / LVS 与匹配技巧</a></li>
-            <li class="current">第 19 篇：芯片封装、测试与失效分析</li>
-            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 20 篇：先进封装与系统级集成 · 2.5D、3D 与 Chiplet</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li class="current">第 18 篇：芯片封装测试与失效分析</li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
             <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
             <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
             <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
             <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
             <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
-<li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
             <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
             <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
           </ol>
         </div>
