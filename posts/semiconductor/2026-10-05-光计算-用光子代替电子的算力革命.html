@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-05</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 22 篇</span><span class="sep"></span>
-      <span>阅读约 18 分钟</span>
+      <span>阅读约 32 分钟</span>
     </div>
 
     <div class="content">
@@ -72,6 +72,75 @@
       <p>一句话总结动机：<strong>AI 时代的算力瓶颈从"算得慢"变成了"搬数据贵"，
       而光最擅长的恰好是又快又省地传数据</strong>。这与《类脑计算与存算一体》是同一个问题的不同解法：
       存算一体把计算搬向数据，光计算让数据换一种介质流动。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="铜互连与光互连的能耗距离曲线">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">"光进铜退"的分界线：能耗随距离怎么走</text>
+          <!-- 坐标 -->
+          <line x1="70" y1="52" x2="70" y2="248" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="70" y1="248" x2="420" y2="248" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="30" y="62" font-size="11" fill="var(--text-mute)">能耗</text>
+          <text x="30" y="76" font-size="11" fill="var(--text-mute)">pJ/bit</text>
+          <text x="378" y="268" font-size="11" fill="var(--text-mute)">传输距离 →</text>
+          <!-- 刻度 -->
+          <text x="66" y="262" font-size="10" fill="var(--text-mute)">mm</text>
+          <text x="232" y="262" font-size="10" fill="var(--text-mute)">m</text>
+          <text x="392" y="262" font-size="10" fill="var(--text-mute)">km</text>
+          <line x1="70" y1="240" x2="76" y2="240" stroke="var(--border)" stroke-width="1"/>
+          <text x="42" y="244" font-size="10" fill="var(--text-mute)">0.1</text>
+          <line x1="70" y1="180" x2="76" y2="180" stroke="var(--border)" stroke-width="1"/>
+          <text x="48" y="184" font-size="10" fill="var(--text-mute)">1</text>
+          <line x1="70" y1="120" x2="76" y2="120" stroke="var(--border)" stroke-width="1"/>
+          <text x="48" y="124" font-size="10" fill="var(--text-mute)">10</text>
+          <line x1="70" y1="60" x2="76" y2="60" stroke="var(--border)" stroke-width="1"/>
+          <text x="48" y="64" font-size="10" fill="var(--text-mute)">100</text>
+          <!-- 铜线曲线 -->
+          <path d="M74 222 C 150 200 210 160 250 138 C 300 112 360 84 410 60" fill="none" stroke="var(--fin)" stroke-width="2.6"/>
+          <text x="330" y="76" font-size="11" fill="var(--fin)" font-weight="700">铜线（电互连）</text>
+          <text x="330" y="92" font-size="10" fill="var(--text-mute)">RC 延迟、趋肤效应、</text>
+          <text x="330" y="106" font-size="10" fill="var(--text-mute)">中继与均衡器吃掉能效</text>
+          <!-- 光曲线 -->
+          <path d="M74 168 C 160 164 260 160 410 154" fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <text x="120" y="146" font-size="11" fill="var(--semi)" font-weight="700">光纤 / 波导（光互连）</text>
+          <text x="120" y="160" font-size="10" fill="var(--text-mute)">与距离几乎无关</text>
+          <!-- 交点 -->
+          <circle cx="178" cy="166" r="6" fill="var(--accent)"/>
+          <line x1="178" y1="166" x2="178" y2="248" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="186" y="196" font-size="10" fill="var(--accent)" font-weight="700">临界距离</text>
+          <text x="186" y="210" font-size="10" fill="var(--text-mute)">超过它，光更省</text>
+          <text x="186" y="224" font-size="10" fill="var(--text-mute)">（逐年向芯片内部逼近）</text>
+
+          <!-- 右侧：战场 -->
+          <line x1="450" y1="40" x2="450" y2="268" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="565" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">三条战线，光推进到哪了</text>
+          <!-- 1 -->
+          <rect x="470" y="46" width="190" height="56" rx="5" fill="var(--up)" fill-opacity=".12" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="565" y="66" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">机间 / 数据中心</text>
+          <text x="565" y="84" text-anchor="middle" font-size="10" fill="var(--text-mute)">早已全光化，400G/800G 光模块</text>
+          <text x="565" y="96" text-anchor="middle" font-size="10" fill="var(--up)">✓ 已规模商用</text>
+          <!-- 2 -->
+          <rect x="470" y="112" width="190" height="56" rx="5" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="565" y="132" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">板间 / 芯片间</text>
+          <text x="565" y="150" text-anchor="middle" font-size="10" fill="var(--text-mute)">CPO 共封装光学正在落地</text>
+          <text x="565" y="162" text-anchor="middle" font-size="10" fill="var(--accent)">◐ 2024-2027 放量</text>
+          <!-- 3 -->
+          <rect x="470" y="178" width="190" height="56" rx="5" fill="var(--down)" fill-opacity=".1" stroke="var(--down)" stroke-width="1.4"/>
+          <text x="565" y="198" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">片上（芯片内部）</text>
+          <text x="565" y="216" text-anchor="middle" font-size="10" fill="var(--text-mute)">光互连刚起步，光计算更早期</text>
+          <text x="565" y="228" text-anchor="middle" font-size="10" fill="var(--down)">◌ 前沿探索</text>
+          <text x="565" y="256" text-anchor="middle" font-size="11" fill="var(--text-soft)">规律：距离越短，越难替代</text>
+          <text x="565" y="272" text-anchor="middle" font-size="10" fill="var(--text-mute)">因为光电转换的固定开销无处摊薄</text>
+        </svg>
+        <figcaption>图 1：光与铜的能耗分界。电互连的能耗随距离快速攀升（RC 延迟、趋肤效应、信号均衡），光互连则几乎与距离无关；两条线的交点就是"光进铜退"的临界距离，而这个交点正随着带宽需求增长不断向芯片内部逼近。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>为什么光在长距离赢了、在短距离却赢不了？</b>
+        因为光互连有一笔<strong>固定开销</strong>：电信号要先驱动调制器"写"到光上，到达后还要探测器"读"回来。
+        这笔账（约几 pJ/bit）与距离无关，距离越长摊得越薄。
+        芯片内部的传输距离只有毫米级，固定开销占了总能耗的绝大部分 ——
+        这正是"光进芯片"比"光进数据中心"难一个数量级的根本原因。
+      </div>
 
       <h2 id="s2">2. 物理原理：干涉就是乘法，波导汇流就是加法</h2>
 
@@ -145,7 +214,7 @@
           <text x="340" y="270" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">类比：电子电路用电压代表数、用晶体管算；</text>
           <text x="340" y="288" text-anchor="middle" font-size="12" fill="var(--text)">光计算用光的振幅与相位代表数、用干涉来算 —— 算术发生在波里，不在开关里。</text>
         </svg>
-        <figcaption>图 1：MZI 干涉仪与光子网格。移相器设定权重，光波干涉完成乘加，网格整体实现任意酉矩阵。</figcaption>
+        <figcaption>图 2：MZI 干涉仪与光子网格。移相器设定权重，光波干涉完成乘加，网格整体实现任意酉矩阵。</figcaption>
       </figure>
 
       <p>三个补充，避免理解偏差：</p>
@@ -160,6 +229,133 @@
         <li><strong>波长并行</strong>：同一网格可同时跑多个波长，每个波长乘一个不同的矩阵
         （微环谐振器对不同波长加权不同），这是电子电路没有的并行维度。</li>
       </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="波分复用实现波长级并行计算">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">WDM：一根波导里的 N 条"车道"，每条跑一个波长</text>
+          <!-- 输入 -->
+          <text x="30" y="86" font-size="11" fill="var(--text-mute)">λ₁…λ</text>
+          <text x="66" y="89" font-size="8" fill="var(--text-mute)">n</text>
+          <text x="74" y="86" font-size="11" fill="var(--text-mute)">复用输入</text>
+          <line x1="126" y1="82" x2="150" y2="82" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="154,82 146,77 146,87" fill="var(--accent)"/>
+          <!-- 主波导 -->
+          <rect x="154" y="66" width="330" height="32" rx="4" fill="var(--surface-2)" fill-opacity=".55" stroke="var(--border)" stroke-width="1.3"/>
+          <!-- 波长通道（不同颜色波形） -->
+          <path d="M162 74 Q170 68 178 74 T194 74 T210 74" fill="none" stroke="var(--semi)" stroke-width="1.5"/>
+          <path d="M162 80 Q170 86 178 80 T194 80 T210 80" fill="none" stroke="var(--fin)" stroke-width="1.5"/>
+          <path d="M162 88 Q170 82 178 88 T194 88 T210 88" fill="none" stroke="var(--up)" stroke-width="1.5"/>
+          <path d="M162 94 Q170 100 178 94 T194 94 T210 94" fill="none" stroke="var(--down)" stroke-width="1.5"/>
+          <text x="220" y="60" font-size="10" fill="var(--text-mute)">同一根波导，互不干扰</text>
+
+          <!-- 微环阵列 -->
+          <g>
+            <circle cx="200" cy="118" r="18" fill="none" stroke="var(--semi)" stroke-width="2"/>
+            <line x1="200" y1="98" x2="200" y2="100" stroke="var(--semi)" stroke-width="2"/>
+            <circle cx="268" cy="118" r="18" fill="none" stroke="var(--fin)" stroke-width="2"/>
+            <line x1="268" y1="98" x2="268" y2="100" stroke="var(--fin)" stroke-width="2"/>
+            <circle cx="336" cy="118" r="18" fill="none" stroke="var(--up)" stroke-width="2"/>
+            <line x1="336" y1="98" x2="336" y2="100" stroke="var(--up)" stroke-width="2"/>
+            <circle cx="404" cy="118" r="18" fill="none" stroke="var(--down)" stroke-width="2"/>
+            <line x1="404" y1="98" x2="404" y2="100" stroke="var(--down)" stroke-width="2"/>
+          </g>
+          <text x="200" y="152" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">λ₁·w₁</text>
+          <text x="268" y="152" text-anchor="middle" font-size="10" fill="var(--fin)" font-weight="700">λ₂·w₂</text>
+          <text x="336" y="152" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">λ₃·w₃</text>
+          <text x="404" y="152" text-anchor="middle" font-size="10" fill="var(--down)" font-weight="700">λ₄·w₄</text>
+          <text x="302" y="172" text-anchor="middle" font-size="11" fill="var(--text-soft)">每个微环只"抓住"自己共振的那个波长，按权重 w 衰减或相移</text>
+
+          <!-- 输出汇流 -->
+          <line x1="484" y1="82" x2="510" y2="82" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="514,82 506,77 506,87" fill="var(--accent)"/>
+          <rect x="518" y="62" width="58" height="40" rx="4" fill="var(--surface-2)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="547" y="80" text-anchor="middle" font-size="10" fill="var(--accent)" font-weight="700">探测器</text>
+          <text x="547" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">光强求和</text>
+          <line x1="576" y1="82" x2="600" y2="82" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="604,82 596,77 596,87" fill="var(--accent)"/>
+          <text x="608" y="86" font-size="11" fill="var(--text)" font-weight="700">= Σ x</text>
+          <text x="634" y="89" font-size="8" fill="var(--text)">i</text>
+          <text x="642" y="86" font-size="11" fill="var(--text)" font-weight="700">·w</text>
+          <text x="654" y="89" font-size="8" fill="var(--text)">i</text>
+
+          <!-- 说明条 -->
+          <rect x="60" y="196" width="560" height="34" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="340" y="212" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">探测器天然把不同波长的光强"加"起来 —— 于是：波长维度做乘法，探测做加法</text>
+          <text x="340" y="226" text-anchor="middle" font-size="10" fill="var(--text-mute)">一次通过，N 个乘加同时完成，且 N 条通道共用同一套光学结构（不增加面积）</text>
+
+          <rect x="60" y="240" width="560" height="34" rx="6" fill="var(--accent)" fill-opacity=".1" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="340" y="256" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">这就是电子电路没有的第三个并行维度：空间（阵列）× 时间（时钟）× 波长（颜色）</text>
+          <text x="340" y="270" text-anchor="middle" font-size="10" fill="var(--text-mute)">代价：每个波长都要一个独立激光器，且需要精确锁波长 —— 这就是"光梳光源"的价值所在</text>
+        </svg>
+        <figcaption>图 3：波分复用（WDM）带来的波长级并行。不同波长的光在同一根波导里互不干扰，各自被对应的微环谐振器按权重调制，最后由探测器把所有波长的光强自然求和 —— 一步完成 N 个乘加。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>但要冷静：波长并行不是"免费"的。</b>
+        每一个波长通道都需要一个独立波长稳定、功率足够的光源。
+        主流方案是<strong>光频梳（Optical Frequency Comb）</strong>：一个激光器产生几十个等间隔的波长"梳齿"，
+        一次性供给所有通道 —— 华裔科学家在光梳领域贡献卓著（2005 年诺贝尔物理学奖授予亨施与霍尔）。
+        另一个现实约束是<strong>串扰</strong>：波长间隔不能太密，否则微环的选择性不够，
+        相邻通道会互相泄漏，直接限制有效精度。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MZI 传输曲线与微环谐振谱">
+          <!-- 左：MZI 余弦响应 -->
+          <text x="170" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① MZI 的透射率随相位变化</text>
+          <line x1="60" y1="52" x2="60" y2="220" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="60" y1="220" x2="300" y2="220" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="32" y="60" font-size="11" fill="var(--text-mute)">透射率</text>
+          <text x="264" y="240" font-size="11" fill="var(--text-mute)">相位差 Δφ</text>
+          <line x1="60" y1="60" x2="66" y2="60" stroke="var(--border)" stroke-width="1"/>
+          <text x="30" y="64" font-size="10" fill="var(--text-mute)">1</text>
+          <line x1="60" y1="220" x2="66" y2="220" stroke="var(--border)" stroke-width="1"/>
+          <text x="30" y="224" font-size="10" fill="var(--text-mute)">0</text>
+          <!-- cos^2 曲线 -->
+          <path d="M60 60 C 80 62 100 100 120 140 C 140 180 160 214 180 220 C 200 214 220 180 240 140 C 260 100 280 62 300 60" fill="none" stroke="var(--semi)" stroke-width="2.6"/>
+          <text x="64" y="86" font-size="10" fill="var(--semi)" font-weight="700">全通</text>
+          <text x="164" y="238" font-size="10" fill="var(--semi)" font-weight="700">全断（π）</text>
+          <text x="278" y="86" font-size="10" fill="var(--semi)" font-weight="700">全通（2π）</text>
+          <!-- 工作点 -->
+          <circle cx="120" cy="140" r="5" fill="var(--accent)"/>
+          <text x="126" y="128" font-size="10" fill="var(--accent)" font-weight="700">调 φ 即调权重</text>
+          <text x="70" y="266" font-size="10" fill="var(--text-mute)">P = cos²(Δφ/2)：相位连续可调 → 权重连续可调</text>
+          <text x="70" y="280" font-size="10" fill="var(--text-mute)">且天然支持正负权重（相差 π 的相位 = 负号）</text>
+
+          <!-- 分隔 -->
+          <line x1="340" y1="16" x2="340" y2="272" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：微环谐振谱 -->
+          <text x="510" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 微环谐振器：只对共振波长敏感</text>
+          <line x1="380" y1="52" x2="380" y2="220" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="380" y1="220" x2="650" y2="220" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="352" y="60" font-size="11" fill="var(--text-mute)">透射率</text>
+          <text x="596" y="240" font-size="11" fill="var(--text-mute)">波长 λ</text>
+          <line x1="380" y1="60" x2="386" y2="60" stroke="var(--border)" stroke-width="1"/>
+          <text x="350" y="64" font-size="10" fill="var(--text-mute)">1</text>
+          <!-- 洛伦兹凹陷 -->
+          <path d="M380 60 L440 60 C 460 62 476 78 480 100 C 484 122 500 140 520 144 C 540 148 560 140 574 120 C 586 104 596 68 650 60" fill="none" stroke="var(--fin)" stroke-width="2.6"/>
+          <text x="396" y="52" font-size="10" fill="var(--fin)" font-weight="700">直通</text>
+          <circle cx="498" cy="140" r="5" fill="var(--down)"/>
+          <text x="470" y="168" font-size="10" fill="var(--down)" font-weight="700">共振：被环"抓走"</text>
+          <!-- 漂移 -->
+          <path d="M380 60 L440 60 C 462 62 480 80 486 104 C 492 128 510 146 532 150 C 552 154 572 144 586 124 C 598 106 606 68 650 60" fill="none" stroke="var(--down)" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <text x="546" y="176" font-size="10" fill="var(--down)" font-weight="700">温度一变，</text>
+          <text x="546" y="190" font-size="10" fill="var(--down)" font-weight="700">谐振点整体漂移</text>
+          <text x="380" y="266" font-size="10" fill="var(--text-mute)">硅的折射率温度系数很大（~1.8×10⁻⁴/K），</text>
+          <text x="380" y="280" font-size="10" fill="var(--text-mute)">所以微环必须持续热调谐锁定 —— 这笔功耗很可观</text>
+        </svg>
+        <figcaption>图 4：两种"相位→强度"转换器。左：MZI 的透射率随相位差按 cos² 变化，连续可调且天然支持正负权重；右：微环谐振器只对共振波长敏感，波长选择性极强，但谐振点对温度极其敏感，需要持续的反馈锁定。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>把图 3 与图 4 合起来看，就理解了光子 AI 加速器的两种流派：</b>
+        ① <strong>相干型（MZI 网格）</strong>：用光的<em>相位</em>编码，权重精度高、支持复数运算，
+        但网格面积随 N² 增长，且需要对每个 MZI 做相位校准；
+        ② <strong>非相干型（微环 / WDM）</strong>：用光的<em>强度</em>编码，结构紧凑、天然适配波分复用，
+        但对波长与温度极其敏感，精度通常受限在 4~8 bit。
+        两条路线各有千秋，至今没有决出胜负 —— 这也侧面说明这个领域确实还很早期。
+      </div>
 
       <h2 id="s3">3. 核心器件：一条光路需要的四样东西</h2>
 
@@ -194,6 +390,79 @@
           </tr>
         </tbody>
       </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SOI 硅光波导剖面与器件全家福">
+          <text x="220" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① SOI 波导横截面：用全内反射把光"关"在硅里</text>
+          <!-- 衬底 -->
+          <rect x="60" y="150" width="320" height="42" fill="var(--surface-2)" fill-opacity=".6" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="220" y="176" text-anchor="middle" font-size="11" fill="var(--text-mute)">硅衬底 Si（支撑）</text>
+          <!-- BOX -->
+          <rect x="60" y="112" width="320" height="38" fill="var(--fin)" fill-opacity=".18" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="220" y="136" text-anchor="middle" font-size="11" fill="var(--fin)">埋氧层 SiO₂（BOX，2~3 μm）</text>
+          <!-- 波导芯 -->
+          <rect x="196" y="88" width="48" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="220" y="80" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">硅波导芯</text>
+          <!-- 上包层 -->
+          <rect x="60" y="46" width="320" height="42" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2"/>
+          <text x="220" y="72" text-anchor="middle" font-size="11" fill="var(--text-mute)">上包层 SiO₂</text>
+          <!-- 光场 -->
+          <ellipse cx="220" cy="100" rx="34" ry="20" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="220" y="104" text-anchor="middle" font-size="10" fill="var(--accent)" font-weight="700">光场</text>
+          <!-- 尺寸标注 -->
+          <line x1="196" y1="88" x2="244" y2="88" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="248" y="86" font-size="10" fill="var(--up)">宽 ~450 nm</text>
+          <line x1="244" y1="88" x2="244" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="248" y="102" font-size="10" fill="var(--up)">高 ~220 nm</text>
+          <!-- 折射率说明 -->
+          <text x="60" y="212" font-size="11" fill="var(--text-soft)" font-weight="700">导光原理：</text>
+          <text x="60" y="228" font-size="10" fill="var(--text-mute)">硅 n ≈ 3.48，二氧化硅 n ≈ 1.44 —— 折射率差极大</text>
+          <text x="60" y="242" font-size="10" fill="var(--text-mute)">→ 全内反射把光死死约束在 0.2 μm² 的芯层里</text>
+          <text x="60" y="256" font-size="10" fill="var(--text-mute)">→ 弯曲半径可小至几微米（这是光子集成的前提）</text>
+          <text x="60" y="272" font-size="10" fill="var(--up)" font-weight="700">但正因为约束太强，端面耦合损耗极大（~2 dB/点）</text>
+          <text x="60" y="286" font-size="10" fill="var(--text-mute)">硅波导损耗 ~1-2 dB/cm；氮化硅 SiN 可低至 0.1 dB/cm</text>
+          <text x="60" y="300" font-size="10" fill="var(--text-mute)">（代价是 SiN 无法做有源器件，常与 Si 做异质集成）</text>
+
+          <!-- 分隔 -->
+          <line x1="400" y1="16" x2="400" y2="300" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <text x="540" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 一条光路需要的器件</text>
+          <!-- 光源 -->
+          <rect x="420" y="42" width="240" height="40" rx="5" fill="var(--down)" fill-opacity=".12" stroke="var(--down)" stroke-width="1.4"/>
+          <text x="434" y="60" font-size="11" fill="var(--down)" font-weight="700">光源</text>
+          <text x="434" y="74" font-size="10" fill="var(--text-mute)">硅不发光 → 外置激光器或键合 III-V</text>
+          <!-- 调制器 -->
+          <rect x="420" y="90" width="240" height="40" rx="5" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.4"/>
+          <text x="434" y="108" font-size="11" fill="var(--semi)" font-weight="700">调制器（电 → 光）</text>
+          <text x="434" y="122" font-size="10" fill="var(--text-mute)">MZM 或微环；硅无 Pockels 效应</text>
+          <!-- 波导 -->
+          <rect x="420" y="138" width="240" height="40" rx="5" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="434" y="156" font-size="11" fill="var(--accent)" font-weight="700">波导 / MZI 网格（算）</text>
+          <text x="434" y="170" font-size="10" fill="var(--text-mute)">唯一"几乎不耗能"的环节</text>
+          <!-- 探测器 -->
+          <rect x="420" y="186" width="240" height="40" rx="5" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.4"/>
+          <text x="434" y="204" font-size="11" fill="var(--fin)" font-weight="700">探测器（光 → 电）</text>
+          <text x="434" y="218" font-size="10" fill="var(--text-mute)">Ge-on-Si；硅不吸收 1550 nm</text>
+          <!-- 放大器/ADC -->
+          <rect x="420" y="234" width="240" height="40" rx="5" fill="var(--up)" fill-opacity=".12" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="434" y="252" font-size="11" fill="var(--up)" font-weight="700">TIA + ADC（读出）</text>
+          <text x="434" y="266" font-size="10" fill="var(--text-mute)">常成为能效瓶颈，吃掉光的收益</text>
+          <!-- 结论 -->
+          <rect x="420" y="282" width="240" height="22" rx="4" fill="var(--text-mute)" fill-opacity=".1"/>
+          <text x="540" y="297" text-anchor="middle" font-size="10" fill="var(--text-soft)">硅的三宗原罪：不发光、不调制、不吸收</text>
+        </svg>
+        <figcaption>图 5：硅光平台的物理基础与器件清单。左：SOI 波导靠硅与二氧化硅之间巨大的折射率差把光约束在亚微米芯层里，弯曲半径可小到几微米 —— 这是光子能"集成"的原因。右：一条完整光路需要的器件链，以及硅材料本身的三处先天不足。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>为什么"硅光子"这么别扭？因为硅在光学上是个三不全的材料。</b>
+        ① <strong>不发光</strong>：硅是间接带隙（第 3 篇讲过），做不了激光器，只能外挂 III-V 族光源或异质键合；
+        ② <strong>不调制</strong>：硅晶体有反演对称性，<em>没有线性电光效应（Pockels 效应）</em>，
+        只能用载流子注入/耗尽这种"次优"机制，速度和功耗都不如铌酸锂（LiNbO₃）与 BTO；
+        ③ <strong>不吸收</strong>：硅对通信波段（1310 / 1550 nm）透明，做探测器必须引入锗（Ge-on-Si）。
+        所以真实的硅光芯片往往是<strong>多种材料的异质集成</strong> —— 这也是它与标准 CMOS 工艺最不兼容的地方，
+        是成本居高不下的根源。近年薄膜铌酸锂（TFLN）崛起，正是冲着"调制"这块短板来的。
+      </div>
 
       <div class="note">
         <strong>一个关键观察</strong>：光源、调制、探测三个环节都涉及"光电转换"，
@@ -231,6 +500,66 @@
           </tr>
         </tbody>
       </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="可插拔光模块与共封装光学 CPO 的链路对比">
+          <!-- 上：可插拔 -->
+          <text x="340" y="22" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① 传统可插拔：电信号要跑完一整块 PCB</text>
+          <rect x="40" y="40" width="90" height="52" rx="5" fill="var(--surface-2)" fill-opacity=".6" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="85" y="62" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">交换芯片</text>
+          <text x="85" y="78" text-anchor="middle" font-size="10" fill="var(--text-mute)">ASIC</text>
+          <!-- 长电通道 -->
+          <line x1="130" y1="66" x2="270" y2="66" stroke="var(--down)" stroke-width="4"/>
+          <polygon points="274,66 264,61 264,71" fill="var(--down)"/>
+          <text x="200" y="56" text-anchor="middle" font-size="10" fill="var(--down)" font-weight="700">PCB 长走线 ~20 cm</text>
+          <text x="200" y="86" text-anchor="middle" font-size="10" fill="var(--text-mute)">高频损耗大，需 Retimer / DSP 补偿</text>
+          <!-- 面板光模块 -->
+          <rect x="278" y="40" width="130" height="52" rx="5" fill="var(--fin)" fill-opacity=".15" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="343" y="62" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">面板光模块</text>
+          <text x="343" y="78" text-anchor="middle" font-size="10" fill="var(--text-mute)">DSP + 光引擎（可更换）</text>
+          <!-- 光纤 -->
+          <line x1="408" y1="66" x2="520" y2="66" stroke="var(--semi)" stroke-width="4"/>
+          <polygon points="524,66 514,61 514,71" fill="var(--semi)"/>
+          <text x="464" y="56" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">光纤</text>
+          <text x="560" y="58" font-size="11" fill="var(--down)" font-weight="700">≈ 15~20 pJ/bit</text>
+          <text x="560" y="74" font-size="10" fill="var(--text-mute)">（112G SerDes 时代）</text>
+          <text x="560" y="90" text-anchor="middle" font-size="10" fill="var(--text-mute)">优点：坏了可热插拔更换</text>
+
+          <!-- 分隔 -->
+          <line x1="40" y1="108" x2="640" y2="108" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 下：CPO -->
+          <text x="340" y="134" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 共封装光学 CPO：把光引擎搬到芯片身边</text>
+          <rect x="40" y="152" width="90" height="52" rx="5" fill="var(--surface-2)" fill-opacity=".6" stroke="var(--semi)" stroke-width="1.5"/>
+          <text x="85" y="174" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">交换芯片</text>
+          <text x="85" y="190" text-anchor="middle" font-size="10" fill="var(--text-mute)">ASIC</text>
+          <!-- 极短电通道 -->
+          <line x1="130" y1="178" x2="182" y2="178" stroke="var(--up)" stroke-width="4"/>
+          <polygon points="186,178 176,173 176,183" fill="var(--up)"/>
+          <text x="158" y="168" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">~mm</text>
+          <!-- 光引擎（同封装） -->
+          <rect x="190" y="146" width="128" height="64" rx="5" fill="var(--fin)" fill-opacity=".15" stroke="var(--fin)" stroke-width="1.5"/>
+          <text x="254" y="168" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">光引擎（硅光）</text>
+          <text x="254" y="184" text-anchor="middle" font-size="10" fill="var(--text-mute)">调制器 + 探测器</text>
+          <text x="254" y="200" text-anchor="middle" font-size="10" fill="var(--text-mute)">与 ASIC 同一基板</text>
+          <!-- 封装框 -->
+          <rect x="34" y="140" width="290" height="76" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4"/>
+          <text x="179" y="230" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">同一个封装内</text>
+          <!-- 光纤 -->
+          <line x1="318" y1="178" x2="430" y2="178" stroke="var(--semi)" stroke-width="4"/>
+          <polygon points="434,178 424,173 424,183" fill="var(--semi)"/>
+          <text x="376" y="168" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">光纤</text>
+          <text x="470" y="170" font-size="11" fill="var(--up)" font-weight="700">≈ 5~8 pJ/bit</text>
+          <text x="470" y="186" font-size="10" fill="var(--text-mute)">省掉 DSP 与长电通道</text>
+          <text x="470" y="202" text-anchor="middle" font-size="10" fill="var(--text-mute)">代价：坏了要整机返修</text>
+
+          <!-- 底部结论 -->
+          <rect x="40" y="248" width="600" height="38" rx="6" fill="var(--accent)" fill-opacity=".1" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="340" y="264" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">CPO 的逻辑不是"光比电快"，而是"把电走的那段路缩到最短"——</text>
+          <text x="340" y="278" text-anchor="middle" font-size="10" fill="var(--text-mute)">缩短电通道 → 省掉 DSP/Retimer → 能效与密度双升。它卖的是封装创新，不是物理革命。</text>
+        </svg>
+        <figcaption>图 6：CPO 共封装光学的真实价值。把光引擎从机箱面板搬到交换芯片身边，电通道从 20 cm 缩短到毫米级，从而省掉高功耗的 DSP 与重定时器 —— 能耗从约 15~20 pJ/bit 降到 5~8 pJ/bit。代价是光模块不再可热插拔更换，可靠性责任转移给了芯片厂。</figcaption>
+      </figure>
 
       <p>为什么"非线性"是分水岭？神经网络的表达力来自激活函数（ReLU、Sigmoid）——
       它是非线性的。电子晶体管天生是非线性开关；而<strong>线性介质中的光波叠加仍是线性</strong>，
@@ -277,6 +606,61 @@
         <li><strong>生态空白</strong>：没有 CUDA。编译器要把神经网络映射到具体 MZI 拓扑，
         涉及物理校准、容错与重训练，软件栈是比硬件更大的门槛。</li>
       </ol>
+
+      <p>把这四条短板量化成一本账，就更容易看清争议的本质 ——
+      下面这张图对比了"做一次乘加"这件事，在不同方案下的真实能耗：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="电子与光子做一次乘加的能耗对比">
+          <text x="340" y="22" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">一本明白账：做一次乘加（MAC）到底花多少能量</text>
+          <line x1="240" y1="40" x2="240" y2="252" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="214" y="52" font-size="10" fill="var(--text-mute)">pJ</text>
+          <text x="430" y="272" font-size="11" fill="var(--text-mute)">能耗（对数坐标，每格 ×10）</text>
+          <!-- 刻度 -->
+          <line x1="240" y1="248" x2="640" y2="248" stroke="var(--border)" stroke-width="1"/>
+          <text x="248" y="264" font-size="10" fill="var(--text-mute)">0.01</text>
+          <text x="348" y="264" font-size="10" fill="var(--text-mute)">0.1</text>
+          <text x="448" y="264" font-size="10" fill="var(--text-mute)">1</text>
+          <text x="548" y="264" font-size="10" fill="var(--text-mute)">10</text>
+          <text x="628" y="264" font-size="10" fill="var(--text-mute)">1000</text>
+
+          <!-- 条1：电子 MAC（寄存器） -->
+          <rect x="240" y="52" width="132" height="22" rx="3" fill="var(--semi)" fill-opacity=".7"/>
+          <text x="46" y="68" font-size="11" fill="var(--text)" font-weight="700">数字 MAC（数据已在寄存器）</text>
+          <text x="378" y="68" font-size="10" fill="var(--semi)" font-weight="700">0.2 pJ</text>
+          <!-- 条2：电子 MAC + DRAM -->
+          <rect x="240" y="86" width="400" height="22" rx="3" fill="var(--down)" fill-opacity=".7"/>
+          <text x="20" y="102" font-size="11" fill="var(--text)" font-weight="700">数字 MAC + 从 DRAM 取数</text>
+          <text x="646" y="102" font-size="10" fill="var(--down)" font-weight="700">~640 pJ</text>
+          <!-- 条3：光子光学部分 -->
+          <rect x="240" y="120" width="52" height="22" rx="3" fill="var(--up)" fill-opacity=".8"/>
+          <text x="66" y="136" font-size="11" fill="var(--text)" font-weight="700">光子：纯光学部分</text>
+          <text x="298" y="136" font-size="10" fill="var(--up)" font-weight="700">≈ 0.001 pJ（几乎免费）</text>
+          <!-- 条4：光子含转换开销 -->
+          <rect x="240" y="154" width="252" height="22" rx="3" fill="var(--accent)" fill-opacity=".75"/>
+          <text x="30" y="170" font-size="11" fill="var(--text)" font-weight="700">光子：含电光转换 + 探测 + ADC</text>
+          <text x="498" y="170" font-size="10" fill="var(--accent)" font-weight="700">~1~10 pJ</text>
+          <!-- 条5：光子含激光源 -->
+          <rect x="240" y="188" width="330" height="22" rx="3" fill="var(--fin)" fill-opacity=".7"/>
+          <text x="52" y="204" font-size="11" fill="var(--text)" font-weight="700">光子：再把激光源的电效率算进去</text>
+          <text x="576" y="204" font-size="10" fill="var(--fin)" font-weight="700">可达数十 pJ</text>
+
+          <!-- 结论框 -->
+          <rect x="40" y="228" width="600" height="30" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="340" y="248" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">结论：光的"算术"几乎不花钱，钱全花在"把数据写上光、再从光上读回来"这两道转换上</text>
+        </svg>
+        <figcaption>图 7：光计算的能耗账本。光学部分的乘加能耗比电子低三个数量级（几乎为零），但一旦把电光转换、探测、放大与 ADC 算进去，优势就被吃掉大半；若再把激光器本身的电光效率（通常仅 10%~30%）计入，优势进一步缩水。这正是"论文里能效比惊人、产品里优势有限"的根源。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>所以判断光计算的成败，只有一个问题真正重要：<em>一次转换，能做多少运算？</em></b>
+        如果数据写进光域之后只做一次矩阵乘就读出，那转换开销完全无法摊薄，光计算必输；
+        如果能在一个光域里连续做很多层（<em>光进光出、层层级联</em>），
+        或者干脆让数据本来就来自光（如光纤传来的信号、光学传感器原始数据流），
+        那光计算才有胜算。这也是为什么业界共识是
+        "<strong>先做互连、再做近存/近传感计算、最后才谈通用光计算</strong>" ——
+        本质上是在逐步提高"每次转换能摊多少运算"这个比值。
+      </div>
 
       <p><strong>合理的预期</strong>：光计算不会"取代 GPU"，而是先在
       <em>数据中心内部互联 → 推理专用加速 → 训练加速</em>的顺序上逐层渗透。
@@ -327,6 +711,31 @@
         <div class="answer">不看论文能效比，先看三点：① 光互连产品（CPO/光模块）是否有真实订单——
         证明工程化与良率；② 光子芯片良率与温度稳定性数据；③ 软件栈（编译器/校准工具）
         的完整度。三者齐备，计算产品才有落地基础。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：硅在光学上有"三宗原罪"，分别是哪三条？各自怎么补救？</summary>
+        <div class="answer">① <b>不发光</b>（间接带隙，做不了激光器）→ 外置 III-V 激光器，或异质键合/外延生长 III-V 增益区；<br>
+        ② <b>不调制</b>（晶体有反演对称性，没有 Pockels 效应）→ 改用载流子注入/耗尽带来的等离子色散效应，
+        或引入薄膜铌酸锂 TFLN、BTO 等真正有强电光效应的材料；<br>
+        ③ <b>不吸收</b>（对 1310/1550 nm 透明，做不了探测器）→ 在硅上外延锗（Ge-on-Si）做吸收区。<br>
+        这三条决定了硅光芯片必然是<em>多材料异质集成</em>，也是它成本高、与标准 CMOS 兼容性差的根本原因。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 7：CPO 共封装光学为什么能省电？它省的是"光那部分的能耗"吗？</summary>
+        <div class="answer">不是。CPO 省的是<strong>电通道的能耗</strong>。
+        传统可插拔方案里，电信号要穿过约 20 cm 的 PCB 走线才到面板上的光模块，高频损耗巨大，
+        必须靠高功耗的 DSP 与 Retimer 补偿。CPO 把光引擎直接放在交换芯片旁边，
+        电通道缩短到毫米级，DSP 可以省掉或大幅简化，于是能耗从约 15~20 pJ/bit 降到 5~8 pJ/bit。
+        所以它是一种<em>封装与系统架构创新</em>，而不是新的物理原理。代价是光模块不再可热插拔更换。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 8：既然光做矩阵乘几乎不耗电，为什么光子 AI 芯片还没取代 GPU？</summary>
+        <div class="answer">因为"算术便宜"不等于"系统便宜"。光学部分确实只要约 0.001 pJ，
+        但数据必须先<strong>调制到光上</strong>、算完再<strong>探测回电并 ADC</strong>，
+        这两道转换加上激光器本身的低电光效率（通常仅 10%~30%），把总能耗抬到 1~10 pJ 甚至更高，优势大幅缩水。<br>
+        再加上三道硬伤：<em>精度只有 4~8 bit</em>（模拟噪声与温漂）、<em>没有理想的光学非线性</em>（做不了激活函数）、
+        <em>没有光存储</em>（权重只能物理固化在器件里，换模型要重写芯片状态），
+        外加完全没有对标 CUDA 的软件生态。所以当前的现实路径是"线性运算给光、非线性与存储给电"的异构方案。</div>
       </details>
 
         <div class="series">

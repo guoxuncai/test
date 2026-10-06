@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-05</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 21 篇</span><span class="sep"></span>
-      <span>阅读约 18 分钟</span>
+      <span>阅读约 34 分钟</span>
     </div>
 
     <div class="content">
@@ -162,6 +162,174 @@
         </li>
       </ol>
 
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="生物神经元结构与积分发放模型">
+          <!-- 左：神经元结构 -->
+          <text x="170" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① 一个生物神经元在干什么</text>
+          <!-- 树突 -->
+          <path d="M60 100 L110 140" stroke="var(--fin)" stroke-width="2"/>
+          <path d="M60 140 L110 140" stroke="var(--fin)" stroke-width="2"/>
+          <path d="M60 180 L110 140" stroke="var(--fin)" stroke-width="2"/>
+          <text x="52" y="96" font-size="10" fill="var(--fin)">上游脉冲</text>
+          <text x="52" y="112" font-size="10" fill="var(--text-mute)">（树突接收）</text>
+          <!-- 突触小点 -->
+          <circle cx="84" cy="120" r="4" fill="var(--fin)"/>
+          <circle cx="84" cy="160" r="4" fill="var(--fin)"/>
+          <circle cx="92" cy="140" r="4" fill="var(--fin)"/>
+          <text x="66" y="200" font-size="10" fill="var(--text-mute)">突触强度 = 权重</text>
+          <!-- 胞体 -->
+          <circle cx="140" cy="140" r="26" fill="var(--semi)" fill-opacity=".22" stroke="var(--semi)" stroke-width="1.8"/>
+          <text x="140" y="136" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">胞体</text>
+          <text x="140" y="150" text-anchor="middle" font-size="10" fill="var(--text-mute)">加权求和</text>
+          <!-- 轴突 -->
+          <path d="M166 140 L250 140" stroke="var(--up)" stroke-width="2.6"/>
+          <polygon points="254,140 244,135 244,145" fill="var(--up)"/>
+          <text x="210" y="130" font-size="10" fill="var(--up)">轴突</text>
+          <!-- 终扣 -->
+          <circle cx="266" cy="140" r="5" fill="var(--up)"/>
+          <path d="M271 140 L290 120 M271 140 L290 160" stroke="var(--up)" stroke-width="2"/>
+          <text x="286" y="116" font-size="10" fill="var(--up)">输出脉冲</text>
+          <text x="286" y="170" font-size="10" fill="var(--text-mute)">分发给下游</text>
+          <!-- 说明 -->
+          <text x="60" y="240" font-size="11" fill="var(--text-soft)" font-weight="700">三个要点：</text>
+          <text x="60" y="256" font-size="10" fill="var(--text-mute)">· 突触既是<tspan font-weight="700">存储</tspan>（权重），又是<tspan font-weight="700">计算</tspan>（加权）</text>
+          <text x="60" y="270" font-size="10" fill="var(--text-mute)">· 胞体只做一件事：积分，超阈值就发放</text>
+          <text x="60" y="284" font-size="10" fill="var(--text-mute)">· 不发放时几乎不耗电 —— 这是能效的源头</text>
+
+          <!-- 分隔 -->
+          <line x1="340" y1="16" x2="340" y2="290" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：LIF 曲线 -->
+          <text x="510" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② LIF 模型：积分-发放（数学版）</text>
+          <line x1="370" y1="50" x2="370" y2="210" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="370" y1="210" x2="650" y2="210" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="346" y="58" font-size="11" fill="var(--text-mute)">膜电位</text>
+          <text x="346" y="72" font-size="11" fill="var(--text-mute)">V(t)</text>
+          <text x="620" y="228" font-size="11" fill="var(--text-mute)">时间 t</text>
+          <!-- 阈值 -->
+          <line x1="370" y1="72" x2="650" y2="72" stroke="var(--down)" stroke-width="1.6" stroke-dasharray="7 4"/>
+          <text x="654" y="76" font-size="11" fill="var(--down)" font-weight="700">V</text>
+          <text x="664" y="79" font-size="8" fill="var(--down)" font-weight="700">th</text>
+          <!-- 静息 -->
+          <line x1="370" y1="190" x2="650" y2="190" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="374" y="204" font-size="10" fill="var(--text-mute)">静息电位</text>
+          <!-- 膜电位曲线 -->
+          <path d="M378 188 L394 188 L398 158 L410 158 L414 176 L426 176 L430 140 L442 140 L446 162 L458 162 L462 120 L474 120 L478 150 L490 150 L494 96 L506 96 L510 132 L522 132 L526 74" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <circle cx="526" cy="72" r="5" fill="var(--down)"/>
+          <!-- 发放 -->
+          <line x1="526" y1="72" x2="526" y2="52" stroke="var(--up)" stroke-width="2.6"/>
+          <text x="532" y="60" font-size="10" fill="var(--up)" font-weight="700">发放！</text>
+          <!-- 复位 -->
+          <path d="M526 190 L534 190" stroke="var(--text-mute)" stroke-width="2.2" stroke-dasharray="3 2"/>
+          <text x="540" y="196" font-size="10" fill="var(--text-mute)">复位</text>
+          <!-- 不应期 -->
+          <path d="M534 190 L560 190 L564 160 L580 160 L584 178 L600 178 L604 146 L620 146" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <text x="560" y="206" font-size="10" fill="var(--text-mute)">不应期后重新积分</text>
+          <!-- 方程 -->
+          <rect x="370" y="240" width="280" height="46" rx="6" fill="var(--surface-2)" fill-opacity=".5" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="386" y="260" font-size="12" fill="var(--text)" font-weight="700">τ · dV/dt = −(V − V</text>
+          <text x="520" y="263" font-size="8" fill="var(--text)" font-weight="700">rest</text>
+          <text x="534" y="260" font-size="12" fill="var(--text)" font-weight="700">) + R·I(t)</text>
+          <text x="386" y="278" font-size="10" fill="var(--text-mute)">V ≥ V</text>
+          <text x="416" y="281" font-size="8" fill="var(--text-mute)">th</text>
+          <text x="424" y="278" font-size="10" fill="var(--text-mute)">时发放一个脉冲，随后 V 复位并进入不应期</text>
+        </svg>
+        <figcaption>图 2：神经元与它的数学模型。左：树突接收上游脉冲、突触强度作为权重、胞体做加权求和、轴突发放输出。右：LIF（Leaky Integrate-and-Fire）模型的膜电位曲线 —— 输入积累使膜电位爬升，越过阈值就发放一个脉冲并复位，之后进入短暂不应期。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>注意 LIF 模型与数字逻辑的本质区别：它自带"时间"。</b>
+        CMOS 门是<em>无状态</em>的组合逻辑（输入定了输出就定），时序靠外部时钟强行同步；
+        而 LIF 神经元本身就是一个<strong>带时间常数 τ 的动态系统</strong> ——
+        它的输出不仅取决于当前输入，还取决于<em>过去一段时间内输入的积累</em>。
+        这种"天然的时序记忆"正是处理语音、视频、传感时序流的天赋能力，
+        也是为什么类脑芯片在处理<strong>流式、稀疏、实时</strong>信号时能效可以远超 GPU。
+      </div>
+
+      <p>脉冲怎么编码信息？三种主流方式：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三种脉冲编码方式与稀疏性对比">
+          <!-- ① 频率编码 -->
+          <text x="24" y="30" font-size="12" fill="var(--text)" font-weight="700">① 频率编码 Rate Coding</text>
+          <line x1="24" y1="56" x2="200" y2="56" stroke="var(--border)" stroke-width="1"/>
+          <g stroke="var(--semi)" stroke-width="2">
+            <line x1="32" y1="56" x2="32" y2="40"/><line x1="56" y1="56" x2="56" y2="40"/><line x1="80" y1="56" x2="80" y2="40"/>
+            <line x1="104" y1="56" x2="104" y2="40"/><line x1="128" y1="56" x2="128" y2="40"/>
+          </g>
+          <text x="140" y="54" font-size="10" fill="var(--semi)" font-weight="700">密集 = 数值大</text>
+          <line x1="24" y1="80" x2="200" y2="80" stroke="var(--border)" stroke-width="1"/>
+          <g stroke="var(--semi)" stroke-width="2">
+            <line x1="32" y1="80" x2="32" y2="64"/><line x1="104" y1="80" x2="104" y2="64"/>
+          </g>
+          <text x="140" y="78" font-size="10" fill="var(--semi)" font-weight="700">稀疏 = 数值小</text>
+          <text x="24" y="100" font-size="10" fill="var(--text-mute)">最直观、最稳健，鲁棒性好</text>
+          <text x="24" y="114" font-size="10" fill="var(--text-mute)">代价：需要较长积分窗口 → 慢</text>
+
+          <!-- ② 时序编码 -->
+          <text x="24" y="150" font-size="12" fill="var(--text)" font-weight="700">② 时序编码 Temporal Coding</text>
+          <line x1="24" y1="176" x2="200" y2="176" stroke="var(--border)" stroke-width="1"/>
+          <line x1="32" y1="176" x2="32" y2="160" stroke="var(--fin)" stroke-width="2"/>
+          <text x="40" y="172" font-size="10" fill="var(--fin)" font-weight="700">首个脉冲来得早 = 数值大</text>
+          <line x1="24" y1="200" x2="200" y2="200" stroke="var(--border)" stroke-width="1"/>
+          <line x1="140" y1="200" x2="140" y2="184" stroke="var(--fin)" stroke-width="2"/>
+          <text x="148" y="196" font-size="10" fill="var(--fin)" font-weight="700">来得晚 = 数值小</text>
+          <text x="24" y="220" font-size="10" fill="var(--text-mute)">一个脉冲就能表达信息，极省</text>
+          <text x="24" y="234" font-size="10" fill="var(--text-mute)">代价：对噪声极敏感，难训练</text>
+          <text x="24" y="248" font-size="10" fill="var(--text-mute)">视觉皮层被认为大量使用它</text>
+
+          <!-- 分隔 -->
+          <line x1="230" y1="16" x2="230" y2="274" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- ③ 稀疏性对比 -->
+          <text x="450" y="30" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">③ 稀疏性：类脑能效的真正来源</text>
+          <!-- 密集矩阵 -->
+          <text x="250" y="58" font-size="11" fill="var(--down)" font-weight="700">传统 ANN：每一拍都全量算</text>
+          <g>
+            <rect x="272" y="68" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="292" y="68" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="312" y="68" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="332" y="68" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="272" y="88" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="292" y="88" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="312" y="88" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="332" y="88" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="272" y="108" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="292" y="108" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="312" y="108" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+            <rect x="332" y="108" width="18" height="18" fill="var(--down)" fill-opacity=".5"/>
+          </g>
+          <text x="252" y="146" font-size="10" fill="var(--down)">全部 12 个单元都在耗电</text>
+          <!-- SNN 稀疏 -->
+          <text x="400" y="58" font-size="11" fill="var(--up)" font-weight="700">SNN：只有事件触发才动</text>
+          <g>
+            <rect x="402" y="68" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="422" y="68" width="18" height="18" fill="var(--up)" fill-opacity=".6"/>
+            <rect x="442" y="68" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="462" y="68" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="402" y="88" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="422" y="88" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="442" y="88" width="18" height="18" fill="var(--up)" fill-opacity=".6"/>
+            <rect x="462" y="88" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="402" y="108" width="18" height="18" fill="var(--up)" fill-opacity=".6"/>
+            <rect x="422" y="108" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="442" y="108" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="462" y="108" width="18" height="18" fill="none" stroke="var(--border)" stroke-width="1"/>
+          </g>
+          <text x="392" y="146" font-size="10" fill="var(--up)">仅 3 个单元激活，其余静默</text>
+          <!-- 能效结论 -->
+          <rect x="250" y="162" width="430" height="36" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="465" y="180" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">稀疏度越高 → 有效计算量越少 → 能效越高</text>
+          <text x="465" y="194" text-anchor="middle" font-size="10" fill="var(--text-mute)">这正是"事件驱动"相对"时钟驱动"的核心优势：不为零值付电费</text>
+          <!-- 事件相机例子 -->
+          <rect x="250" y="208" width="430" height="56" rx="6" fill="var(--accent)" fill-opacity=".1" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="465" y="226" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">现实案例：事件相机（DVS）</text>
+          <text x="465" y="242" text-anchor="middle" font-size="10" fill="var(--text-mute)">不按帧拍，只在某个像素亮度变化时输出一个事件 → 微秒级延迟、</text>
+          <text x="465" y="256" text-anchor="middle" font-size="10" fill="var(--text-mute)">动态范围极高、带宽极低，天生适配脉冲神经网络处理</text>
+        </svg>
+        <figcaption>图 3：脉冲编码与稀疏性。频率编码稳健但需要长时间窗口；时序编码一个脉冲就能携带信息却对噪声敏感；而无论哪种编码，真正的能效来源是<strong>稀疏性</strong> —— 只有被事件触发的单元才耗电。</figcaption>
+      </figure>
+
       <div class="note">
         <strong>为什么这很难在硅上实现？</strong>
         数字电路的晶体管是"开关"——要么导通要么关断，天然擅长布尔逻辑而不擅长"连续可调的连接强度"。
@@ -206,6 +374,80 @@
       <strong>整个阵列一步输出 y</strong>，不需要任何"搬运"。
       模拟 CIM 能效比最高，但受器件噪声、漂移与 ADC 精度限制；
       数字 CIM 用位行拆分加移位累加保精度，与现有数字生态兼容，是大算力场景的主流选择。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="交叉阵列结构与潜行电流问题">
+          <!-- 左：1T1R 阵列 -->
+          <text x="200" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① 1T1R 交叉阵列：每个节点 = 一个突触</text>
+          <!-- 字线 -->
+          <text x="24" y="58" font-size="10" fill="var(--text-mute)">字线</text>
+          <line x1="60" y1="62" x2="330" y2="62" stroke="var(--semi)" stroke-width="2"/>
+          <text x="24" y="112" font-size="10" fill="var(--text-mute)">（行）</text>
+          <line x1="60" y1="116" x2="330" y2="116" stroke="var(--semi)" stroke-width="2"/>
+          <line x1="60" y1="170" x2="330" y2="170" stroke="var(--semi)" stroke-width="2"/>
+          <!-- 位线 -->
+          <line x1="90" y1="46" x2="90" y2="212" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="160" y1="46" x2="160" y2="212" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="230" y1="46" x2="230" y2="212" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="300" y1="46" x2="300" y2="212" stroke="var(--fin)" stroke-width="2"/>
+          <text x="306" y="42" font-size="10" fill="var(--fin)">位线（列）</text>
+          <!-- 单元 -->
+          <g>
+            <rect x="80" y="52" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="150" y="52" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="220" y="52" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="290" y="52" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="80" y="106" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="150" y="106" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="220" y="106" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="290" y="106" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="80" y="160" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="150" y="160" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="220" y="160" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="290" y="160" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.2"/>
+          </g>
+          <text x="200" y="232" text-anchor="middle" font-size="10" fill="var(--text-mute)">每个交叉点 = 1 个忆阻器（突触）+ 1 个选择管（开关）</text>
+          <!-- 电流汇流 -->
+          <path d="M90 212 L90 246" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="90,250 85,240 95,240" fill="var(--accent)"/>
+          <text x="100" y="252" font-size="10" fill="var(--accent)" font-weight="700">I = Σ G</text>
+          <text x="148" y="255" font-size="8" fill="var(--accent)" font-weight="700">ij</text>
+          <text x="156" y="252" font-size="10" fill="var(--accent)" font-weight="700">· V</text>
+          <text x="168" y="255" font-size="8" fill="var(--accent)" font-weight="700">j</text>
+          <text x="176" y="252" font-size="10" fill="var(--accent)" font-weight="700">→ 天然求和</text>
+          <text x="200" y="276" text-anchor="middle" font-size="11" fill="var(--text-soft)" font-weight="700">一步得到整列输出：这就是 y = W·x</text>
+          <text x="200" y="290" text-anchor="middle" font-size="10" fill="var(--text-mute)">密度极高（4F²），且权重就地参与运算</text>
+
+          <!-- 分隔 -->
+          <line x1="360" y1="16" x2="360" y2="290" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：sneak path -->
+          <text x="520" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 为什么必须加"选择管"：潜行电流</text>
+          <!-- 无选择管阵列 -->
+          <line x1="410" y1="66" x2="600" y2="66" stroke="var(--semi)" stroke-width="2"/>
+          <line x1="410" y1="120" x2="600" y2="120" stroke="var(--semi)" stroke-width="2"/>
+          <line x1="410" y1="174" x2="600" y2="174" stroke="var(--semi)" stroke-width="2"/>
+          <line x1="440" y1="50" x2="440" y2="200" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="510" y1="50" x2="510" y2="200" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="580" y1="50" x2="580" y2="200" stroke="var(--fin)" stroke-width="2"/>
+          <!-- 目标单元 -->
+          <rect x="430" y="110" width="20" height="20" rx="2" fill="var(--up)" fill-opacity=".6" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="440" y="104" text-anchor="middle" font-size="9" fill="var(--up)" font-weight="700">目标</text>
+          <!-- 潜行路径 -->
+          <path d="M440 120 L440 130 L510 130 L510 120 M510 130 L580 130 L580 66" fill="none" stroke="var(--down)" stroke-width="2" stroke-dasharray="5 3"/>
+          <path d="M440 110 L440 100 L510 100 L510 174" fill="none" stroke="var(--down)" stroke-width="2" stroke-dasharray="5 3"/>
+          <text x="480" y="146" font-size="10" fill="var(--down)" font-weight="700">潜行电流</text>
+          <text x="480" y="160" font-size="10" fill="var(--text-mute)">绕道从别处流过</text>
+          <text x="410" y="216" font-size="10" fill="var(--down)" font-weight="700">纯忆阻器阵列（0T1R）：</text>
+          <text x="410" y="230" font-size="10" fill="var(--text-mute)">读出的电流里混了别人的贡献 → 结果全错</text>
+          <text x="410" y="244" font-size="10" fill="var(--text-mute)">且阵列越大，潜行路径越多，误差越严重</text>
+          <!-- 解法 -->
+          <rect x="400" y="252" width="280" height="36" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="540" y="268" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">解法：串一个选择管（1T1R）或选通器（1S1R）</text>
+          <text x="540" y="282" text-anchor="middle" font-size="10" fill="var(--text-mute)">代价：单元面积从 4F² 涨到 6~12F²，密度下降</text>
+        </svg>
+        <figcaption>图 4：交叉阵列的工程现实。左：每个交叉点放一个忆阻器充当突触，行加电压、列汇电流，一步完成整列的乘加。右：如果只用纯忆阻器不加选择管，电流会沿着"潜行路径"绕道，读出结果完全不可信 —— 这是高密度存算阵列必须解决的第一道工程难题。</figcaption>
+      </figure>
 
       <figure class="diagram">
         <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="存算一体谱系与矩阵乘原理">
@@ -253,7 +495,7 @@
             <text x="610" y="92" fill="var(--fin)">存内逻辑</text>
           </g>
         </svg>
-        <figcaption>图 2：欧姆定律做乘、基尔霍夫定律做和——存储阵列一步完成矩阵乘；右侧为按物理距离划分的三档谱系。</figcaption>
+        <figcaption>图 5：欧姆定律做乘、基尔霍夫定律做和——存储阵列一步完成矩阵乘；右侧为按物理距离划分的三档谱系。</figcaption>
       </figure>
 
       <p><strong>类脑算法栈</strong>则解决"用什么模型跑在这样的硬件上"：
@@ -304,6 +546,104 @@
         </tbody>
       </table>
 
+      <p>忆阻器为什么被寄予厚望？因为它是<strong>唯一一个"单器件就能同时完成存储与加权"</strong>的候选。
+      它的故事本身就是一段好教材：</p>
+
+      <div class="note">
+        <b>一段值得记住的历史。</b>
+        1971 年，华裔科学家<strong>蔡少棠（Leon Chua）</strong>从电路理论的对称性出发，
+        预言了电阻、电容、电感之外的<em>第四种无源元件</em>—— 忆阻器（memristor），
+        其电阻取决于"历史上流过的电荷总量"，即<strong>带记忆的电阻</strong>。
+        此后三十多年它只存在于论文里，直到 <strong>2008 年惠普实验室</strong>在二氧化钛（TiO₂）
+        纳米薄膜中首次给出物理实现，才把这个"缺失的元件"真正造出来。
+        一个从数学对称性预言出、三十七年后才被找到的器件 —— 这是凝聚态物理与电路理论结合的美妙案例。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="忆阻器的迟滞回线与导电细丝机制">
+          <!-- 左：I-V 迟滞回线 -->
+          <text x="170" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① 识别标志：捏紧的迟滞回线</text>
+          <line x1="170" y1="52" x2="170" y2="230" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="60" y1="140" x2="290" y2="140" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="146" y="60" font-size="11" fill="var(--text-mute)">电流 I</text>
+          <text x="256" y="248" font-size="11" fill="var(--text-mute)">电压 V</text>
+          <!-- 8 字形回线 -->
+          <path d="M170 140 C 190 108 230 76 260 92 C 280 102 268 128 170 140" fill="none" stroke="var(--semi)" stroke-width="2.4"/>
+          <path d="M170 140 C 150 172 110 204 80 188 C 60 178 72 152 170 140" fill="none" stroke="var(--fin)" stroke-width="2.4"/>
+          <circle cx="170" cy="140" r="4" fill="var(--accent)"/>
+          <text x="178" y="132" font-size="10" fill="var(--accent)" font-weight="700">原点捏紧</text>
+          <!-- 高低阻态 -->
+          <text x="216" y="88" font-size="10" fill="var(--semi)" font-weight="700">低阻态 LRS</text>
+          <text x="222" y="100" font-size="10" fill="var(--text-mute)">（斜率陡 = 电导大）</text>
+          <text x="88" y="196" font-size="10" fill="var(--fin)" font-weight="700">高阻态 HRS</text>
+          <text x="88" y="208" font-size="10" fill="var(--text-mute)">（斜率缓 = 电导小）</text>
+          <text x="60" y="270" font-size="10" fill="var(--text-mute)">斜率 = 电导 = 权重。同一电压下两条分支</text>
+          <text x="60" y="284" font-size="10" fill="var(--text-mute)">对应不同电导 → 这就是"记忆"的物理表现</text>
+
+          <!-- 分隔 -->
+          <line x1="330" y1="16" x2="330" y2="290" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：导电细丝 -->
+          <text x="510" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 物理机制：氧空位导电细丝</text>
+          <!-- HRS 器件 -->
+          <text x="366" y="52" font-size="11" fill="var(--fin)" font-weight="700">高阻态 HRS（细丝断开）</text>
+          <rect x="366" y="62" width="70" height="16" fill="var(--text-mute)" fill-opacity=".4"/>
+          <text x="366" y="80" font-size="9" fill="var(--text-mute)">上电极</text>
+          <rect x="366" y="78" width="180" height="46" fill="var(--surface-2)" fill-opacity=".5" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="456" y="106" text-anchor="middle" font-size="10" fill="var(--text-mute)">氧化物（HfO</text>
+          <text x="520" y="109" font-size="8" fill="var(--text-mute)">x</text>
+          <text x="528" y="106" font-size="10" fill="var(--text-mute)"> / TaO</text>
+          <text x="556" y="109" font-size="8" fill="var(--text-mute)">x</text>
+          <text x="564" y="106" font-size="10" fill="var(--text-mute)">）</text>
+          <rect x="366" y="124" width="180" height="16" fill="var(--text-mute)" fill-opacity=".4"/>
+          <text x="366" y="152" font-size="9" fill="var(--text-mute)">下电极</text>
+          <!-- 断开的细丝 -->
+          <path d="M440 124 L440 100" stroke="var(--semi)" stroke-width="2.2" stroke-dasharray="3 3"/>
+          <path d="M440 88 L440 78" stroke="var(--semi)" stroke-width="2.2" stroke-dasharray="3 3"/>
+          <circle cx="440" cy="94" r="3" fill="var(--down)"/>
+          <text x="452" y="94" font-size="10" fill="var(--down)" font-weight="700">缺口</text>
+          <!-- 氧空位点 -->
+          <g fill="var(--text-mute)" fill-opacity=".5">
+            <circle cx="404" cy="90" r="2.5"/><circle cx="476" cy="98" r="2.5"/><circle cx="492" cy="112" r="2.5"/>
+            <circle cx="396" cy="114" r="2.5"/><circle cx="508" cy="90" r="2.5"/>
+          </g>
+          <text x="366" y="176" font-size="9" fill="var(--text-mute)">氧空位（缺陷）散落各处</text>
+
+          <!-- 分隔箭头 -->
+          <path d="M560 100 L586 100" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="590,100 580,95 580,105" fill="var(--accent)"/>
+          <text x="556" y="88" font-size="9" fill="var(--accent)">加电压 SET</text>
+
+          <!-- LRS 器件 -->
+          <text x="366" y="212" font-size="11" fill="var(--semi)" font-weight="700">低阻态 LRS（细丝连通）</text>
+          <rect x="366" y="222" width="180" height="46" fill="var(--surface-2)" fill-opacity=".5" stroke="var(--border)" stroke-width="1.2"/>
+          <rect x="366" y="222" width="180" height="16" fill="var(--text-mute)" fill-opacity=".4"/>
+          <rect x="366" y="252" width="180" height="16" fill="var(--text-mute)" fill-opacity=".4"/>
+          <path d="M440 252 L440 222" stroke="var(--semi)" stroke-width="3.4"/>
+          <text x="452" y="240" font-size="10" fill="var(--semi)" font-weight="700">导电细丝连通</text>
+          <text x="366" y="286" font-size="9" fill="var(--text-mute)">氧空位在电场下迁移排成一条通路 → 电流畅通</text>
+
+          <!-- 右侧补充 -->
+          <text x="600" y="212" font-size="10" fill="var(--up)" font-weight="700">写：</text>
+          <text x="600" y="228" font-size="9" fill="var(--text-mute)">SET 形成</text>
+          <text x="600" y="244" font-size="10" fill="var(--down)" font-weight="700">擦：</text>
+          <text x="600" y="260" font-size="9" fill="var(--text-mute)">RESET 熔断</text>
+        </svg>
+        <figcaption>图 6：忆阻器的工作原理。左：它的"身份证"是一条过原点被捏紧的 8 字形 I-V 迟滞回线 —— 同一电压下电流有两条分支，分别对应高阻态与低阻态，斜率就是电导（权重）。右：主流的阻变机制是氧空位在电场驱动下迁移，形成或熔断一条纳米级导电细丝。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>为什么忆阻器至今没能大规模量产？四个真实的物理难题。</b>
+        ① <strong>离散性（device-to-device variation）</strong>：导电细丝是随机长出来的，
+        每个器件的电阻都不一样，同一批芯片上千差万别；
+        ② <strong>循环离散性（cycle-to-cycle）</strong>：同一个器件每次写入得到的阻值也有随机波动；
+        ③ <strong>电导漂移</strong>：细丝中的氧空位会缓慢扩散，阻值随时间与温度变化；
+        ④ <strong>非线性与非对称</strong>：电导随脉冲数的变化不是线性的，增大与减小的路径也不对称，
+        导致在线训练非常困难。
+        这四条叠加，使得<em>实验室里漂亮的 6-bit 精度，到了大规模阵列上往往只剩 3~4 bit 有效位</em>。
+        这既是模拟存算的精度墙，也是目前产业界更倾向"数字 CIM（SRAM）"的现实原因。
+      </div>
+
       <p>三条工程观察：</p>
 
       <ul>
@@ -344,6 +684,65 @@
         与"十五五"新型计算范式布局同频。</li>
       </ul>
 
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="存算一体与类脑芯片的成熟度地图">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">芯片地图：横轴是通用性，纵轴是能效，颜色是成熟度</text>
+          <!-- 坐标轴 -->
+          <line x1="80" y1="46" x2="80" y2="256" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="80" y1="256" x2="620" y2="256" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="40" y="58" font-size="11" fill="var(--text-mute)">能效</text>
+          <text x="40" y="72" font-size="11" fill="var(--text-mute)">↑ 高</text>
+          <text x="574" y="272" font-size="11" fill="var(--text-mute)">通用性 → 高</text>
+
+          <!-- GPU -->
+          <circle cx="150" cy="234" r="26" fill="var(--down)" fill-opacity=".2" stroke="var(--down)" stroke-width="1.8"/>
+          <text x="150" y="230" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">GPU</text>
+          <text x="150" y="244" text-anchor="middle" font-size="9" fill="var(--text-mute)">通用但耗能</text>
+
+          <!-- 近存 HBM-PIM -->
+          <circle cx="272" cy="196" r="26" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="272" y="192" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">HBM-PIM</text>
+          <text x="272" y="206" text-anchor="middle" font-size="9" fill="var(--text-mute)">AiM</text>
+
+          <!-- 数字 CIM SRAM -->
+          <circle cx="386" cy="150" r="26" fill="var(--semi)" fill-opacity=".22" stroke="var(--semi)" stroke-width="1.8"/>
+          <text x="386" y="146" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">数字 CIM</text>
+          <text x="386" y="160" text-anchor="middle" font-size="9" fill="var(--text-mute)">SRAM</text>
+
+          <!-- eFlash CIM -->
+          <circle cx="480" cy="118" r="24" fill="var(--fin)" fill-opacity=".22" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="480" y="114" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">eFlash</text>
+          <text x="480" y="128" text-anchor="middle" font-size="9" fill="var(--text-mute)">端侧推理</text>
+
+          <!-- 模拟 CIM RRAM -->
+          <circle cx="552" cy="88" r="22" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.8"/>
+          <text x="552" y="84" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">RRAM</text>
+          <text x="552" y="98" text-anchor="middle" font-size="9" fill="var(--text-mute)">模拟 CIM</text>
+
+          <!-- 神经拟态 -->
+          <circle cx="300" cy="76" r="28" fill="var(--text-mute)" fill-opacity=".18" stroke="var(--text-mute)" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <text x="300" y="72" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">神经拟态</text>
+          <text x="300" y="86" text-anchor="middle" font-size="9" fill="var(--text-mute)">Loihi / 天机</text>
+          <text x="300" y="98" text-anchor="middle" font-size="9" fill="var(--text-mute)">（另一条轴）</text>
+
+          <!-- 趋势箭头 -->
+          <path d="M176 224 C 230 208 250 204 250 200" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <path d="M298 190 C 340 176 360 166 364 160" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <path d="M412 144 C 440 134 456 126 462 122" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <path d="M504 112 C 520 104 530 98 534 94" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <text x="228" y="216" font-size="10" fill="var(--accent)" font-weight="700">能效提升方向</text>
+
+          <!-- 图例 -->
+          <rect x="80" y="278" width="540" height="26" rx="5" fill="var(--surface-2)" fill-opacity=".4" stroke="var(--border)" stroke-width="1"/>
+          <circle cx="104" cy="291" r="6" fill="var(--accent)" fill-opacity=".4" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="116" y="295" font-size="10" fill="var(--text-mute)">实线 = 已商用 / 量产</text>
+          <circle cx="264" cy="291" r="6" fill="none" stroke="var(--text-mute)" stroke-width="1.4" stroke-dasharray="4 2"/>
+          <text x="276" y="295" font-size="10" fill="var(--text-mute)">虚线 = 科研 / 专用场景</text>
+          <text x="460" y="295" font-size="10" fill="var(--text-mute)">越靠左上：能效高但通用性低</text>
+        </svg>
+        <figcaption>图 7：类脑与存算芯片的成熟度地图。从左下的 GPU（通用但耗能）到右上的模拟 CIM（能效极高但通用性低），是一条清晰的"用通用性换能效"的取舍曲线；神经拟态芯片则不完全在这条轴上 —— 它牺牲的是通用计算范式本身，换取对稀疏时序信号的极端适配。</figcaption>
+      </figure>
+
       <p><strong>成熟度判断</strong>——三个梯队在解决不同的问题：</p>
 
       <ol>
@@ -353,6 +752,13 @@
         <li><strong>神经拟态芯片仍以科研与专用场景为主</strong>：SNN 训练方法、工具链与"杀手级应用"
         三者缺一，距离通用化尚有距离。</li>
       </ol>
+
+      <div class="note">
+        <b>读图 7 的一个提醒：不要把"能效最高"误认为"最好"。</b>
+        越往右上走的方案，能效数字越漂亮，但它能跑的模型种类越窄、软件栈越薄、量产良率越低。
+        产业真正的赢家，往往不是能效最高的那个，而是<strong>在能效、通用性、生态三者交界处站稳的那个</strong> ——
+        目前看，数字 CIM（SRAM 路线）最靠近这个甜蜜点，这也是它与现有 CMOS 工艺完全兼容所换来的巨大优势。
+      </div>
 
       <h2 id="s6">6. 如何继续学习</h2>
 
@@ -412,6 +818,31 @@
         HBM-PIM 属近存计算（DRAM 内置计算单元）。
         成熟度：HBM-PIM（已进存储大厂主产品线）&gt; 端侧 Flash/SRAM CIM（已商用）&gt;
         大算力数字 CIM（主战场）&gt; 神经拟态芯片（科研与专用为主）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：为什么存储阵列"天生会算"矩阵乘？用两条物理定律说明。</summary>
+        <div class="answer">把权重 W 存成每个单元的电导 G。<br>
+        ① <b>欧姆定律</b> I = G·V：在字线上加输入电压 V<sub>j</sub>，流过该单元的电流自然就是 G<sub>ij</sub>·V<sub>j</sub> —— <em>乘法免费完成</em>；<br>
+        ② <b>基尔霍夫电流定律</b>：同一条位线上的电流自然相加，Σ<sub>j</sub> G<sub>ij</sub>·V<sub>j</sub> —— <em>求和也免费完成</em>。<br>
+        整列一次读出就是 y = W·x 的一个分量，全阵列一步输出整个向量，全程不需要把权重搬运到任何"计算单元"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 7：忆阻器为什么至今没能大规模量产？它的四个物理难题是什么？</summary>
+        <div class="answer">① <b>器件间离散性</b>：导电细丝随机生长，同一批芯片上每个器件电阻都不同；<br>
+        ② <b>循环间离散性</b>：同一个器件每次写入得到的阻值也有随机波动；<br>
+        ③ <b>电导漂移</b>：细丝中的氧空位会缓慢扩散，阻值随时间与温度漂移；<br>
+        ④ <b>非线性与非对称</b>：电导随编程脉冲的变化不是线性的，增大与减小的路径也不对称，在线训练极困难。<br>
+        四条叠加导致实验室里的 6-bit 精度到大规模阵列上常只剩 3~4 bit 有效位 ——
+        这就是模拟存算的"精度墙"，也是产业界目前更偏好数字 CIM（SRAM）的现实原因。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 8：既然存算一体能效高得多，为什么 GPU 还没被取代？</summary>
+        <div class="answer">因为它换来的是<strong>通用性、精度与软件生态的丧失</strong>。
+        以图 7 的取舍曲线看，越往右上（能效高）走，能跑的模型种类越窄、精度越低、工具链越薄、量产良率越低。
+        GPU 的优势不只是算力，更是 CUDA 生态、浮点精度、可编程性与通用性 ——
+        这些正是存算一体目前最薄弱的环节。<br>
+        所以存算一体的切入点是<em>能效敏感且任务固定的场景</em>（端侧语音唤醒、可穿戴、固定模型的推理），
+        而不是通用训练。判断是否真正起势，看的是<strong>软件栈完整度与量产出货量</strong>，不是论文里的 TOPS/W。</div>
       </details>
 
         <div class="series">

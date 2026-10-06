@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 14:58:35 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 21:57:55 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
@@ -46,7 +46,7 @@
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-05-量子计算-从量子比特到量子优越性.html</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[这一篇先破除误区建立正确直觉，再深入到物理载体、算法原理、纠错工程与产业地图， 让你既能向朋友讲明白，也能看清哪些新闻是真突破、哪些是标题党。目录 入门：量子比特到底特殊在哪 算法的本质：不是并行，是干涉 物理实现：五种造比特的路线 里程碑…]]></description>
+      <description><![CDATA[这一篇先破除误区建立正确直觉，再深入到物理载体、算法原理、纠错工程与产业地图， 让你既能向朋友讲明白，也能看清哪些新闻是真突破、哪些是标题党。目录 入门：量子比特到底特殊在哪 量子门：在布洛赫球上"转箭头" 纠缠：第二个、也更诡异的资源 算…]]></description>
     </item>
     <item>
       <title>类脑计算与存算一体：后摩尔时代的两条突围路线</title>
@@ -158,7 +158,7 @@
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-半导体物理基础-能带与载流子.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-半导体物理基础-能带与载流子.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[从原子能级到能带、本征激发、掺杂与载流子输运，配能带图与核心公式，是理解二极管、MOSFET 与芯片工艺的地基]]></description>
+      <description><![CDATA[从原子能级分裂成能带讲起，覆盖 E-k 能带结构、直接/间接带隙、有效质量与态密度、本征激发、施主受主电离、漂移扩散与散射机制、电阻率、温度效应与非平衡复合，配 11 张原理图与完整推导，是理解 PN 结、MOSFET 与工艺的地基]]></description>
     </item>
     <item>
       <title>刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀</title>
