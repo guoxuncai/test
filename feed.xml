@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 07:49:22 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 11:58:03 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
@@ -193,7 +193,7 @@
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMOS集成电路基础-反相器与逻辑门.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-01-CMOS集成电路基础-反相器与逻辑门.html</guid>
       <pubDate>Thu, 01 Oct 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[从 CMOS 反相器结构、电压传输特性与噪声容限，到功耗组成、组合逻辑门与时序元件建立保持时间，配电路图推导]]></description>
+      <description><![CDATA[从 CMOS 反相器结构、VTC 与噪声容限，到与或非门的开关模型与原理图、万能门 NAND、传输门与异或，再到逻辑综合、标准单元版图与芯片数据通路，配十余张电路与版图示意图]]></description>
     </item>
     <item>
       <title>瑾年财经早报 | 2026年9月30日 星期三</title>

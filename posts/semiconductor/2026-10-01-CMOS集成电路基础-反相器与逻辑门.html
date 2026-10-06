@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CMOS 集成电路基础 · 反相器与逻辑门</title>
-<meta name="description" content="从 CMOS 反相器结构、电压传输特性与噪声容限，到功耗组成、组合逻辑门与时序元件建立保持时间，配电路图推导。">
-<meta name="keywords" content="CMOS,反相器,逻辑门,噪声容限,动态功耗,建立时间,保持时间,数字集成电路">
+<meta name="description" content="从 CMOS 反相器结构、VTC 与噪声容限，到与或非门的开关模型与原理图、万能门 NAND、传输门与异或，再到逻辑综合、标准单元版图与芯片数据通路，配十余张电路与版图示意图。">
+<meta name="keywords" content="CMOS,反相器,逻辑门,与非门,或非门,传输门,万能门,标准单元,逻辑综合,噪声容限,动态功耗,建立时间,保持时间,数字集成电路">
 <meta name="date" content="2026-10-01">
 
 <link rel="stylesheet" href="../../assets/css/article.css">
@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 6 篇</span><span class="sep"></span>
-      <span>阅读约 14 分钟</span>
+      <span>阅读约 28 分钟</span>
     </div>
 
     <div class="content">
@@ -36,7 +36,9 @@
       <div class="box">
         <span class="box-title">这一篇要解决什么</span>
         有了 MOSFET，怎么搭出"会算数的电路"？这一篇从最简单的 CMOS 反相器出发，
-        讲清它的电压传输特性、噪声容限、功耗从哪来，以及与非门/或非门/触发器这些积木是怎么拼起来的。
+        讲清它的电压传输特性、噪声容限与功耗来源；然后用<strong>开关模型</strong>把与、或、非、与非、或非、异或
+        一个个拆开画给你看，说清它们为什么长这样、为什么与非门最受宠；最后把这些门放回真实芯片——
+        它们是怎么被 EDA 工具综合、铺成标准单元行、连成加法器和状态机的。
       </div>
 
       <div class="toc">
@@ -46,9 +48,14 @@
           <li><a href="#s2">电压传输特性 VTC 与噪声容限</a></li>
           <li><a href="#s3">功耗：静态、动态与短路</a></li>
           <li><a href="#s4">传播延时与驱动能力</a></li>
-          <li><a href="#s5">组合逻辑门：NAND / NOR / 传输门</a></li>
-          <li><a href="#s6">时序元件：锁存器与触发器</a></li>
-          <li><a href="#s7">易错点与自测</a></li>
+          <li><a href="#s5">逻辑门的本质：开关、布尔代数与门符号</a></li>
+          <li><a href="#s6">CMOS 门怎么搭：上拉网络与下拉网络</a></li>
+          <li><a href="#s7">万能门：只用 NAND 造出整个世界</a></li>
+          <li><a href="#s8">传输门、异或与三态总线</a></li>
+          <li><a href="#s9">从逻辑门到真实芯片：综合、布局布线与版图</a></li>
+          <li><a href="#s10">门在芯片里干什么活</a></li>
+          <li><a href="#s11">时序元件：锁存器与触发器</a></li>
+          <li><a href="#s12">易错点与自测</a></li>
         </ol>
       </div>
 
@@ -191,25 +198,964 @@
         实践中常用 3~4 倍（级数少、面积小，延时损失有限）。这就是所谓的"逻辑努力（Logical Effort）"方法。
       </div>
 
-      <h2 id="s5">5. 组合逻辑门：NAND / NOR / 传输门</h2>
+      <h2 id="s5">5. 逻辑门的本质：开关、布尔代数与门符号</h2>
+
+      <p><strong>逻辑门（Logic Gate）</strong>的本质只有一句话：<em>用电压高低表示 0 和 1，用晶体管当开关，把若干输入"算"成一个输出</em>。
+      它的数学底座是布尔代数——乔治·布尔（George Boole）1854 年写《思维规律的研究》时，
+      这被认为是一门"毫无用处的哲学数学"；一百年后，它成了整个数字世界的地基。</p>
+
+      <p>理解逻辑门最直观的办法，是把它还原成<strong>开关和灯泡</strong>：开关串联就是"与"，并联就是"或"，旁路短路就是"非"。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="开关串联并联与旁路对应的与或非逻辑">
+          <!-- ===== 串联 = AND ===== -->
+          <g transform="translate(30,34)">
+            <line x1="0" y1="0" x2="60" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="60" cy="0" r="3.2" fill="var(--text)"/>
+            <line x1="60" y1="0" x2="86" y2="-22" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="100" cy="0" r="3.2" fill="var(--text)"/>
+            <line x1="100" y1="0" x2="130" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="130" cy="0" r="3.2" fill="var(--text)"/>
+            <line x1="130" y1="0" x2="156" y2="-22" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="170" cy="0" r="3.2" fill="var(--text)"/>
+            <line x1="170" y1="0" x2="230" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="0" x2="230" y2="46" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="230" cy="60" r="15" fill="var(--surface-2)" stroke="var(--text)" stroke-width="2"/>
+            <line x1="221" y1="51" x2="239" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="239" y1="51" x2="221" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="230" y1="75" x2="230" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="120" x2="0" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="0" y1="120" x2="0" y2="66" stroke="var(--text)" stroke-width="2"/>
+            <line x1="-12" y1="54" x2="12" y2="54" stroke="var(--text)" stroke-width="3"/>
+            <line x1="-6" y1="66" x2="6" y2="66" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="0" y1="54" x2="0" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <text x="72" y="-30" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <text x="142" y="-30" font-size="13" fill="var(--text)" font-weight="700">B</text>
+            <text x="250" y="64" font-size="11" fill="var(--text-mute)">灯</text>
+            <text x="115" y="132" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">串联 = 与（AND）</text>
+            <text x="115" y="150" text-anchor="middle" font-size="11" fill="var(--text-mute)">A 和 B 都闭合，灯才亮</text>
+          </g>
+
+          <!-- ===== 并联 = OR ===== -->
+          <g transform="translate(370,34)">
+            <line x1="0" y1="0" x2="230" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="0" x2="230" y2="46" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="230" cy="60" r="15" fill="var(--surface-2)" stroke="var(--text)" stroke-width="2"/>
+            <line x1="221" y1="51" x2="239" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="239" y1="51" x2="221" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="230" y1="75" x2="230" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="120" x2="0" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="0" y1="120" x2="0" y2="66" stroke="var(--text)" stroke-width="2"/>
+            <line x1="-12" y1="54" x2="12" y2="54" stroke="var(--text)" stroke-width="3"/>
+            <line x1="-6" y1="66" x2="6" y2="66" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="0" y1="54" x2="0" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <!-- 支路 1 -->
+            <line x1="70" y1="0" x2="70" y2="44" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="70" cy="44" r="3.2" fill="var(--text)"/>
+            <line x1="70" y1="44" x2="94" y2="36" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="70" cy="74" r="3.2" fill="var(--text)"/>
+            <line x1="70" y1="74" x2="70" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <!-- 支路 2 -->
+            <line x1="160" y1="0" x2="160" y2="44" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="160" cy="44" r="3.2" fill="var(--text)"/>
+            <line x1="160" y1="44" x2="184" y2="36" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="160" cy="74" r="3.2" fill="var(--text)"/>
+            <line x1="160" y1="74" x2="160" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <text x="40" y="42" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <text x="176" y="42" font-size="13" fill="var(--text)" font-weight="700">B</text>
+            <text x="115" y="132" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">并联 = 或（OR）</text>
+            <text x="115" y="150" text-anchor="middle" font-size="11" fill="var(--text-mute)">A 或 B 任一闭合，灯就亮</text>
+          </g>
+
+          <!-- ===== 旁路 = NOT ===== -->
+          <g transform="translate(30,200)">
+            <line x1="0" y1="0" x2="230" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="0" x2="230" y2="46" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="230" cy="60" r="15" fill="var(--surface-2)" stroke="var(--text)" stroke-width="2"/>
+            <line x1="221" y1="51" x2="239" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="239" y1="51" x2="221" y2="69" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="230" y1="75" x2="230" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="230" y1="120" x2="0" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <line x1="0" y1="120" x2="0" y2="66" stroke="var(--text)" stroke-width="2"/>
+            <line x1="-12" y1="54" x2="12" y2="54" stroke="var(--text)" stroke-width="3"/>
+            <line x1="-6" y1="66" x2="6" y2="66" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="0" y1="54" x2="0" y2="0" stroke="var(--text)" stroke-width="2"/>
+            <!-- 旁路支路 -->
+            <line x1="100" y1="0" x2="100" y2="45" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="100" cy="45" r="3.2" fill="var(--text)"/>
+            <line x1="100" y1="45" x2="124" y2="37" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="100" cy="75" r="3.2" fill="var(--text)"/>
+            <line x1="100" y1="75" x2="100" y2="120" stroke="var(--text)" stroke-width="2"/>
+            <text x="112" y="34" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <text x="115" y="132" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">旁路 = 非（NOT）</text>
+            <text x="115" y="150" text-anchor="middle" font-size="11" fill="var(--text-mute)">A 闭合 → 灯被短路 → 灭</text>
+          </g>
+
+          <!-- ===== 图例 ===== -->
+          <g transform="translate(370,200)">
+            <rect x="0" y="0" width="290" height="130" rx="8" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+            <text x="16" y="26" font-size="12" fill="var(--accent)" font-weight="700">把开关换成晶体管</text>
+            <text x="16" y="52" font-size="11" fill="var(--text)">NMOS：栅极 = 1 时闭合（直通开关）</text>
+            <text x="16" y="74" font-size="11" fill="var(--text)">PMOS：栅极 = 0 时闭合（带气泡，取反）</text>
+            <text x="16" y="96" font-size="11" fill="var(--text)">串并联组合 → 与、或、非及其复合</text>
+            <text x="16" y="118" font-size="11" fill="var(--text-mute)">所谓"搭逻辑门"，就是排布这些开关</text>
+          </g>
+        </svg>
+        <figcaption>图 3：开关与灯泡模型。串联＝与、并联＝或、旁路＝非——三种基本逻辑回到最朴素的电路直觉。</figcaption>
+      </figure>
+
+      <h3>真值表：把 2ⁿ 种输入组合穷举一遍</h3>
+
+      <p>n 个输入的门，真值表就有 2<sup>n</sup> 行。真值表是门<strong>唯一而完整的定义</strong>——
+      至于内部是用 CMOS、TTL 还是继电器搭的，根本不重要，只要真值表一致，功能就等价。
+      这一点是后文"逻辑综合"能随意替换电路结构的根本前提：<em>工程师描述功能，工具决定实现。</em></p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="常用逻辑门符号一览">
+          <!-- AND -->
+          <g transform="translate(30,40)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 H26 A20 20 0 0 1 26 40 H0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="46" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">与门 AND</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = A·B</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">全 1 才出 1</text>
+          </g>
+          <!-- OR -->
+          <g transform="translate(360,40)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 Q30 0 46 20 Q30 40 0 40 Q16 20 0 0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="46" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">或门 OR</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = A + B</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">有 1 就出 1</text>
+          </g>
+          <!-- NOT -->
+          <g transform="translate(30,112)">
+            <line x1="-24" y1="20" x2="0" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 L36 20 L0 40 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="41" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="46" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">非门 NOT</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = NOT A</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">取反，也叫反相器</text>
+          </g>
+          <!-- NAND -->
+          <g transform="translate(360,112)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 H26 A20 20 0 0 1 26 40 H0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="51" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="56" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">与非 NAND</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = NOT(A·B)</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">全 1 才出 0</text>
+          </g>
+          <!-- NOR -->
+          <g transform="translate(30,184)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 Q30 0 46 20 Q30 40 0 40 Q16 20 0 0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="51" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="56" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">或非 NOR</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = NOT(A+B)</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">有 1 就出 0</text>
+          </g>
+          <!-- XOR -->
+          <g transform="translate(360,184)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M-9 0 Q7 20 -9 40" fill="none" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 Q30 0 46 20 Q30 40 0 40 Q16 20 0 0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="46" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">异或 XOR</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = A ⊕ B</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">相异出 1（加法器核心）</text>
+          </g>
+          <!-- XNOR -->
+          <g transform="translate(30,256)">
+            <line x1="-24" y1="10" x2="0" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="-24" y1="30" x2="0" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M-9 0 Q7 20 -9 40" fill="none" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 Q30 0 46 20 Q30 40 0 40 Q16 20 0 0 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="51" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="56" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">同或 XNOR</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = NOT(A⊕B)</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">相同出 1（比较器核心）</text>
+          </g>
+          <!-- BUF -->
+          <g transform="translate(360,256)">
+            <line x1="-24" y1="20" x2="0" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M0 0 L40 20 L0 40 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="40" y1="20" x2="76" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="26" font-size="13" fill="var(--text)" font-weight="700">缓冲器 BUF</text>
+            <text x="176" y="26" font-size="12" fill="var(--accent)">Y = A</text>
+            <text x="250" y="26" font-size="11" fill="var(--text-mute)">不改逻辑，只增强驱动</text>
+          </g>
+
+          <text x="30" y="326" font-size="11" fill="var(--text-mute)">小圆圈（气泡）＝ 取反：出现在输出端即 NAND / NOR；出现在输入端表示"低电平有效"，如片选 CS#、复位 RST#（# 表示低电平有效）。</text>
+        </svg>
+        <figcaption>图 4：常用逻辑门符号一览（IEEE/ANSI 标准画法）。记住两件事就够了：形状定运算，气泡定取反。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>门的两条铁律：</b><br>
+        ① <strong>组合逻辑门没有记忆</strong>——输出只由<em>此刻</em>的输入决定，输入一撤，输出就变（要记东西必须用第 11 章的触发器）；<br>
+        ② <strong>门必须有驱动能力</strong>——它要能给后级所有门的栅电容和连线电容充放电，所以"扇出（Fan-out）"永远有限，
+        这也是第 4 章反相器链和缓冲器存在的原因。
+      </div>
+
+      <h2 id="s6">6. CMOS 门怎么搭：上拉网络与下拉网络</h2>
+
+      <p>反相器只有 1 个输入、2 个管子。要做多输入的门，CMOS 用的是一套极其简洁的<strong>通用构造法</strong>：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMOS 门通用互补结构">
+          <line x1="180" y1="36" x2="440" y2="36" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="28" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">VDD</text>
+
+          <line x1="310" y1="36" x2="310" y2="62" stroke="var(--text)" stroke-width="2"/>
+          <rect x="240" y="62" width="140" height="52" rx="6" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="310" y="82" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">上拉网络 PUN</text>
+          <text x="310" y="100" text-anchor="middle" font-size="11" fill="var(--text-mute)">由 PMOS 组成 · 负责输出 1</text>
+          <line x1="310" y1="114" x2="310" y2="140" stroke="var(--text)" stroke-width="2"/>
+
+          <circle cx="310" cy="140" r="4.5" fill="var(--text)"/>
+          <line x1="310" y1="140" x2="440" y2="140" stroke="var(--text)" stroke-width="2"/>
+          <text x="448" y="145" font-size="14" fill="var(--text)" font-weight="700">OUT</text>
+
+          <line x1="310" y1="140" x2="310" y2="166" stroke="var(--text)" stroke-width="2"/>
+          <rect x="240" y="166" width="140" height="52" rx="6" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.8"/>
+          <text x="310" y="186" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">下拉网络 PDN</text>
+          <text x="310" y="204" text-anchor="middle" font-size="11" fill="var(--text-mute)">由 NMOS 组成 · 负责输出 0</text>
+          <line x1="310" y1="218" x2="310" y2="244" stroke="var(--text)" stroke-width="2"/>
+          <line x1="180" y1="244" x2="440" y2="244" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="262" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">GND</text>
+
+          <!-- 输入 -->
+          <text x="52" y="115" font-size="13" fill="var(--text)" font-weight="700">输入</text>
+          <text x="52" y="132" font-size="11" fill="var(--text-mute)">A B C …</text>
+          <line x1="112" y1="118" x2="150" y2="118" stroke="var(--text)" stroke-width="2"/>
+          <line x1="150" y1="88" x2="150" y2="192" stroke="var(--text)" stroke-width="2"/>
+          <line x1="150" y1="88" x2="240" y2="88" stroke="var(--text)" stroke-width="1.8"/>
+          <line x1="150" y1="192" x2="240" y2="192" stroke="var(--text)" stroke-width="1.8"/>
+
+          <!-- 右侧说明 -->
+          <rect x="470" y="62" width="190" height="106" rx="8" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+          <text x="484" y="86" font-size="12" fill="var(--accent)" font-weight="700">互补（对偶）规则</text>
+          <text x="484" y="108" font-size="11" fill="var(--text)">PDN 串联 ↔ PUN 并联</text>
+          <text x="484" y="128" font-size="11" fill="var(--text)">PDN 并联 ↔ PUN 串联</text>
+          <text x="484" y="150" font-size="11" fill="var(--text-mute)">同一输入同时驱动 1 个</text>
+          <text x="484" y="164" font-size="11" fill="var(--text-mute)">PMOS 与 1 个 NMOS</text>
+
+          <text x="470" y="196" font-size="11" fill="var(--up)">⇒ 任意输入组合下，</text>
+          <text x="470" y="214" font-size="11" fill="var(--up)">PUN 与 PDN 恰好一侧导通、</text>
+          <text x="470" y="232" font-size="11" fill="var(--up)">一侧断开 ⇒ 无直流通路。</text>
+        </svg>
+        <figcaption>图 5：CMOS 门的通用结构。上拉网络（PMOS）与下拉网络（NMOS）互为对偶，这是所有静态 CMOS 门的设计总则。</figcaption>
+      </figure>
+
+      <p>为什么必须"对偶"？因为如果两侧同时导通，VDD 到 GND 就出现直流通路，静态功耗和逻辑电平均崩溃；
+      如果两侧同时断开，输出就悬空（高阻），电平不确定。对偶结构保证了<strong>输出永远是"非 0 即 1"</strong>——这正是第 1 章反相器"总有一个管子截止"的多输入推广版。</p>
+
+      <h3>与非门 NAND：下拉串联、上拉并联</h3>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="二输入与非门的开关模型与真值表">
+          <line x1="170" y1="36" x2="330" y2="36" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="28" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">VDD</text>
+
+          <!-- 并联 PMOS -->
+          <line x1="205" y1="36" x2="205" y2="62" stroke="var(--text)" stroke-width="2"/>
+          <rect x="177" y="62" width="56" height="30" rx="4" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+          <line x1="196" y1="70" x2="214" y2="70" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="205" y="86" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">A</text>
+          <line x1="205" y1="92" x2="205" y2="120" stroke="var(--text)" stroke-width="2"/>
+
+          <line x1="295" y1="36" x2="295" y2="62" stroke="var(--text)" stroke-width="2"/>
+          <rect x="267" y="62" width="56" height="30" rx="4" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+          <line x1="286" y1="70" x2="304" y2="70" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="295" y="86" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">B</text>
+          <line x1="295" y1="92" x2="295" y2="120" stroke="var(--text)" stroke-width="2"/>
+
+          <line x1="205" y1="120" x2="295" y2="120" stroke="var(--text)" stroke-width="2"/>
+          <circle cx="250" cy="120" r="4" fill="var(--text)"/>
+          <line x1="250" y1="120" x2="400" y2="120" stroke="var(--text)" stroke-width="2"/>
+          <text x="408" y="125" font-size="14" fill="var(--text)" font-weight="700">OUT</text>
+
+          <!-- 串联 NMOS -->
+          <line x1="250" y1="120" x2="250" y2="150" stroke="var(--text)" stroke-width="2"/>
+          <rect x="222" y="150" width="56" height="30" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="250" y="170" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">A</text>
+          <line x1="250" y1="180" x2="250" y2="205" stroke="var(--text)" stroke-width="2"/>
+          <rect x="222" y="205" width="56" height="30" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="250" y="225" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">B</text>
+          <line x1="250" y1="235" x2="250" y2="262" stroke="var(--text)" stroke-width="2"/>
+          <line x1="170" y1="262" x2="330" y2="262" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="280" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">GND</text>
+
+          <text x="44" y="74" font-size="11" fill="var(--text-mute)">上拉 PUN</text>
+          <text x="44" y="90" font-size="11" fill="var(--text-mute)">PMOS 并联</text>
+          <text x="44" y="162" font-size="11" fill="var(--text-mute)">下拉 PDN</text>
+          <text x="44" y="178" font-size="11" fill="var(--text-mute)">NMOS 串联</text>
+
+          <!-- 真值表 -->
+          <g transform="translate(452,52)">
+            <text x="85" y="-12" text-anchor="middle" font-size="12" fill="var(--text-mute)">真值表</text>
+            <rect x="0" y="0" width="170" height="132" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="28" x2="170" y2="28" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="54" x2="170" y2="54" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="80" x2="170" y2="80" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="106" x2="170" y2="106" stroke="var(--border)" stroke-width="1"/>
+            <line x1="57" y1="0" x2="57" y2="132" stroke="var(--border)" stroke-width="1"/>
+            <line x1="114" y1="0" x2="114" y2="132" stroke="var(--border)" stroke-width="1"/>
+            <text x="28" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">A</text>
+            <text x="85" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">B</text>
+            <text x="142" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">OUT</text>
+            <text x="28" y="46" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="85" y="46" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="142" y="46" text-anchor="middle" font-size="13" fill="var(--up)">1</text>
+            <text x="28" y="72" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="85" y="72" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="142" y="72" text-anchor="middle" font-size="13" fill="var(--up)">1</text>
+            <text x="28" y="98" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="85" y="98" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="142" y="98" text-anchor="middle" font-size="13" fill="var(--up)">1</text>
+            <text x="28" y="124" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="85" y="124" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="142" y="124" text-anchor="middle" font-size="13" fill="var(--down)">0</text>
+          </g>
+
+          <text x="452" y="212" font-size="11" fill="var(--accent)" font-weight="700">逐个输入组合看通路：</text>
+          <text x="452" y="234" font-size="11" fill="var(--text)">A=0,B=0 → 两个 PMOS 都闭合 → OUT=1</text>
+          <text x="452" y="252" font-size="11" fill="var(--text)">A=0,B=1 → 左边 PMOS 闭合 → OUT=1</text>
+          <text x="452" y="270" font-size="11" fill="var(--text)">A=1,B=0 → 右边 PMOS 闭合 → OUT=1</text>
+          <text x="452" y="288" font-size="11" fill="var(--text)">A=1,B=1 → 两个 NMOS 串通到地 → OUT=0</text>
+
+          <text x="30" y="298" font-size="11" fill="var(--text-mute)">带横线的开关 = PMOS（输入 0 时闭合）；不带横线的 = NMOS（输入 1 时闭合）。</text>
+        </svg>
+        <figcaption>图 6：二输入与非门（NAND2）。下拉两个 NMOS 串联——只有 A、B 同时为 1 才把输出拉到地，这就是"与非"。</figcaption>
+      </figure>
+
+      <h3>或非门 NOR：下拉并联、上拉串联</h3>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="二输入或非门的开关模型与真值表">
+          <line x1="170" y1="36" x2="330" y2="36" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="28" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">VDD</text>
+
+          <!-- 串联 PMOS -->
+          <line x1="250" y1="36" x2="250" y2="62" stroke="var(--text)" stroke-width="2"/>
+          <rect x="222" y="62" width="56" height="30" rx="4" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+          <line x1="241" y1="70" x2="259" y2="70" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="250" y="86" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">A</text>
+          <line x1="250" y1="92" x2="250" y2="112" stroke="var(--text)" stroke-width="2"/>
+          <rect x="222" y="112" width="56" height="30" rx="4" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+          <line x1="241" y1="120" x2="259" y2="120" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="250" y="136" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">B</text>
+          <line x1="250" y1="142" x2="250" y2="168" stroke="var(--text)" stroke-width="2"/>
+          <circle cx="250" cy="168" r="4" fill="var(--text)"/>
+          <line x1="250" y1="168" x2="400" y2="168" stroke="var(--text)" stroke-width="2"/>
+          <text x="408" y="173" font-size="14" fill="var(--text)" font-weight="700">OUT</text>
+
+          <!-- 并联 NMOS -->
+          <line x1="250" y1="168" x2="250" y2="192" stroke="var(--text)" stroke-width="2"/>
+          <line x1="205" y1="192" x2="295" y2="192" stroke="var(--text)" stroke-width="2"/>
+          <line x1="205" y1="192" x2="205" y2="212" stroke="var(--text)" stroke-width="2"/>
+          <rect x="177" y="212" width="56" height="30" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="205" y="232" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">A</text>
+          <line x1="205" y1="242" x2="205" y2="262" stroke="var(--text)" stroke-width="2"/>
+          <line x1="295" y1="192" x2="295" y2="212" stroke="var(--text)" stroke-width="2"/>
+          <rect x="267" y="212" width="56" height="30" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="295" y="232" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">B</text>
+          <line x1="295" y1="242" x2="295" y2="262" stroke="var(--text)" stroke-width="2"/>
+          <line x1="170" y1="262" x2="330" y2="262" stroke="var(--text)" stroke-width="2"/>
+          <text x="250" y="280" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">GND</text>
+
+          <text x="44" y="100" font-size="11" fill="var(--text-mute)">上拉 PUN</text>
+          <text x="44" y="116" font-size="11" fill="var(--text-mute)">PMOS 串联</text>
+          <text x="44" y="226" font-size="11" fill="var(--text-mute)">下拉 PDN</text>
+          <text x="44" y="242" font-size="11" fill="var(--text-mute)">NMOS 并联</text>
+
+          <!-- 真值表 -->
+          <g transform="translate(452,52)">
+            <text x="85" y="-12" text-anchor="middle" font-size="12" fill="var(--text-mute)">真值表</text>
+            <rect x="0" y="0" width="170" height="132" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="28" x2="170" y2="28" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="54" x2="170" y2="54" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="80" x2="170" y2="80" stroke="var(--border)" stroke-width="1"/>
+            <line x1="0" y1="106" x2="170" y2="106" stroke="var(--border)" stroke-width="1"/>
+            <line x1="57" y1="0" x2="57" y2="132" stroke="var(--border)" stroke-width="1"/>
+            <line x1="114" y1="0" x2="114" y2="132" stroke="var(--border)" stroke-width="1"/>
+            <text x="28" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">A</text>
+            <text x="85" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">B</text>
+            <text x="142" y="20" text-anchor="middle" font-size="12" fill="var(--text-mute)">OUT</text>
+            <text x="28" y="46" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="85" y="46" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="142" y="46" text-anchor="middle" font-size="13" fill="var(--up)">1</text>
+            <text x="28" y="72" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="85" y="72" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="142" y="72" text-anchor="middle" font-size="13" fill="var(--down)">0</text>
+            <text x="28" y="98" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="85" y="98" text-anchor="middle" font-size="13" fill="var(--text)">0</text>
+            <text x="142" y="98" text-anchor="middle" font-size="13" fill="var(--down)">0</text>
+            <text x="28" y="124" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="85" y="124" text-anchor="middle" font-size="13" fill="var(--text)">1</text>
+            <text x="142" y="124" text-anchor="middle" font-size="13" fill="var(--down)">0</text>
+          </g>
+
+          <text x="452" y="212" font-size="11" fill="var(--accent)" font-weight="700">为什么 NOR 比 NAND 慢？</text>
+          <text x="452" y="234" font-size="11" fill="var(--text)">串联的是 PMOS，而空穴迁移率只有电子</text>
+          <text x="452" y="252" font-size="11" fill="var(--text)">的 1/2 ~ 1/3 ⇒ 等效电阻更大、充放电更慢，</text>
+          <text x="452" y="270" font-size="11" fill="var(--text)">要补偿就得把 PMOS 做宽 → 面积和栅电容也涨。</text>
+          <text x="452" y="288" font-size="11" fill="var(--text-mute)">所以多输入 NOR 在标准单元库里很少见。</text>
+
+          <text x="30" y="298" font-size="11" fill="var(--text-mute)">带横线的开关 = PMOS（输入 0 时闭合）；不带横线的 = NMOS（输入 1 时闭合）。</text>
+        </svg>
+        <figcaption>图 7：二输入或非门（NOR2）。上拉两个 PMOS 串联——只有 A、B 同时为 0 才把输出拉到 VDD，这就是"或非"。</figcaption>
+      </figure>
 
       <table>
         <thead><tr><th>门</th><th>PMOS 网络</th><th>NMOS 网络</th><th>工程特点</th></tr></thead>
         <tbody>
-          <tr><td>反相器 INV</td><td>1 个串联</td><td>1 个串联</td><td>最简单、最快</td></tr>
-          <tr><td>与非 NAND</td><td>并联</td><td>串联</td><td><strong>比 NOR 更常用</strong>：串联的是 NMOS（驱动强），速度损失小</td></tr>
-          <tr><td>或非 NOR</td><td>串联</td><td>并联</td><td>串联的是 PMOS（驱动弱），多输入时明显变慢</td></tr>
-          <tr><td>传输门 TG</td><td>与 NMOS 并联互补</td><td>与 PMOS 并联互补</td><td>可无损耗传输全摆幅信号，用于 MUX、异或、锁存器</td></tr>
+          <tr><td>反相器 INV</td><td>1 个</td><td>1 个</td><td>最简单、最快；共 2 管</td></tr>
+          <tr><td>与非 NAND</td><td>并联</td><td>串联</td><td><strong>比 NOR 更常用</strong>：串联的是 NMOS，电子迁移率高，速度损失小；2 输入共 4 管</td></tr>
+          <tr><td>或非 NOR</td><td>串联</td><td>并联</td><td>串联的是 PMOS，驱动弱，多输入时明显变慢</td></tr>
+          <tr><td>与或非 AOI</td><td>对偶复合网络</td><td>串联与并联复合</td><td>一级门完成多级功能，比"NAND+NOR 级联"更快更小</td></tr>
+          <tr><td>传输门 TG</td><td>与 NMOS 并联互补</td><td>与 PMOS 并联互补</td><td>无损耗传输全摆幅信号，用于 MUX、异或、锁存器</td></tr>
         </tbody>
       </table>
 
       <div class="note">
-        <b>为什么数字标准单元库里 NAND 居多？</b>同样的 2 输入门，NAND 的上拉是并联 PMOS（快）、
-        下拉是串联 NMOS；而 NOR 相反，串联的 PMOS 迁移率低、电阻大，速度更差。
-        所以综合工具更倾向于把逻辑映射成 NAND 形式，也常用"NAND 等效门数"衡量电路规模。
+        <b>尺寸怎么定？</b>串联管子的等效电阻会叠加，所以串联路径上的每个管子都要<em>加宽</em>：
+        2 输入 NAND 的两个 NMOS 通常各按 2× 宽长比设计，等效于单个管子的电阻；3 输入就 3×。
+        宽了驱动强，但栅电容也跟着变大，会拖慢<em>上一级</em>——这就是"逻辑努力（Logical Effort）"要算的那笔账。
       </div>
 
-      <h2 id="s6">6. 时序元件：锁存器与触发器</h2>
+      <div class="tip">
+        <b>复合门 AOI/OAI 是隐藏的速度杀手锏。</b>要实现 Y = NOT(A·B + C)，
+        若用"AND + OR + NOT"三级门要二十几个管子；而一个 <em>AOI21</em> 门只需 6 个管子、一级延时就搞定
+        （PDN：A、B 串联后与 C 并联，共 3 个 NMOS；PUN 按对偶规则得 3 个 PMOS）。
+        标准单元库里这类复合门是综合工具提速的秘密武器。
+      </div>
+
+      <h2 id="s7">7. 万能门：只用 NAND 造出整个世界</h2>
+
+      <p>把 NAND 的两个输入端并接在一起，它就变成了非门；再加一级，就变成与门；再变一下，就变成或门。
+      也就是说——<strong>NAND 一个门就足够搭出任意逻辑</strong>，这叫"功能完备（functional completeness）"，
+      背后的数学是德摩根定律：NOT(A·B) = NOT A + NOT B。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="用与非门构造非门与门或门">
+          <!-- ① NOT -->
+          <g transform="translate(20,20)">
+            <line x1="0" y1="20" x2="44" y2="20" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="44" cy="20" r="3.2" fill="var(--text)"/>
+            <line x1="44" y1="20" x2="56" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="44" y1="20" x2="56" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M56 0 H82 A20 20 0 0 1 82 40 H56 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="107" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="112" y1="20" x2="152" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="0" y="16" font-size="12" fill="var(--text)" font-weight="700">A</text>
+            <text x="158" y="25" font-size="12" fill="var(--accent)" font-weight="700">NOT A</text>
+            <text x="0" y="72" font-size="11" fill="var(--text)">① 两端并接 → 非门</text>
+            <text x="0" y="88" font-size="11" fill="var(--text-mute)">NAND(A,A) = NOT A</text>
+          </g>
+          <!-- ② AND -->
+          <g transform="translate(250,20)">
+            <line x1="0" y1="30" x2="36" y2="30" stroke="var(--text)" stroke-width="1.6"/>
+            <line x1="0" y1="50" x2="36" y2="50" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M36 20 H62 A20 20 0 0 1 62 60 H36 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="87" cy="40" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="92" y1="40" x2="106" y2="40" stroke="var(--text)" stroke-width="1.6"/>
+            <path d="M106 20 L140 40 L106 60 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="145" cy="40" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="150" y1="40" x2="180" y2="40" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="-14" y="27" font-size="12" fill="var(--text)" font-weight="700">A</text>
+            <text x="-14" y="67" font-size="12" fill="var(--text)" font-weight="700">B</text>
+            <text x="0" y="92" font-size="11" fill="var(--text)">② NAND + NOT → 与门</text>
+            <text x="0" y="108" font-size="11" fill="var(--text-mute)">NOT(NOT(A·B)) = A·B</text>
+          </g>
+          <!-- ③ OR -->
+          <g transform="translate(470,10)">
+            <line x1="0" y1="20" x2="28" y2="20" stroke="var(--text)" stroke-width="1.6"/>
+            <circle cx="28" cy="20" r="3.2" fill="var(--text)"/>
+            <line x1="28" y1="20" x2="28" y2="10" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="10" x2="40" y2="10" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="20" x2="28" y2="30" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="30" x2="40" y2="30" stroke="var(--text)" stroke-width="1.4"/>
+            <path d="M40 0 H66 A20 20 0 0 1 66 40 H40 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="91" cy="20" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="96" y1="20" x2="104" y2="20" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="104" y1="20" x2="104" y2="35" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="104" y1="35" x2="110" y2="35" stroke="var(--text)" stroke-width="1.4"/>
+
+            <line x1="0" y1="90" x2="28" y2="90" stroke="var(--text)" stroke-width="1.6"/>
+            <circle cx="28" cy="90" r="3.2" fill="var(--text)"/>
+            <line x1="28" y1="90" x2="28" y2="80" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="80" x2="40" y2="80" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="90" x2="28" y2="100" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="28" y1="100" x2="40" y2="100" stroke="var(--text)" stroke-width="1.4"/>
+            <path d="M40 70 H66 A20 20 0 0 1 66 110 H40 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="91" cy="90" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="96" y1="90" x2="104" y2="90" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="104" y1="90" x2="104" y2="55" stroke="var(--text)" stroke-width="1.4"/>
+            <line x1="104" y1="55" x2="110" y2="55" stroke="var(--text)" stroke-width="1.4"/>
+
+            <path d="M110 25 H136 A20 20 0 0 1 136 65 H110 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.8"/>
+            <circle cx="161" cy="45" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.8"/>
+            <line x1="166" y1="45" x2="186" y2="45" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="-14" y="24" font-size="12" fill="var(--text)" font-weight="700">A</text>
+            <text x="-14" y="94" font-size="12" fill="var(--text)" font-weight="700">B</text>
+            <text x="0" y="142" font-size="11" fill="var(--text)">③ 德摩根：NAND(NOT A, NOT B)</text>
+            <text x="0" y="158" font-size="11" fill="var(--text-mute)">= NOT(NOT A · NOT B) = A + B</text>
+          </g>
+        </svg>
+        <figcaption>图 8：NAND 是"万能门"。非、与、或都能用它与它自身拼出来，NOR 同理——二者都具备功能完备性。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>为什么标准单元库里 NAND 最吃香？</b>三个原因叠加：<br>
+        ① 结构上：NAND 串联的是驱动强的 NMOS，同样的输入数比 NOR 快；<br>
+        ② 度量上：业界习惯用"<em>等效 2 输入 NAND 门数</em>"衡量电路规模（1 个 D 触发器 ≈ 6~8 个等效门），
+        这是衡量芯片复杂度的通用货币；<br>
+        ③ 存储上：NAND 闪存的名字就来自它的存储阵列是"与非"结构（串联的浮栅管链），
+        而 NOR 闪存则是"或非"结构（并联，可随机访问、读快写慢）——两种闪存的分野，根源就在这里。
+      </div>
+
+      <h2 id="s8">8. 传输门、异或与三态总线</h2>
+
+      <p>前面所有门都是"输入在左、输出在右、单向"。但有一类电路不同：<strong>传输门（Transmission Gate, TG）</strong>
+      不产生逻辑，只负责"让信号通过或不通过"，而且<em>双向</em>都能走。</p>
+
+      <p>为什么不能只用一只 NMOS 当开关？因为 NMOS 传高电平时，栅极最多只能把输出充到 <em>V<sub>DD</sub> − V<sub>tn</sub></em>
+      （超过这个电压它就自己截止了），这叫<strong>阈值损失</strong>；同理单 PMOS 传低电平会止步于 |V<sub>tp</sub>|。
+      把两只管子<em>并联互补</em>，一个擅长传 0、一个擅长传 1，就得到了全摆幅的传输门。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="传输门、二选一选择器与异或门">
+          <!-- (a) 传输门 -->
+          <g transform="translate(20,34)">
+            <text x="0" y="54" font-size="12" fill="var(--text)" font-weight="700">IN</text>
+            <line x1="26" y1="50" x2="46" y2="50" stroke="var(--text)" stroke-width="2"/>
+            <line x1="46" y1="26" x2="46" y2="74" stroke="var(--text)" stroke-width="2"/>
+            <rect x="46" y="26" width="76" height="24" rx="3" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+            <text x="84" y="42" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">PMOS</text>
+            <rect x="46" y="50" width="76" height="24" rx="3" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="84" y="66" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">NMOS</text>
+            <line x1="122" y1="26" x2="122" y2="74" stroke="var(--text)" stroke-width="2"/>
+            <line x1="122" y1="50" x2="164" y2="50" stroke="var(--text)" stroke-width="2"/>
+            <text x="168" y="54" font-size="12" fill="var(--text)" font-weight="700">OUT</text>
+            <!-- 控制 -->
+            <line x1="84" y1="26" x2="84" y2="10" stroke="var(--text)" stroke-width="1.6"/>
+            <circle cx="84" cy="10" r="4.5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="94" y="6" font-size="11" fill="var(--text-mute)">C 非</text>
+            <line x1="84" y1="74" x2="84" y2="90" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="96" font-size="11" fill="var(--text-mute)">C</text>
+            <text x="0" y="118" font-size="11" fill="var(--accent)" font-weight="700">（a）传输门</text>
+            <text x="0" y="136" font-size="11" fill="var(--text)">C = 1 → 两管齐导通，双向全摆幅</text>
+            <text x="0" y="152" font-size="11" fill="var(--text)">C = 0 → 两管齐截止，输出高阻</text>
+          </g>
+
+          <!-- (b) MUX -->
+          <g transform="translate(250,34)">
+            <text x="0" y="24" font-size="12" fill="var(--text)" font-weight="700">A</text>
+            <line x1="14" y1="20" x2="40" y2="20" stroke="var(--text)" stroke-width="2"/>
+            <rect x="40" y="8" width="62" height="24" rx="3" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="71" y="24" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">TG（S非）</text>
+            <line x1="102" y1="20" x2="130" y2="20" stroke="var(--text)" stroke-width="2"/>
+            <line x1="130" y1="20" x2="130" y2="60" stroke="var(--text)" stroke-width="2"/>
+
+            <text x="0" y="104" font-size="12" fill="var(--text)" font-weight="700">B</text>
+            <line x1="14" y1="100" x2="40" y2="100" stroke="var(--text)" stroke-width="2"/>
+            <rect x="40" y="88" width="62" height="24" rx="3" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="71" y="104" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">TG（S）</text>
+            <line x1="102" y1="100" x2="130" y2="100" stroke="var(--text)" stroke-width="2"/>
+            <line x1="130" y1="100" x2="130" y2="60" stroke="var(--text)" stroke-width="2"/>
+
+            <circle cx="130" cy="60" r="4" fill="var(--text)"/>
+            <line x1="130" y1="60" x2="176" y2="60" stroke="var(--text)" stroke-width="2"/>
+            <text x="180" y="64" font-size="12" fill="var(--text)" font-weight="700">Y</text>
+            <text x="0" y="140" font-size="11" fill="var(--accent)" font-weight="700">（b）2 选 1 选择器 MUX</text>
+            <text x="0" y="158" font-size="11" fill="var(--text)">S = 0 选 A，S = 1 选 B</text>
+            <text x="0" y="174" font-size="11" fill="var(--text-mute)">FPGA 里最基本的积木就是它</text>
+          </g>
+
+          <!-- (c) XOR -->
+          <g transform="translate(470,34)">
+            <text x="0" y="24" font-size="12" fill="var(--text)" font-weight="700">A</text>
+            <line x1="14" y1="20" x2="26" y2="20" stroke="var(--text)" stroke-width="2"/>
+            <circle cx="26" cy="20" r="3.2" fill="var(--text)"/>
+            <line x1="26" y1="20" x2="44" y2="20" stroke="var(--text)" stroke-width="2"/>
+            <rect x="44" y="8" width="58" height="24" rx="3" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="73" y="24" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">TG（B非）</text>
+            <line x1="102" y1="20" x2="168" y2="20" stroke="var(--text)" stroke-width="2"/>
+            <line x1="168" y1="20" x2="168" y2="60" stroke="var(--text)" stroke-width="2"/>
+
+            <line x1="26" y1="20" x2="26" y2="88" stroke="var(--text)" stroke-width="2"/>
+            <line x1="26" y1="88" x2="44" y2="88" stroke="var(--text)" stroke-width="2"/>
+            <path d="M44 76 L78 88 L44 100 Z" fill="var(--surface-2)" stroke="var(--text)" stroke-width="1.6"/>
+            <circle cx="83" cy="88" r="5" fill="var(--surface)" stroke="var(--text)" stroke-width="1.6"/>
+            <text x="92" y="70" font-size="11" fill="var(--text-mute)">A非</text>
+            <line x1="88" y1="88" x2="102" y2="88" stroke="var(--text)" stroke-width="2"/>
+            <rect x="102" y="76" width="58" height="24" rx="3" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.6"/>
+            <text x="131" y="92" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">TG（B）</text>
+            <line x1="160" y1="88" x2="168" y2="88" stroke="var(--text)" stroke-width="2"/>
+            <line x1="168" y1="88" x2="168" y2="60" stroke="var(--text)" stroke-width="2"/>
+
+            <circle cx="168" cy="60" r="4" fill="var(--text)"/>
+            <line x1="168" y1="60" x2="196" y2="60" stroke="var(--text)" stroke-width="2"/>
+            <text x="200" y="64" font-size="12" fill="var(--text)" font-weight="700">Y</text>
+            <text x="0" y="140" font-size="11" fill="var(--accent)" font-weight="700">（c）一个 MUX 就是异或</text>
+            <text x="0" y="158" font-size="11" fill="var(--text)">Y = A·B非 + A非·B = A ⊕ B</text>
+            <text x="0" y="174" font-size="11" fill="var(--text-mute)">加法器的求和位、比较器都靠它</text>
+          </g>
+        </svg>
+        <figcaption>图 9：传输门（a）及其两个经典应用：二选一选择器（b）与异或门（c）。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>三态缓冲器与总线：</b>传输门关断时输出呈<strong>高阻态（Z）</strong>，相当于"把手从线上拿开"。
+        把多个三态输出挂到同一根线上，就构成了<em>总线</em>——同一时刻只允许一个器件驱动，其余全部高阻。
+        CPU 的数据总线、内存总线、I²C 的 SDA 线，都是这个原理。<strong>"线与""线或"、开漏（Open-Drain）输出</strong>
+        也由此而来：只能拉低、不能拉高，靠上拉电阻回到 1——这样多个器件才能安全地"抢"同一根线而不短路。
+      </div>
+
+      <h2 id="s9">9. 从逻辑门到真实芯片：综合、布局布线与版图</h2>
+
+      <p>到这里我们已经会"用开关搭门"了。但一颗芯片上有<strong>上百亿个晶体管</strong>，
+      显然没有人手画它们的连接关系。现代数字芯片的流程是：<em>人只描述"要算什么"，机器决定"用哪些门、放在哪、怎么连"</em>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="从 RTL 到 GDSII 的数字芯片实现流程">
+          <!-- 第一行 -->
+          <g transform="translate(20,30)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">1. RTL 代码</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">Verilog：描述功能，不提门</text>
+            <polygon points="158,28 168,24 168,32" fill="var(--text-mute)"/>
+            <line x1="152" y1="28" x2="166" y2="28" stroke="var(--text-mute)" stroke-width="1.6"/>
+          </g>
+          <g transform="translate(190,30)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">2. 逻辑综合</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">映射到标准单元库</text>
+            <polygon points="158,28 168,24 168,32" fill="var(--text-mute)"/>
+            <line x1="152" y1="28" x2="166" y2="28" stroke="var(--text-mute)" stroke-width="1.6"/>
+          </g>
+          <g transform="translate(360,30)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.6"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">3. 门级网表</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">几千种门的连接清单</text>
+            <polygon points="158,28 168,24 168,32" fill="var(--text-mute)"/>
+            <line x1="152" y1="28" x2="166" y2="28" stroke="var(--text-mute)" stroke-width="1.6"/>
+          </g>
+          <g transform="translate(530,30)">
+            <rect x="0" y="0" width="130" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">4. 布局规划</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">定 IP 位置与电源网络</text>
+            <line x1="65" y1="58" x2="65" y2="104" stroke="var(--text-mute)" stroke-width="1.6"/>
+            <polygon points="61,104 69,104 65,112" fill="var(--text-mute)"/>
+          </g>
+          <!-- 第二行（反向） -->
+          <g transform="translate(360,145)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">5. 布局 Placement</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">摆放上亿个标准单元</text>
+            <polygon points="-8,28 -18,24 -18,32" fill="var(--text-mute)"/>
+            <line x1="-10" y1="28" x2="-2" y2="28" stroke="var(--text-mute)" stroke-width="1.6"/>
+          </g>
+          <g transform="translate(190,145)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">6. 时钟树综合</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">让 CLK 同时到达各触发器</text>
+            <polygon points="-8,28 -18,24 -18,32" fill="var(--text-mute)"/>
+            <line x1="-10" y1="28" x2="-2" y2="28" stroke="var(--text-mute)" stroke-width="1.6"/>
+          </g>
+          <g transform="translate(20,145)">
+            <rect x="0" y="0" width="150" height="56" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">7. 布线 Routing</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">十余层金属把它们连起来</text>
+          </g>
+          <g transform="translate(530,145)">
+            <rect x="0" y="0" width="130" height="56" rx="6" fill="var(--up)" fill-opacity=".12" stroke="var(--up)" stroke-width="1.6"/>
+            <text x="12" y="24" font-size="12" fill="var(--text)" font-weight="700">8. 签核 + 流片</text>
+            <text x="12" y="44" font-size="10" fill="var(--text-mute)">STA / DRC / LVS → GDSII</text>
+          </g>
+          <text x="20" y="228" font-size="11" fill="var(--text-mute)">第 2~3 步（高亮）决定"用哪些门"；第 5~7 步决定"门摆在哪、怎么连"。这两件事今天全部由 EDA 工具自动完成。</text>
+          <text x="20" y="248" font-size="11" fill="var(--text-mute)">工程师真正手写的只有第 1 步的 Verilog 和一份时序/面积/功耗约束（SDC）。</text>
+        </svg>
+        <figcaption>图 10：数字芯片实现流程。逻辑门在"综合"这步被实例化，在"布局布线"这步被摆放到硅片上。</figcaption>
+      </figure>
+
+      <h3>标准单元库：芯片界的乐高积木清单</h3>
+
+      <p>综合工具不是凭空造门，而是从<strong>标准单元库（Standard Cell Library）</strong>里挑。库由晶圆厂或设计公司提供，
+      每一个"门"其实是一整套数据：</p>
+
+      <table class="term-table">
+        <thead><tr><th>组成部分</th><th>内容</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>原理图</td><td>晶体管级连接（如 NAND2 的 4 管结构）</td><td>功能与电气仿真（SPICE）</td></tr>
+          <tr><td>版图 GDS</td><td>每一层的几何图形（扩散、多晶硅、金属…）</td><td>实际制造用的图形</td></tr>
+          <tr><td>时序模型 .lib</td><td>不同输入斜率 × 负载电容下的延时、功耗、建立/保持时间</td><td>静态时序分析 STA</td></tr>
+          <tr><td>物理抽象 LEF</td><td>单元外框、引脚位置、阻挡层</td><td>布局布线工具使用</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>同一个门，库里有一堆"型号"。</b>以反相器为例：<em>INVD1 / INVD2 / INVD4 / INVD8</em> 是驱动能力递增的版本
+        （管子越宽、驱动越强、面积和输入电容也越大）；再加上 <em>HVT / SVT / LVT / ULVT</em> 几种阈值电压版本
+        （阈值越低跑得越快、漏电越大）。综合工具就像配菜师傅：关键路径上用快而漏的 LVT，非关键路径上用省电的 HVT——
+        这套"多阈值混合"是今天低功耗设计的标准操作。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="标准单元版图与标准单元行示意">
+          <!-- (a) 单个单元版图 -->
+          <g transform="translate(20,26)">
+            <text x="0" y="-8" font-size="12" fill="var(--accent)" font-weight="700">（a）一个 NAND2 单元的版图</text>
+            <rect x="0" y="0" width="180" height="150" fill="none" stroke="var(--text-mute)" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <!-- VDD rail -->
+            <rect x="0" y="0" width="180" height="13" fill="var(--text-mute)" fill-opacity=".35" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="90" y="11" text-anchor="middle" font-size="9" fill="var(--text)">VDD（Metal1 电源轨）</text>
+            <!-- nwell -->
+            <rect x="8" y="22" width="164" height="46" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="160" y="27" font-size="9" fill="var(--fin)">N 阱</text>
+            <!-- PMOS 有源区 -->
+            <rect x="22" y="30" width="60" height="28" fill="var(--fin)" fill-opacity=".38" stroke="var(--fin)" stroke-width="1.2"/>
+            <rect x="98" y="30" width="60" height="28" fill="var(--fin)" fill-opacity=".38" stroke="var(--fin)" stroke-width="1.2"/>
+            <!-- NMOS 有源区 -->
+            <rect x="22" y="92" width="60" height="28" fill="var(--semi)" fill-opacity=".38" stroke="var(--semi)" stroke-width="1.2"/>
+            <rect x="98" y="92" width="60" height="28" fill="var(--semi)" fill-opacity=".38" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="160" y="88" font-size="9" fill="var(--semi)">P 衬底</text>
+            <!-- poly 栅 -->
+            <rect x="44" y="20" width="7" height="112" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1"/>
+            <rect x="124" y="20" width="7" height="112" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1"/>
+            <text x="54" y="18" font-size="9" fill="var(--accent)">Poly 栅 A</text>
+            <text x="134" y="18" font-size="9" fill="var(--accent)">Poly 栅 B</text>
+            <!-- 输出金属 -->
+            <rect x="60" y="62" width="42" height="11" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1"/>
+            <text x="104" y="71" font-size="9" fill="var(--up)">OUT 金属</text>
+            <!-- GND rail -->
+            <rect x="0" y="137" width="180" height="13" fill="var(--text-mute)" fill-opacity=".35" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="90" y="148" text-anchor="middle" font-size="9" fill="var(--text)">GND（Metal1 电源轨）</text>
+            <!-- 图例 -->
+            <rect x="0" y="162" width="10" height="8" fill="var(--semi)" fill-opacity=".38" stroke="var(--semi)" stroke-width="1"/>
+            <text x="16" y="170" font-size="9" fill="var(--text-mute)">有源区（扩散）</text>
+            <rect x="96" y="162" width="10" height="8" fill="var(--accent)" fill-opacity=".55"/>
+            <text x="112" y="170" font-size="9" fill="var(--text-mute)">多晶硅栅</text>
+            <rect x="0" y="180" width="10" height="8" fill="var(--up)" fill-opacity=".35"/>
+            <text x="16" y="188" font-size="9" fill="var(--text-mute)">金属互连</text>
+            <rect x="96" y="180" width="10" height="8" fill="var(--fin)" fill-opacity=".2" stroke="var(--fin)" stroke-width="1"/>
+            <text x="112" y="188" font-size="9" fill="var(--text-mute)">N 阱</text>
+            <text x="0" y="206" font-size="9" fill="var(--text-mute)">上半部在 N 阱内 = PMOS；下半部在 P 衬底上 = NMOS；两条竖线是共用的多晶硅栅 A、B。</text>
+          </g>
+
+          <!-- (b) 标准单元行 -->
+          <g transform="translate(280,26)">
+            <text x="0" y="-8" font-size="12" fill="var(--accent)" font-weight="700">（b）把它们排成"标准单元行"</text>
+            <!-- 电源轨 -->
+            <rect x="0" y="0" width="380" height="11" fill="var(--text-mute)" fill-opacity=".35"/>
+            <text x="4" y="9" font-size="8" fill="var(--text)">VDD</text>
+            <!-- 第一行 -->
+            <rect x="6" y="18" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="34" y="46" text-anchor="middle" font-size="9" fill="var(--text)">NAND2</text>
+            <rect x="68" y="18" width="56" height="44" rx="2" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="96" y="46" text-anchor="middle" font-size="9" fill="var(--text)">INVD4</text>
+            <rect x="130" y="18" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="158" y="46" text-anchor="middle" font-size="9" fill="var(--text)">AOI21</text>
+            <rect x="192" y="18" width="56" height="44" rx="2" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="220" y="46" text-anchor="middle" font-size="9" fill="var(--text)">DFF</text>
+            <rect x="254" y="18" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="282" y="46" text-anchor="middle" font-size="9" fill="var(--text)">NOR2</text>
+            <rect x="316" y="18" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="344" y="46" text-anchor="middle" font-size="9" fill="var(--text)">MUX2</text>
+            <!-- 共用电源轨 -->
+            <rect x="0" y="66" width="380" height="11" fill="var(--text-mute)" fill-opacity=".35"/>
+            <text x="4" y="75" font-size="8" fill="var(--text)">GND（上下两行共用）</text>
+            <!-- 第二行（翻转） -->
+            <rect x="6" y="82" width="56" height="44" rx="2" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="34" y="110" text-anchor="middle" font-size="9" fill="var(--text)">INVD2</text>
+            <rect x="68" y="82" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="96" y="110" text-anchor="middle" font-size="9" fill="var(--text)">NAND3</text>
+            <rect x="130" y="82" width="56" height="44" rx="2" fill="var(--fin)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="158" y="110" text-anchor="middle" font-size="9" fill="var(--text)">BUF8</text>
+            <rect x="192" y="82" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="220" y="110" text-anchor="middle" font-size="9" fill="var(--text)">XOR2</text>
+            <rect x="254" y="82" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="282" y="110" text-anchor="middle" font-size="9" fill="var(--text)">DFF</text>
+            <rect x="316" y="82" width="56" height="44" rx="2" fill="var(--semi)" fill-opacity=".2" stroke="var(--border)" stroke-width="1"/>
+            <text x="344" y="110" text-anchor="middle" font-size="9" fill="var(--text)">AOI22</text>
+            <rect x="0" y="130" width="380" height="11" fill="var(--text-mute)" fill-opacity=".35"/>
+            <text x="4" y="139" font-size="8" fill="var(--text)">VDD</text>
+            <!-- 布线 -->
+            <line x1="62" y1="148" x2="68" y2="148" stroke="var(--up)" stroke-width="3"/>
+            <line x1="124" y1="148" x2="200" y2="148" stroke="var(--up)" stroke-width="3"/>
+            <line x1="186" y1="148" x2="186" y2="164" stroke="var(--up)" stroke-width="3"/>
+            <text x="212" y="152" font-size="9" fill="var(--up)">布线通道（Metal2 横向走线）</text>
+
+            <text x="0" y="184" font-size="11" fill="var(--text)">所有单元<tspan font-weight="700">等高</tspan>、电源轨对齐，一行行铺满芯片核心区；</text>
+            <text x="0" y="200" font-size="11" fill="var(--text)">相邻行共享 VDD/GND，行间留金属层做连线。</text>
+            <text x="0" y="218" font-size="11" fill="var(--text-mute)">这就是"用乐高铺地板"——单元是积木，EDA 是施工队。</text>
+          </g>
+        </svg>
+        <figcaption>图 11：标准单元的物理形态。左：一个 NAND2 的版图（示意）；右：单元被等高排列成行、共享电源轨，行间由金属层连线。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>数量级感受：</b>一个 2 输入 NAND 在先进节点上面积约百分之几平方微米量级；
+        一颗 100 mm² 的手机 SoC 可容纳<strong>上百亿个晶体管、数千万到上亿个等效逻辑门</strong>。
+        你写的每一行 <em>Verilog</em>（比如 <code>a &amp; b</code>），落地到硅片上就是几个这样的方块被摆放、连线、通电。
+      </div>
+
+      <h2 id="s10">10. 门在芯片里干什么活</h2>
+
+      <p>答案只有两件事：<strong>算</strong>（组合逻辑）与<strong>记</strong>（时序逻辑）。
+      任何复杂的 CPU、GPU、NPU，拆到底层都是这两类的排列组合。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="芯片数据通路中组合逻辑与时序逻辑的分工">
+          <!-- 寄存器堆 -->
+          <rect x="20" y="60" width="120" height="120" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="80" y="96" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">寄存器堆</text>
+          <text x="80" y="116" text-anchor="middle" font-size="10" fill="var(--text-mute)">触发器阵列</text>
+          <text x="80" y="136" text-anchor="middle" font-size="10" fill="var(--text-mute)">（记住状态）</text>
+          <text x="80" y="158" text-anchor="middle" font-size="10" fill="var(--text-mute)">只在时钟沿更新</text>
+
+          <!-- 组合逻辑云 -->
+          <rect x="200" y="46" width="250" height="148" rx="14" fill="var(--semi)" fill-opacity=".13" stroke="var(--semi)" stroke-width="2" stroke-dasharray="7 4"/>
+          <text x="325" y="76" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">组合逻辑云</text>
+          <text x="325" y="98" text-anchor="middle" font-size="10" fill="var(--text)">与门 / 或门 / 异或 / MUX</text>
+          <text x="325" y="116" text-anchor="middle" font-size="10" fill="var(--text)">加法器 · 比较器 · 译码器</text>
+          <text x="325" y="134" text-anchor="middle" font-size="10" fill="var(--text)">乘法器 · 桶形移位器</text>
+          <text x="325" y="158" text-anchor="middle" font-size="10" fill="var(--text-mute)">无记忆：输入变，输出立刻跟着变</text>
+          <text x="325" y="180" text-anchor="middle" font-size="10" fill="var(--text-mute)">（必须在一个时钟周期内算完）</text>
+
+          <!-- 结果寄存器 -->
+          <rect x="530" y="60" width="120" height="120" rx="8" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.8"/>
+          <text x="590" y="96" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">结果寄存器</text>
+          <text x="590" y="116" text-anchor="middle" font-size="10" fill="var(--text-mute)">ALU 输出 / 状态位</text>
+          <text x="590" y="136" text-anchor="middle" font-size="10" fill="var(--text-mute)">内存数据 / 指令</text>
+          <text x="590" y="158" text-anchor="middle" font-size="10" fill="var(--text-mute)">等下一个时钟沿写入</text>
+
+          <!-- 箭头 -->
+          <line x1="140" y1="100" x2="196" y2="100" stroke="var(--text)" stroke-width="2"/>
+          <polygon points="196,95 206,100 196,105" fill="var(--text)"/>
+          <text x="150" y="92" font-size="10" fill="var(--text-mute)">操作数 A</text>
+          <line x1="140" y1="150" x2="196" y2="150" stroke="var(--text)" stroke-width="2"/>
+          <polygon points="196,145 206,150 196,155" fill="var(--text)"/>
+          <text x="150" y="166" font-size="10" fill="var(--text-mute)">操作数 B</text>
+          <line x1="450" y1="120" x2="526" y2="120" stroke="var(--text)" stroke-width="2"/>
+          <polygon points="526,115 536,120 526,125" fill="var(--text)"/>
+          <text x="462" y="112" font-size="10" fill="var(--text-mute)">运算结果</text>
+
+          <!-- 反馈 -->
+          <path d="M590 180 L590 210 L80 210 L80 180" fill="none" stroke="var(--text-mute)" stroke-width="1.8" stroke-dasharray="6 4"/>
+          <polygon points="74,180 86,180 80,172" fill="var(--text-mute)"/>
+          <text x="300" y="228" text-anchor="middle" font-size="10" fill="var(--text-mute)">反馈：本拍结果 → 下一拍的输入（这就是"程序跑起来了"）</text>
+
+          <!-- 时钟 -->
+          <text x="300" y="26" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">CLK 时钟：所有触发器在同一瞬间"咔哒"一次</text>
+          <line x1="80" y1="34" x2="80" y2="56" stroke="var(--accent)" stroke-width="1.6"/>
+          <line x1="590" y1="34" x2="590" y2="56" stroke="var(--accent)" stroke-width="1.6"/>
+        </svg>
+        <figcaption>图 12：芯片里的经典数据通路。组合逻辑负责"算"，触发器负责"记"，时钟负责给出节拍。</figcaption>
+      </figure>
+
+      <h3>一条加法指令，走过哪些门</h3>
+
+      <ol>
+        <li><strong>取指</strong>：程序计数器 PC（一组触发器）给出地址 → <em>译码器</em>选中指令存储器的一行 → 指令编码被读出；</li>
+        <li><strong>译码</strong>：指令的 opcode 字段送进<em>译码器</em>（一大片与/或门），产生几十条控制信号："读哪两个寄存器""ALU 做加法""写回哪个寄存器"；</li>
+        <li><strong>读数</strong>：寄存器地址经<em>地址译码器</em>→ 选中两个寄存器 → 数据经<em>多路选择器 MUX</em> 送到 ALU 输入端；</li>
+        <li><strong>运算</strong>：ALU 里是一条 <em>全加器链</em>（或超前进位加法器）——每个全加器由 2 个异或 + 2 个与 + 1 个或构成，
+        64 位就要 64 个级联；进位链是最关键的路径；</li>
+        <li><strong>写回</strong>：结果经 MUX 送回寄存器堆，在下一个时钟沿写入；同时更新<em>状态标志</em>（零标志 Z、进位 C、溢出 V——都是几个门）；</li>
+        <li><strong>推进</strong>：PC 自增（一个加法器），下一条指令开始。</li>
+      </ol>
+
+      <div class="note">
+        <b>PPA 三角：门的三个评价指标。</b><br>
+        <strong>Performance（性能）</strong>——关键路径上有几个门、每个多快，决定主频；<br>
+        <strong>Power（功耗）</strong>——有多少门在翻转、每次翻转消耗多少电荷（回到第 3 章的 α·C·V²·f）；<br>
+        <strong>Area（面积）</strong>——用了多少个门、每个多宽，直接决定一颗晶圆能切出多少颗芯片，也就是成本。<br>
+        芯片设计本质上就是在这三个角上反复权衡：想快就换低阈值大驱动（费电、占面积），想省电就降频降压（变慢）。
+      </div>
+
+      <div class="tip">
+        <b>门是"词汇"，架构是"文章"。</b>CPU、GPU、NPU 用的都是同一批与或非门和触发器，
+        区别只在于<em>怎么组织</em>：CPU 把门堆成少量极复杂的核心（重控制、重分支预测）；
+        GPU 把门复制成几千个简单核心（重吞吐）；NPU 把乘加单元（MAC）排成脉动阵列（重数据复用）。
+        这正呼应了本系列第 26 篇讲的"生态位"——<strong>不是谁更强，而是谁更适合</strong>。
+      </div>
+
+      <h2 id="s11">11. 时序元件：锁存器与触发器</h2>
+
+      <p>前面所有的门都有一个共同点：<strong>输出只取决于此刻的输入，断电就忘</strong>。
+      要让电路"记住"上一步的结果，就得把输出绕回来接回输入——形成反馈，这就是时序元件的由来。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="D 触发器主从结构">
+          <!-- D 输入 -->
+          <text x="24" y="90" font-size="14" fill="var(--text)" font-weight="700">D</text>
+          <line x1="40" y1="85" x2="110" y2="85" stroke="var(--text)" stroke-width="2"/>
+
+          <!-- TG1 -->
+          <rect x="110" y="65" width="66" height="40" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="143" y="90" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">TG1</text>
+          <text x="143" y="55" text-anchor="middle" font-size="11" fill="var(--text-mute)">CLK=0 时通</text>
+          <line x1="176" y1="85" x2="212" y2="85" stroke="var(--text)" stroke-width="2"/>
+
+          <!-- 主锁存器 -->
+          <rect x="212" y="55" width="86" height="60" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.4"/>
+          <text x="255" y="80" text-anchor="middle" font-size="11" fill="var(--text)">主锁存器</text>
+          <text x="255" y="98" text-anchor="middle" font-size="10" fill="var(--text-mute)">交叉耦合反相器</text>
+          <line x1="298" y1="85" x2="334" y2="85" stroke="var(--text)" stroke-width="2"/>
+
+          <!-- TG2 -->
+          <rect x="334" y="65" width="66" height="40" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="367" y="90" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">TG2</text>
+          <text x="367" y="55" text-anchor="middle" font-size="11" fill="var(--text-mute)">CLK=1 时通</text>
+          <line x1="400" y1="85" x2="436" y2="85" stroke="var(--text)" stroke-width="2"/>
+
+          <!-- 从锁存器 -->
+          <rect x="436" y="55" width="86" height="60" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.4"/>
+          <text x="479" y="80" text-anchor="middle" font-size="11" fill="var(--text)">从锁存器</text>
+          <text x="479" y="98" text-anchor="middle" font-size="10" fill="var(--text-mute)">交叉耦合反相器</text>
+          <line x1="522" y1="85" x2="600" y2="85" stroke="var(--text)" stroke-width="2"/>
+          <text x="612" y="90" font-size="14" fill="var(--text)" font-weight="700">Q</text>
+
+          <!-- 时钟 -->
+          <text x="24" y="180" font-size="14" fill="var(--accent)" font-weight="700">CLK</text>
+          <line x1="58" y1="175" x2="90" y2="175" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="90" cy="175" r="3" fill="var(--accent)"/>
+          <line x1="90" y1="175" x2="90" y2="150" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="96" y="146" font-size="10" fill="var(--accent)">TG1 控制</text>
+          <line x1="90" y1="175" x2="90" y2="205" stroke="var(--text-mute)" stroke-width="1.6"/>
+          <line x1="90" y1="205" x2="160" y2="205" stroke="var(--text-mute)" stroke-width="1.6"/>
+          <polygon points="168,200 178,205 168,210" fill="var(--text-mute)"/>
+          <circle cx="160" cy="205" r="6" fill="var(--surface)" stroke="var(--text-mute)" stroke-width="1.6"/>
+          <text x="120" y="225" font-size="10" fill="var(--text-mute)">取反后控制 TG2</text>
+
+          <!-- 说明 -->
+          <rect x="230" y="160" width="380" height="66" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+          <text x="244" y="182" font-size="11" fill="var(--text)">两级串联 = 边沿触发：任何时刻只有一个传输门导通，</text>
+          <text x="244" y="200" font-size="11" fill="var(--text)">输入不可能"穿透"到输出，所以 Q 只在时钟沿更新一次。</text>
+          <text x="244" y="218" font-size="11" fill="var(--text-mute)">而单个锁存器是电平敏感：使能有效期间输出一直跟着输入变。</text>
+        </svg>
+        <figcaption>图 13：主从 D 触发器。两个传输门由互补时钟控制，一开一合，把"电平敏感"升级为"边沿触发"。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>一句话区分：</b>锁存器（Latch）= 电平敏感，门开着时输入直通输出（像一扇敞开的门）；
+        触发器（Flip-Flop）= 边沿敏感，只在时钟跳变那一瞬间"咔哒"拍一张快照。
+        数字芯片里几乎全用触发器，因为<em>边沿触发让时序分析变得可预测</em>——所有状态在同一瞬间集体更新。
+      </div>
 
       <table class="term-table">
         <thead><tr><th>概念</th><th>含义</th><th>违例后果</th></tr></thead>
@@ -227,14 +1173,19 @@
         也是数字后端反复迭代收敛的目标：缩短组合逻辑延时 t<sub>logic</sub>、控制时钟偏斜 t<sub>skew</sub>。</span>
       </div>
 
-      <h2 id="s7">7. 易错点与自测</h2>
+      <h2 id="s12">12. 易错点与自测</h2>
 
       <div class="warn">
         <b>新手常踩的坑：</b><br>
         ① 以为 CMOS 静态电流为零所以"不耗电" —— 动态功耗才是大头，且频率越高越耗电；<br>
         ② 把 PMOS 画在下面 —— 记住口诀：<strong>PMOS 靠电源（上），NMOS 靠地（下）</strong>；<br>
         ③ 忽略扇出（Fan-out）—— 一个门驱动太多后级会显著变慢，需要插入缓冲器；<br>
-        ④ 认为触发器输出立即变化 —— 是<em>时钟沿</em>触发，且要等 t<sub>cq</sub> 才稳定。
+        ④ 认为触发器输出立即变化 —— 是<em>时钟沿</em>触发，且要等 t<sub>cq</sub> 才稳定；<br>
+        ⑤ 把"逻辑上的 0/1"当成"物理上理想的 0 V / V<sub>DD</sub>" —— 实际有噪声容限、有延时、有扇出限制，
+        电平在过渡期是"Analog 的"，只有稳态才是数字的；<br>
+        ⑥ 画 CMOS 门时不遵守互补对偶 —— 一定要检查"是否任意输入组合下都恰好一侧导通"，
+        否则不是静态功耗爆掉就是输出悬空；<br>
+        ⑦ 混淆锁存器与触发器 —— 前者电平敏感会"直通"，后者边沿敏感才适合做同步设计。
       </div>
 
       <details class="quiz"><summary>自测 1：C<sub>L</sub> = 50 fF，V<sub>DD</sub> = 1.0 V，f = 2 GHz，翻转因子 α = 0.2，求动态功耗。</summary>
@@ -253,6 +1204,31 @@
         <div class="answer">由建立时间约束 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>setup</sub> + t<sub>skew</sub> 决定最大的 f。
         其中 t<sub>logic</sub> 是最长路径（关键路径）延时，受晶体管驱动强度、互连 RC、温度与电压影响。
         PVT（工艺/电压/温度）最差情况下仍需满足，所以签核要在 SS 慢角、高温低压下做。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：画出 3 输入与非门（NAND3）的管子连接，并说明每个管子宽度该怎么定。</summary>
+        <div class="answer">下拉网络 PDN 是<strong>3 个 NMOS 串联</strong>（全部输入为 1 才拉到地）；
+        按对偶规则，上拉网络 PUN 是<strong>3 个 PMOS 并联</strong>（任一输入为 0 就拉到 V<sub>DD</sub>），共 6 管。
+        串联路径上每个 NMOS 的宽长比要取单管的 <strong>3 倍</strong>，使串联总电阻与反相器相当；
+        代价是栅电容变成 3 倍，会拖慢驱动它的前一级——所以库里通常只提供 2~4 输入的门，
+        更多输入交给综合工具拆成树状结构。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：为什么不能用一只 NMOS 当开关传输高电平？传输门是怎么解决的？</summary>
+        <div class="answer">NMOS 导通条件是 V<sub>GS</sub> &gt; V<sub>tn</sub>。传高电平时，输出（源端）电位不断上升，
+        当它升到 V<sub>DD</sub> − V<sub>tn</sub> 时 V<sub>GS</sub> 恰好等于阈值，管子自己截止——
+        输出就<strong>卡在 V<sub>DD</sub> − V<sub>tn</sub></strong>，这就是阈值损失（还伴随体效应使 V<sub>tn</sub> 更大）。
+        传输门把一只 PMOS 与之并联：PMOS 传高电平没有阈值损失（它只在传低电平时卡在 |V<sub>tp</sub>|），
+        两只互补，于是 0 和 1 都能全摆幅通过。代价是需要一对互补的控制信号（C 与其反相信号）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：静态时序分析报出建立时间违例（timing violation），有哪些修复手段？</summary>
+        <div class="answer">本质是把 T<sub>clk</sub> ≥ t<sub>cq</sub> + t<sub>logic</sub> + t<sub>setup</sub> + t<sub>skew</sub> 重新满足：<br>
+        ① <strong>降频</strong>（最简单，性能换正确性）；② <strong>插流水线寄存器</strong>，把长组合逻辑切成两段（性能最好，增加一拍延迟和面积）；
+        ③ <strong>换快单元</strong>：关键路径上把 HVT 换成 LVT/ULVT，或换成更大驱动（X2→X4）；
+        ④ <strong>优化逻辑结构</strong>：用 AOI 复合门替代多级门、平衡树状结构、重定时（retiming）；
+        ⑤ <strong>减小互连延时</strong>：调整布局、插入中继缓冲器、加宽或改用高层金属走线；
+        ⑥ <strong>减小时钟偏斜 t<sub>skew</sub></strong>：优化时钟树（useful skew 甚至可以"借"时间给关键路径）。</div>
       </details>
 
         <div class="series">
@@ -294,6 +1270,10 @@
       <span class="chip">#CMOS</span>
       <span class="chip">#反相器</span>
       <span class="chip">#逻辑门</span>
+      <span class="chip">#与非门</span>
+      <span class="chip">#传输门</span>
+      <span class="chip">#标准单元</span>
+      <span class="chip">#逻辑综合</span>
       <span class="chip">#功耗</span>
       <span class="chip">#时序分析</span>
     </div>
