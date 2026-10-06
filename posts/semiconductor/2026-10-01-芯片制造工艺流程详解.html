@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 11 篇</span><span class="sep"></span>
-      <span>阅读约 15 分钟</span>
+      <span>阅读约 30 分钟</span>
     </div>
 
     <div class="content">
@@ -177,8 +177,95 @@
         ② 多重图形化让 7nm 所需曝光次数成倍增加，设备时长与成本飙升；
         ③ 掩膜、光刻胶、量测设备同样高度垄断。工艺节点的推进速度，很大程度上被光刻能力锁死。
       </div>
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="光刻图形转移的五步剖面">
+          <g font-size="9">
+            <rect x="20" y="170" width="112" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="20" y="146" width="112" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="20" y="110" width="112" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="152" y="170" width="112" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="152" y="146" width="112" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="152" y="110" width="112" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="152" y="76" width="38" height="14" fill="var(--text-mute)" fill-opacity=".75"/>
+            <rect x="226" y="76" width="38" height="14" fill="var(--text-mute)" fill-opacity=".75"/>
+            <line x1="198" y1="92" x2="198" y2="108" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M195 108 L198 113 L201 108 Z" fill="var(--up)"/>
+            <line x1="208" y1="92" x2="208" y2="108" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M205 108 L208 113 L211 108 Z" fill="var(--up)"/>
+            <line x1="218" y1="92" x2="218" y2="108" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M215 108 L218 113 L221 108 Z" fill="var(--up)"/>
+            <rect x="284" y="170" width="112" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="284" y="146" width="112" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="284" y="110" width="38" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="358" y="110" width="38" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="416" y="170" width="112" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="416" y="146" width="38" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="490" y="146" width="38" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="416" y="110" width="38" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="490" y="110" width="38" height="36" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="548" y="170" width="112" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="548" y="146" width="38" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="622" y="146" width="38" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <text x="138" y="146" font-size="12" fill="var(--text-mute)">→</text>
+            <text x="270" y="146" font-size="12" fill="var(--text-mute)">→</text>
+            <text x="402" y="146" font-size="12" fill="var(--text-mute)">→</text>
+            <text x="534" y="146" font-size="12" fill="var(--text-mute)">→</text>
+            <text x="76" y="216" text-anchor="middle" font-size="10" fill="var(--text)">① 涂胶</text>
+            <text x="208" y="216" text-anchor="middle" font-size="10" fill="var(--text)">② 曝光</text>
+            <text x="340" y="216" text-anchor="middle" font-size="10" fill="var(--text)">③ 显影</text>
+            <text x="472" y="216" text-anchor="middle" font-size="10" fill="var(--text)">④ 刻蚀</text>
+            <text x="604" y="216" text-anchor="middle" font-size="10" fill="var(--text)">⑤ 去胶</text>
+            <text x="20" y="238" font-size="9" fill="var(--text-mute)">蓝 = 光刻胶　灰 = 待刻蚀薄膜　底 = 硅衬底；正性胶曝光区溶解，于是"胶上有洞 → 膜上有洞"</text>
+          </g>
+        </svg>
+        <figcaption>图 2：光刻把图形转移进材料的五步剖面。光刻只是把图形"印"在胶上，真正改变材料的是随后的刻蚀。</figcaption>
+      </figure>
 
       <h2 id="s4">4. 刻蚀：把图形真正刻进材料</h2>
+      <p>刻蚀的成败，几乎全在<strong>方向性</strong>上。同样的光刻图形，刻出来的剖面可以完全不同：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="各向同性与各向异性刻蚀剖面对比">
+          <g font-size="9">
+            <text x="165" y="46" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">各向同性刻蚀（湿法）</text>
+            <text x="475" y="46" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">各向异性刻蚀（等离子 / RIE）</text>
+
+            <rect x="40" y="150" width="250" height="40" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.3"/>
+            <path d="M40 100 L115 100 C 115 160, 205 160, 205 100 L290 100 L290 150 L40 150 Z"
+                  fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <rect x="40" y="70" width="100" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="180" y="70" width="110" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="55" y="60" font-size="9" fill="var(--accent)">光刻胶</text>
+            <line x1="140" y1="100" x2="140" y2="152" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="180" y1="100" x2="180" y2="152" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="115" y1="125" x2="137" y2="125" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M137 121 L143 125 L137 129 Z" fill="var(--up)"/>
+            <text x="46" y="128" font-size="9" fill="var(--up)">钻蚀</text>
+            <text x="40" y="205" font-size="9" fill="var(--up)">横向也刻 → 图形被钻蚀，实际线宽与胶上不一致</text>
+
+            <rect x="350" y="150" width="250" height="40" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.3"/>
+            <path d="M350 100 L450 100 L450 145 L490 145 L490 100 L600 100 L600 150 L350 150 Z"
+                  fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <rect x="350" y="70" width="100" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="490" y="70" width="110" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="365" y="60" font-size="9" fill="var(--accent)">光刻胶</text>
+            <line x1="450" y1="100" x2="450" y2="152" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="490" y1="100" x2="490" y2="152" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="350" y="205" font-size="9" fill="var(--semi)">只往下刻 → 图形忠实转移，是先进节点的唯一选择</text>
+
+            <text x="40" y="222" font-size="9" fill="var(--text-mute)">灰 = 待刻蚀薄膜　蓝框 = 光刻胶开口　虚线 = 胶上图形的理论边界，两者之差即"钻蚀量"</text>
+          </g>
+        </svg>
+        <figcaption>图 3：刻蚀方向性对比。湿法各向同性会横向钻蚀使线宽失控；等离子刻蚀通过离子定向轰击实现近乎垂直的侧壁。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>各向异性是怎么"造"出来的？</b>三个手段：① <strong>离子定向轰击</strong>—— 鞘层电场把正离子垂直加速打向硅片，
+        只有被轰击的底面能被刻掉，侧壁不受轰击因而反应速率极低；② <strong>侧壁钝化</strong>——
+        反应气体在侧壁沉积一层聚合物保护膜（Bosch 工艺就是"刻蚀—钝化"交替循环）；
+        ③ <strong>低温</strong>—— 抑制各向同性的纯化学反应分量。代价是速率慢、设备复杂、且离子轰击会带来损伤。
+      </div>
+
 
       <table>
         <thead><tr><th>类型</th><th>介质</th><th>方向性</th><th>典型应用</th></tr></thead>
@@ -207,7 +294,49 @@
       <div class="note">
         <b>为什么先进节点偏爱尖峰退火？</b>结深要浅、掺杂要陡，但高温会让杂质扩散变深。
         所以要用"瞬间高温、快速降温"（毫秒级）来在激活杂质与抑制扩散之间取得平衡。
-      </div>
+      </div>      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="离子注入剖面与退火前后浓度分布">
+          <g font-size="9">
+            <text x="40" y="28" font-size="11" fill="var(--text)" font-weight="700">① 离子注入</text>
+            <rect x="40" y="120" width="290" height="70" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.3"/>
+            <rect x="40" y="90" width="110" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="220" y="90" width="110" height="30" fill="var(--accent)" fill-opacity=".30" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="52" y="110" font-size="9" fill="var(--accent)">光刻胶</text>
+            <text x="150" y="40" font-size="9" fill="var(--up)">离子束</text>
+            <line x1="158" y1="46" x2="158" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M155 112 L158 120 L161 112 Z" fill="var(--up)"/>
+            <line x1="170" y1="46" x2="170" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M167 112 L170 120 L173 112 Z" fill="var(--up)"/>
+            <line x1="182" y1="46" x2="182" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M179 112 L182 120 L185 112 Z" fill="var(--up)"/>
+            <line x1="194" y1="46" x2="194" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M191 112 L194 120 L197 112 Z" fill="var(--up)"/>
+            <line x1="206" y1="46" x2="206" y2="112" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M203 112 L206 120 L209 112 Z" fill="var(--up)"/>
+            <ellipse cx="185" cy="145" rx="42" ry="22" fill="var(--up)" fill-opacity=".15" stroke="var(--up)" stroke-width="1.2" stroke-dasharray="5 3"/>
+            <line x1="185" y1="120" x2="185" y2="167" stroke="var(--up)" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="238" y="136" font-size="9" fill="var(--up)">注入损伤区</text>
+            <text x="238" y="150" font-size="9" fill="var(--text-mute)">（晶格被打乱）</text>
+            <text x="160" y="182" font-size="9" fill="var(--up)">Rp ± ΔRp</text>
+            <text x="40" y="212" font-size="9" fill="var(--text-soft)">能量决定深度 Rp，剂量决定浓度峰值；横向也存在离散 ΔR⊥</text>
+            <text x="370" y="28" font-size="11" fill="var(--text)" font-weight="700">② 退火前后</text>
+            <line x1="390" y1="190" x2="645" y2="190" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="390" y1="190" x2="390" y2="45" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M641 186 L651 190 L641 194 Z" fill="var(--text-mute)"/>
+            <path d="M386 49 L390 39 L394 49 Z" fill="var(--text-mute)"/>
+            <text x="620" y="206" text-anchor="middle" font-size="9" fill="var(--text-soft)">深度 →</text>
+            <text x="396" y="52" font-size="9" fill="var(--text-soft)">浓度</text>
+            <path d="M395 189 C 420 188, 445 130, 470 68 C 495 130, 520 180, 560 187 L630 189" fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <path d="M395 189 C 425 187, 450 150, 475 95 C 505 150, 540 178, 580 187 L630 189" fill="none" stroke="var(--up)" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <line x1="545" y1="60" x2="575" y2="60" stroke="var(--semi)" stroke-width="2"/>
+            <text x="582" y="64" font-size="9" fill="var(--text-soft)">注入态</text>
+            <line x1="545" y1="78" x2="575" y2="78" stroke="var(--up)" stroke-width="2" stroke-dasharray="5 3"/>
+            <text x="582" y="82" font-size="9" fill="var(--text-soft)">退火后</text>
+            <text x="390" y="224" font-size="9" fill="var(--text-soft)">退火的两难：要激活杂质必须高温，又要抑制扩散必须极快</text>
+          </g>
+        </svg>
+        <figcaption>图 4：离子注入与退火。注入形成高斯分布并留下晶格损伤；退火修复损伤、激活杂质，代价是杂质同时扩散展宽。</figcaption>
+      </figure>
 
       <h2 id="s6">6. 薄膜沉积与 CMP 平坦化</h2>
 
@@ -226,6 +355,45 @@
         <b>CMP 是多层布线的"隐形功臣"：</b>没有平坦化，表面起伏会让光刻无法对焦，
         布线层数根本堆不上去。现代逻辑芯片有十几层金属，靠的就是"沉积—光刻—刻蚀—CMP"的反复循环。
       </div>
+      <p>每完成一层金属就要把表面重新扫平，否则下一层光刻无法对焦。
+      但 CMP 也不是"磨平就完事"，它自带两个副作用：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMP 平坦化前后的 Dishing 与 Erosion">
+          <g font-size="9">
+            <text x="180" y="28" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">抛光前</text>
+            <text x="490" y="28" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">抛光后</text>
+
+            <rect x="40" y="150" width="280" height="40" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.3"/>
+            <rect x="40" y="100" width="280" height="50" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <rect x="70" y="110" width="40" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="150" y="110" width="22" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="200" y="110" width="70" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="40" y="88" width="280" height="12" fill="var(--up)" fill-opacity=".55" stroke="var(--up)" stroke-width="1.1"/>
+            <rect x="40" y="52" width="280" height="22" fill="var(--text-mute)" fill-opacity=".35" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <text x="180" y="67" text-anchor="middle" font-size="9" fill="var(--text)">抛光垫 + 研磨液</text>
+            <line x1="180" y1="76" x2="180" y2="86" stroke="var(--accent)" stroke-width="1.4"/>
+            <path d="M176 86 L180 92 L184 86 Z" fill="var(--accent)"/>
+            <text x="40" y="205" font-size="9" fill="var(--text-soft)">表面随图形起伏，多余铜覆盖整个表面</text>
+
+            <rect x="350" y="150" width="280" height="40" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.3"/>
+            <path d="M350 100 L460 100 C 470 100, 476 108, 486 108 L564 108 C 574 108, 580 100, 590 100 L630 100 L630 150 L350 150 Z"
+                  fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <rect x="370" y="116" width="70" height="34" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="470" y="110" width="22" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="520" y="110" width="22" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="560" y="118" width="60" height="32" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <line x1="344" y1="100" x2="640" y2="100" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="5 3"/>
+            <text x="636" y="96" text-anchor="end" font-size="8" fill="var(--accent)">理想平面</text>
+            <line x1="405" y1="100" x2="405" y2="114" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M401 114 L405 120 L409 114 Z" fill="var(--up)"/>
+            <text x="350" y="205" font-size="9" fill="var(--up)">① Dishing：宽铜线中心被磨凹（软金属磨得快）</text>
+            <text x="350" y="221" font-size="9" fill="var(--text-soft)">② Erosion：图形密集区介质整体减薄</text>
+          </g>
+        </svg>
+        <figcaption>图 5：CMP 的两类副作用。Dishing 使宽金属线中心凹陷，Erosion 使密集区介质整体减薄 —— 两者都会改变后续层的厚度与电阻。</figcaption>
+      </figure>
+
 
       <h2 id="s7">7. 后道：铜互连是怎么搭起来的</h2>
 
@@ -237,7 +405,37 @@
         <li>沉积阻挡层（TaN/Ta）+ 铜籽晶层；</li>
         <li><strong>电镀铜</strong>填充（铜无法用干法刻蚀，所以反过来先挖槽再填）；</li>
         <li><strong>CMP</strong>去除多余铜，表面重新平坦 → 进入下一层。</li>
-      </ol>
+      </ol>      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="铜双大马士革互连工艺五步">
+          <g font-size="9">
+            <rect x="20" y="170" width="116" height="26" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.1"/>
+            <rect x="20" y="110" width="116" height="60" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="150" y="170" width="116" height="26" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.1"/>
+            <path d="M150 110 L168 110 L168 132 L198 132 L198 170 L150 170 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M248 110 L266 110 L266 170 L218 170 L218 132 L248 132 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="280" y="170" width="116" height="26" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.1"/>
+            <path d="M280 110 L298 110 L298 132 L328 132 L328 170 L280 170 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M378 110 L396 110 L396 170 L348 170 L348 132 L378 132 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M298 110 L298 132 L328 132 L328 170 L348 170 L348 132 L378 132 L378 110" fill="none" stroke="var(--accent)" stroke-width="2.6"/>
+            <rect x="410" y="170" width="116" height="26" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.1"/>
+            <path d="M410 110 L428 110 L428 132 L458 132 L458 170 L410 170 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M508 110 L526 110 L526 170 L478 170 L478 132 L508 132 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M428 110 L428 132 L458 132 L458 170 L478 170 L478 132 L508 132 L508 110 Z" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <rect x="410" y="100" width="116" height="10" fill="var(--up)" fill-opacity=".55" stroke="var(--up)" stroke-width="1.1"/>
+            <rect x="540" y="170" width="116" height="26" fill="var(--up)" fill-opacity=".22" stroke="var(--up)" stroke-width="1.1"/>
+            <path d="M540 110 L558 110 L558 132 L588 132 L588 170 L540 170 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M638 110 L656 110 L656 170 L608 170 L608 132 L638 132 Z" fill="var(--border)" fill-opacity=".45" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <path d="M558 110 L558 132 L588 132 L588 170 L608 170 L608 132 L638 132 L638 110 Z" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1"/>
+            <text x="78" y="214" text-anchor="middle" font-size="10" fill="var(--text)">① 介质</text>
+            <text x="208" y="214" text-anchor="middle" font-size="10" fill="var(--text)">② 刻蚀</text>
+            <text x="338" y="214" text-anchor="middle" font-size="10" fill="var(--text)">③ 阻挡层</text>
+            <text x="468" y="214" text-anchor="middle" font-size="10" fill="var(--text)">④ 电镀铜</text>
+            <text x="598" y="214" text-anchor="middle" font-size="10" fill="var(--text)">⑤ CMP</text>
+            <text x="20" y="234" font-size="9" fill="var(--text-mute)">铜无法干法刻蚀 → 只能先挖槽再填充；沟槽与通孔一次成型，即"双大马士革"（Dual Damascene）</text>
+          </g>
+        </svg>
+        <figcaption>图 6：铜双大马士革互连的五步剖面。先刻出通孔与沟槽，再沉积阻挡层与籽晶层，电镀填满，最后 CMP 去掉多余铜。</figcaption>
+      </figure>
 
       <div class="note">
         <b>为什么从铝换成铜？</b>铜电阻率更低（1.7 vs 2.7 μΩ·cm）、抗电迁移能力更强。
@@ -250,6 +448,52 @@
         <span class="fl">Y ≈ e<sup>−A·D</sup>　（泊松模型）　，　Y ≈ [ (1 − e<sup>−A·D</sup>) / (A·D) ]² （Murphy 模型）</span>
         <span class="fnote">A 为芯片面积，D 为缺陷密度（个/cm²）。面积越大、缺陷越多，良率呈指数下降。</span>
       </div>
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="良率随面积下降与 Chiplet 拆分对比">
+          <g font-size="9">
+            <text x="60" y="28" font-size="11" fill="var(--text)" font-weight="700">良率随裸片面积指数下降</text>
+            <line x1="60" y1="190" x2="350" y2="190" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="60" y1="190" x2="60" y2="36" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M346 186 L356 190 L346 194 Z" fill="var(--text-mute)"/>
+            <path d="M56 40 L60 30 L64 40 Z" fill="var(--text-mute)"/>
+            <text x="54" y="54" text-anchor="end" font-size="9" fill="var(--text-soft)">100%</text>
+            <text x="54" y="124" text-anchor="end" font-size="9" fill="var(--text-soft)">50%</text>
+            <text x="60" y="204" text-anchor="middle" font-size="9" fill="var(--text-soft)">0</text>
+            <text x="140" y="204" text-anchor="middle" font-size="9" fill="var(--text-soft)">200</text>
+            <text x="220" y="204" text-anchor="middle" font-size="9" fill="var(--text-soft)">400</text>
+            <text x="300" y="204" text-anchor="middle" font-size="9" fill="var(--text-soft)">600</text>
+            <text x="205" y="220" text-anchor="middle" font-size="9" fill="var(--text-soft)">裸片面积 mm²（D = 0.1 /cm²）</text>
+            <path d="M60 50 L80 56.8 L100 63.3 L120 69.5 L140 75.4 L160 81 L180 86.3 L200 91.3 L220 96.2 L240 100.7 L260 105.1 L280 109.2 L300 113.2 L320 116.9 L340 120.5" fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <circle cx="80" cy="57" r="3.5" fill="var(--semi)"/>
+            <circle cx="140" cy="75" r="3.5" fill="var(--semi)"/>
+            <circle cx="300" cy="113" r="3.5" fill="var(--up)"/>
+            <text x="88" y="54" font-size="9" fill="var(--semi)">50 mm² → 95%</text>
+            <text x="148" y="72" font-size="9" fill="var(--semi)">200 mm² → 82%</text>
+            <text x="232" y="112" font-size="9" fill="var(--up)">600 mm² → 55%</text>
+
+            <text x="390" y="28" font-size="11" fill="var(--text)" font-weight="700">Chiplet：化整为零</text>
+            <rect x="400" y="46" width="240" height="64" fill="var(--up)" fill-opacity=".16" stroke="var(--up)" stroke-width="1.3" stroke-dasharray="6 4"/>
+            <text x="520" y="70" text-anchor="middle" font-size="10" fill="var(--text)">单片 600 mm²</text>
+            <text x="520" y="88" text-anchor="middle" font-size="9" fill="var(--up)">良率 ≈ 55%</text>
+            <line x1="520" y1="112" x2="520" y2="146" stroke="var(--accent)" stroke-width="1.4"/>
+            <path d="M516 146 L520 152 L524 146 Z" fill="var(--accent)"/>
+            <text x="530" y="134" font-size="9" fill="var(--accent)">拆</text>
+            <rect x="400" y="154" width="72" height="44" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.2"/>
+            <rect x="486" y="154" width="72" height="44" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.2"/>
+            <rect x="572" y="154" width="72" height="44" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="436" y="174" text-anchor="middle" font-size="9" fill="var(--text)">200 mm²</text>
+            <text x="436" y="190" text-anchor="middle" font-size="9" fill="var(--semi)">≈ 82%</text>
+            <text x="522" y="174" text-anchor="middle" font-size="9" fill="var(--text)">200 mm²</text>
+            <text x="522" y="190" text-anchor="middle" font-size="9" fill="var(--semi)">≈ 82%</text>
+            <text x="608" y="174" text-anchor="middle" font-size="9" fill="var(--text)">200 mm²</text>
+            <text x="608" y="190" text-anchor="middle" font-size="9" fill="var(--semi)">≈ 82%</text>
+            <text x="390" y="216" font-size="9" fill="var(--text-soft)">坏点只毁掉一颗小芯粒，可单独替换</text>
+            <text x="390" y="232" font-size="9" fill="var(--text-soft)">不同模块还能各用最合适的工艺节点</text>
+          </g>
+        </svg>
+        <figcaption>图 7：左为泊松模型下良率随裸片面积的指数衰减；右为 Chiplet 化整为零的思路 —— 用小面积的高良率换取总体成本优势。</figcaption>
+      </figure>
+
 
       <table>
         <thead><tr><th>芯片面积</th><th>缺陷密度 D = 0.1 /cm²</th><th>D = 0.05 /cm²</th></tr></thead>
@@ -347,6 +591,30 @@
         但Chiplet 的优势在于：① 坏掉的只是单个小芯粒而非整颗大芯片，可单独替换；② 不同模块可用不同工艺节点分别优化；
         ③ 芯粒可复用、摊薄设计成本。这就是 Chiplet 的真实价值所在。</div>
       </details>
+      <details class="quiz"><summary>自测 4：离子注入时为什么要"倾斜注入"，或者先做一层预非晶化（PAI）？</summary>
+        <div class="answer">因为单晶硅存在<strong>沟道效应（Channeling）</strong>：当离子入射方向恰好与某个晶向平行时，
+        它会在晶格间隙中"穿行"而几乎不发生碰撞，射程远超设计值，使浓度分布拖出一条长尾，结深失控、器件特性离散。
+        对策有两条：① <strong>倾斜注入</strong>（通常 7° 左右）让离子偏离主晶向；② <strong>预非晶化</strong>，
+        先用重离子（如 Si、Ge）把表层打成非晶态，再进行目标离子注入。
+        这也是为什么注入机台的晶向对准精度是一项实打实的工艺指标。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：CMP 之后宽铜线的中心为什么会凹陷（Dishing）？它会带来什么后果？</summary>
+        <div class="answer">铜比周围的介质软，抛光时铜的去除速率更高，宽的铜线中心被磨得比边缘更深，形成碟形凹陷。
+        后果是：① 该层金属的实际横截面积变小，<strong>线电阻升高</strong>，IR-drop 变大；
+        ② 上层介质沉积时表面不平，累积影响后续层的光刻对焦与厚度均匀性；
+        ③ 与 Erosion（密集区介质整体减薄）叠加后，多层互连的厚度误差会逐层累积。
+        因此版图上有金属密度规则，EDA 也会做 Dummy Fill 来均衡密度 —— 根子就在 CMP 的这个特性上。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：为什么铜互连必须用"先挖槽、后填铜"的大马士革工艺，而不能像铝那样先沉积再刻蚀成型？</summary>
+        <div class="answer">因为铜的卤化物挥发性差，<strong>无法用干法等离子刻蚀有效图形化</strong>（铝可以）。
+        于是工艺被反过来设计：先在介质里刻出通孔与沟槽，再沉积阻挡层（TaN/Ta，防止铜扩散污染硅）
+        与铜籽晶层，然后电镀把铜填满，最后用 CMP 把表面多余的铜磨掉、只留下槽里的铜。
+        把沟槽和通孔一次成型就叫<strong>双大马士革</strong>，它比"单大马士革"少一道 CMP，
+        是铜互连能堆到十几层的关键。</div>
+      </details>
+
 
         <div class="series">
           <div class="series-title">集成电路学习路径 · 系列导航</div>

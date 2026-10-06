@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 5 篇</span><span class="sep"></span>
-      <span>阅读约 14 分钟</span>
+      <span>阅读约 26 分钟</span>
     </div>
 
     <div class="content">
@@ -57,7 +57,7 @@
       <h2 id="s1">1. 结构：栅、源、漏、体</h2>
 
       <figure class="diagram">
-        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NMOS 截面结构">
+        <svg viewBox="0 0 680 282" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NMOS 截面结构">
           <!-- 衬底 -->
           <rect x="60" y="140" width="560" height="90" fill="var(--fin)" fill-opacity=".10" stroke="var(--fin)" stroke-width="1.3"/>
           <text x="340" y="200" text-anchor="middle" font-size="13" fill="var(--fin)">P 型衬底（Body / Bulk）</text>
@@ -121,6 +121,114 @@
         所以 MOSFET 是<strong>电压控制器件</strong>，输入功耗极低 —— 这是 CMOS 电路能做到超低功耗、能集成几十亿个管子的根本原因。
       </div>
 
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="栅压增大时半导体表面经历积累耗尽反型三个阶段">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">同一颗 NMOS，栅压从 0 往上加，表面经历了三次"变身"</text>
+
+          <!-- ① 平带/积累 -->
+          <text x="112" y="52" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">① V</text>
+          <text x="130" y="55" font-size="9" fill="var(--text)" font-weight="700">GS</text>
+          <text x="146" y="52" font-size="12" fill="var(--text)" font-weight="700">= 0：平带</text>
+          <rect x="40" y="62" width="150" height="18" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="115" y="76" text-anchor="middle" font-size="10" fill="var(--text)">栅极</text>
+          <rect x="40" y="80" width="150" height="10" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="40" y="90" width="150" height="60" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2"/>
+          <text x="115" y="124" text-anchor="middle" font-size="10" fill="var(--fin)">P 型（空穴为主）</text>
+          <g fill="var(--fin)" fill-opacity=".55">
+            <circle cx="60" cy="112" r="4"/><circle cx="86" cy="104" r="4"/><circle cx="112" cy="116" r="4"/>
+            <circle cx="138" cy="106" r="4"/><circle cx="164" cy="114" r="4"/><circle cx="74" cy="132" r="4"/>
+            <circle cx="126" cy="134" r="4"/><circle cx="152" cy="128" r="4"/>
+          </g>
+          <text x="115" y="168" text-anchor="middle" font-size="10" fill="var(--text-mute)">表面还是 P 型</text>
+          <text x="115" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">源漏之间无通路 → 关断</text>
+          <!-- 能带 -->
+          <text x="40" y="206" font-size="10" fill="var(--text-mute)">能带：平坦，无弯曲</text>
+          <line x1="40" y1="222" x2="120" y2="222" stroke="var(--semi)" stroke-width="2"/>
+          <text x="126" y="225" font-size="9" fill="var(--semi)">E</text>
+          <text x="134" y="228" font-size="7" fill="var(--semi)">C</text>
+          <line x1="40" y1="248" x2="120" y2="248" stroke="var(--fin)" stroke-width="2"/>
+          <text x="126" y="251" font-size="9" fill="var(--fin)">E</text>
+          <text x="134" y="254" font-size="7" fill="var(--fin)">V</text>
+          <line x1="40" y1="272" x2="190" y2="272" stroke="var(--down)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="40" y="288" font-size="9" fill="var(--down)">E</text>
+          <text x="48" y="291" font-size="7" fill="var(--down)">F</text>
+
+          <!-- 箭头 -->
+          <path d="M196 140 L214 140" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="218,140 208,135 208,145" fill="var(--accent)"/>
+          <text x="202" y="130" font-size="9" fill="var(--accent)">加正压</text>
+
+          <!-- ② 耗尽 -->
+          <text x="342" y="52" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">② 中等正压：耗尽</text>
+          <rect x="270" y="62" width="150" height="18" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="345" y="76" text-anchor="middle" font-size="10" fill="var(--text)">栅极（+）</text>
+          <rect x="270" y="80" width="150" height="10" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="270" y="90" width="150" height="60" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2"/>
+          <!-- 耗尽层 -->
+          <rect x="270" y="90" width="150" height="24" fill="var(--surface-2)" fill-opacity=".7" stroke="var(--down)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="345" y="106" text-anchor="middle" font-size="10" fill="var(--down)" font-weight="700">耗尽层（无载流子）</text>
+          <g fill="var(--fin)" fill-opacity=".55">
+            <circle cx="290" cy="132" r="4"/><circle cx="316" cy="126" r="4"/><circle cx="342" cy="134" r="4"/>
+            <circle cx="368" cy="128" r="4"/><circle cx="394" cy="132" r="4"/>
+          </g>
+          <text x="345" y="168" text-anchor="middle" font-size="10" fill="var(--text-mute)">空穴被推走，表面只剩</text>
+          <text x="345" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">固定负电荷 → 仍不导通</text>
+          <!-- 能带弯曲 -->
+          <text x="270" y="206" font-size="10" fill="var(--text-mute)">能带：向下弯曲</text>
+          <path d="M270 222 L330 222 Q 360 226 400 236" fill="none" stroke="var(--semi)" stroke-width="2"/>
+          <text x="406" y="240" font-size="9" fill="var(--semi)">E</text>
+          <text x="414" y="243" font-size="7" fill="var(--semi)">C</text>
+          <path d="M270 248 L330 248 Q 360 252 400 262" fill="none" stroke="var(--fin)" stroke-width="2"/>
+          <text x="406" y="266" font-size="9" fill="var(--fin)">E</text>
+          <text x="414" y="269" font-size="7" fill="var(--fin)">V</text>
+          <line x1="270" y1="272" x2="420" y2="272" stroke="var(--down)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="270" y="288" font-size="9" fill="var(--down)">E</text>
+          <text x="278" y="291" font-size="7" fill="var(--down)">F</text>
+
+          <!-- 箭头 -->
+          <path d="M426 140 L444 140" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="448,140 438,135 438,145" fill="var(--accent)"/>
+          <text x="432" y="130" font-size="9" fill="var(--accent)">再加</text>
+
+          <!-- ③ 反型 -->
+          <text x="572" y="52" text-anchor="middle" font-size="12" fill="var(--up)" font-weight="700">③ 强反型：沟道出现！</text>
+          <rect x="500" y="62" width="150" height="18" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="575" y="76" text-anchor="middle" font-size="10" fill="var(--text)">栅极（++）</text>
+          <rect x="500" y="80" width="150" height="10" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="500" y="90" width="150" height="60" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2"/>
+          <!-- 反型层 -->
+          <rect x="500" y="90" width="150" height="18" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1.6"/>
+          <text x="575" y="104" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">N 型反型沟道（电子）</text>
+          <g fill="var(--up)" fill-opacity=".7">
+            <circle cx="516" cy="126" r="3.5"/><circle cx="540" cy="120" r="3.5"/><circle cx="566" cy="128" r="3.5"/>
+            <circle cx="592" cy="122" r="3.5"/><circle cx="620" cy="126" r="3.5"/>
+          </g>
+          <text x="575" y="168" text-anchor="middle" font-size="10" fill="var(--up)">电子浓度已超过空穴</text>
+          <text x="575" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">源漏之间连通 → 导通</text>
+          <!-- 能带强弯 -->
+          <text x="500" y="206" font-size="10" fill="var(--text-mute)">能带：弯到 E</text>
+          <text x="596" y="209" font-size="8" fill="var(--text-mute)">C</text>
+          <text x="604" y="206" font-size="10" fill="var(--text-mute)">贴近 E</text>
+          <text x="648" y="209" font-size="8" fill="var(--text-mute)">F</text>
+          <path d="M500 222 L560 222 Q 590 232 620 258" fill="none" stroke="var(--semi)" stroke-width="2"/>
+          <path d="M500 248 L560 248 Q 590 258 620 284" fill="none" stroke="var(--fin)" stroke-width="2"/>
+          <line x1="500" y1="272" x2="650" y2="272" stroke="var(--down)" stroke-width="1.4" stroke-dasharray="6 4"/>
+          <text x="500" y="288" font-size="9" fill="var(--down)">E</text>
+          <text x="508" y="291" font-size="7" fill="var(--down)">F</text>
+          <text x="520" y="288" font-size="9" fill="var(--up)" font-weight="700">E</text>
+          <text x="528" y="291" font-size="7" fill="var(--up)" font-weight="700">i</text>
+          <text x="536" y="288" font-size="9" fill="var(--text-mute)">已越过 E</text>
+          <text x="596" y="291" font-size="7" fill="var(--text-mute)">F</text>
+        </svg>
+        <figcaption>图 2：反型沟道的形成过程。栅压为零时表面仍是 P 型，源漏之间没有通路；加中等正压后空穴被推离表面、留下耗尽层；电压继续升高，能带被压弯到导带底接近费米能级，电子在表面聚集并超过空穴浓度 —— 表面"反型"成 N 型，导电沟道诞生。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>判据记住一句话：表面势 ψ<sub>s</sub> = 2φ<sub>F</sub> 就是强反型的门槛。</b>
+        此时表面电子浓度刚好等于体内的空穴浓度，器件正式"打开"。
+        这个判据也是阈值电压公式里 2φ<sub>F</sub> 那一项的来源（见第 3 节公式）。
+      </div>
+
       <h2 id="s3">3. 阈值电压与体效应</h2>
 
       <div class="formula-block">
@@ -159,6 +267,97 @@
         <span class="fnote">λ 为沟道长度调制系数，L 越小 λ 越大（输出特性曲线上翘越明显）。
         注意"饱和"指的是电流对 V<sub>DS</sub> 饱和，不是对 V<sub>GS</sub> 饱和 —— 命名来自沟道在漏端夹断。</span>
       </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="漏压增大时沟道从均匀到夹断的变化">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">"饱和"到底饱和了什么：看沟道怎么被"掐断"</text>
+
+          <!-- ① 线性区 -->
+          <text x="112" y="48" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">① V</text>
+          <text x="128" y="51" font-size="9" fill="var(--text)" font-weight="700">DS</text>
+          <text x="144" y="48" font-size="12" fill="var(--text)" font-weight="700">很小：均匀沟道</text>
+          <rect x="40" y="58" width="150" height="16" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="115" y="71" text-anchor="middle" font-size="9" fill="var(--text)">栅极</text>
+          <rect x="40" y="74" width="150" height="8" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <!-- 源漏 -->
+          <rect x="40" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="53" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">S</text>
+          <rect x="164" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="177" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">D</text>
+          <!-- 沟道矩形 -->
+          <polygon points="66,90 164,90 164,104 66,104" fill="var(--up)" fill-opacity=".4" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="115" y="146" text-anchor="middle" font-size="10" fill="var(--text-mute)">沟道厚度处处相同</text>
+          <text x="115" y="160" text-anchor="middle" font-size="10" fill="var(--text-mute)">像一个固定电阻</text>
+          <text x="115" y="176" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">I</text>
+          <text x="123" y="179" font-size="8" fill="var(--semi)" font-weight="700">D</text>
+          <text x="131" y="176" font-size="10" fill="var(--text-mute)">随 V</text>
+          <text x="163" y="179" font-size="8" fill="var(--text-mute)">DS</text>
+          <text x="175" y="176" font-size="10" fill="var(--text-mute)">线性上升</text>
+          <!-- 小曲线 -->
+          <line x1="40" y1="200" x2="40" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <line x1="40" y1="256" x2="190" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <path d="M40 256 L180 210" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <text x="150" y="226" font-size="9" fill="var(--semi)">线性</text>
+
+          <!-- ② 夹断 -->
+          <text x="342" y="48" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">② V</text>
+          <text x="358" y="51" font-size="9" fill="var(--accent)" font-weight="700">DS</text>
+          <text x="374" y="48" font-size="12" fill="var(--accent)" font-weight="700">= V</text>
+          <text x="398" y="51" font-size="9" fill="var(--accent)" font-weight="700">OV</text>
+          <text x="412" y="48" font-size="12" fill="var(--accent)" font-weight="700">：漏端夹断</text>
+          <rect x="270" y="58" width="150" height="16" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="345" y="71" text-anchor="middle" font-size="9" fill="var(--text)">栅极</text>
+          <rect x="270" y="74" width="150" height="8" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="270" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="283" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">S</text>
+          <rect x="394" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="407" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">D</text>
+          <!-- 沟道三角形（漏端收为 0） -->
+          <polygon points="296,90 394,103 296,104" fill="var(--up)" fill-opacity=".4" stroke="var(--up)" stroke-width="1.4"/>
+          <circle cx="394" cy="103" r="4" fill="var(--down)"/>
+          <text x="368" y="86" font-size="9" fill="var(--down)" font-weight="700">夹断点</text>
+          <text x="345" y="146" text-anchor="middle" font-size="10" fill="var(--text-mute)">漏端沟道厚度刚好归零</text>
+          <text x="345" y="160" text-anchor="middle" font-size="10" fill="var(--text-mute)">（预夹断 pinch-off）</text>
+          <text x="345" y="176" text-anchor="middle" font-size="10" fill="var(--accent)" font-weight="700">饱和区的起点</text>
+          <line x1="270" y1="200" x2="270" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <line x1="270" y1="256" x2="420" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <path d="M270 256 L370 212 L410 210" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <circle cx="370" cy="212" r="4" fill="var(--down)"/>
+          <text x="376" y="228" font-size="9" fill="var(--down)">拐点</text>
+
+          <!-- ③ 夹断后 -->
+          <text x="572" y="48" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">③ V</text>
+          <text x="588" y="51" font-size="9" fill="var(--text)" font-weight="700">DS</text>
+          <text x="604" y="48" font-size="12" fill="var(--text)" font-weight="700">继续增大</text>
+          <rect x="500" y="58" width="150" height="16" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="575" y="71" text-anchor="middle" font-size="9" fill="var(--text)">栅极</text>
+          <rect x="500" y="74" width="150" height="8" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="500" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="513" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">S</text>
+          <rect x="624" y="82" width="26" height="46" fill="var(--semi)" fill-opacity=".35" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="637" y="110" text-anchor="middle" font-size="9" fill="var(--semi)">D</text>
+          <!-- 沟道三角形，顶点左移 -->
+          <polygon points="526,90 596,103 526,104" fill="var(--up)" fill-opacity=".4" stroke="var(--up)" stroke-width="1.4"/>
+          <rect x="596" y="90" width="28" height="14" fill="var(--surface-2)" fill-opacity=".6" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="610" y="128" font-size="9" fill="var(--text-mute)">夹断区</text>
+          <path d="M560 100 L580 100" stroke="var(--down)" stroke-width="1.6"/>
+          <polygon points="584,100 574,96 574,104" fill="var(--down)"/>
+          <text x="530" y="146" font-size="9" fill="var(--down)" font-weight="700">夹断点左移</text>
+          <text x="575" y="160" text-anchor="middle" font-size="10" fill="var(--text-mute)">有效沟道变短 → 电流略增</text>
+          <text x="575" y="176" text-anchor="middle" font-size="10" fill="var(--text-mute)">= 沟道长度调制 λ</text>
+          <line x1="500" y1="200" x2="500" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <line x1="500" y1="256" x2="650" y2="256" stroke="var(--border)" stroke-width="1"/>
+          <path d="M500 256 L580 214 L650 210" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <text x="600" y="230" font-size="9" fill="var(--text-mute)">略微上翘</text>
+
+          <text x="340" y="278" text-anchor="middle" font-size="11" fill="var(--text-soft)">注意：饱和的是"电流对 V</text>
+          <text x="424" y="281" font-size="8" fill="var(--text-soft)">DS</text>
+          <text x="432" y="278" font-size="11" fill="var(--text-soft)">"，不是"对 V</text>
+          <text x="504" y="281" font-size="8" fill="var(--text-soft)">GS</text>
+          <text x="512" y="278" font-size="11" fill="var(--text-soft)">" —— 栅压依然牢牢控制着电流</text>
+        </svg>
+        <figcaption>图 3：为什么会有"饱和区"。漏压升高时，漏端的有效栅压（V<sub>GD</sub>）反而变小，沟道在漏端被逐渐掐细；掐断之后，多余的漏压全部落在夹断区上，电流几乎不再增长 —— 这就是恒流特性的来源，也是 MOSFET 能做放大器的物理基础。</figcaption>
+      </figure>
 
       <div class="note">
         <b>为什么饱和区还能放大？</b>沟道在漏端夹断后，V<sub>DS</sub> 继续增大只会让夹断点向源端移动，
@@ -200,8 +399,86 @@
           <text x="588" y="60" font-size="12" fill="var(--accent)">I<tspan dy="2" font-size="8">D</tspan> ∝ (V<tspan dy="2" font-size="8">GS</tspan>−V<tspan dy="2" font-size="8">t</tspan>)²</text>
           <text x="440" y="245" font-size="11" fill="var(--text-mute)">右：转移特性 I<tspan dy="2" font-size="8">D</tspan>–V<tspan dy="2" font-size="8">GS</tspan></text>
         </svg>
-        <figcaption>图 2：左为输出特性（每条曲线对应一个 V<sub>GS</sub>），右为转移特性，拐点即阈值电压 V<sub>t</sub>。</figcaption>
+        <figcaption>图 4：左为输出特性（每条曲线对应一个 V<sub>GS</sub>），右为转移特性，拐点即阈值电压 V<sub>t</sub>。</figcaption>
       </figure>
+
+      <p>把转移特性换成<strong>纵轴取对数</strong>，会露出一段在第 4 节被忽略的区域 ——
+      它恰恰是现代低功耗芯片的命门：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="亚阈值区与 60 mV/dec 亚阈值摆幅极限">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">亚阈值区：栅压低于阈值电压时，管子其实没完全关断</text>
+          <!-- 坐标 -->
+          <line x1="70" y1="46" x2="70" y2="230" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="70" y1="230" x2="400" y2="230" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="36" y="54" font-size="11" fill="var(--text-mute)">log I</text>
+          <text x="62" y="62" font-size="8" fill="var(--text-mute)">D</text>
+          <text x="360" y="248" font-size="11" fill="var(--text-mute)">V</text>
+          <text x="374" y="251" font-size="8" fill="var(--text-mute)">GS</text>
+          <!-- 刻度 -->
+          <text x="30" y="230" font-size="9" fill="var(--text-mute)">pA</text>
+          <text x="30" y="150" font-size="9" fill="var(--text-mute)">nA</text>
+          <text x="30" y="70" font-size="9" fill="var(--text-mute)">μA</text>
+          <!-- 曲线：亚阈值直线 + 强反型抛物线 -->
+          <path d="M76 224 L200 220 L286 100 L390 56" fill="none" stroke="var(--semi)" stroke-width="2.8"/>
+          <path d="M76 224 L200 220 L246 190" fill="none" stroke="var(--accent)" stroke-width="3"/>
+          <!-- Vt 线 -->
+          <line x1="200" y1="40" x2="200" y2="230" stroke="var(--down)" stroke-width="1.6" stroke-dasharray="6 4"/>
+          <text x="206" y="52" font-size="11" fill="var(--down)" font-weight="700">V</text>
+          <text x="216" y="55" font-size="8" fill="var(--down)" font-weight="700">t</text>
+          <!-- 分区 -->
+          <text x="90" y="90" font-size="11" fill="var(--accent)" font-weight="700">亚阈值区</text>
+          <text x="90" y="106" font-size="10" fill="var(--text-mute)">（弱反型）</text>
+          <text x="90" y="122" font-size="10" fill="var(--text-mute)">I 随 V</text>
+          <text x="152" y="125" font-size="8" fill="var(--text-mute)">GS</text>
+          <text x="162" y="122" font-size="10" fill="var(--text-mute)">指数增长</text>
+          <text x="300" y="80" font-size="11" fill="var(--semi)" font-weight="700">强反型区</text>
+          <text x="300" y="96" font-size="10" fill="var(--text-mute)">I ∝ (V</text>
+          <text x="358" y="99" font-size="8" fill="var(--text-mute)">GS</text>
+          <text x="370" y="96" font-size="10" fill="var(--text-mute)">−V</text>
+          <text x="386" y="99" font-size="8" fill="var(--text-mute)">t</text>
+          <text x="394" y="96" font-size="10" fill="var(--text-mute)">)²</text>
+          <!-- 斜率标注 -->
+          <line x1="100" y1="216" x2="180" y2="196" stroke="var(--up)" stroke-width="2"/>
+          <text x="106" y="238" font-size="10" fill="var(--up)" font-weight="700">每 60 mV 电流 ×10</text>
+          <text x="106" y="256" font-size="10" fill="var(--text-mute)">= 亚阈值摆幅 S 的理论极限（室温）</text>
+
+          <!-- 右侧：为什么是 60 -->
+          <line x1="430" y1="40" x2="430" y2="262" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="555" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">为什么极限恰好是 60 mV/dec？</text>
+          <rect x="450" y="44" width="210" height="70" rx="6" fill="var(--surface-2)" fill-opacity=".5" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="466" y="66" font-size="11" fill="var(--text)">S = (kT/q) · ln10 · (1 + C</text>
+          <text x="640" y="69" font-size="8" fill="var(--text)">d</text>
+          <text x="648" y="66" font-size="11" fill="var(--text)">/C</text>
+          <text x="660" y="69" font-size="8" fill="var(--text)">ox</text>
+          <text x="466" y="86" font-size="11" fill="var(--text)">)</text>
+          <text x="466" y="106" font-size="10" fill="var(--text-mute)">理想情况 C</text>
+          <text x="560" y="109" font-size="8" fill="var(--text-mute)">d</text>
+          <text x="568" y="106" font-size="10" fill="var(--text-mute)">= 0 → S = 60 mV/dec</text>
+          <!-- 含义 -->
+          <text x="450" y="136" font-size="11" fill="var(--accent)" font-weight="700">这意味着：</text>
+          <text x="450" y="154" font-size="10" fill="var(--text-mute)">要把关态电流压低 10 倍，栅压必须</text>
+          <text x="450" y="170" font-size="10" fill="var(--text-mute)">再降 60 mV —— 没有捷径可走</text>
+          <rect x="450" y="180" width="210" height="74" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="555" y="200" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">它决定了缩放的地板</text>
+          <text x="450" y="220" font-size="10" fill="var(--text-mute)">电源电压降低时，如果 S 降不下来，</text>
+          <text x="450" y="236" font-size="10" fill="var(--text-mute)">"开"与"关"的电流比</text>
+          <text x="450" y="251" font-size="10" fill="var(--text-mute)">（I<tspan dy="3" font-size="8">on</tspan><tspan dy="-3">/I</tspan><tspan dy="3" font-size="8">off</tspan><tspan dy="-3">）就会崩塌</tspan></text>
+        </svg>
+        <figcaption>图 5：亚阈值特性。栅压低于阈值时电流并不为零，而是随 V<sub>GS</sub> 指数增长（弱反型）；这段直线的斜率叫亚阈值摆幅 S，室温下理论极限约 60 mV/dec —— 它决定了关断一个晶体管最少需要多少栅压摆幅，是低压低功耗设计的物理地板。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>60 mV/dec 这条线，是过去二十年器件创新的主战场之一。</b>
+        平面 MOSFET 的实际 S 通常只能做到 70~90 mV/dec（因为存在耗尽层电容 C<sub>d</sub>）。
+        当电源电压降到 0.7 V 以下时，开关电流比急剧恶化，漏电失控。
+        于是业界做了两件事：<br>
+        ① 让栅对沟道的控制更强 —— <strong>FinFET 把栅从"一面"变成"三面"包裹沟道，
+        GAA（纳米片/环栅）进一步变成四面全包围</strong>，显著抑制短沟道效应、改善 S；<br>
+        ② 换栅介质 —— 用<strong>High-k（HfO₂）+ 金属栅</strong>替代 SiO₂，
+        在等效厚度（EOT）不变的前提下增加物理厚度，把栅极隧穿漏电压下去（第 3 篇已铺垫）。<br>
+        第 7 篇讲器件微缩时，会沿着这条线索继续展开。
+      </div>
 
       <h2 id="s6">6. 跨导与本征增益</h2>
 
@@ -240,6 +517,85 @@
         本质都是为了<em>让栅极更好地"管住"沟道</em>。
       </div>
 
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DIBL 漏极诱导势垒降低的物理图像">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">DIBL：漏极的电压，为什么能"遥控"源端的门槛</text>
+          <!-- 左：能带势垒图 -->
+          <text x="180" y="48" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">① 沿沟道方向的势垒剖面</text>
+          <line x1="60" y1="70" x2="60" y2="230" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="60" y1="230" x2="330" y2="230" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="36" y="78" font-size="10" fill="var(--text-mute)">导带底</text>
+          <text x="36" y="92" font-size="10" fill="var(--text-mute)">E</text>
+          <text x="46" y="95" font-size="8" fill="var(--text-mute)">C</text>
+          <text x="60" y="248" font-size="10" fill="var(--text-mute)">源端</text>
+          <text x="286" y="248" font-size="10" fill="var(--text-mute)">漏端</text>
+          <!-- 长沟道势垒（实线） -->
+          <path d="M60 200 Q 120 100 170 96 Q 220 100 300 180" fill="none" stroke="var(--semi)" stroke-width="2.4"/>
+          <text x="176" y="88" text-anchor="middle" font-size="10" fill="var(--semi)" font-weight="700">长沟道：势垒高</text>
+          <!-- 短沟道 VDS 低（虚线） -->
+          <path d="M60 200 Q 120 140 170 136 Q 220 140 300 190" fill="none" stroke="var(--fin)" stroke-width="2.4" stroke-dasharray="5 3"/>
+          <!-- 短沟道 VDS 高（点线，更低） -->
+          <path d="M60 200 Q 120 168 170 164 Q 220 168 300 200" fill="none" stroke="var(--down)" stroke-width="2.6"/>
+          <text x="176" y="156" text-anchor="middle" font-size="10" fill="var(--down)" font-weight="700">短沟道 + 高 V</text>
+          <text x="244" y="169" font-size="8" fill="var(--down)" font-weight="700">DS</text>
+          <!-- 降低量箭头 -->
+          <line x1="170" y1="92" x2="170" y2="160" stroke="var(--accent)" stroke-width="1.8"/>
+          <polygon points="170,164 165,154 175,154" fill="var(--accent)"/>
+          <text x="180" y="130" font-size="10" fill="var(--accent)" font-weight="700">Δφ（势垒降低）</text>
+          <!-- 说明 -->
+          <text x="60" y="268" font-size="10" fill="var(--text-mute)">势垒一低，源极电子就更容易翻过去 → 关态漏电飙升</text>
+          <text x="60" y="284" font-size="10" fill="var(--text-mute)">DIBL = 漏压每升高 1 V，阈值电压下降多少（mV/V）</text>
+
+          <!-- 分隔 -->
+          <line x1="360" y1="36" x2="360" y2="276" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：结构解释 -->
+          <text x="520" y="48" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">② 本质：栅"管不住"了</text>
+          <!-- 长沟道 -->
+          <text x="390" y="74" font-size="11" fill="var(--semi)" font-weight="700">长沟道：栅主导</text>
+          <rect x="390" y="82" width="180" height="16" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="480" y="95" text-anchor="middle" font-size="9" fill="var(--text)">栅极</text>
+          <rect x="390" y="98" width="180" height="8" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="390" y="106" width="30" height="34" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="405" y="127" text-anchor="middle" font-size="9" fill="var(--semi)">S</text>
+          <rect x="540" y="106" width="30" height="34" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="555" y="127" text-anchor="middle" font-size="9" fill="var(--semi)">D</text>
+          <!-- 电场线（栅控） -->
+          <g stroke="var(--semi)" stroke-width="1.4">
+            <line x1="430" y1="98" x2="430" y2="112"/><line x1="460" y1="98" x2="460" y2="112"/>
+            <line x1="490" y1="98" x2="490" y2="112"/><line x1="520" y1="98" x2="520" y2="112"/>
+          </g>
+          <text x="480" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">栅的电场线全部落在沟道上 → 控制力强</text>
+
+          <!-- 短沟道 -->
+          <text x="390" y="180" font-size="11" fill="var(--down)" font-weight="700">短沟道：漏极来抢</text>
+          <rect x="390" y="188" width="180" height="16" fill="var(--text)" fill-opacity=".16" stroke="var(--text)" stroke-width="1.2"/>
+          <text x="480" y="201" text-anchor="middle" font-size="9" fill="var(--text)">栅极</text>
+          <rect x="390" y="204" width="180" height="8" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1"/>
+          <rect x="390" y="212" width="34" height="34" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="407" y="233" text-anchor="middle" font-size="9" fill="var(--semi)">S</text>
+          <rect x="536" y="212" width="34" height="34" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1.2"/>
+          <text x="553" y="233" text-anchor="middle" font-size="9" fill="var(--semi)">D</text>
+          <!-- 漏极电场线横向穿透 -->
+          <g stroke="var(--down)" stroke-width="1.6" stroke-dasharray="4 2">
+            <path d="M536 226 Q 490 216 440 220"/>
+            <path d="M536 236 Q 490 228 440 232"/>
+          </g>
+          <text x="480" y="264" text-anchor="middle" font-size="10" fill="var(--down)" font-weight="700">漏极电场横向穿透整个沟道</text>
+          <text x="480" y="280" text-anchor="middle" font-size="10" fill="var(--text-mute)">→ 栅的控制被"稀释"，阈值随漏压漂移</text>
+        </svg>
+        <figcaption>图 6：DIBL（Drain-Induced Barrier Lowering，漏极诱导势垒降低）的物理图像。沟道缩短后，漏极的高电场横向穿透整个沟道，把源端的注入势垒拉低；势垒一降低，栅压还没到阈值就有电子漏过去 —— 关态漏电急剧恶化。这就是"短沟道效应"里最要命的一条。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>FinFET 与 GAA 究竟解决了什么？一句话：把栅的"话语权"抢回来。</b>
+        平面器件里栅只从<em>上方</em>控制沟道，沟道一短，漏极就从侧面插手（图 6 右侧）；
+        FinFET 让栅三面包住鳍式沟道，GAA（全环绕栅极）让栅四面完全包住纳米片沟道 ——
+        栅的静电控制面积成倍增加，漏极的横向电场被严密屏蔽，
+        于是 DIBL、阈值滚降、亚阈值摆幅同时改善。
+        这就是为什么从 22nm 到 3nm 的每一次跨越，本质上都是<strong>把栅越包越紧</strong>。
+      </div>
+
       <h2 id="s8">8. 易错点与自测</h2>
 
       <div class="warn">
@@ -264,6 +620,30 @@
         <div class="answer">两个原因：① 电源电压 V<sub>DD</sub> 降低，允许的最大 V<sub>GS</sub>−V<sub>t</sub>（过驱动电压）变小，g<sub>m</sub>/I<sub>D</sub> 受限；
         ② L 缩短使沟道长度调制系数 λ 增大，r<sub>o</sub> = 1/(λI<sub>D</sub>) 下降。
         二者叠加使 g<sub>m</sub>r<sub>o</sub> 下降，模拟电路必须靠 Cascode、增益提升等技巧补偿。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：栅极明明是绝缘的，关断的 MOS 管为什么还有漏电流？</summary>
+        <div class="answer">有三条主要路径：<br>
+        ① <b>亚阈值漏电</b>：栅压低于阈值时沟道并未完全消失，只是进入弱反型，电流随 V<sub>GS</sub> 指数衰减但绝不为零（图 5）；<br>
+        ② <b>栅极隧穿漏电</b>：栅氧厚度降到 1~2 nm 后，电子可以直接量子隧穿过氧化层（这也是引入 High-k 材料的直接原因）；<br>
+        ③ <b>结漏电与 GIDL</b>：源漏 PN 结的反偏漏电，以及漏极高电场下栅漏交叠区的带间隧穿。<br>
+        先进节点里静态功耗的大部分就来自这几项，它们共同决定了芯片的"待机功耗"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：什么是 DIBL？它和"栅氧化层变薄"是同一件事吗？</summary>
+        <div class="answer">不是。DIBL（漏极诱导势垒降低）是<strong>静电控制能力不足</strong>的问题：
+        沟道缩短后漏极电场横向穿透，把源端注入势垒拉低，导致关态漏电随漏压升高而恶化（图 6）。<br>
+        栅氧变薄带来的则是<strong>栅极隧穿漏电</strong>，属于量子效应。两者都会让关态功耗上升，但机理完全不同，
+        解法也不同：前者靠改良器件结构（FinFET / GAA 增强栅控），后者靠换材料（High-k 增加物理厚度）。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：为什么亚阈值摆幅的极限是 60 mV/dec，而且这个数字这么重要？</summary>
+        <div class="answer">亚阈值区电流由源端注入势垒上的热发射决定，受热分布 kT 限制：
+        S = (kT/q)·ln10·(1 + C<sub>d</sub>/C<sub>ox</sub>)，室温下 kT/q ≈ 25.85 mV，
+        理想情况（C<sub>d</sub>=0）下 S = 25.85 × ln10 ≈ <strong>60 mV/dec</strong>。<br>
+        它的意义是：要让电流变化 10 倍，栅压至少要摆动 60 mV —— 这是由热运动设定的物理地板，无法用工程手段突破。
+        当电源电压降到 0.6 V 以下时，可用的栅压摆幅越来越小，开关电流比 I<sub>on</sub>/I<sub>off</sub> 必然恶化，
+        这正是低压低功耗设计最根本的约束。FinFET / GAA 改善的是"实际 S 逼近 60 的程度"，而不是突破 60。</div>
       </details>
 
         <div class="series">

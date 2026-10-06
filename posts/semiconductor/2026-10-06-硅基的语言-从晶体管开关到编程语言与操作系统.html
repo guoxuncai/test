@@ -321,7 +321,7 @@
           </g>
           <text x="520" y="220" font-size="10" fill="var(--text)">单条要 5 拍，但每拍都能</text>
           <text x="520" y="238" font-size="10" fill="var(--text)">吐出 1 条结果 —— 吞吐翻 5 倍</text>
-          <text x="520" y="262" font-size="10" fill="var(--text-mute)">（现代 CPU 有 15 级以上流水线、</text>
+          <text x="514" y="262" font-size="10" fill="var(--text-mute)">（现代 CPU 有 15 级以上流水线、</text>
           <text x="520" y="276" font-size="10" fill="var(--text-mute)">乱序执行、分支预测等复杂机制）</text>
         </svg>
         <figcaption>图 3：指令的五级执行（a）与流水线并行（b）。IPC（每拍完成指令数）就是靠这一套把主频之外的性能榨出来的。</figcaption>
@@ -455,7 +455,7 @@
 
           <text x="570" y="216" font-size="10" fill="var(--text-mute)">新语言只要写前端，</text>
           <text x="570" y="232" font-size="10" fill="var(--text-mute)">新芯片只要写后端；</text>
-          <text x="570" y="248" font-size="10" fill="var(--text-mute)">中间的公共 Infra 复用。</text>
+          <text x="556" y="248" font-size="10" fill="var(--text-mute)">中间的公共 Infra 复用。</text>
           <text x="570" y="272" font-size="10" fill="var(--up)">这也是国产指令集</text>
           <text x="570" y="286" font-size="10" fill="var(--up)">起步快的关键之一。</text>
         </svg>
@@ -590,7 +590,7 @@
               <rect x="126" y="60" width="28" height="24" fill="var(--text-mute)" fill-opacity=".2" stroke="var(--text-mute)"/>
             </g>
             <text x="90" y="98" text-anchor="middle" font-size="10" fill="var(--accent)">编译期就已决定</text>
-            <text x="10" y="120" font-size="10" fill="var(--text)">每个值有唯一所有者，出了作用域自动释放</text>
+            <text x="10" y="120" font-size="9.5" fill="var(--text)">每个值有唯一所有者，出了作用域自动释放</text>
             <text x="10" y="136" font-size="10" fill="var(--text-mute)">借用规则由编译器证明：不能有数据竞争</text>
             <text x="10" y="152" font-size="10" fill="var(--up)">代价：学习曲线陡（跟借用检查器吵架）</text>
             <text x="10" y="172" font-size="10" fill="var(--text)">收益：零运行时开销 + 内存与线程安全</text>
@@ -663,7 +663,7 @@
           <line x1="475" y1="158" x2="475" y2="176" stroke="var(--up)" stroke-width="1.6"/>
           <line x1="505" y1="158" x2="530" y2="176" stroke="var(--up)" stroke-width="1.6"/>
           <line x1="580" y1="158" x2="560" y2="176" stroke="var(--up)" stroke-width="1.6"/>
-          <text x="360" y="240" font-size="10" fill="var(--up)">程序只管调用 read / write / printf；同一份代码换台机器照样跑，</text>
+          <text x="354" y="240" font-size="10" fill="var(--up)">程序只管调用 read / write / printf；同一份代码换台机器照样跑，</text>
           <text x="360" y="254" font-size="10" fill="var(--up)">因为差异都被吸收在 <tspan font-weight="700">驱动 + 系统调用</tspan> 这一层。</text>
         </svg>
         <figcaption>图 8：OS 出现前后。它同时扮演两个角色：<strong>资源的分配者</strong>与<strong>硬件的化妆师</strong>。</figcaption>
@@ -716,7 +716,7 @@
 
           <text x="30" y="262" font-size="12" fill="var(--accent)" font-weight="700">（b）一次 write() 的穿越</text>
           <text x="30" y="282" font-size="11" fill="var(--text)">① 用户态把参数放进约定寄存器 → ② 执行 <tspan font-family="Consolas,monospace">ecall</tspan> / <tspan font-family="Consolas,monospace">syscall</tspan> 指令 → ③ CPU 切到内核态、跳到固定入口 →</text>
-          <text x="30" y="294" font-size="11" fill="var(--text)">④ 内核查系统调用表、执行驱动 → ⑤ 返回结果、切回用户态程序继续跑。</text>
+          <text x="30" y="288" font-size="11" fill="var(--text)">④ 内核查系统调用表、执行驱动 → ⑤ 返回结果、切回用户态程序继续跑。</text>
         </svg>
         <figcaption>图 9：用户态与内核态的分界。（b）中那几次"切换"要保存/恢复寄存器、换栈，代价在一两百到上千个时钟周期。</figcaption>
       </figure>

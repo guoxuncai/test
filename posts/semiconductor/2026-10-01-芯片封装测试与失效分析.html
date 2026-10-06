@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 19 篇</span><span class="sep"></span>
-      <span>阅读约 14 分钟</span>
+      <span>阅读约 30 分钟</span>
     </div>
 
     <div class="content">
@@ -112,6 +112,155 @@
         <b>探针扎的是"焊垫（Pad）"。</b>所以版图时必须预留足够大的 Pad（常见 50~80 μm 见方），
         并满足规则要求的间距，否则探针扎不准或相邻 Pad 短路。这是新手第一次流片最容易忽略的实用细节。
       </div>
+      <p>CP 测试的物理动作很朴素：把整片晶圆放在探针台上，用探针卡上的数十根针一次性扎到某个 die 的焊垫上，
+      测试机加激励、量响应、判 Pass/Fail，然后晶圆移动到下一个 die 重复。整个过程的关键在两处 ——
+      <strong>针必须扎准</strong>（所以版图要留够大的 Pad），<strong>扎过的 Pad 不能再用</strong>（所以量产 die 的 Pad 一般不再做键合）。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="探针台、探针卡与晶圆 Pad 针痕">
+          <g font-size="10">
+            <rect x="60" y="30" width="380" height="26" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <text x="250" y="48" text-anchor="middle" font-size="10" fill="var(--text)">探针卡 Probe Card（PCB + 数十根探针）</text>
+
+            <g stroke="var(--accent)" stroke-width="1.4" fill="none">
+              <path d="M120 56 C 105 90, 78 110, 74 145"/>
+              <path d="M160 56 C 150 90, 120 112, 116 145"/>
+              <path d="M240 56 C 250 90, 280 112, 284 145"/>
+              <path d="M280 56 C 295 90, 322 110, 326 145"/>
+              <path d="M200 56 L200 145"/>
+            </g>
+
+            <rect x="50" y="145" width="400" height="50" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.4"/>
+            <g fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="0.8">
+              <rect x="70" y="155" width="40" height="30"/>
+              <rect x="118" y="155" width="40" height="30"/>
+              <rect x="166" y="155" width="40" height="30"/>
+              <rect x="262" y="155" width="40" height="30"/>
+              <rect x="310" y="155" width="40" height="30"/>
+              <rect x="358" y="155" width="40" height="30"/>
+            </g>
+            <rect x="214" y="155" width="40" height="30" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1.2"/>
+            <g fill="var(--accent)">
+              <rect x="76" y="150" width="7" height="5"/><rect x="116" y="150" width="7" height="5"/>
+              <rect x="196" y="150" width="7" height="5"/><rect x="236" y="150" width="7" height="5"/>
+            </g>
+            <text x="234" y="172" text-anchor="middle" font-size="9" fill="var(--text)">被测 die</text>
+            <text x="250" y="212" text-anchor="middle" font-size="9" fill="var(--text-mute)">晶圆：由数十到数千个 die 组成，逐颗步进测试</text>
+
+            <rect x="470" y="40" width="190" height="160" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <text x="565" y="60" text-anchor="middle" font-size="10" fill="var(--text)">Pad 与针痕（放大）</text>
+            <rect x="510" y="80" width="70" height="50" fill="var(--up)" fill-opacity=".25" stroke="var(--up)" stroke-width="1.3"/>
+            <circle cx="528" cy="98" r="3" fill="var(--text-mute)"/>
+            <circle cx="545" cy="110" r="3" fill="var(--text-mute)"/>
+            <circle cx="562" cy="122" r="3" fill="var(--text-mute)"/>
+            <text x="545" y="150" text-anchor="middle" font-size="9" fill="var(--text-soft)">针痕必须落在 Pad 内</text>
+            <text x="545" y="168" text-anchor="middle" font-size="9" fill="var(--text-mute)">Pad 常见 50~80 μm 见方</text>
+            <text x="545" y="186" text-anchor="middle" font-size="9" fill="var(--text-mute)">铝层，最上层金属</text>
+
+            <text x="50" y="232" font-size="9" fill="var(--text-soft)">探针台负责承载、定位与温控（−55~200 ℃），测试机负责施加激励并判定 Pass / Fail</text>
+          </g>
+        </svg>
+        <figcaption>图 2：CP 测试的物理连接。探针卡上的针扎到 die 的 Pad 上，测试机完成激励与判定，探针台完成定位与温控。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>CP 数据最有价值的产出不是"挑出坏片"，而是那张晶图。</b>
+        把每个 die 的测试结果按坐标画出来，就是 <strong>Wafer Map</strong>。
+        它既是出货依据，更是给工艺工程师的"体检报告" —— 失效图形长什么样，直接指向问题出在哪个工序。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 266" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wafer Map 良率地图与三类失效图形">
+          <g font-size="10">
+            <circle cx="230" cy="135" r="112" fill="none" stroke="var(--semi)" stroke-width="1.6"/>
+            <path d="M230 23 L230 34 M230 236 L230 247" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="230" y="258" text-anchor="middle" font-size="9" fill="var(--text-mute)">晶圆（示例：69 颗 die，示意良率 57%）</text>
+            <rect x="181" y="46" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="201" y="46" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="221" y="46" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="241" y="46" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="261" y="46" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="66" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="181" y="66" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="66" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="66" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="66" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="261" y="66" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="281" y="66" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="141" y="86" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="86" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="181" y="86" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="86" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="86" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="86" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="261" y="86" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="281" y="86" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="301" y="86" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="141" y="106" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="106" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="181" y="106" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="106" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="106" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="106" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="261" y="106" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="281" y="106" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="301" y="106" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="141" y="126" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="181" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="261" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="281" y="126" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="301" y="126" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="141" y="146" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="181" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="261" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="281" y="146" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="301" y="146" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="141" y="166" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="166" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="181" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="261" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="281" y="166" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="301" y="166" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="161" y="186" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="181" y="186" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="201" y="186" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="221" y="186" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="241" y="186" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="261" y="186" width="18" height="18" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="0.6"/>
+            <rect x="281" y="186" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="181" y="206" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="201" y="206" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="221" y="206" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="241" y="206" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <rect x="261" y="206" width="18" height="18" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.6"/>
+            <text x="380" y="52" font-size="11" fill="var(--text)" font-weight="700">Wafer Map 的三类失效图形</text>
+            <rect x="382" y="66" width="14" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.8"/>
+            <text x="404" y="78" font-size="10" fill="var(--text-soft)">边缘环带失效：涂胶 / CMP / 刻蚀边缘不均</text>
+            <rect x="382" y="90" width="14" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.8"/>
+            <text x="404" y="102" font-size="10" fill="var(--text-soft)">中心团簇：局部颗粒、气泡或设备异常</text>
+            <rect x="382" y="114" width="14" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="0.8"/>
+            <text x="404" y="126" font-size="10" fill="var(--text-soft)">随机散布：随机缺陷密度 D 决定</text>
+            <text x="380" y="156" font-size="10" fill="var(--text)">die 面积 A 越大，被缺陷命中的概率越高</text>
+            <text x="380" y="176" font-size="10" fill="var(--semi)">Y ≈ e^(−A·D)　（泊松良率模型）</text>
+            <text x="380" y="202" font-size="9" fill="var(--text-mute)">这是"大芯片为什么贵"的根本原因之一：</text>
+            <text x="380" y="218" font-size="9" fill="var(--text-mute)">面积翻倍，良率不是打对折，而是更低。</text>
+            <text x="380" y="240" font-size="9" fill="var(--accent)">也是 Chiplet 的核心动机：化整为零换良率。</text>
+          </g>
+        </svg>
+        <figcaption>图 3：Wafer Map 与三类典型失效图形。红色为失效 die，蓝色为通过 die；失效图形的形状直接指向出问题的工序。</figcaption>
+      </figure>
+
 
       <h2 id="s3">3. 封装：类型与选择</h2>
 
@@ -126,6 +275,55 @@
           <tr><td>3D / TSV</td><td>硅通孔垂直堆叠</td><td>HBM 堆叠、CIS</td></tr>
         </tbody>
       </table>
+      <p>选封装，本质上是在<strong>成本、I/O 数、寄生、散热</strong>四项之间做取舍。
+      最核心的分野是芯片与基板怎么连：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="引线键合与倒装的对比">
+          <g font-size="10">
+            <text x="165" y="30" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">引线键合 Wire Bonding</text>
+            <rect x="50" y="170" width="230" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <text x="60" y="186" font-size="9" fill="var(--text-mute)">基板 / 引线框架</text>
+            <rect x="110" y="130" width="110" height="30" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="165" y="150" text-anchor="middle" font-size="10" fill="var(--text)">芯片 Die</text>
+            <g stroke="var(--accent)" stroke-width="1.4" fill="none">
+              <path d="M120 130 C 100 95, 72 112, 66 168"/>
+              <path d="M142 130 C 126 100, 96 118, 90 168"/>
+              <path d="M188 130 C 204 100, 234 118, 240 168"/>
+              <path d="M210 130 C 230 95, 258 112, 264 168"/>
+            </g>
+            <text x="50" y="80" font-size="9" fill="var(--accent)">金线 / 铜线（逐根打线）</text>
+            <text x="50" y="214" font-size="9" fill="var(--text-soft)">I/O 只能沿芯片四周排列 → 数量受限（数百）</text>
+            <text x="50" y="232" font-size="9" fill="var(--text-soft)">线长数毫米 → 寄生电感 nH 级，高频受限</text>
+
+            <text x="515" y="30" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">倒装 Flip Chip</text>
+            <rect x="400" y="170" width="230" height="24" fill="var(--border)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <text x="410" y="186" font-size="9" fill="var(--text-mute)">基板 / 中介层</text>
+            <rect x="450" y="120" width="130" height="40" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="515" y="145" text-anchor="middle" font-size="10" fill="var(--text)">芯片 Die（正面朝下）</text>
+            <g fill="var(--up)" fill-opacity=".55" stroke="var(--up)" stroke-width="0.8">
+              <rect x="458" y="160" width="14" height="10"/>
+              <rect x="484" y="160" width="14" height="10"/>
+              <rect x="510" y="160" width="14" height="10"/>
+              <rect x="536" y="160" width="14" height="10"/>
+              <rect x="562" y="160" width="14" height="10"/>
+            </g>
+            <text x="400" y="80" font-size="9" fill="var(--up)">凸点阵列 Bump（整个面可用）</text>
+            <text x="400" y="214" font-size="9" fill="var(--text-soft)">整个面布凸点 → I/O 可达数千</text>
+            <text x="400" y="232" font-size="9" fill="var(--text-soft)">路径仅百微米 → 寄生电感低一个量级</text>
+          </g>
+        </svg>
+        <figcaption>图 4：两种芯片-基板互连方式。引线键合便宜但只能走四周且寄生大；倒装用整个面的凸点直连，是高性能芯片的必然选择。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>封装不是"套个壳子"，它会反过来改变电路性能。</b>同一颗 die 用不同封装，
+        实测的最高频率、噪声、甚至功耗都可能不同 —— 因为键合线/凸点带来的
+        <strong>寄生电感与电阻</strong>、基板走线的<strong>寄生电容</strong>、以及
+        <strong>散热路径的热阻</strong>全都变了。射频与电源芯片尤其明显，
+        这也是为什么这类芯片的 datasheet 一定要标明"测试板与封装条件"。
+      </div>
+
 
       <div class="note">
         <b>引线键合 vs 倒装：</b>引线键合（Wire Bonding）用金线/铜线连接芯片四周与引脚，成本低但寄生电感大、I/O 数受限；
@@ -141,6 +339,53 @@
         <li><strong>分档 Binning</strong>：按性能把芯片分成不同等级售卖 —— 同一颗晶圆上的 die 因工艺波动体质不同，
         能跑高频率的卖高价，次之降频卖，这是同一设计产出多档产品（如 CPU 的 i5/i7）的由来。</li>
       </ul>
+      <p>FT 里最有信息量的图是 <strong>Shmoo 图</strong>：横轴电压、纵轴频率（或反过来），
+      在每个工作点上跑一遍测试，把 Pass / Fail 画成二维地图。它给出的不是"能不能用"，
+      而是"这颗芯片的极限在哪" —— 分档就是在这个极限上划线。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shmoo 图与分档 Binning">
+          <g font-size="10">
+            <text x="60" y="26" font-size="11" fill="var(--text)" font-weight="700">Shmoo 图：电压—频率的 Pass/Fail 边界</text>
+            <polygon points="60,185 60,55 110,95 180,140 250,160 290,165 290,185"
+                     fill="var(--semi)" fill-opacity=".20" stroke="none"/>
+            <polygon points="60,55 110,95 180,140 250,160 290,165 290,45 60,45"
+                     fill="var(--up)" fill-opacity=".10" stroke="none"/>
+            <path d="M60 55 L110 95 L180 140 L250 160 L290 165" fill="none" stroke="var(--up)" stroke-width="1.8"/>
+            <line x1="60" y1="185" x2="300" y2="185" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="60" y1="185" x2="60" y2="40" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M296 181 L306 185 L296 189 Z" fill="var(--text-mute)"/>
+            <path d="M56 46 L60 36 L64 46 Z" fill="var(--text-mute)"/>
+            <text x="312" y="189" font-size="9" fill="var(--text-soft)">电压 V</text>
+            <text x="66" y="48" font-size="9" fill="var(--text-soft)">频率 f</text>
+            <text x="120" y="150" font-size="11" fill="var(--semi)" font-weight="700">Pass</text>
+            <text x="200" y="90" font-size="11" fill="var(--up)" font-weight="700">Fail</text>
+            <text x="60" y="210" font-size="9" fill="var(--text-soft)">曲线在高电压端趋于平坦：加压换频率存在饱和点</text>
+            <text x="60" y="226" font-size="9" fill="var(--text-mute)">这条边界就是该 die 的"体质"，据此分档</text>
+
+            <text x="360" y="26" font-size="11" fill="var(--text)" font-weight="700">分档 Binning：同一设计，多种售价</text>
+            <text x="360" y="52" font-size="9" fill="var(--text-soft)">同一片晶圆上的 die，体质呈分布而非一致</text>
+            <line x1="360" y1="190" x2="645" y2="190" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <g>
+              <rect x="370" y="160" width="26" height="30" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="0.8"/>
+              <rect x="402" y="140" width="26" height="50" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="0.8"/>
+              <rect x="434" y="115" width="26" height="75" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="0.8"/>
+              <rect x="466" y="95" width="26" height="95" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="0.8"/>
+              <rect x="498" y="100" width="26" height="90" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="0.8"/>
+              <rect x="530" y="120" width="26" height="70" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="0.8"/>
+              <rect x="562" y="145" width="26" height="45" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="0.8"/>
+              <rect x="594" y="165" width="26" height="25" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="0.8"/>
+            </g>
+            <text x="402" y="208" text-anchor="middle" font-size="9" fill="var(--semi)">低档</text>
+            <text x="498" y="208" text-anchor="middle" font-size="9" fill="var(--accent)">中档</text>
+            <text x="591" y="208" text-anchor="middle" font-size="9" fill="var(--up)">高档</text>
+            <text x="360" y="232" font-size="9" fill="var(--text-soft)">高档卖高价，中档降频降价，低端屏蔽部分模块</text>
+            <text x="360" y="250" font-size="9" fill="var(--text-mute)">这就是同一款设计能卖出 i5 / i7 / i9 的由来</text>
+          </g>
+        </svg>
+        <figcaption>图 5：左为 Shmoo 图（电压-频率 Pass/Fail 边界），右为分档 Binning。同一批 die 按实测体质划入不同档位销售。</figcaption>
+      </figure>
+
 
       <div class="warn">
         <b>测试覆盖率与成本的矛盾：</b>测试越充分，出厂质量越高，但测试时间直接折算成钱（ATE 机时昂贵）。
@@ -167,6 +412,52 @@
         电压/电流源的高精度与宽量程（可从 μV 到数百 V、fA 到 A 级）、极低的噪声底、
         多通道同步与保护。测一个 fA 级漏电流，任何微小的线缆漏电或振动都会毁掉数据 —— 这也是对操作环境要求高的原因。
       </div>
+      <p>C–V 测量是少数能"看见"氧化层与界面质量的电学手段，也是工艺监控的常规项目。
+      一条 MOS 电容的 C–V 曲线天然分成三段，每段对应栅下不同的电荷状态：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MOS 电容 C-V 曲线的三个区">
+          <g font-size="10">
+            <line x1="60" y1="190" x2="400" y2="190" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="60" y1="190" x2="60" y2="40" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M396 186 L406 190 L396 194 Z" fill="var(--text-mute)"/>
+            <path d="M56 44 L60 34 L64 44 Z" fill="var(--text-mute)"/>
+            <text x="300" y="230" text-anchor="middle" font-size="9" fill="var(--text-soft)">栅压 V_G →</text>
+            <text x="66" y="48" font-size="9" fill="var(--text-soft)">电容 C</text>
+            <line x1="150" y1="40" x2="150" y2="190" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="270" y1="40" x2="270" y2="190" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <path d="M60 60 L150 60 L190 80 L230 130 L270 150 L300 120 L340 75 L380 62"
+                  fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <path d="M60 60 L150 60 L190 80 L230 130 L270 152 L400 152"
+                  fill="none" stroke="var(--up)" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <text x="105" y="208" text-anchor="middle" font-size="9" fill="var(--text-soft)">积累</text>
+            <text x="210" y="208" text-anchor="middle" font-size="9" fill="var(--text-soft)">耗尽</text>
+            <text x="335" y="208" text-anchor="middle" font-size="9" fill="var(--text-soft)">反型</text>
+            <text x="70" y="52" font-size="9" fill="var(--text-mute)">Cox</text>
+            <text x="275" y="172" font-size="9" fill="var(--text-mute)">Cmin</text>
+
+            <line x1="440" y1="70" x2="470" y2="70" stroke="var(--semi)" stroke-width="2"/>
+            <text x="478" y="74" font-size="9" fill="var(--text-soft)">低频（准静态）</text>
+            <line x1="440" y1="92" x2="470" y2="92" stroke="var(--up)" stroke-width="2" stroke-dasharray="5 3"/>
+            <text x="478" y="96" font-size="9" fill="var(--text-soft)">高频（1 MHz）</text>
+            <text x="440" y="126" font-size="10" fill="var(--text)" font-weight="700">C–V 能读出什么</text>
+            <text x="440" y="146" font-size="9" fill="var(--text-soft)">① Cox → 氧化层厚度</text>
+            <text x="440" y="164" font-size="9" fill="var(--text-soft)">② 平带电压 V_FB → 固定电荷</text>
+            <text x="440" y="182" font-size="9" fill="var(--text-soft)">③ 曲线畸变 → 界面态密度</text>
+            <text x="440" y="200" font-size="9" fill="var(--text-soft)">④ 高频/低频之差 → 少子产生率</text>
+            <text x="440" y="218" font-size="9" fill="var(--text-soft)">⑤ C–t 瞬态 → 少子寿命</text>
+          </g>
+        </svg>
+        <figcaption>图 6：MOS 电容 C–V 曲线的三个区。高频下反型区少子跟不上交流信号，电容停在 Cmin；低频下则回到 Cox —— 两条曲线之差本身就是信息。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>为什么高频和低频不一样？</b>反型层的少子（如 P 衬底里的电子）只能靠<em>热产生</em>慢慢补充，
+        产生速率有上限。交流信号频率太高时，少子来不及跟随，反型层"充不上"，电容就停在最小值；
+        准静态（低频）扫描时少子跟得上，电容又回到 C<sub>ox</sub>。
+        这个差别反而成了测量少子寿命与产生率的手段 —— 这就是 C–t（电容-时间）法的原理。
+      </div>
+
 
       <h2 id="s6">6. 从数据提取器件参数</h2>
 
@@ -186,6 +477,59 @@
         <div><div class="v">I<sub>on</sub>/I<sub>off</sub></div><div class="l">开关比，越大越好</div></div>
         <div><div class="v">SS</div><div class="l">亚阈值摆幅</div></div>
       </div>
+      <p>拿到 I<sub>D</sub>–V<sub>GS</sub> 曲线后，V<sub>t</sub> 与 SS 这两个最常被引用的参数，
+      都是"从曲线上量出来"的，而不是直接读出来的。两种经典做法如下：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="阈值电压与亚阈值摆幅的图解法">
+          <g font-size="10">
+            <text x="60" y="24" font-size="11" fill="var(--text)" font-weight="700">① 阈值电压：最大跨导外推法</text>
+            <line x1="60" y1="180" x2="310" y2="180" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="60" y1="180" x2="60" y2="38" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M306 176 L316 180 L306 184 Z" fill="var(--text-mute)"/>
+            <path d="M56 42 L60 32 L64 42 Z" fill="var(--text-mute)"/>
+            <text x="300" y="196" font-size="9" fill="var(--text-soft)">V_GS</text>
+            <text x="66" y="50" font-size="9" fill="var(--text-soft)">I_D</text>
+            <path d="M60 175 C 120 172, 160 150, 190 110 C 220 70, 250 50, 290 45"
+                  fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <line x1="85" y1="180" x2="280" y2="50" stroke="var(--up)" stroke-width="1.4" stroke-dasharray="6 4"/>
+            <circle cx="190" cy="110" r="4" fill="var(--up)"/>
+            <text x="200" y="102" font-size="9" fill="var(--up)">gm 最大点</text>
+            <line x1="85" y1="172" x2="85" y2="180" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="85" y="196" text-anchor="middle" font-size="9" fill="var(--up)">Vt</text>
+            <text x="60" y="214" font-size="9" fill="var(--text-mute)">在 gm 最大点作切线，延长到横轴，交点即 Vt</text>
+
+            <text x="400" y="24" font-size="11" fill="var(--text)" font-weight="700">② 亚阈值摆幅 SS</text>
+            <line x1="400" y1="180" x2="645" y2="180" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="400" y1="180" x2="400" y2="38" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M641 176 L651 180 L641 184 Z" fill="var(--text-mute)"/>
+            <path d="M396 42 L400 32 L404 42 Z" fill="var(--text-mute)"/>
+            <text x="630" y="196" font-size="9" fill="var(--text-soft)">V_GS</text>
+            <text x="406" y="50" font-size="9" fill="var(--text-soft)">log I_D</text>
+            <path d="M410 172 L555 62 C 590 45, 615 42, 630 42"
+                  fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <line x1="405" y1="170" x2="505" y2="170" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="405" y1="110" x2="505" y2="110" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="620" y1="170" x2="620" y2="110" stroke="var(--up)" stroke-width="1.2"/>
+            <path d="M616 114 L620 104 L624 114 Z" fill="var(--up)"/>
+            <path d="M616 166 L620 176 L624 166 Z" fill="var(--up)"/>
+            <text x="612" y="144" text-anchor="end" font-size="9" fill="var(--up)">×10</text>
+            <line x1="413" y1="196" x2="413" y2="204" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="492" y1="196" x2="492" y2="204" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="413" y1="200" x2="492" y2="200" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <text x="452" y="214" text-anchor="middle" font-size="9" fill="var(--text-mute)">SS（每十倍电流）</text>
+          </g>
+        </svg>
+        <figcaption>图 7：器件参数的两种经典图解法。左：gm 最大点作切线外推求 Vt；右：半对数坐标下电流变化十倍所需的栅压增量即 SS。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>对比数据时先问一句"V<sub>t</sub> 是怎么定义出来的"。</b>最大跨导外推法、恒定电流法
+        （如 I<sub>D</sub> = 0.1 μA·W/L 对应的 V<sub>GS</sub>）、线性外推法，三种定义在同一条曲线上
+        能给出相差几十毫伏的结果。跨文献、跨 PDK 比较时，定义不统一的数据没有可比性 ——
+        这是初学者最常犯的"数据对比错误"。
+      </div>
+
 
       <div class="tip">
         <b>仿真 vs 实测对不上怎么办？</b>按这个顺序排查：
@@ -197,6 +541,46 @@
       </div>
 
       <h2 id="s7">7. 可靠性试验</h2>
+      <p>可靠性试验回答的不是一个"合格/不合格"，而是<strong>失效率随时间怎么变</strong>。
+      半导体器件的失效率曲线有一个经典形状 —— 浴盆曲线（Bathtub Curve）：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="失效率浴盆曲线">
+          <g font-size="10">
+            <line x1="60" y1="190" x2="650" y2="190" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="60" y1="190" x2="60" y2="36" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M646 186 L656 190 L646 194 Z" fill="var(--text-mute)"/>
+            <path d="M56 40 L60 30 L64 40 Z" fill="var(--text-mute)"/>
+            <text x="600" y="208" text-anchor="middle" font-size="9" fill="var(--text-soft)">时间 / 寿命 →</text>
+            <text x="66" y="46" font-size="9" fill="var(--text-soft)">失效率 λ</text>
+            <path d="M60 55 C 110 60, 160 150, 220 165 L450 168 C 530 165, 590 120, 640 55"
+                  fill="none" stroke="var(--semi)" stroke-width="1.8"/>
+            <line x1="220" y1="40" x2="220" y2="190" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="450" y1="40" x2="450" y2="190" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="140" y="204" text-anchor="middle" font-size="10" fill="var(--up)">① 早期失效</text>
+            <text x="335" y="204" text-anchor="middle" font-size="10" fill="var(--semi)">② 随机失效</text>
+            <text x="545" y="204" text-anchor="middle" font-size="10" fill="var(--up)">③ 磨损失效</text>
+            <text x="90" y="88" font-size="9" fill="var(--up)">制造缺陷、弱器件</text>
+            <text x="90" y="104" font-size="9" fill="var(--text-mute)">靠 Burn-in 老化筛选剔除</text>
+            <text x="280" y="150" font-size="9" fill="var(--semi)">随机缺陷，失效率近似恒定</text>
+            <text x="280" y="166" font-size="9" fill="var(--text-mute)">无法筛选，只能靠设计裕量</text>
+            <text x="470" y="88" font-size="9" fill="var(--up)">磨损机理主导：</text>
+            <text x="470" y="104" font-size="9" fill="var(--text-mute)">HCI、NBTI、TDDB、EM</text>
+            <text x="470" y="120" font-size="9" fill="var(--text-mute)">由加速试验外推寿命</text>
+            <text x="60" y="228" font-size="9" fill="var(--text-soft)">可靠性试验的目标：把 ① 提前暴露在厂内，把 ③ 推到设计寿命之外</text>
+          </g>
+        </svg>
+        <figcaption>图 8：失效率浴盆曲线。早期失效靠老化筛选剔除，随机失效期失效率近似恒定，磨损失效期由 HCI / NBTI / TDDB / EM 等机理主导。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>"加速"是怎么算的？</b>可靠性试验不可能真跑 15 年，于是用<em>加严应力</em>加速失效：
+        升温（Arrhenius 模型）、加电压（E 模型或 1/E 模型）、加湿（Peck 模型）。
+        测出加速条件下的失效时间，再用模型外推到实际使用条件。
+        外推倍率可以是几十到几千倍 —— 也正因为是外推，<strong>模型选错会导致寿命估算差一个数量级</strong>，
+        这是可靠性工程里最有争议的部分。
+      </div>
+
 
       <table>
         <thead><tr><th>项目</th><th>条件</th><th>考察什么</th></tr></thead>
@@ -231,6 +615,37 @@
           <tr><td>TEM</td><td>透射电镜</td><td>原子级结构、栅氧厚度、界面</td></tr>
         </tbody>
       </table>
+      <figure class="diagram">
+        <svg viewBox="0 0 680 286" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="失效分析的漏斗式流程">
+          <g font-size="10">
+            <rect x="30" y="36" width="620" height="26" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="340" y="53" text-anchor="middle" font-size="10" fill="var(--text)">① 外观检查 OM</text>
+            <rect x="60" y="68" width="560" height="26" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="340" y="85" text-anchor="middle" font-size="10" fill="var(--text)">② X-ray / SAT（非破坏）</text>
+            <rect x="90" y="100" width="500" height="26" rx="4" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="340" y="117" text-anchor="middle" font-size="10" fill="var(--text)">③ 电学定位：IV 曲线比对</text>
+            <rect x="120" y="132" width="440" height="26" rx="4" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="340" y="149" text-anchor="middle" font-size="10" fill="var(--text)">④ EMMI / OBIRCH 热点定位</text>
+            <rect x="150" y="164" width="380" height="26" rx="4" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="340" y="181" text-anchor="middle" font-size="10" fill="var(--text)">⑤ 去封装 Decapsulation</text>
+            <rect x="180" y="196" width="320" height="26" rx="4" fill="var(--up)" fill-opacity=".16" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="340" y="213" text-anchor="middle" font-size="10" fill="var(--text)">⑥ SEM / FIB 剖切</text>
+            <rect x="210" y="228" width="260" height="26" rx="4" fill="var(--up)" fill-opacity=".16" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="340" y="245" text-anchor="middle" font-size="10" fill="var(--text)">⑦ TEM / EDS 定性</text>
+            <text x="30" y="266" font-size="9" fill="var(--text-soft)">顺序不可颠倒：一旦做破坏性剖切，电学证据将永久丢失</text>
+            <text x="30" y="278" font-size="9" fill="var(--text-mute)">蓝 = 非破坏　黄 = 半破坏（去封装）　红 = 破坏性剖切</text>
+          </g>
+        </svg>
+        <figcaption>图 9：失效分析的漏斗式流程。每一步都把可疑范围缩小一圈，代价是逐步不可逆 —— 所以必须严格按序推进。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>FA 的第一原则：先定位，再破坏。</b>在不知道"看哪里"之前就剖片，
+        相当于在一片几平方毫米的芯片上大海捞针 —— TEM 样品只有几十纳米厚，
+        切错位置就永远错过了真正的失效点。正确做法是先用
+        <strong>电学定位 + EMMI/OBIRCH 热点定位</strong>把范围缩到几微米，再动刀。
+      </div>
+
 
       <div class="tip">
         <b>FA（失效分析）的黄金流程：先非破坏、后破坏。</b>
@@ -273,6 +688,29 @@
         ④ 电学定位后用 EMMI/OBIRCH 找漏电或短路热点。
         时序类问题还要复查关键路径的 PVT 签核与实际工作条件是否一致。</div>
       </details>
+      <details class="quiz"><summary>自测 4：同一颗 die，换个封装后实测最高频率下降了，可能是什么原因？</summary>
+        <div class="answer">封装会引入额外的寄生与热阻：① 键合线带来的<strong>串联电感与电阻</strong>（倒装可低一个量级），
+        使电源完整性变差、高频下 IR-drop 与地弹加剧；② 基板走线与焊球的<strong>寄生电容</strong>拖慢信号边沿；
+        ③ <strong>散热路径热阻</strong>变大，结温升高后载流子迁移率下降、漏电上升，频率与功耗同时恶化；
+        ④ 封装应力还可能通过压阻效应改变器件参数。所以射频、电源、高速接口的指标必须连同封装与测试板一起标定。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：Wafer Map 上失效 die 连成一个"圆环"分布在晶圆边缘，最可能指向哪类问题？</summary>
+        <div class="answer">边缘环带失效典型指向<strong>边缘效应</strong>：① 涂胶（Spin Coating）在晶圆边缘厚度不均，
+        导致光刻线宽偏离；② CMP 抛光在边缘出现过度或不足的去除速率（Edge Roll-off）；
+        ③ 刻蚀与薄膜沉积在边缘的均匀性较差；④ 划片（Dicing）应力与崩边影响最外圈 die。
+        与之相对：<strong>中心团簇</strong>通常指向局部颗粒污染、气泡或某次设备异常；
+        <strong>随机散布</strong>则由随机缺陷密度决定，与 die 面积共同决定良率。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：为什么可靠性试验要用"加速"的方式，而不是在正常使用条件下跑够年限？</summary>
+        <div class="answer">因为产品寿命要求是 10~15 年甚至更长，等实测跑完再上市是不现实的。
+        加速试验用<strong>加严应力</strong>（升温、加压、加湿）把失效机理提前触发，
+        再用物理模型外推回使用条件：温度用 Arrhenius 模型，电压用 E 模型或 1/E 模型，温湿度用 Peck 模型。
+        外推倍率可达几十到几千倍。代价是：<strong>应力过猛会引入正常使用下不会出现的失效机理</strong>，
+        导致外推失真 —— 所以加速条件必须经过验证，不能为了缩短周期无限加码。</div>
+      </details>
+
 
         <div class="series">
           <div class="series-title">集成电路学习路径 · 系列导航</div>

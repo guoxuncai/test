@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 17 篇</span><span class="sep"></span>
-      <span>阅读约 14 分钟</span>
+      <span>阅读约 26 分钟</span>
     </div>
 
     <div class="content">
@@ -116,6 +116,84 @@
         周期 2~3 个月。因此"签核"环节的严谨性直接决定项目生死 —— 这也是 EDA 工具价值极高的原因。
       </div>
 
+      <p>其中<strong>逻辑综合</strong>是整个链条上最关键的一步"翻译"：它把抽象的行为描述，
+      变成实实在在的门电路。看它到底做了什么：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="逻辑综合把 RTL 翻译为门级网表">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">逻辑综合：从"我想让它做什么"到"用哪些门实现"</text>
+
+          <!-- 左：RTL 代码 -->
+          <text x="70" y="52" font-size="12" fill="var(--fin)" font-weight="700">① 输入：RTL（行为描述）</text>
+          <rect x="40" y="62" width="200" height="86" rx="5" fill="var(--surface-2)" fill-opacity=".55" stroke="var(--fin)" stroke-width="1.3"/>
+          <text x="54" y="82" font-size="11" fill="var(--text-mute)">module</text>
+          <text x="106" y="82" font-size="11" fill="var(--text)">nand2</text>
+          <text x="54" y="98" font-size="11" fill="var(--text-mute)">input</text>
+          <text x="98" y="98" font-size="11" fill="var(--text)">a, b;</text>
+          <text x="54" y="114" font-size="11" fill="var(--text-mute)">output</text>
+          <text x="110" y="114" font-size="11" fill="var(--text)">y;</text>
+          <text x="54" y="130" font-size="11" fill="var(--text-mute)">assign</text>
+          <text x="106" y="130" font-size="11" fill="var(--text)">y = ~(a &amp; b);</text>
+          <text x="40" y="164" font-size="10" fill="var(--text-mute)">只描述功能，不提任何门</text>
+
+          <!-- 约束 -->
+          <text x="70" y="190" font-size="12" fill="var(--accent)" font-weight="700">② 约束：SDC</text>
+          <rect x="40" y="200" width="200" height="76" rx="5" fill="var(--accent)" fill-opacity=".1" stroke="var(--accent)" stroke-width="1.3"/>
+          <text x="54" y="220" font-size="11" fill="var(--text)">create_clock -period 2</text>
+          <text x="54" y="238" font-size="11" fill="var(--text)">set_input_delay 0.3</text>
+          <text x="54" y="256" font-size="11" fill="var(--text)">set_max_area 500</text>
+          <text x="54" y="272" font-size="10" fill="var(--text-mute)">告诉工具"要跑多快、能多大"</text>
+
+          <!-- 箭头 -->
+          <path d="M244 118 L296 118" stroke="var(--semi)" stroke-width="2"/>
+          <polygon points="300,118 290,113 290,123" fill="var(--semi)"/>
+          <path d="M244 238 L296 238" stroke="var(--semi)" stroke-width="2" stroke-dasharray="4 3"/>
+          <polygon points="300,238 290,233 290,243" fill="var(--semi)"/>
+
+          <!-- 中：三步 -->
+          <text x="380" y="52" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">③ 综合器内部的三步</text>
+          <rect x="306" y="62" width="150" height="34" rx="5" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="381" y="84" text-anchor="middle" font-size="11" fill="var(--text)">翻译：HDL → 布尔式</text>
+          <rect x="306" y="104" width="150" height="34" rx="5" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="381" y="126" text-anchor="middle" font-size="11" fill="var(--text)">优化：化简、重定时</text>
+          <rect x="306" y="146" width="150" height="34" rx="5" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.3"/>
+          <text x="381" y="168" text-anchor="middle" font-size="11" fill="var(--text)">映射：选具体单元</text>
+          <g stroke="var(--text-mute)" stroke-width="1.4" fill="none">
+            <path d="M381 96 L381 104"/><path d="M381 138 L381 146"/>
+          </g>
+          <text x="381" y="196" text-anchor="middle" font-size="10" fill="var(--text-mute)">映射时要同时权衡</text>
+          <text x="381" y="212" text-anchor="middle" font-size="10" fill="var(--text-mute)">驱动强度、阈值电压、</text>
+          <text x="381" y="228" text-anchor="middle" font-size="10" fill="var(--text-mute)">面积与时序 —— 这是</text>
+          <text x="381" y="244" text-anchor="middle" font-size="10" fill="var(--text-mute)">EDA 算法的核心战场</text>
+          <rect x="306" y="254" width="150" height="22" rx="4" fill="var(--up)" fill-opacity=".12"/>
+          <text x="381" y="269" text-anchor="middle" font-size="10" fill="var(--up)" font-weight="700">+ 标准单元库 .lib/.lef</text>
+
+          <!-- 箭头 -->
+          <path d="M460 118 L500 118" stroke="var(--semi)" stroke-width="2"/>
+          <polygon points="504,118 494,113 494,123" fill="var(--semi)"/>
+
+          <!-- 右：网表 -->
+          <text x="590" y="52" text-anchor="middle" font-size="12" fill="var(--up)" font-weight="700">④ 输出：门级网表</text>
+          <rect x="510" y="62" width="160" height="86" rx="5" fill="var(--surface-2)" fill-opacity=".55" stroke="var(--up)" stroke-width="1.3"/>
+          <text x="524" y="84" font-size="11" fill="var(--text-mute)">NAND2_X2</text>
+          <text x="606" y="84" font-size="11" fill="var(--text)">U1 (</text>
+          <text x="524" y="102" font-size="11" fill="var(--text)">  .A(a), .B(b),</text>
+          <text x="524" y="120" font-size="11" fill="var(--text)">  .Y(y)</text>
+          <text x="524" y="138" font-size="11" fill="var(--text)">);</text>
+          <text x="510" y="164" font-size="10" fill="var(--text-mute)">具体到型号与连接关系</text>
+          <text x="510" y="182" font-size="10" fill="var(--text-mute)">（X2 = 2 倍驱动强度）</text>
+        </svg>
+        <figcaption>图 2：逻辑综合的输入与输出。左上是行为级 RTL、左下是时序/面积约束（SDC）；综合器先翻译成布尔表达式，再做逻辑化简与重定时，最后结合标准单元库映射成具体的门型号与连接关系，输出门级网表。第 6 篇讲过的 NAND 万能性，正是在"映射"这一步被真正利用起来。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>一个常被忽视的事实：综合是"约束驱动"的，不是"代码驱动"的。</b>
+        同一份 RTL，给的时钟周期是 2 ns 还是 5 ns，综合出来的电路可能完全不同 ——
+        紧约束下工具会自动换成驱动更强的单元、插入缓冲器、复制逻辑来换速度，
+        面积与功耗随之上升。所以"写 RTL"和"写约束"是同等重要的两件事，
+        而后者恰恰是新手最容易轻视的。这也是为什么<em>时序约束写错往往比代码写错更难排查</em>。
+      </div>
+
       <h2 id="s2">2. 模拟 IC 流程有什么不同</h2>
 
       <table>
@@ -149,6 +227,51 @@
         降低电压能省功耗但速度变慢、噪声容限变小；缩小面积可能牺牲性能与可制造性。
         芯片架构评审的本质，就是在给定应用场景下为 PPA 排序 ——
         例如手机 SoC 优先功耗，服务器 CPU 优先性能，MCU 优先成本。
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="不同类型芯片在 PPA 三角中的定位">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">同一颗芯片不可能三项全优 —— 看各类芯片把自己摆在三角的哪个角</text>
+          <!-- 三角形 -->
+          <polygon points="340,52 100,236 580,236" fill="var(--surface-2)" fill-opacity=".35" stroke="var(--border)" stroke-width="1.4"/>
+          <!-- 顶点标签 -->
+          <circle cx="340" cy="52" r="6" fill="var(--semi)"/>
+          <text x="340" y="42" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">性能 Performance</text>
+          <circle cx="100" cy="236" r="6" fill="var(--up)"/>
+          <text x="86" y="258" text-anchor="middle" font-size="13" fill="var(--up)" font-weight="700">功耗 Power ↑</text>
+          <circle cx="580" cy="236" r="6" fill="var(--fin)"/>
+          <text x="594" y="258" text-anchor="middle" font-size="13" fill="var(--fin)" font-weight="700">面积/成本 Area</text>
+          <!-- 中点连线 -->
+          <line x1="220" y1="144" x2="460" y2="144" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="340" y1="52" x2="340" y2="236" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="100" y1="236" x2="580" y2="236" stroke="var(--border)" stroke-width="1"/>
+          <!-- 定位点 -->
+          <circle cx="340" cy="92" r="8" fill="var(--semi)" fill-opacity=".6" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="356" y="88" font-size="11" fill="var(--semi)" font-weight="700">服务器 CPU / GPU</text>
+          <text x="356" y="102" font-size="10" fill="var(--text-mute)">性能优先，功耗其次</text>
+          <circle cx="270" cy="176" r="8" fill="var(--accent)" fill-opacity=".6" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="200" y="180" font-size="11" fill="var(--accent)" font-weight="700">手机 SoC</text>
+          <text x="196" y="194" font-size="10" fill="var(--text-mute)">三者平衡</text>
+          <circle cx="196" cy="206" r="8" fill="var(--up)" fill-opacity=".6" stroke="var(--up)" stroke-width="1.6"/>
+          <text x="130" y="222" font-size="11" fill="var(--up)" font-weight="700">可穿戴 / 物联网</text>
+          <text x="130" y="236" font-size="10" fill="var(--text-mute)">功耗压倒一切</text>
+          <circle cx="470" cy="200" r="8" fill="var(--fin)" fill-opacity=".6" stroke="var(--fin)" stroke-width="1.6"/>
+          <text x="482" y="204" font-size="11" fill="var(--fin)" font-weight="700">MCU / 家电芯片</text>
+          <text x="482" y="218" font-size="10" fill="var(--text-mute)">成本压倒一切</text>
+          <!-- 说明 -->
+          <rect x="40" y="266" width="600" height="26" rx="5" fill="var(--accent)" fill-opacity=".1" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="340" y="284" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">越靠近某个顶点 = 在该维度上越极致，同时也意味在另外两维上做出了让步</text>
+        </svg>
+        <figcaption>图 3：PPA 权衡三角上的芯片定位。服务器芯片冲性能、可穿戴冲功耗、MCU 冲成本，手机 SoC 则被夹在中间做最难的三方平衡 —— 架构评审的本质就是先把这个点画出来，再倒推所有设计决策。</figcaption>
+      </figure>
+
+      <div class="warn">
+        <b>PPA 还有一个隐藏的第四维：上市时间（Time-to-Market）。</b>
+        实际项目中，往往不是"做不到最优"，而是"没时间做到最优"。
+        一颗手机 SoC 的窗口期通常只有 12~18 个月，错过就要等下一代。
+        所以 EDA 工具真正的价值不只是"做得更好"，更是<strong>做得更快、更可预测</strong> ——
+        能让设计团队在有限时间里<em>确信</em>这版能一次点亮，这比把频率再提高 3% 值钱得多。
+        理解这一点，就能理解为什么 EDA 是整个半导体产业链里<em>利润率最高、护城河最深</em>的环节之一。
       </div>
 
       <h2 id="s4">4. PDK：代工厂给你的"说明书"</h2>
@@ -186,6 +309,82 @@
           <tr><td>功耗与热</td><td>峰值功耗、热密度分布</td><td>过热降频、封装与散热成本失控</td></tr>
         </tbody>
       </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="签核检查全景与 PVT 工艺角">
+          <text x="190" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">① 签核：版图要同时闯过七道关</text>
+          <!-- 中心版图 -->
+          <rect x="140" y="120" width="110" height="76" rx="6" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.8"/>
+          <text x="195" y="148" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">最终版图</text>
+          <text x="195" y="166" text-anchor="middle" font-size="10" fill="var(--text-mute)">GDSII</text>
+          <text x="195" y="182" text-anchor="middle" font-size="10" fill="var(--text-mute)">（待交付）</text>
+          <!-- 环绕检查项 -->
+          <g font-size="10">
+            <rect x="40" y="62" width="86" height="34" rx="5" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="83" y="76" text-anchor="middle" fill="var(--semi)" font-weight="700">STA 时序</text>
+            <text x="83" y="90" text-anchor="middle" fill="var(--text-mute)">跑得动吗</text>
+
+            <rect x="144" y="42" width="86" height="34" rx="5" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.3"/>
+            <text x="187" y="56" text-anchor="middle" fill="var(--fin)" font-weight="700">DRC 规则</text>
+            <text x="187" y="70" text-anchor="middle" fill="var(--text-mute)">造得出吗</text>
+
+            <rect x="256" y="62" width="86" height="34" rx="5" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.3"/>
+            <text x="299" y="76" text-anchor="middle" fill="var(--up)" font-weight="700">LVS 一致</text>
+            <text x="299" y="90" text-anchor="middle" fill="var(--text-mute)">连对了吗</text>
+
+            <rect x="286" y="128" width="86" height="34" rx="5" fill="var(--down)" fill-opacity=".12" stroke="var(--down)" stroke-width="1.3"/>
+            <text x="329" y="142" text-anchor="middle" fill="var(--down)" font-weight="700">功耗 / 热</text>
+            <text x="329" y="156" text-anchor="middle" fill="var(--text-mute)">会烧吗</text>
+
+            <rect x="256" y="204" width="86" height="34" rx="5" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="299" y="218" text-anchor="middle" fill="var(--accent)" font-weight="700">IR-drop / EM</text>
+            <text x="299" y="232" text-anchor="middle" fill="var(--text-mute)">供得上电吗</text>
+
+            <rect x="144" y="220" width="86" height="34" rx="5" fill="var(--text-mute)" fill-opacity=".12" stroke="var(--text-mute)" stroke-width="1.3"/>
+            <text x="187" y="234" text-anchor="middle" fill="var(--text)" font-weight="700">DFM 可制造</text>
+            <text x="187" y="248" text-anchor="middle" fill="var(--text-mute)">良率够吗</text>
+
+            <rect x="40" y="204" width="86" height="34" rx="5" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="83" y="218" text-anchor="middle" fill="var(--semi)" font-weight="700">天线效应</text>
+            <text x="83" y="232" text-anchor="middle" fill="var(--text-mute)">栅氧会坏吗</text>
+          </g>
+          <!-- 连线 -->
+          <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 2">
+            <path d="M126 96 L152 118"/><path d="M187 76 L195 120"/><path d="M256 86 L244 128"/>
+            <path d="M286 148 L250 152"/><path d="M299 204 L250 186"/><path d="M187 220 L192 196"/>
+            <path d="M126 210 L156 182"/>
+          </g>
+          <text x="195" y="278" text-anchor="middle" font-size="11" fill="var(--text-soft)">任意一项不过 → 修改版图重来，代价巨大</text>
+          <text x="195" y="294" text-anchor="middle" font-size="10" fill="var(--text-mute)">所以签核不是"检查"，而是"最后一道保险"</text>
+
+          <!-- 分隔 -->
+          <line x1="390" y1="30" x2="390" y2="296" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- 右：PVT 角 -->
+          <text x="535" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">② 时序要在所有 PVT 角下都成立</text>
+          <!-- 二维网格 -->
+          <line x1="440" y1="60" x2="440" y2="210" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="440" y1="210" x2="640" y2="210" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="420" y="70" font-size="10" fill="var(--text-mute)">电压</text>
+          <text x="420" y="84" font-size="10" fill="var(--text-mute)">↑ 高</text>
+          <text x="600" y="228" font-size="10" fill="var(--text-mute)">温度 → 高</text>
+          <!-- 角点 -->
+          <circle cx="464" cy="90" r="7" fill="var(--up)" fill-opacity=".6" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="474" y="94" font-size="10" fill="var(--up)" font-weight="700">FF（都快）</text>
+          <circle cx="616" cy="86" r="7" fill="var(--down)" fill-opacity=".6" stroke="var(--down)" stroke-width="1.4"/>
+          <text x="560" y="80" font-size="10" fill="var(--down)" font-weight="700">SS（都慢）最严</text>
+          <circle cx="616" cy="188" r="7" fill="var(--text-mute)" fill-opacity=".5" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="560" y="204" font-size="10" fill="var(--text-mute)">高温低压角</text>
+          <circle cx="540" cy="138" r="8" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="552" y="142" font-size="10" fill="var(--accent)" font-weight="700">TT（典型）</text>
+          <!-- 说明 -->
+          <rect x="420" y="240" width="220" height="52" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.2"/>
+          <text x="530" y="258" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">关键：慢角查建立，快角查保持</text>
+          <text x="420" y="276" font-size="10" fill="var(--text-mute)">· 建立时间（setup）：信号来太晚 → 慢角最险</text>
+          <text x="420" y="288" font-size="10" fill="var(--text-mute)">· 保持时间（hold）：信号走太快 → 快角最险</text>
+        </svg>
+        <figcaption>图 4：签核全景与 PVT 工艺角。左：最终版图必须同时通过七类检查，任意一项不通过都要改版重来；右：时序检查不是跑一次就完事，而是要在工艺（Process）、电压（Voltage）、温度（Temperature）组成的所有角上都满足 —— 慢角查建立时间，快角查保持时间。</figcaption>
+      </figure>
 
       <div class="tip">
         <b>工艺角（Corner）的含义：</b>SS（慢 NMOS + 慢 PMOS）、FF（都快）、SF/FS（混合）、TT（典型）。
@@ -229,6 +428,74 @@
         </div>
       </div>
 
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="开源 EDA 全流程工具链">
+          <text x="340" y="24" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">一条完全免费、可真正流片的数字全流程（OpenLane）</text>
+          <!-- 流程链 -->
+          <g>
+            <rect x="30" y="48" width="110" height="52" rx="6" fill="var(--fin)" fill-opacity=".14" stroke="var(--fin)" stroke-width="1.4"/>
+            <text x="85" y="70" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">RTL</text>
+            <text x="85" y="88" text-anchor="middle" font-size="10" fill="var(--text-mute)">design.v</text>
+          </g>
+          <path d="M144 74 L166 74" stroke="var(--semi)" stroke-width="2"/>
+          <polygon points="170,74 160,69 160,79" fill="var(--semi)"/>
+          <g>
+            <rect x="174" y="48" width="120" height="52" rx="6" fill="var(--semi)" fill-opacity=".16" stroke="var(--semi)" stroke-width="1.4"/>
+            <text x="234" y="68" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">Yosys</text>
+            <text x="234" y="86" text-anchor="middle" font-size="10" fill="var(--text-mute)">综合 → 网表</text>
+          </g>
+          <path d="M298 74 L320 74" stroke="var(--semi)" stroke-width="2"/>
+          <polygon points="324,74 314,69 314,79" fill="var(--semi)"/>
+          <g>
+            <rect x="328" y="48" width="140" height="52" rx="6" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>
+            <text x="398" y="66" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">OpenROAD</text>
+            <text x="398" y="84" text-anchor="middle" font-size="10" fill="var(--text-mute)">Floorplan → Place</text>
+            <text x="398" y="96" text-anchor="middle" font-size="10" fill="var(--text-mute)">→ CTS → Route</text>
+          </g>
+          <path d="M472 74 L494 74" stroke="var(--semi)" stroke-width="2"/>
+          <polygon points="498,74 488,69 488,79" fill="var(--semi)"/>
+          <g>
+            <rect x="502" y="48" width="148" height="52" rx="6" fill="var(--up)" fill-opacity=".14" stroke="var(--up)" stroke-width="1.4"/>
+            <text x="576" y="68" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">Klayout + Netgen</text>
+            <text x="576" y="86" text-anchor="middle" font-size="10" fill="var(--text-mute)">DRC / LVS / 出 GDS</text>
+          </g>
+
+          <!-- 下方：命令流 -->
+          <text x="30" y="126" font-size="12" fill="var(--text)" font-weight="700">实际操作只需几条命令：</text>
+          <rect x="30" y="136" width="620" height="96" rx="6" fill="var(--surface-2)" fill-opacity=".5" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="46" y="158" font-size="11" fill="var(--text-mute)"># 安装后，进入 OpenLane 目录</text>
+          <text x="46" y="178" font-size="11" fill="var(--text)">make mount</text>
+          <text x="46" y="198" font-size="11" fill="var(--text-mute)"># 一行跑通 RTL → GDSII 全流程</text>
+          <text x="46" y="218" font-size="11" fill="var(--text)">./flow.tcl -design spm</text>
+
+          <!-- 下方：PDK 与验证 -->
+          <g>
+            <rect x="30" y="248" width="196" height="40" rx="6" fill="var(--fin)" fill-opacity=".1" stroke="var(--fin)" stroke-width="1.3"/>
+            <text x="128" y="266" text-anchor="middle" font-size="11" fill="var(--fin)" font-weight="700">SKY130 开源 PDK</text>
+            <text x="128" y="280" text-anchor="middle" font-size="10" fill="var(--text-mute)">130nm，无需 NDA，免费获取</text>
+
+            <rect x="240" y="248" width="196" height="40" rx="6" fill="var(--semi)" fill-opacity=".1" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="338" y="266" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">MPW 多项目晶圆</text>
+            <text x="338" y="280" text-anchor="middle" font-size="10" fill="var(--text-mute)">分摊掩膜费，几千元即可流片</text>
+
+            <rect x="450" y="248" width="200" height="40" rx="6" fill="var(--up)" fill-opacity=".1" stroke="var(--up)" stroke-width="1.3"/>
+            <text x="550" y="266" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">真实意义</text>
+            <text x="550" y="280" text-anchor="middle" font-size="10" fill="var(--text-mute)">个人第一次能"造出真芯片"</text>
+          </g>
+        </svg>
+        <figcaption>图 5：开源 EDA 全流程。Yosys 做综合、OpenROAD 做布局布线、Klayout 与 Netgen 做物理验证，配合 SkyWater SKY130 开源 PDK，个人可以在几乎零成本的前提下走完从 RTL 到 GDSII 的完整链路，并通过 MPW 多项目晶圆真正流片。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>这件事的历史意义值得单独说一句。</b>
+        在 2020 年之前，"个人设计一颗真实芯片"基本是天方夜谭 ——
+        不是技术做不到，而是<em>PDK 拿不到、EDA 买不起、掩膜费付不出</em>三道门槛同时卡死。
+        SKY130 开源 PDK + OpenLane 全自动流程 + Efabless 的免费 MPW 名额，
+        第一次把这三道门槛同时拆掉。今天一个在校学生提交一份 Verilog，
+        几个月后就能收到自己设计的芯片实物 —— 这在半导体史上是<strong>第一次</strong>。
+        如果你读到这里有动手的冲动，这就是最好的入场时机。
+      </div>
+
       <table>
         <thead><tr><th>建议项目</th><th>难度</th><th>能练到什么</th></tr></thead>
         <tbody>
@@ -264,6 +531,30 @@
         使用时电压会波动（Voltage）、温度会变化（Temperature）。
         如果只按典型条件验证，量产后必然有一部分芯片在极端条件下失效，
         良率无法保证。因此必须在 SS（最慢）、FF（最快）等最坏角下都满足时序，才算签核通过。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：两段 RTL 代码"功能完全等价"，综合出来的电路却可能差一倍面积。为什么？这说明了什么？</summary>
+        <div class="answer">因为综合是<strong>约束驱动</strong>而不是"代码驱动"的。同一个功能可以映射成大而慢的单元组合，
+        也可以映射成小而快的单元组合，取决于你给的时钟周期、驱动强度、输入输出延迟等约束。
+        工具只在约束允许的范围内做优化：约束松，它就选最小面积的实现；约束紧，它就插入缓冲、换成大驱动单元去抢时序。
+        这说明写 RTL 时不能只关心"功能对不对"，还要理解代码结构（例如一个 if 会被综合成多路选择器还是优先级链）
+        与最终电路的对应关系 —— 所谓"写 RTL 时要心里有电路"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：PPA 之外常说的"第四维"是什么？它为什么会反过来改变 PPA 的取舍？</summary>
+        <div class="answer">第四维是 <strong>Time-to-Market（上市时间）</strong>，有时再加上可复用性（一次设计、多处复用）。
+        芯片晚上市半年，可能就错过了一个产品窗口，损失远大于 5% 的面积或功耗优化。
+        所以工程上经常主动放弃"最优解"：用成熟 IP 而不是自研、用已验证的旧单元库而不是重新优化、
+        限制时钟频率换取一次流片成功率。这也是为什么"能按时 tape-out"往往排在"PPA 再压一点"前面。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：开源 PDK（如 SKY130）+ OpenLane 这类开源流程，对学习者真正意味着什么？它和商业流程的差距在哪？</summary>
+        <div class="answer">它把过去"必须付数十万美元授权费、必须签 NDA 才能看到"的完整流程变成了任何人可下载的包：
+        从 RTL 到 GDSII 的每一步都能亲手跑通、出错能看到真实日志、跑完能拿到真实的面积/时序数字。
+        这是过去二十年 IC 教育最大的变化 —— 学习门槛从"有没有单位"变成"有没有时间"。
+        差距主要在三点：工艺节点落后（130 nm 对先进节点）、单元库与 IP 生态小、
+        签核工具的精度和商业化支持弱。但对学习"流程为什么是这样"而言，这些差距不影响理解，
+        因为流程骨架、约束的写法、时序收敛的思路都是通用的。</div>
       </details>
 
         <div class="series">

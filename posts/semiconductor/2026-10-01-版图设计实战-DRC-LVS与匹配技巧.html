@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-01</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 18 篇</span><span class="sep"></span>
-      <span>阅读约 14 分钟</span>
+      <span>阅读约 28 分钟</span>
     </div>
 
     <div class="content">
@@ -47,10 +47,11 @@
           <li><a href="#s3">设计规则在约束什么</a></li>
           <li><a href="#s4">四种检查：DRC / LVS / ERC / PEX</a></li>
           <li><a href="#s5">匹配：模拟版图的灵魂</a></li>
-          <li><a href="#s6">天线效应</a></li>
-          <li><a href="#s7">闩锁效应 Latch-up</a></li>
-          <li><a href="#s8">实战：画一个反相器版图</a></li>
-          <li><a href="#s9">自测</a></li>
+          <li><a href="#s6">匹配进阶：WPE 与 STI 应力</a></li>
+          <li><a href="#s7">天线效应</a></li>
+          <li><a href="#s8">闩锁效应 Latch-up</a></li>
+          <li><a href="#s9">实战：画一个反相器版图</a></li>
+          <li><a href="#s10">自测</a></li>
         </ol>
       </div>
 
@@ -85,6 +86,93 @@
         每一级只能和相邻级相连。这也是版图工具里"打孔串层"必须一层层来的原因。
       </div>
 
+      <p>把这些层"竖着切开"看一眼，会比表格直观得多。下图左边是器件剖面，
+      右边是各层的连接层级 —— 注意金属层只能通过通孔与<em>相邻</em>层相连，
+      不存在"M1 直接跳到 M3"这种走法。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="工艺层纵向剖面与互连层级">
+          <g font-size="11">
+            <rect x="60" y="96" width="300" height="120" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+            <text x="210" y="152" text-anchor="middle" font-size="11" fill="var(--text-mute)">ILD 层间介质（绝缘）</text>
+
+            <rect x="60" y="216" width="300" height="64" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.4"/>
+            <rect x="240" y="216" width="120" height="34" fill="var(--fin)" fill-opacity=".16" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="6 4"/>
+            <text x="300" y="238" text-anchor="middle" font-size="10" fill="var(--fin)">N 阱</text>
+            <text x="130" y="232" text-anchor="middle" font-size="10" fill="var(--semi)">NMOS</text>
+            <text x="110" y="272" font-size="10" fill="var(--text-mute)">P 型硅衬底</text>
+
+            <rect x="75" y="204" width="40" height="12" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="175" y="204" width="40" height="12" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="125" y="186" width="40" height="14" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.3"/>
+            <rect x="125" y="200" width="40" height="4" fill="var(--text-mute)" fill-opacity=".7"/>
+            <text x="145" y="182" text-anchor="middle" font-size="9" fill="var(--accent)">栅</text>
+
+            <rect x="250" y="204" width="32" height="12" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1.1"/>
+            <rect x="328" y="204" width="32" height="12" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1.1"/>
+            <rect x="290" y="186" width="30" height="14" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.3"/>
+            <rect x="290" y="200" width="30" height="4" fill="var(--text-mute)" fill-opacity=".7"/>
+
+            <g fill="var(--up)" fill-opacity=".7">
+              <rect x="90" y="108" width="10" height="96"/>
+              <rect x="190" y="108" width="10" height="96"/>
+              <rect x="140" y="108" width="10" height="78"/>
+              <rect x="260" y="108" width="10" height="96"/>
+              <rect x="338" y="108" width="10" height="96"/>
+              <rect x="298" y="108" width="10" height="78"/>
+            </g>
+
+            <g fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1">
+              <rect x="85" y="92" width="20" height="14"/>
+              <rect x="135" y="92" width="20" height="14"/>
+              <rect x="185" y="92" width="20" height="14"/>
+              <rect x="255" y="92" width="20" height="14"/>
+              <rect x="293" y="92" width="20" height="14"/>
+              <rect x="333" y="92" width="20" height="14"/>
+            </g>
+            <rect x="92" y="74" width="10" height="18" fill="var(--up)" fill-opacity=".6"/>
+            <rect x="78" y="60" width="80" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.1"/>
+
+            <g>
+              <rect x="400" y="56" width="130" height="18" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1.1"/>
+              <text x="408" y="70" font-size="10" fill="var(--text)">M2 顶层金属</text>
+              <rect x="400" y="86" width="130" height="14" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1"/>
+              <text x="408" y="97" font-size="10" fill="var(--text-soft)">VIA1 通孔</text>
+              <rect x="400" y="112" width="130" height="18" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1.1"/>
+              <text x="408" y="126" font-size="10" fill="var(--text)">M1 第一层金属</text>
+              <rect x="400" y="142" width="130" height="14" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1"/>
+              <text x="408" y="153" font-size="10" fill="var(--text-soft)">CT 接触孔</text>
+              <rect x="400" y="168" width="130" height="18" fill="var(--accent)" fill-opacity=".2" stroke="var(--accent)" stroke-width="1.1"/>
+              <text x="408" y="182" font-size="10" fill="var(--text)">多晶硅栅 / 源漏扩散</text>
+              <rect x="400" y="198" width="130" height="18" fill="var(--semi)" fill-opacity=".14" stroke="var(--semi)" stroke-width="1.1"/>
+              <text x="408" y="212" font-size="10" fill="var(--text)">衬底与阱（器件本体）</text>
+            </g>
+            <g fill="var(--text-mute)">
+              <line x1="465" y1="75" x2="465" y2="81" stroke="var(--text-mute)" stroke-width="1.2"/>
+              <path d="M461 81 L465 86 L469 81 Z"/>
+              <line x1="465" y1="101" x2="465" y2="107" stroke="var(--text-mute)" stroke-width="1.2"/>
+              <path d="M461 107 L465 112 L469 107 Z"/>
+              <line x1="465" y1="131" x2="465" y2="137" stroke="var(--text-mute)" stroke-width="1.2"/>
+              <path d="M461 137 L465 142 L469 137 Z"/>
+              <line x1="465" y1="157" x2="465" y2="163" stroke="var(--text-mute)" stroke-width="1.2"/>
+              <path d="M461 163 L465 168 L469 163 Z"/>
+              <line x1="465" y1="187" x2="465" y2="193" stroke="var(--text-mute)" stroke-width="1.2"/>
+              <path d="M461 193 L465 198 L469 193 Z"/>
+            </g>
+            <text x="400" y="240" font-size="10" fill="var(--text-soft)">规则：只能与相邻层相连</text>
+            <text x="400" y="258" font-size="10" fill="var(--text-soft)">M1 不能直接跳到 M3</text>
+            <text x="400" y="276" font-size="10" fill="var(--text-mute)">打孔串层必须一层一层来</text>
+          </g>
+        </svg>
+        <figcaption>图 1：工艺层纵向剖面（左）与互连层级（右）。金属只能经通孔与相邻层相连，因此布线是"搭楼梯"而不是"坐电梯"。</figcaption>
+      </figure>
+
+      <div class="tip">
+        <b>层名字在不同 PDK 里不一样。</b>Sky130 里叫 <strong>li1 / met1 / via</strong>，
+        商用 PDK 里可能叫 <strong>M1 / VIA1 / OD / PO</strong>。名字不重要，
+        重要的是看懂<em>层与层之间的连接关系</em>：新拿一个 PDK，第一件事就是翻它的层定义表。
+      </div>
+
       <h2 id="s3">3. 设计规则在约束什么</h2>
 
       <p>设计规则（Design Rule）是代工厂根据工艺能力给出的几何约束。违反它，芯片造不出来或良率极低。</p>
@@ -101,6 +189,68 @@
         </tbody>
       </table>
 
+      <p>这六类规则看着抽象，其实每一条都对应一个具体的物理后果。下面把最常见的四条画出来 ——
+      左边是违反的样子，右边是合格的样子。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四类设计规则的几何示意">
+          <g font-size="10">
+            <rect x="26" y="34" width="300" height="104" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="354" y="34" width="300" height="104" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="26" y="152" width="300" height="104" fill="none" stroke="var(--border)" stroke-width="1"/>
+            <rect x="354" y="152" width="300" height="104" fill="none" stroke="var(--border)" stroke-width="1"/>
+
+            <text x="176" y="52" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">① 最小宽度 Width</text>
+            <rect x="62" y="64" width="5" height="44" fill="var(--up)" fill-opacity=".8"/>
+            <text x="64" y="120" text-anchor="middle" font-size="10" fill="var(--up)">✗ 太窄</text>
+            <rect x="150" y="64" width="22" height="44" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.2"/>
+            <line x1="150" y1="112" x2="150" y2="120" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="172" y1="112" x2="172" y2="120" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="150" y1="116" x2="172" y2="116" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="161" y="131" text-anchor="middle" font-size="9" fill="var(--text-soft)">✓ W ≥ Wmin</text>
+
+            <text x="504" y="52" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">② 最小间距 Space</text>
+            <rect x="380" y="64" width="18" height="44" fill="var(--up)" fill-opacity=".7"/>
+            <rect x="402" y="64" width="18" height="44" fill="var(--up)" fill-opacity=".7"/>
+            <text x="400" y="120" text-anchor="middle" font-size="10" fill="var(--up)">✗ 太近</text>
+            <rect x="470" y="64" width="18" height="44" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="506" y="64" width="18" height="44" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.2"/>
+            <line x1="488" y1="112" x2="488" y2="120" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="506" y1="112" x2="506" y2="120" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="488" y1="116" x2="506" y2="116" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="497" y="131" text-anchor="middle" font-size="9" fill="var(--text-soft)">✓ S ≥ Smin</text>
+
+            <text x="176" y="170" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">③ 包围 Enclosure</text>
+            <rect x="60" y="182" width="64" height="46" fill="none" stroke="var(--text-mute)" stroke-width="1.1" stroke-dasharray="4 3"/>
+            <rect x="114" y="196" width="16" height="18" fill="var(--up)" fill-opacity=".75"/>
+            <text x="92" y="246" text-anchor="middle" font-size="10" fill="var(--up)">✗ 未包住</text>
+            <rect x="170" y="182" width="64" height="46" fill="var(--accent)" fill-opacity=".12" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="194" y="198" width="16" height="14" fill="var(--up)" fill-opacity=".75"/>
+            <text x="202" y="246" text-anchor="middle" font-size="10" fill="var(--accent)">✓ 四周包住</text>
+
+            <text x="504" y="170" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">④ 延伸 Extension</text>
+            <rect x="380" y="198" width="34" height="24" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="398" y="188" width="20" height="44" fill="var(--accent)" fill-opacity=".6" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="406" y="246" text-anchor="middle" font-size="10" fill="var(--up)">✗ 未伸出</text>
+            <rect x="470" y="198" width="64" height="24" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="498" y="188" width="20" height="44" fill="var(--accent)" fill-opacity=".6" stroke="var(--accent)" stroke-width="1.2"/>
+            <line x1="518" y1="224" x2="518" y2="232" stroke="var(--up)" stroke-width="1"/>
+            <line x1="534" y1="224" x2="534" y2="232" stroke="var(--up)" stroke-width="1"/>
+            <line x1="518" y1="228" x2="534" y2="228" stroke="var(--up)" stroke-width="1"/>
+            <text x="526" y="221" text-anchor="middle" font-size="9" fill="var(--up)">X</text>
+            <text x="516" y="246" text-anchor="middle" font-size="10" fill="var(--accent)">✓ 两侧伸出</text>
+          </g>
+        </svg>
+        <figcaption>图 2：四类最常见的设计规则。宽度与间距保证"画得出来"，包围与延伸保证"层与层真的接上了"。</figcaption>
+      </figure>
+
+      <div class="note">
+        <b>规则不是"越小越牛"，而是"工艺窗口"。</b>代工厂给的最小线宽，
+        是它在<em>良率、产能、可靠性</em>之间权衡后给出的安全边界：再小 10 nm，
+        也许实验室里能刻出来，但量产后良率会从 95% 掉到 60%。
+        所以"能不能画"和"能不能量产"是两件事 —— 设计规则管的是后者。
+      </div>
+
       <div class="warn">
         <b>为什么必须填 Dummy（虚拟图形）？</b>CMP 抛光时，金属稀疏的区域会被磨得更多（Dishing）、
         密集区域磨得少，导致表面高低不平，后续光刻对焦失败。因此需要往空白处填<em>不与电路连接的</em>金属块，
@@ -116,6 +266,72 @@
           <tr><td>LVS</td><td>Layout vs Schematic</td><td>连出来是不是<strong>你要的电路</strong></td><td>连接错误，功能不对</td></tr>
           <tr><td>ERC</td><td>Electrical Rule Check</td><td>有没有<strong>电学违规</strong>（浮空节点、衬底未接等）</td><td>潜在的可靠性与功能隐患</td></tr>
           <tr><td>PEX</td><td>Parasitic Extraction</td><td>实际有<strong>多大寄生 R/C</strong></td><td>后仿真与实测对不上</td></tr>
+        </tbody>
+      </table>
+
+      <p>电路图里一根线就是一根线，没有电阻也没有电容；但版图里每一段金属都是<strong>电阻</strong>，
+      每条线对面都有一块<strong>衬底</strong>构成电容，两条相邻的线之间还互相耦合。
+      PEX 做的事，就是把这些"画出来的副作用"全部量化回网表。下图是四类主要寄生来源：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="版图寄生参数的四类来源">
+          <g font-size="10">
+            <text x="60" y="52" font-size="11" fill="var(--text)" font-weight="700">互连寄生</text>
+            <text x="430" y="52" font-size="11" fill="var(--text)" font-weight="700">通孔与器件寄生</text>
+
+            <rect x="40" y="200" width="600" height="16" fill="var(--semi)" fill-opacity=".18" stroke="var(--semi)" stroke-width="1.1"/>
+            <text x="48" y="213" font-size="9" fill="var(--text-soft)">衬底 / 阱（交流地）</text>
+
+            <rect x="60" y="96" width="280" height="14" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1"/>
+            <text x="64" y="92" font-size="9" fill="var(--text-soft)">M1 信号线 A</text>
+            <rect x="60" y="132" width="280" height="14" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1"/>
+            <text x="64" y="162" font-size="9" fill="var(--text-soft)">M1 信号线 B</text>
+
+            <line x1="90" y1="146" x2="90" y2="166" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="80" y1="166" x2="100" y2="166" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="80" y1="172" x2="100" y2="172" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="90" y1="172" x2="90" y2="200" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="106" y="188" font-size="9" fill="var(--text-soft)">Cg 对地电容</text>
+
+            <line x1="290" y1="146" x2="290" y2="166" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="280" y1="166" x2="300" y2="166" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="280" y1="172" x2="300" y2="172" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="290" y1="172" x2="290" y2="200" stroke="var(--text-mute)" stroke-width="1"/>
+
+            <line x1="180" y1="110" x2="180" y2="118" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="170" y1="118" x2="190" y2="118" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="170" y1="124" x2="190" y2="124" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="180" y1="124" x2="180" y2="132" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="196" y="124" font-size="9" fill="var(--text-soft)">Cc 线间耦合电容</text>
+
+            <rect x="430" y="62" width="80" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.1"/>
+            <text x="436" y="58" font-size="9" fill="var(--text-soft)">M2</text>
+            <rect x="470" y="76" width="10" height="20" fill="var(--up)" fill-opacity=".65"/>
+            <rect x="430" y="96" width="120" height="14" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1"/>
+            <text x="486" y="90" font-size="9" fill="var(--up)">Rvia 通孔电阻</text>
+            <text x="436" y="126" font-size="9" fill="var(--text-soft)">Rwire 金属方块电阻</text>
+
+            <rect x="566" y="150" width="64" height="20" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)" stroke-width="1.1"/>
+            <text x="598" y="144" text-anchor="middle" font-size="9" fill="var(--semi)">N+ 扩散区</text>
+            <line x1="598" y1="170" x2="598" y2="186" stroke="var(--text-mute)" stroke-width="1"/>
+            <line x1="586" y1="186" x2="610" y2="186" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="586" y1="192" x2="610" y2="192" stroke="var(--text-mute)" stroke-width="2"/>
+            <line x1="598" y1="192" x2="598" y2="200" stroke="var(--text-mute)" stroke-width="1"/>
+            <text x="616" y="192" font-size="9" fill="var(--text-soft)">Cj 结电容</text>
+
+            <text x="40" y="232" font-size="9" fill="var(--text-mute)">PEX 把上述 R、C 全部提取出来回灌进网表，后仿真才第一次"看见"真实的电路</text>
+          </g>
+        </svg>
+        <figcaption>图 3：版图寄生的四类主要来源 —— 对地电容 Cg、线间耦合电容 Cc、通孔/金属电阻 Rvia 与 Rwire、扩散区结电容 Cj。</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>寄生类型</th><th>典型量级</th><th>主要影响</th><th>缓解手段</th></tr></thead>
+        <tbody>
+          <tr><td>金属对地电容 Cg</td><td>0.1 ~ 0.2 fF/μm</td><td>带宽下降、建立时间变长</td><td>缩短走线、用顶层厚金属、减小线宽</td></tr>
+          <tr><td>线间耦合电容 Cc</td><td>与间距成反比</td><td>串扰（Crosstalk）、信号完整性</td><td>加大间距、插屏蔽线（Shielding）</td></tr>
+          <tr><td>通孔电阻 Rvia</td><td>1 ~ 5 Ω/个</td><td>电源网络 IR-drop、高频衰减</td><td>多孔并联、关键路径少打孔</td></tr>
+          <tr><td>扩散区结电容 Cj</td><td>与结面积/周长成正比</td><td>限制最高工作频率</td><td>减小漏/源面积、折叠器件</td></tr>
         </tbody>
       </table>
 
@@ -176,7 +392,7 @@
           <text x="129" y="170" text-anchor="middle" font-size="11" fill="var(--text-mute)">A 在左、B 在右，梯度使二者失配</text>
           <text x="429" y="152" text-anchor="middle" font-size="11" fill="var(--down)">A/B 对称分布，梯度影响被抵消</text>
         </svg>
-        <figcaption>图 1：匹配版图对比。共质心（ABBA）+ 两端 Dummy 是模拟版图最常用的标准做法。</figcaption>
+        <figcaption>图 4：匹配版图对比。共质心（ABBA）+ 两端 Dummy 是模拟版图最常用的标准做法。</figcaption>
       </figure>
 
       <div class="formula-block">
@@ -184,7 +400,91 @@
         <span class="fnote">随机失配随器件面积平方根下降。想让失配减半，面积要增大 4 倍 —— 这是精度与面积之间最直接的权衡。</span>
       </div>
 
-      <h2 id="s6">6. 天线效应</h2>
+      <h2 id="s6">6. 匹配进阶：WPE 与 STI 应力</h2>
+
+      <p>到第 5 节为止，我们抵消的都是<strong>位置带来的梯度</strong>——工艺参数在硅片上缓慢地线性变化。
+      但还有一类失配来源更隐蔽：器件<em>自身</em>的参数，会被它<em>周围画了什么</em>改变。
+      这类效应统称<strong>版图依赖效应（LDE, Layout Dependent Effects）</strong>，最典型的就是 WPE 与 STI 应力。
+      它们的特点是：<strong>电路图完全一样、W/L 完全一样，只因为摆在版图上的位置不同，实测电流就能差出百分之几</strong>。
+      对高精度电流镜、带隙基准、比较器来说，这已经足够让指标报废。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WPE 阱邻近效应与 STI 应力示意">
+          <g font-size="11">
+
+            <text x="40" y="24" font-size="12" fill="var(--text)" font-weight="700">① 阱邻近效应 WPE</text>
+            <rect x="40" y="40" width="300" height="110" fill="var(--fin)" fill-opacity=".12" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="6 4"/>
+            <text x="46" y="54" font-size="10" fill="var(--fin)">N 阱</text>
+            <rect x="58" y="66" width="44" height="42" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="80" y="92" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">A</text>
+            <rect x="228" y="66" width="44" height="42" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="250" y="92" text-anchor="middle" font-size="13" fill="var(--text)" font-weight="700">B</text>
+            <line x1="40" y1="120" x2="40" y2="128" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="58" y1="120" x2="58" y2="128" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="40" y1="124" x2="58" y2="124" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="62" y="128" font-size="10" fill="var(--up)">S₁（小）</text>
+            <line x1="40" y1="134" x2="40" y2="142" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="228" y1="134" x2="228" y2="142" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="40" y1="138" x2="228" y2="138" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="232" y="142" font-size="10" fill="var(--up)">S₂（大）</text>
+            <text x="40" y="172" font-size="10" fill="var(--text-soft)">A 紧邻阱边：离子侧向散射多，Vt 与 μ 偏离模型值</text>
+            <text x="40" y="192" font-size="10" fill="var(--text-soft)">B 位于阱中央：掺杂接近标称，参数符合模型</text>
+            <text x="40" y="212" font-size="10" fill="var(--semi)">W/L 相同，A 与 B 的实测电流却不相等</text>
+            <text x="40" y="234" font-size="10" fill="var(--text-mute)">对策：匹配对到阱边的距离 S 必须相等</text>
+
+            <text x="370" y="24" font-size="12" fill="var(--text)" font-weight="700">② STI 应力 / LOD</text>
+            <rect x="376" y="56" width="34" height="56" fill="var(--border)" fill-opacity=".55" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="542" y="56" width="34" height="56" fill="var(--border)" fill-opacity=".55" stroke="var(--text-mute)" stroke-width="1.1"/>
+            <rect x="410" y="56" width="132" height="56" fill="var(--semi)" fill-opacity=".12" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="393" y="48" text-anchor="middle" font-size="9" fill="var(--text-mute)">STI</text>
+            <text x="559" y="48" text-anchor="middle" font-size="9" fill="var(--text-mute)">STI</text>
+            <text x="430" y="104" font-size="9" fill="var(--semi)">OD</text>
+            <rect x="452" y="48" width="32" height="72" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.4"/>
+            <line x1="410" y1="84" x2="424" y2="84" stroke="var(--up)" stroke-width="1.4"/>
+            <path d="M424 80 L433 84 L424 88 Z" fill="var(--up)"/>
+            <line x1="542" y1="84" x2="528" y2="84" stroke="var(--up)" stroke-width="1.4"/>
+            <path d="M528 80 L519 84 L528 88 Z" fill="var(--up)"/>
+            <line x1="410" y1="124" x2="410" y2="132" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="452" y1="124" x2="452" y2="132" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="410" y1="128" x2="452" y2="128" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="424" y="142" font-size="10" fill="var(--up)">SA</text>
+            <line x1="484" y1="124" x2="484" y2="132" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="542" y1="124" x2="542" y2="132" stroke="var(--up)" stroke-width="1.2"/>
+            <line x1="484" y1="128" x2="542" y2="128" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="506" y="142" font-size="10" fill="var(--up)">SB</text>
+            <text x="370" y="172" font-size="10" fill="var(--text-soft)">STI 氧化物体积膨胀，横向挤压沟道 → 迁移率变化</text>
+            <text x="370" y="192" font-size="10" fill="var(--text-soft)">SA / SB 越小应力越强；左右不对称则器件不对称</text>
+            <text x="370" y="212" font-size="10" fill="var(--semi)">同样的 W/L，SA 不同 ⇒ 实际驱动电流不同</text>
+            <text x="370" y="234" font-size="10" fill="var(--text-mute)">对策：匹配对 SA、SB 必须完全相同（必要时加 Dummy）</text>
+          </g>
+        </svg>
+        <figcaption>图 5：两类版图依赖效应。左：器件到阱边的距离 S 决定 WPE 强度；右：栅到有源区边界的距离 SA/SB 决定 STI 应力强度。</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>效应</th><th>物理成因</th><th>受哪个版图量控制</th><th>对策</th></tr></thead>
+        <tbody>
+          <tr><td>WPE 阱邻近效应</td><td>阱注入时离子从光刻胶与阱边缘侧向散射，靠边的器件掺杂偏多</td><td>器件到阱边界的距离 S</td><td>匹配对保持等距；敏感器件远离阱边</td></tr>
+          <tr><td>STI 应力 / LOD</td><td>浅槽隔离氧化物体积膨胀，横向挤压沟道晶格，改变迁移率</td><td>栅到有源区边界的距离 SA / SB</td><td>匹配对 SA、SB 完全一致；两端加 Dummy 撑开</td></tr>
+          <tr><td>金属与封装应力</td><td>上层金属、钝化层、塑封体施加的机械应力改变迁移率</td><td>器件在芯片上的位置、周边金属密度</td><td>共质心摆放；远离功率器件与切割道</td></tr>
+          <tr><td>片上温度梯度</td><td>功率器件发热导致硅片温度不均</td><td>与热源的距离和相对方向</td><td>对称布局；敏感对放在同一等温线上</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <b>新手最容易踩的坑：</b>画了一对非常漂亮的共质心器件，结果一边紧挨阱边、一边在阱中央。
+        共质心只抵消了<em>线性梯度</em>，却同时引入了<em>WPE 的系统偏差</em>——两者不是一回事，不能互相替代。
+        正确的优先顺序是：<strong>先保证 LDE 环境一致（S、SA、SB 都相同），再谈共质心排列</strong>。
+      </div>
+
+      <div class="note">
+        <b>为什么前仿真里看不到这些？</b>因为标准 SPICE 模型只认 W 和 L 两个参数，
+        而 WPE / STI 效应必须靠<em>版图后仿真</em>才能体现：先由 PEX 工具把版图里测出的 S、SA、SB
+        <strong>反标（back-annotate）</strong>回网表，仿真器才会用修正后的器件参数。
+        这也是"LVS 通过"与"仿真结果可信"之间还隔着一步的原因。
+      </div>
+
+      <h2 id="s7">7. 天线效应</h2>
 
       <p><strong>成因：</strong>制造过程中，等离子刻蚀会让大面积的金属线像"天线"一样收集电荷。
       若这些电荷通过与之相连的栅极泄放，就会击穿极薄的栅氧化层，造成永久损伤。</p>
@@ -192,6 +492,61 @@
       <div class="formula-block">
         <span class="fl">天线比 = 连接到栅极的金属面积 / 栅氧化层面积　（工艺给出上限，如 400:1）</span>
       </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="天线效应的成因与两种修复方法">
+          <g font-size="10">
+            <text x="30" y="46" font-size="11" fill="var(--text)" font-weight="700">① 问题：大面积金属成天线</text>
+            <text x="250" y="46" font-size="11" fill="var(--text)" font-weight="700">② 修法一：跳线 Jumper</text>
+            <text x="480" y="46" font-size="11" fill="var(--text)" font-weight="700">③ 修法二：天线二极管</text>
+
+            <rect x="30" y="145" width="620" height="28" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.2"/>
+            <text x="36" y="164" font-size="10" fill="var(--text-mute)">衬底</text>
+
+            <rect x="50" y="70" width="140" height="40" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.2"/>
+            <text x="120" y="94" text-anchor="middle" font-size="10" fill="var(--text)">大面积 M1</text>
+            <text x="70" y="62" font-size="13" fill="var(--up)">+</text>
+            <text x="100" y="62" font-size="13" fill="var(--up)">+</text>
+            <text x="130" y="62" font-size="13" fill="var(--up)">+</text>
+            <text x="160" y="62" font-size="13" fill="var(--up)">+</text>
+            <text x="196" y="60" font-size="9" fill="var(--text-mute)">等离子</text>
+            <rect x="110" y="110" width="10" height="15" fill="var(--up)" fill-opacity=".7"/>
+            <rect x="95" y="125" width="40" height="12" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="95" y="137" width="40" height="4" fill="var(--text-mute)" fill-opacity=".8"/>
+            <path d="M148 128 l-9 14 h7 l-5 13 l12 -17 h-7 l6 -10 z" fill="var(--up)"/>
+            <text x="160" y="140" font-size="9" fill="var(--up)">栅氧击穿</text>
+
+            <rect x="255" y="67" width="115" height="14" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1.1"/>
+            <text x="376" y="78" font-size="9" fill="var(--text-soft)">M2</text>
+            <rect x="268" y="81" width="9" height="14" fill="var(--up)" fill-opacity=".65"/>
+            <rect x="352" y="81" width="9" height="14" fill="var(--up)" fill-opacity=".65"/>
+            <rect x="255" y="95" width="45" height="12" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1"/>
+            <rect x="315" y="95" width="45" height="12" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.1"/>
+            <rect x="330" y="107" width="9" height="18" fill="var(--up)" fill-opacity=".7"/>
+            <rect x="330" y="125" width="40" height="12" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="330" y="137" width="40" height="4" fill="var(--text-mute)" fill-opacity=".8"/>
+            <text x="376" y="140" font-size="9" fill="var(--accent)">✓ 收集面积被切断</text>
+
+            <rect x="490" y="70" width="90" height="30" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1.2"/>
+            <rect x="555" y="100" width="9" height="25" fill="var(--up)" fill-opacity=".7"/>
+            <rect x="540" y="125" width="40" height="12" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.2"/>
+            <rect x="540" y="137" width="40" height="4" fill="var(--text-mute)" fill-opacity=".8"/>
+            <line x1="580" y1="131" x2="598" y2="131" stroke="var(--accent)" stroke-width="1.2"/>
+            <path d="M598 121 L598 141 L614 131 Z" fill="var(--accent)" fill-opacity=".65"/>
+            <line x1="614" y1="119" x2="614" y2="143" stroke="var(--accent)" stroke-width="1.6"/>
+            <line x1="614" y1="131" x2="628" y2="131" stroke="var(--accent)" stroke-width="1.2"/>
+            <line x1="628" y1="131" x2="628" y2="145" stroke="var(--accent)" stroke-width="1.2"/>
+            <text x="606" y="114" text-anchor="middle" font-size="9" fill="var(--accent)">D</text>
+            <text x="634" y="152" font-size="9" fill="var(--accent)">✓ 泄放</text>
+
+            <text x="30" y="196" font-size="9" fill="var(--text-soft)">天线比 = 连接到栅极的金属面积 ÷ 栅氧面积，超过工艺上限（如 400:1）即判定违规</text>
+            <text x="30" y="214" font-size="9" fill="var(--text-mute)">跳线在物理上切断了连续金属，二极管则给电荷留了一条不经过栅氧的低阻泄放路径</text>
+          </g>
+        </svg>
+        <figcaption>图 6：天线效应的成因与两种标准修法。左：大面积金属在等离子刻蚀中收集电荷并击穿栅氧；中：跳线断开连续收集面积；右：并联二极管提供泄放通路。</figcaption>
+      </figure>
+
+      <p>理解了图 6 之后再看下面这张表，每一行对应的就不再是一句"规则要求"，而是一个明确的物理动作：</p>
 
       <table>
         <thead><tr><th>解决方法</th><th>做法</th><th>代价</th></tr></thead>
@@ -207,10 +562,61 @@
         却会在制造阶段批量损伤栅氧 —— 因此必须靠专门的 Antenna DRC 规则拦截，不能只看普通 DRC。
       </div>
 
-      <h2 id="s7">7. 闩锁效应 Latch-up</h2>
+      <h2 id="s8">8. 闩锁效应 Latch-up</h2>
 
       <p>CMOS 结构中天然存在寄生的<strong>可控硅（SCR）</strong>：由寄生 NPN 与 PNP 互相耦合形成正反馈。
       一旦被触发（如 I/O 上的电压过冲），就会在电源与地之间形成低阻通路，电流剧增直至烧毁芯片。</p>
+
+      <p>关键在于，这两个三极管<strong>不是画出来的，而是 CMOS 结构自带的</strong>：
+      NMOS 的 N+ 源、P 衬底、N 阱恰好构成一个纵向 NPN；PMOS 的 P+ 源、N 阱、P 衬底恰好构成一个横向 PNP。
+      它们共用衬底与阱，于是互相提供基极电流，形成一个<em>谁也离不开谁</em>的正反馈环。
+      下图左边是剖面对应关系，右边是这条环路在电流-电压上的"指纹"——一条带负阻区的回滞曲线。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="闩锁效应的寄生结构与回滞 I-V 曲线">
+          <g font-size="10">
+            <text x="40" y="30" font-size="11" fill="var(--text)" font-weight="700">剖面：两个寄生三极管</text>
+            <text x="390" y="30" font-size="11" fill="var(--text)" font-weight="700">闩锁的 I–V 特征（回滞曲线）</text>
+
+            <rect x="40" y="110" width="300" height="90" fill="var(--semi)" fill-opacity=".10" stroke="var(--semi)" stroke-width="1.4"/>
+            <rect x="190" y="110" width="140" height="58" fill="var(--fin)" fill-opacity=".13" stroke="var(--fin)" stroke-width="1.2" stroke-dasharray="6 4"/>
+            <rect x="70" y="96" width="46" height="14" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="130" y="96" width="36" height="14" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1.1"/>
+            <rect x="215" y="96" width="46" height="14" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1.1"/>
+            <rect x="280" y="96" width="36" height="14" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1.1"/>
+            <text x="93" y="90" text-anchor="middle" font-size="9" fill="var(--semi)">N+ 源</text>
+            <text x="238" y="90" text-anchor="middle" font-size="9" fill="var(--fin)">P+ 源</text>
+            <text x="100" y="200" text-anchor="middle" font-size="10" fill="var(--text-mute)">P 衬底（接 VSS）</text>
+            <text x="260" y="184" text-anchor="middle" font-size="10" fill="var(--fin)">N 阱（接 VDD）</text>
+            <path d="M96 124 L96 180 Q96 196 112 196 L222 196 Q238 196 238 180 L238 158" fill="none" stroke="var(--up)" stroke-width="1.4" stroke-dasharray="5 3"/>
+            <path d="M232 160 L238 150 L244 160 Z" fill="var(--up)"/>
+            <text x="167" y="222" text-anchor="middle" font-size="9" fill="var(--up)">正反馈环路：β(NPN) × β(PNP) ≥ 1 即自锁</text>
+            <text x="40" y="244" font-size="9" fill="var(--text-soft)">寄生 NPN：E = N+ 源，B = P 衬底，C = N 阱</text>
+            <text x="40" y="260" font-size="9" fill="var(--text-soft)">寄生 PNP：E = P+ 源，B = N 阱，C = P 衬底</text>
+
+            <line x1="410" y1="210" x2="640" y2="210" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <line x1="410" y1="210" x2="410" y2="60" stroke="var(--text-mute)" stroke-width="1.2"/>
+            <path d="M634 206 L644 210 L634 214 Z" fill="var(--text-mute)"/>
+            <path d="M406 66 L410 56 L414 66 Z" fill="var(--text-mute)"/>
+            <text x="636" y="226" text-anchor="middle" font-size="10" fill="var(--text-soft)">V</text>
+            <text x="400" y="58" text-anchor="middle" font-size="10" fill="var(--text-soft)">I</text>
+            <path d="M410 208 L545 194 L480 120 L520 72" fill="none" stroke="var(--up)" stroke-width="1.8"/>
+            <circle cx="545" cy="194" r="4" fill="var(--up)"/>
+            <circle cx="480" cy="120" r="4" fill="var(--up)"/>
+            <line x1="545" y1="194" x2="545" y2="210" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="480" y1="120" x2="480" y2="210" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="545" y="224" text-anchor="middle" font-size="9" fill="var(--text-soft)">Vt1</text>
+            <text x="480" y="224" text-anchor="middle" font-size="9" fill="var(--text-soft)">Vh</text>
+            <line x1="410" y1="120" x2="480" y2="120" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="404" y="124" text-anchor="end" font-size="9" fill="var(--text-soft)">Ih</text>
+            <text x="553" y="190" font-size="9" fill="var(--up)">触发点</text>
+            <text x="430" y="110" font-size="9" fill="var(--up)">维持点（自锁）</text>
+            <text x="560" y="150" font-size="9" fill="var(--text-soft)">负阻区</text>
+            <text x="390" y="248" font-size="9" fill="var(--text-mute)">一旦跨过触发点就自锁，须断电或把电流降到 Ih 以下才能退出</text>
+          </g>
+        </svg>
+        <figcaption>图 7：闩锁效应。左：CMOS 结构中天然存在的寄生 NPN 与 PNP 及其正反馈环路；右：带负阻区的回滞 I–V 曲线，触发点之后进入自锁。</figcaption>
+      </figure>
 
       <table>
         <thead><tr><th>防护措施</th><th>原理</th></tr></thead>
@@ -227,7 +633,23 @@
         也就决定了闩锁触发电流门槛。I/O 区域因为要抗 ESD，规则通常比内部电路更严格。
       </div>
 
-      <h2 id="s8">8. 实战：画一个反相器版图</h2>
+      <div class="warn">
+        <b>闩锁不是"自己发生"的，总要有人推一把。</b>常见的触发源有四类：
+        ① I/O 引脚上的<strong>电压过冲/下冲</strong>（超过 VDD 或低于 VSS 一个二极管压降）；
+        ② <strong>ESD 事件</strong>注入的瞬态大电流；
+        ③ 电源<strong>上电顺序不当</strong>（I/O 先于内核得电）；
+        ④ 高温与辐照环境下寄生电阻升高、β 变大。
+        这也是为什么所有 I/O 单元都要单独做闩锁加固 —— 它们离"外界"最近。
+      </div>
+
+      <div class="tip">
+        <b>一个实用的判断顺序：</b>拿到一个 PDK，先看它给的
+        <strong>Latch-up 规则</strong>（衬底/阱接触的最大间距、I/O 与内部电路的间隔）；
+        画版图时先铺好<em>保护环与接触阵列</em>再放器件，而不是画完了再补 ——
+        后者几乎总会因为空间不够而被迫牺牲规则。
+      </div>
+
+      <h2 id="s9">9. 实战：画一个反相器版图</h2>
 
       <figure class="diagram">
         <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="反相器版图俯视示意">
@@ -267,7 +689,7 @@
           <text x="560" y="140" font-size="12" fill="var(--text)" font-weight="700">OUT (M1)</text>
           <line x1="494" y1="145" x2="552" y2="145" stroke="var(--text)" stroke-width="1.2" stroke-dasharray="4 3"/>
         </svg>
-        <figcaption>图 2：反相器版图俯视（示意，未标尺寸）。栅极竖直跨过 PMOS 与 NMOS；源接电源/地，漏接一起作为输出。</figcaption>
+        <figcaption>图 8：反相器版图俯视（示意，未标尺寸）。栅极竖直跨过 PMOS 与 NMOS；源接电源/地，漏接一起作为输出。</figcaption>
       </figure>
 
       <div class="tip">
@@ -293,7 +715,7 @@
         ⑩ 只做前仿真就交付 → 回片性能与仿真严重不符。
       </div>
 
-      <h2 id="s9">9. 自测</h2>
+      <h2 id="s10">10. 自测</h2>
 
       <details class="quiz"><summary>自测 1：DRC 全绿、LVS 也通过，为什么还要做 PEX 后仿真？</summary>
         <div class="answer">因为版图引入了前仿真中没有的寄生电阻与电容：金属线电容、通孔电阻、结电容、线间耦合电容等。
@@ -311,6 +733,31 @@
         <div class="answer">危害是制造过程中大面积金属收集的电荷通过栅极泄放，击穿薄栅氧，造成<strong>永久性损伤</strong>。
         仿真发现不了，是因为它并非电路工作时的电学行为，而是<em>制造过程中的物理现象</em> ——
         电路网表与 SPICE 模型里根本没有"等离子充电"这项，只能靠几何规则（天线比）来检查。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 4：版图里"Dummy"这个词出现了两次（金属 Dummy 和器件 Dummy），它们分别解决什么问题？</summary>
+        <div class="answer">两者目的完全不同。<strong>金属 Dummy</strong> 是为了满足密度规则：CMP 抛光时金属稀疏处会被磨得更深（Dishing），
+        填 Dummy 让整层密度均匀，保证表面平整、后续光刻能对准 —— 它不接任何电路，代价是引入额外寄生电容。
+        <strong>器件 Dummy</strong> 是为了匹配：在器件阵列两端放不接入电路的相同器件，让中间器件处在相同的刻蚀环境里，
+        消除边缘刻蚀负载效应，同时撑开 SA/SB 距离使 STI 应力一致。前者管"能不能造"，后者管"造出来准不准"。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 5：两个器件 W/L 完全相同，也认真做了共质心排列，为什么实测电流仍可能差百分之几？</summary>
+        <div class="answer">因为共质心只抵消了<strong>线性工艺梯度</strong>，还有一类<strong>版图依赖效应（LDE）</strong>它管不了：
+        ① WPE —— 器件到阱边的距离 S 不同，阱注入的离子侧向散射量就不同，Vt 与 μ 随之偏移；
+        ② STI 应力 / LOD —— 栅到有源区边界的 SA、SB 不同，沟道受到的挤压应力不同，迁移率不同；
+        ③ 上层金属与封装应力、片上温度梯度。
+        对策是<strong>先保证 LDE 环境一致（S、SA、SB 全部相同，必要时加 Dummy 器件撑开），再做共质心</strong>，
+        并且要用带反标参数的版图后仿真来验证，前仿真看不到这些效应。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 6：闩锁一旦触发，为什么撤掉触发信号也没用？版图上如何提高触发门槛？</summary>
+        <div class="answer">因为闩锁是一个<strong>正反馈自持</strong>过程：寄生 NPN 与 PNP 互相提供基极电流，
+        只要环路增益 β₁·β₂ ≥ 1，即使外部扰动消失，环路自己也能维持导通 —— 在 I–V 曲线上表现为越过了触发点、
+        落入负阻区右侧的自锁状态。要退出必须把电压/电流降到<em>维持点</em>以下，通常只能断电。
+        版图上提高门槛的手段：① 加密衬底/阱接触，减小寄生电阻 R<sub>sub</sub>、R<sub>well</sub>，
+        使基极电压难以被抬高；② 加保护环（NMOS 周围 P+ 环接地、PMOS 周围 N+ 环接 VDD）收集少数载流子；
+        ③ 拉开 NMOS 与 PMOS 间距降低 β；④ I/O 加 ESD 钳位器件防止过冲。</div>
       </details>
 
         <div class="series">
