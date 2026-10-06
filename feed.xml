@@ -5,7 +5,7 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 06 Oct 2026 11:58:03 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 13:51:30 +0800</lastBuildDate>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</link>
@@ -19,6 +19,13 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html</guid>
       <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[用吉他弦、剧院座位和海平面三个比喻，讲清薛定谔方程、泡利不相容原理与费米-狄拉克分布——固体物理与半导体世界赖以运转的三块量子基石]]></description>
+    </item>
+    <item>
+      <title>硅基的语言：从晶体管开关到编程语言与操作系统</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[晶体管的通断如何变成「意思」？一路讲透机器指令、汇编、编译与解释、高级语言范式、系统调用、进程、虚拟内存与文件系统，配十三张原理图看懂软件怎样说动硅片]]></description>
     </item>
     <item>
       <title>数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么</title>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-19daily_briefing_.html</guid>
       <pubDate>Sat, 19 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[💱 五、外汇市场（9月17日） 美元指数 100.23 人民币中间价 6.7580 在岸人民币(CFETS) 6.7060 离岸人民币 6.7040 人民币较中间价走强约520基点。前8月在岸人民币升值约4%，央行重申坚持有管理浮动汇率制度…]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月18日 周五</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-18瑾年财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-18瑾年财经早报_.html</guid>
-      <pubDate>Fri, 18 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[上证指数 3864.28 0.41% 深证成指 — 0.33% 创业板指 — 0.40% 科创50 — 0.61% 两市成交 8688亿（沪）+ 9544亿（深） 9月17日收盘数据（注：9月17日为周三交易日；今日9月18日市场开盘前） …]]></description>
     </item>
   </channel>
 </rss>
