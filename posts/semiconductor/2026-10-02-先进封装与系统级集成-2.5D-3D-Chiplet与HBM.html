@@ -84,7 +84,7 @@
 <text x="490" y="226" text-anchor="middle" font-size="11" fill="var(--text-soft)">性能推进主力：晶体管密度 → 系统集成密度</text>
 </g>
 </svg>
-<figcaption>图1 · 后摩尔时代的三条路线。先进封装属于 More than Moore：不改晶体管本身，改"晶体管之间的连接方式"。</figcaption>
+<figcaption>图 1：后摩尔时代的三条路线。先进封装属于 More than Moore：不改晶体管本身，改"晶体管之间的连接方式"。</figcaption>
 </figure>
 
 <div class="kv">
@@ -149,7 +149,7 @@
 <text x="372" y="244" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">pitch：50 μm → 150 μm → 45 μm → 9 μm → 6 μm</text>
 </g>
 </svg>
-<figcaption>图2 · 互连密度演进。注意纵轴是对数：hybrid bonding 相对引线键合是四个数量级的跨越，寄生参数随之下降到接近片内互连。</figcaption>
+<figcaption>图 2：互连密度演进。注意纵轴是对数：hybrid bonding 相对引线键合是四个数量级的跨越，寄生参数随之下降到接近片内互连。</figcaption>
 </figure>
 
 <p>演进的技术主线可以概括为四步：<strong>引线键合 → 倒装（bump 凸点）→ 晶圆级封装 WLP → 扇出 Fan-Out</strong>。倒装把芯片翻转过来、凸点朝下对准基板，IO 遍布整个面而不是只排四边；晶圆级封装（Wafer Level Packaging）则干脆在整片晶圆上完成再布线与植球，划片即成品（fan-in WLCSP，芯片尺寸=封装尺寸）；但当芯片面积太小、凸点排不下所有 IO 时，就需要把 IO"扇出"到芯片轮廓之外——这就是下一节的 Fan-Out。</p>
@@ -166,7 +166,7 @@
 
 <p>Fan-Out 的取舍也预告了整个先进封装行业的核心难题：<strong>它要求 Known Good Die（KGD）</strong>。die 一旦埋进塑封体，就再也不可能单独更换，所以只有 CP 全通过的 die 才能上重建晶圆——良率与测试的问题从这一刻起就埋下了，第 8、10 节会回头算这笔账。</p>
 
-<h2 id="s4">2.5D 封装：硅中介层与 CoWoS</h2>
+<h2 id="s4">4. 2.5D 封装：硅中介层与 CoWoS</h2>
 
 <p>2.5D 封装解决的问题非常具体：<strong>让两颗以上的高速芯片靠得足够近、连线足够密，但又不互相干扰</strong>。"2.5D"这个名字听起来像营销，其实很准确：芯片并排（不是堆叠）放在一块中介层上，集成度提升来自"平面内的高密度互连"，还没进入"垂直堆叠"的 3D 世界。</p>
 
@@ -229,7 +229,7 @@
 <line x1="330" y1="92" x2="330" y2="112" stroke="var(--text-mute)" stroke-width="1" marker-end="url(#ar17-3)" opacity=".6"/>
 </g>
 </svg>
-<figcaption>图3 · CoWoS 2.5D 剖面：GPU 与 HBM 并排贴在硅中介层上，高速信号走 interposer 内的细密 RDL，普通信号经 C4 落入有机基板，最后 BGA 焊球出板。</figcaption>
+<figcaption>图 3：CoWoS 2.5D 剖面：GPU 与 HBM 并排贴在硅中介层上，高速信号走 interposer 内的细密 RDL，普通信号经 C4 落入有机基板，最后 BGA 焊球出板。</figcaption>
 </figure>
 
 <p><strong>为什么 GPU + HBM 必须上 2.5D？</strong>关键在走线密度。HBM 的接口是 1024-bit 超宽总线（第 7 节细算），一颗 GPU 挂 4~8 颗 HBM，需要同时为每颗 HBM 提供 1024 根数据线 + 电源地 + 控制，单 die 边缘要走通数千根高速线。有机基板的线宽线距是 9/12 μm 量级——每毫米只能走约 2~3 根差分对，根本排不下；而硅中介层借用了芯片 BEOL 工艺，RDL 线宽 0.4~2 μm，走线密度比有机基板高一到两个数量级，还能在 die 之间塞进去整面的去耦电容。一句话：<strong>带宽需求 × 走线密度 = 2.5D 的必然性</strong>。</p>
@@ -249,7 +249,7 @@
 
 <p><strong>EMIB</strong>（Embedded Multi-die Interconnect Bridge）的思路尤其值得体会：它不追求"整面高密度"，只在两颗 die 的交界带放一条几毫米宽的硅桥，桥内走亚微米细线，其余互连交给普通基板。硅桥从基板侧面与 die 引脚相连，<strong>完全不需要 TSV</strong>，省掉了 interposer 里最贵的一环。对于 die 间互连需求集中于"边缘走廊"的产品（CPU + IO die、CPU + 加速器），EMIB 的性价比极高；而对于 GPU+HBM 这种"整面灌带宽"的拓扑，CoWoS 的全片 interposer 仍不可替代。<strong>没有最好的封装，只有匹配流量拓扑的封装</strong>——这个原则贯穿本篇。</p>
 
-<h2 id="s5">TSV 硅通孔工艺流程</h2>
+<h2 id="s5">5. TSV 硅通孔工艺流程</h2>
 
 <p>TSV（Through-Silicon Via，硅通孔）是垂直集成的"电梯井"：在硅片上刻出直径 5~10 μm、深度约 100 μm 的深孔，内壁绝缘、衬 barrier/seed、电镀填铜，把 die 正面的互连垂直引到背面（或引到堆叠的上一层）。它是 HBM、硅 interposer、3D 堆叠的共同基础设施。整个流程几乎是<strong>第 13 篇深硅刻蚀（HAR）</strong>与<strong>第 14 篇薄膜工艺</strong>的实战汇编：</p>
 
@@ -313,7 +313,7 @@
 <text x="340" y="26" text-anchor="middle" font-size="13" fill="var(--text)">TSV 工艺五步（via-middle 顺序）</text>
 </g>
 </svg>
-<figcaption>图4 · TSV 工艺流程。刻蚀的深宽比（AR≈10:1）与电镀的无空洞填充是两大工艺难点，分别对应第 13 篇 HAR 刻蚀与第 14 篇电镀/薄膜的内容。</figcaption>
+<figcaption>图 4：TSV 工艺流程。刻蚀的深宽比（AR≈10:1）与电镀的无空洞填充是两大工艺难点，分别对应第 13 篇 HAR 刻蚀与第 14 篇电镀/薄膜的内容。</figcaption>
 </figure>
 
 <p>逐点拆解难点。①<strong>深孔刻蚀</strong>：用 Bosch 时间复用法（刻蚀-钝化交替），深宽比 10:1 量级意味着 10 μm 宽的孔要刻 100 μm 深，还得控制侧壁锥度与 notch（底部过刻蚀）。②<strong>绝缘层</strong>：TEOS 或 O₃-TEOS 亚大气压 CVD 沉 SiO₂，深孔底部的台阶覆盖率远低于开口处，膜太薄会漏电，太厚挤压后续铜的截面积。③<strong>barrier/seed</strong>：TaN/TiN 阻挡层防止 Cu 扩散进硅，PVD 在深孔里"喷不进底"，所以 seed 层底部常断——这是电镀缺陷的头号来源，行业内用离子化 PVD、ALD barrier 等手段补救。④<strong>电镀填孔</strong>：靠添加剂体系（加速剂聚底、抑制剂护壁）实现自底向上（bottom-up）生长，杜绝空洞——空洞会在后续热循环中变成致命缺陷。⑤<strong>CMP + 薄化露头</strong>：正面 CMP 去掉过电镀铜帽（呼应<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇</a>），若做 TSV last/reveal 流程，还要把晶圆临时键合到载板上、背面研磨抛光至 TSV 铜柱"露头"，再与下一片键合。</p>
@@ -327,7 +327,7 @@
 <div><div class="v">无空洞</div><div class="l">电镀填孔的生命线</div></div>
 </div>
 
-<h2 id="s6">3D 封装：microbump 堆叠与 hybrid bonding</h2>
+<h2 id="s6">6. 3D 封装：microbump 堆叠与 hybrid bonding</h2>
 
 <p>2.5D 是"并排"，3D 是"叠起来"。垂直堆叠有两条技术路线，差异本质上是<strong>层间互连的 pitch</strong>：</p>
 
@@ -364,7 +364,7 @@
 <text x="510" y="226" text-anchor="middle" font-size="9.5" fill="var(--accent)">互连密度 ~10⁶/cm² 级，高 1~2 个数量级</text>
 </g>
 </svg>
-<figcaption>图5 · 两条 3D 堆叠路线。hybrid bonding 用 Cu-Cu 直接键合取代焊料凸点，pitch 从几十微米压到 10 μm 以下，代价是键合面对平整度的苛刻要求。</figcaption>
+<figcaption>图 5：两条 3D 堆叠路线。hybrid bonding 用 Cu-Cu 直接键合取代焊料凸点，pitch 从几十微米压到 10 μm 以下，代价是键合面对平整度的苛刻要求。</figcaption>
 </figure>
 
 <p><strong>路线 A：microbump 堆叠</strong>。把倒装焊点缩小到 40 μm pitch 以下（Cu pillar + 焊料帽），逐层叠放、回流。这是目前最成熟的路线：HBM 的层间、Intel Foveros（Lakefield、Meteor Lake 的 base tile 架构）都基于它。极限在于物理：pitch 缩到 20 μm 以下时，焊球太小、共面性公差不变，相邻 bump 之间桥连短路的风险指数上升，回流塌陷也控不住——<strong>bump 的物理尺寸成了密度的天花板</strong>。</p>
@@ -375,7 +375,7 @@
 
 <p>实战案例最能说明问题：AMD 的 <strong>3D V-Cache</strong>（Zen 3/4/5 系列）用 SoIC 把一片 64 MB SRAM die 以 hybrid bonding 叠在 CPU die 上，L3 从 32 MB 跳到 96 MB，游戏平均帧率提升可观——而 CPU die 本身的工艺与版图几乎不动。垂直方向的"第二个数量级"就是这么来的：同一块 100 mm² 的地皮上"免费"多出一片 die 的晶体管。</p>
 
-<h2 id="s7">HBM 深度案例：AI 时代的带宽发动机</h2>
+<h2 id="s7">7. HBM 深度案例：AI 时代的带宽发动机</h2>
 
 <p>HBM（High Bandwidth Memory，高带宽内存）是本篇所有技术的汇合点：它是<strong>TSV 堆叠 + 2.5D 封装 + KGD 测试</strong>三位一体的产品，也是 AI 算力最紧缺的零部件。先看结构：</p>
 
@@ -428,7 +428,7 @@
 <text x="340" y="278" text-anchor="middle" font-size="10" fill="var(--text-soft)">带宽 = 接口位宽 × 数据速率 ÷ 8：1024 bit × 9.6 Gbps ÷ 8 ≈ 1.23 TB/s（HBM3e 每栈）</text>
 </g>
 </svg>
-<figcaption>图6 · HBM 剖面：8~12 片 DRAM 薄化后 TSV 堆叠，底部是逻辑工艺的 base die，1024-bit 接口面朝 GPU，靠 2.5D interposer 完成数千根互连。</figcaption>
+<figcaption>图 6：HBM 剖面：8~12 片 DRAM 薄化后 TSV 堆叠，底部是逻辑工艺的 base die，1024-bit 接口面朝 GPU，靠 2.5D interposer 完成数千根互连。</figcaption>
 </figure>
 
 <p><strong>HBM 的本质是把内存带宽做成了"宽进"而非"快跑"</strong>。DDR5 单条 DIMM 只有 64-bit 接口，想提速只能拉频率，但频率拉得越高、信号完整性越难做，板级走线还动辄几十 pJ/bit。HBM 反其道：接口位宽直接给到 1024-bit（HBM4 起 2048-bit），DRAM 核心阵列并行度极高，每 pin 速率只需 4~10 Gbps 的"舒服区间"。带宽公式与演进账本：</p>
@@ -462,7 +462,7 @@
 
 <p><strong>为什么 HBM 必须用 2.5D 贴着 GPU 放？</strong>两个原因。其一，1024 根数据线物理上只能走硅 interposer（第 4 节已算过走线密度账）；其二，功耗：板级长走线的驱动功耗会吃掉带宽收益，HBM 与 GPU 间距压到毫米级后，接口能效做到 ~3~5 pJ/bit，比传统板级内存好一个数量级。代价也直白：HBM 用 DRAM 工艺做堆叠，良率敏感、产能被 CoWoS 与 DRAM 双重卡位，单价远高于同容量 DDR——所以 HBM 至今只出现在"带宽就是钱"的 AI/HPC 场景。顺带一提，HBM4 开始 base die 有望改用逻辑代工工艺（把 PHY、测试逻辑做进去），DRAM 厂与逻辑代工厂的分工正在重组，这是观察未来几年供应链的好窗口。</p>
 
-<h2 id="s8">Chiplet 芯粒革命与 UCIe</h2>
+<h2 id="s8">8. Chiplet 芯粒革命与 UCIe</h2>
 
 <p>Chiplet（芯粒）回答的问题是：<strong>一颗芯片大到一定程度后，"一整块"是否还是最优解？</strong>答案越来越倾向否定。用<a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇</a>的 Poisson 良率模型算一笔账：</p>
 
@@ -509,7 +509,7 @@
 <text x="500" y="252" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">小 die 良率高 · 各节点最优 · IP 复用 · 产品线快速衍生</text>
 </g>
 </svg>
-<figcaption>图7 · AMD EPYC 式拆分：4 个 8 核 CCD（先进节点）+ 1 个 IOD（成熟节点）。逻辑、IO、模拟各回各家，先进硅片面积最小化。</figcaption>
+<figcaption>图 7：AMD EPYC 式拆分：4 个 8 核 CCD（先进节点）+ 1 个 IOD（成熟节点）。逻辑、IO、模拟各回各家，先进硅片面积最小化。</figcaption>
 </figure>
 
 <p>良率之外还有三笔账。<strong>工艺账</strong>：CPU 核心吃先进节点，但内存控制器、PCIe PHY、SerDes 对节点不敏感（模拟电路在新节点反而难做），用 6nm/12nm 做 IOD 能省下大笔晶圆钱。<strong>掩膜与研发账</strong>：一套 5nm 级掩膜上千万美元，拆分后只有小 die 需要全套，IOD 用成熟节点掩膜便宜得多；改一代产品只需重做部分 chiplet，产品线衍生（8 核、16 核、32 核、64 核共用同一 CCD）像拼积木。<strong>IP 复用账</strong>：一个验证过的 CCD 可以同时服务 EPYC（服务器）、Ryzen（桌面）、Instinct（加速器）三条线，摊薄设计与验证成本。</p>
@@ -529,7 +529,7 @@
 
 <p>物理规律很简单：距离越短，驱动损耗越小、可以并行而不怕串音、速率可以更随意。<strong>封装内互连的能效与带宽密度都比板级好一到两个数量级</strong>——这就是 chiplet 的物理红利，也是为什么大家愿意为先进封装付溢价。但 chiplet 也有绕不开的坑：<strong>KGD（Known Good Die，已知合格 die）</strong>。传统封装里 die 坏了在 CP 阶段就被筛掉；chiplet 模式下 die 要先卖给/交给别人封装，买方必须确认三件事：全速功能测试通过（不只是 CP 的有限向量）、可靠性寿命达标（按<a href="2026-10-01-芯片封装测试与失效分析.html">第 19 篇</a>的浴盆曲线做 burn-in 筛掉早期失效）、参数分布足够集中。KGD 测试成本可能占 chiplet 成本的 10~20%，而"测试覆盖不了、堆完才发现坏"的尾部风险永远存在——这是 chiplet 商业模式里最不性感、最要命的一环。</p>
 
-<h2 id="s9">系统级集成的热与电挑战</h2>
+<h2 id="s9">9. 系统级集成的热与电挑战</h2>
 
 <p>前面六节讲"怎么集成"，这一节讲"为什么难"。3D 堆叠不是免费的：它把芯片设计里原本独立的热、电、机械问题全部耦合到了一起。</p>
 
@@ -541,7 +541,7 @@
 
 <div class="warn"><b>一句话总结</b>：先进封装把"摩尔红利"从晶体管层面搬到了系统层面，同时也把系统级难题（热、供电、机械应力）搬进了封装工厂——工程师从"设计一颗芯片"变成了"设计一个子系统"。</div>
 
-<h2 id="s10">良率与测试的连锁变化</h2>
+<h2 id="s10">10. 良率与测试的连锁变化</h2>
 
 <p>传统封装里，测试在封装前后各做一次（CP/FT，见<a href="2026-10-01-芯片封装测试与失效分析.html">第 19 篇</a>），坏了大不了报废单颗。先进封装把这个简单模型彻底打破：<strong>堆叠结构里一个坏 die 会毁掉整个 stack</strong>。算一笔账：8 层 HBM，假设每层 DRAM die 测试后良率 97%，全栈无缺陷概率只有 0.97⁸ ≈ 78%——还没算 base die、键合与封装环节的损失。所以先进封装的世界里，测试不再是流程的"质检站"，而是良率的"守门人"，一切围绕三个动作展开：</p>
 
@@ -551,7 +551,7 @@
 
 <p><strong>第三，不可见缺陷的检测</strong>。传统封装的可视化检查（X-ray 看焊球、光学看引线）到 3D 时代大面积失效：堆叠内部的 bump 是 hidden joint，TSV 深埋硅中完全不可见。检测手段被迫升级：声学扫描显微镜（SAT/CSAM）用超声波探测层间空洞与脱层，X-ray 断层看堆叠对位，红外锁相热成像定位短路发热点。更被动的一招是"可靠性试验抓漏网"：温度循环、HAST 等加速应力（第 19 篇的可靠性工具箱）在出货前把潜在缺陷引爆。行业共识是：<strong>先进封装的检测难点不在单点技术，而在"检测点必须跟着工艺往前移"——等封装完成再想看内部，已经太晚了</strong>。</p>
 
-<h2 id="s11">商业格局速览</h2>
+<h2 id="s11">11. 商业格局速览</h2>
 
 <p>技术看完了，看一眼牌桌上的玩家。先进封装的竞争格局按"谁的硅、谁的线、谁的手"分成三个梯队：</p>
 
@@ -567,7 +567,7 @@
 
 <p>值得体会的是<strong>边界的移动</strong>。传统分工里晶圆厂（IDM/fab）管前道、OSAT 管后道，泾渭分明。先进封装把这条线搅浑了：硅 interposer 与 hybrid bonding 是晶圆工艺的延伸（BEOL RDL、Å 级 CMP、晶圆级键合），天然归 fab；而塑封、RDL 扇出、基板贴合是 OSAT 的传统强项。于是出现"分段代工"：TSMC 做 interposer 与键合，OSAT 做 module 级组装；三星做 HBM 全栈；苹果、NVIDIA、AMD 亲自下场定义封装规格。<strong>封装正在从"制造的下游"变成"产品的定义环节"</strong>——这是十年前没人预测到的格局变化。</p>
 
-<h2 id="s12">未来方向：玻璃基板、CPO 与真 3D</h2>
+<h2 id="s12">12. 未来方向：玻璃基板、CPO 与真 3D</h2>
 
 <p>最后看三个正在路上的方向，它们共同的逻辑是"继续解决本篇留下的问题"。</p>
 
@@ -577,7 +577,7 @@
 
 <p><strong>CFET 与真 3D 逻辑</strong>：器件层面，GAA 之后的大招是 CFET（Complementary FET）——nMOS 直接叠在 pMOS 上，把逻辑门"竖起来"，属于第 7 篇路线图的远期一站；系统层面，hybrid bonding 的 pitch 继续下探（6→4.5 μm 以下）后，"逻辑-on-逻辑"的粒度可以从 block 级细化到模块阵列级，真正的 3D 逻辑分区（而非现在的"cache-on-logic"）开始可行。加上 UCIe 生态的开放（IP 厂、存储厂、逻辑厂各自出 chiplet 自由拼装），<strong>未来的"一颗芯片"会越来越像一个封装好的小型系统</strong>——这正是本篇标题"系统级集成"的含义。</p>
 
-<h2 id="s13">常见误区</h2>
+<h2 id="s13">13. 常见误区</h2>
 
 <p><strong>误区一："2.5D 比 3D 落后，迟早被淘汰。"</strong>不是代际关系，是路线关系。3D 堆叠的散热路径天然更差（上层挡住下层），且 hybrid bonding 成本仍高；对"带宽灌满、发热巨大"的 GPU+HBM 场景，2.5D 反而是热、成本、带宽的最优解——HBM 本身虽然内部是 3D 堆叠，但它在系统里始终以 2.5D 姿态与 GPU 并排。真正的演进图景是混合使用：同一封装里，cache 用 3D 叠（3D V-Cache），内存用 2.5D 摆（CoWoS）。<strong>选择的标准是流量拓扑、热预算与成本的三元权衡，不是"新打旧"</strong>。</p>
 
@@ -585,7 +585,7 @@
 
 <p><strong>误区三："先进封装是后道，不需要好工艺。"</strong>恰恰相反，本篇出现过两个"前道级"的工艺要求：TSV 刻蚀是深宽比 10:1 的 HAR 工艺（第 13 篇的难度天花板之一），hybrid bonding 要求 Å 级 CMP 平整度（比逻辑后段还苛刻一个数量级）。先进封装没有降低工艺难度，只是把难度从"更小的晶体管"转移到了"更完美的表面与界面"。低估它的工艺含量，是外行人看封装最常见的错位。</p>
 
-<h2 id="s14">自测</h2>
+<h2 id="s14">14. 自测</h2>
 
 <details class="quiz">
 <summary>Q1 · HBM3e 每栈带宽约 1.2 TB/s 是怎么算出来的？请写出公式并指出关键变量。</summary>

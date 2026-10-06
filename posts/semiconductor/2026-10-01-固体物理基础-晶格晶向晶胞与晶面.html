@@ -370,9 +370,12 @@
 
       <div class="term-table">
         <table>
+          <thead><tr><th>晶向族</th><th>包含的等价方向与个数</th></tr></thead>
+          <tbody>
           <tr><td>&lt;100&gt;</td><td>[100] [010] [001] [1̄00] [01̄0] [001̄] —— 共 <strong>6 个</strong>等价方向（±3 个轴）</td></tr>
           <tr><td>&lt;110&gt;</td><td>[110] [101] [011] [11̄0] … —— 共 <strong>12 个</strong>（面对角线方向）</td></tr>
           <tr><td>&lt;111&gt;</td><td>[111] [1̄11] [11̄1] [111̄] … —— 共 <strong>8 个</strong>（体对角线方向）</td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -424,7 +427,7 @@
             </g>
           </g>
           <rect x="16" y="212" width="648" height="22" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
-          <text x="32" y="227" font-size="10.5" fill="var(--text-soft)">箭头都从前左下角（原点）出发。<strong>&lt;100&gt; 是棱、&lt;110&gt; 是面对角线、&lt;111&gt; 是体对角线</strong> —— 这三个要能一眼认出。</text>
+          <text x="32" y="227" font-size="10.5" fill="var(--text-soft)">箭头都从前左下角（原点）出发。<tspan font-weight="700">&lt;100&gt; 是棱、&lt;110&gt; 是面对角线、&lt;111&gt; 是体对角线</tspan> —— 这三个要能一眼认出。</text>
         </svg>
         <figcaption>图 5：三个最重要的晶向。它们不只是几何方向，而是对应完全不同的原子排列密度与电子性质。</figcaption>
       </figure>
@@ -489,7 +492,7 @@
           </g>
           <rect x="16" y="212" width="648" height="32" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
           <text x="32" y="227" font-size="10.5" fill="var(--text-soft)">晶面族 {hkl}：如 {100} 包含 (100)(010)(001)(1̄00)(01̄0)(001̄) 共 6 个等价面；{111} 有 8 个；{110} 有 12 个。</text>
-          <text x="32" y="240" font-size="10.5" fill="var(--text-soft)">立方晶系特例：<strong>[hkl] 方向严格垂直于 (hkl) 面</strong> —— 这个结论只在立方晶系成立，其它晶系不成立。</text>
+          <text x="32" y="240" font-size="10.5" fill="var(--text-soft)">立方晶系特例：<tspan font-weight="700">[hkl] 方向严格垂直于 (hkl) 面</tspan> —— 这个结论只在立方晶系成立，其它晶系不成立。</text>
         </svg>
         <figcaption>图 6：米勒指数的几何图像。(100) 是一个完整侧面，(110) 是对角切面，(111) 切掉一个角。</figcaption>
       </figure>
@@ -507,9 +510,12 @@
 
       <div class="term-table">
         <table>
+          <thead><tr><th>概念</th><th>含义与工程意义</th></tr></thead>
+          <tbody>
           <tr><td>面密度<br>（planar density）</td><td>单位面积上的原子数，atoms/cm²。决定<strong>氧化速率、外延速率、界面态密度</strong></td></tr>
           <tr><td>线密度<br>（linear density）</td><td>某晶向上单位长度的原子数。决定<strong>位错滑移方向、扩散各向异性</strong></td></tr>
           <tr><td>悬挂键密度</td><td>晶体被切开后，表面原子未配对的价键数/cm²。决定<strong>表面态与界面质量</strong></td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -703,7 +709,7 @@
           </g>
           <rect x="40" y="166" width="628" height="28" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
           <text x="54" y="184" font-size="10.5" fill="var(--text-soft)">实例：Cu Kα（λ = 1.5406 Å）测硅。Si(111)：d = 3.135 Å ⇒ 2θ ≈ 28.4°；Si(400)：d = a/4 = 1.358 Å ⇒ 2θ ≈ 69.1°。</text>
-          <text x="54" y="196" font-size="10.5" fill="var(--text-soft)">产线上就是用这类峰位来<strong>给晶锭定向、确认平边/缺口方向、检查外延层与应变</strong>。</text>
+          <text x="54" y="196" font-size="10.5" fill="var(--text-soft)">产线上就是用这类峰位来<tspan font-weight="700">给晶锭定向、确认平边/缺口方向、检查外延层与应变</tspan>。</text>
         </svg>
         <figcaption>图 9：布拉格衍射。θ 是与晶面的夹角；相邻面反射的波程差 2d·sinθ 等于整数倍波长时才出峰。</figcaption>
       </figure>

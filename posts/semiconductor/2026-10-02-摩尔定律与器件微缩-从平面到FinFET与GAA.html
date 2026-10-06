@@ -73,7 +73,7 @@
 <text x="120" y="140" fill="var(--text-soft)" font-size="10">主频随之停滞</text>
 <text x="120" y="156" fill="var(--text-soft)" font-size="10">→ 转向多核</text>
 </svg>
-<figcaption>图 1 · Dennard 缩放预言功耗密度恒定，实际在 2005 年前后掉头向上——功耗墙由此而来。</figcaption>
+<figcaption>图 1：Dennard 缩放预言功耗密度恒定，实际在 2005 年前后掉头向上——功耗墙由此而来。</figcaption>
 </figure>
 
 <h2 id="s2">2. 平面 MOSFET 微缩的收益与代价</h2>
@@ -112,7 +112,7 @@
 <text x="556" y="40" fill="var(--semi)" font-size="10">② 栅氧隧穿</text>
 <text x="556" y="55" fill="var(--semi)" font-size="10">漏电</text>
 </svg>
-<figcaption>图 2 · 平面 MOSFET 微缩到极限后的两条主要漏电路径：穿通沟道下方的亚阈值漏电，与穿过超薄栅氧的直接隧穿。</figcaption>
+<figcaption>图 2：平面 MOSFET 微缩到极限后的两条主要漏电路径：穿通沟道下方的亚阈值漏电，与穿过超薄栅氧的直接隧穿。</figcaption>
 </figure>
 
 <h2 id="s3">3. 短沟道效应：四个机制与特征长度 λ</h2>
@@ -159,7 +159,7 @@
 <text x="620" y="160" text-anchor="middle" fill="var(--text-mute)" font-size="9">λ 越小越安全</text>
 <text x="620" y="175" text-anchor="middle" fill="var(--text-mute)" font-size="9">L ≥ 4~6λ</text>
 </svg>
-<figcaption>图 3 · 栅控（蓝）与漏控（橙）的拔河：长沟道下漏极电场够不着源端势垒；短沟道下漏控穿透，DIBL 与穿通随之而来。一切微缩创新的核心都是压小 λ。</figcaption>
+<figcaption>图 3：栅控（蓝）与漏控（橙）的拔河：长沟道下漏极电场够不着源端势垒；短沟道下漏控穿透，DIBL 与穿通随之而来。一切微缩创新的核心都是压小 λ。</figcaption>
 </figure>
 
 <h2 id="s4">4. 应变硅：先从迁移率上挤性能</h2>
@@ -195,7 +195,7 @@
 <path d="M 550 112 L 540 112 L 546 104 L 534 104 L 540 96" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar6-4b)"/>
 <text x="510" y="88" text-anchor="middle" fill="var(--accent)" font-size="10">拉应变 → 电子迁移率 +10~20%</text>
 </svg>
-<figcaption>图 4 · 应变硅：PMOS 用晶格更大的 SiGe 源漏对沟道施压应变，NMOS 用氮化硅 CESL 施拉应变，分别提升空穴与电子迁移率。</figcaption>
+<figcaption>图 4：应变硅：PMOS 用晶格更大的 SiGe 源漏对沟道施压应变，NMOS 用氮化硅 CESL 施拉应变，分别提升空穴与电子迁移率。</figcaption>
 </figure>
 
 <h2 id="s5">5. HKMG：栅介质与栅电极的换血</h2>
@@ -233,7 +233,7 @@
 <text x="430" y="218" fill="var(--semi)" font-size="10">W_eff ≈ 2×H_fin + W_fin</text>
 <text x="430" y="236" fill="var(--text-soft)" font-size="10">（顶面 + 两侧）</text>
 </svg>
-<figcaption>图 5 · FinFET：竖立的鳍状沟道被栅三面包围，有效宽度 W_eff 由鳍高与鳍宽几何决定——驱动电流因此按"鳍数"取整。</figcaption>
+<figcaption>图 5：FinFET：竖立的鳍状沟道被栅三面包围，有效宽度 W_eff 由鳍高与鳍宽几何决定——驱动电流因此按"鳍数"取整。</figcaption>
 </figure>
 <p>FinFET 带来的第一个"甜蜜的麻烦"是<strong>宽度量化（width quantization）</strong>。平面时代，晶体管宽度 W 想画多宽画多宽（连续可调）；FinFET 时代，W_eff 等于每片鳍贡献的 2H<sub>fin</sub>+W<sub>fin</sub>，想要更大驱动电流只能<strong>并联更多片鳍</strong>——2 片、3 片、4 片，没有 2.5 片。这对设计是根本性改变：版图师从"画矩形"变成"数鳍"，标准单元高度按鳍数离散成 3 鳍、2 鳍、1 鳍档位（后来普遍收敛到单鳍+触点增强），这正是第 18 篇版图实战里会展开的内容。</p>
 <p>第二个麻烦在制造端。FinFET 要求<strong>高深宽比（HAR）刻蚀</strong>：鳍高 50nm 量级、鳍宽十几纳米，深宽比接近 10:1 甚至更高，刻蚀稍歪就是鳍倾倒或底部过蚀，对应工艺细节见<a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇</a>。更早的 22nm 时代，193nm 浸没式光刻已经不够用，鳍的图形要靠<strong>自对准双图案化（SADP）</strong>拼出来，这是<a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇</a>的重点内容。此外还有寄生问题：鳍立在浅沟槽隔离（STI）之上，鳍底与 STI 交界处的"fin 圆化"和界面态会引入寄生电阻与离散度；源漏接触要搭在很小的鳍顶上，接触电阻成了新瓶颈（催生了后来的触点金属硅化物工程与 eSiGe 应力接触）。</p>
@@ -273,7 +273,7 @@
 <text x="540" y="200" fill="var(--text-soft)" font-size="9">inner spacer 防</text>
 <text x="540" y="216" fill="var(--text-soft)" font-size="9">片间栅桥接</text>
 </svg>
-<figcaption>图 6 · GAA 纳米片：水平堆叠的 Si 沟道片被金属栅四面包围；释放工艺掏空 SiGe 牺牲层后栅金属填充其间，片宽成为设计自由度。</figcaption>
+<figcaption>图 6：GAA 纳米片：水平堆叠的 Si 沟道片被金属栅四面包围；释放工艺掏空 SiGe 牺牲层后栅金属填充其间，片宽成为设计自由度。</figcaption>
 </figure>
 <p>再往后看，路线图上已经画好的还有两步：<strong>forksheet</strong>——把 NMOS 与 PMOS 的沟道片用一面共享的"叉子"介质墙隔开，省掉 n/p 器件之间的间距，密度再进一步；<strong>CFET（complementary FET）</strong>——干脆把 NMOS 叠在 PMOS <strong>正上方</strong>，垂直堆叠互补对，反相器的占地面积理论上减半。CFET 要解决超垂直外延、两面各自金属栅、上下对准（3D 对准精度）与热管理，是 2030 年前后的候选方向。</p>
 
