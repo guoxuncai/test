@@ -28,7 +28,7 @@
     <div class="meta">
       <span>2026-10-07</span><span class="sep"></span>
       <span>集成电路学习路径 · 第 31 篇</span><span class="sep"></span>
-      <span>阅读约 28 分钟</span>
+      <span>阅读约 30 分钟</span>
     </div>
 
     <div class="content">
@@ -51,13 +51,14 @@
           <li><a href="#s1">一颗芯片要淌过多少家公司</a></li>
           <li><a href="#s2">垂直解体：为什么没人再从头做到尾</a></li>
           <li><a href="#s3">五种商业模式对照</a></li>
-          <li><a href="#s4">代工的下单规则：四种钱与三种身份</a></li>
-          <li><a href="#s5">不造芯片照样赚钱：IP 授权与 EDA 订阅</a></li>
-          <li><a href="#s6">价值分配：半导体的那条曲线</a></li>
-          <li><a href="#s7">一颗芯片的账单：钱最后去了哪</a></li>
-          <li><a href="#s8">这套体系为什么高效、又为什么脆弱</a></li>
-          <li><a href="#s9">易错点</a></li>
-          <li><a href="#s10">自测</a></li>
+          <li><a href="#s4">谁在这些位置上：各环节代表公司</a></li>
+          <li><a href="#s5">代工的下单规则：四种钱与三种身份</a></li>
+          <li><a href="#s6">不造芯片照样赚钱：IP 授权与 EDA 订阅</a></li>
+          <li><a href="#s7">价值分配：半导体的那条曲线</a></li>
+          <li><a href="#s8">一颗芯片的账单：钱最后去了哪</a></li>
+          <li><a href="#s9">这套体系为什么高效、又为什么脆弱</a></li>
+          <li><a href="#s10">易错点</a></li>
+          <li><a href="#s11">自测</a></li>
         </ol>
       </div>
 
@@ -295,7 +296,113 @@
       高通、英伟达、苹果都敢把最核心的图纸交给他，因为他们知道这家工厂不会转身去卖同款芯片。
       <strong>商业模式里，「不做什么」往往比「做什么」更能决定生死。</strong></p>
 
-      <h2 id="s4">4. 代工的下单规则：四种钱与三种身份</h2>
+      <h2 id="s4">4. 谁在这些位置上：各环节代表公司</h2>
+
+      <p>前面三章都在讲<strong>位置</strong>，但没有点名。位置是抽象的，公司才是具体的。
+      下面把产业链每一格里最常被提到的公司列出来——注意这份名单有两个前提：
+      <strong>第一，它一定会过时</strong>（十年前的 Fabless 前十和今天完全不同）；
+      <strong>第二，它是「位置」不是「身份」</strong>，同一家公司常常同时落在好几个格子里。
+      所以名单只是锚点，真正要掌握的是上一章那句判据：<strong>它的厂在哪、它把东西卖给谁、它靠什么收钱</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="产业链各环节的代表公司分布">
+          <text x="340" y="20" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">谁在这些位置上：产业链各环节的代表公司</text>
+          <text x="340" y="36" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">按「卖什么、厂在哪」分格；同一家公司可能同时出现在多个格子里</text>
+
+          <!-- 1 设备与材料 -->
+          <rect x="18" y="46" width="206" height="118" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1" rx="3"/>
+          <text x="28" y="66" font-size="11.5" fill="var(--text)" font-weight="700">① 上游设备与材料</text>
+          <line x1="28" y1="74" x2="214" y2="74" stroke="var(--border)" stroke-width="1"/>
+          <text x="28" y="90" font-size="9" fill="var(--text-soft)">ASML（荷兰）· 光刻机，EUV 唯一供应商</text>
+          <text x="28" y="106" font-size="9" fill="var(--text-soft)">应用材料 · 泛林 · 东京电子（美 / 日）</text>
+          <text x="28" y="122" font-size="9" fill="var(--text-soft)">科磊 KLA · 爱德万 · 泰瑞达（量测测试）</text>
+          <text x="28" y="138" font-size="9" fill="var(--text-soft)">信越 · SUMCO · JSR（日）硅片与光刻胶</text>
+          <text x="28" y="154" font-size="9" fill="var(--text-mute)">林德 · 液空 · 大阳日酸：电子特气</text>
+
+          <!-- 2 EDA 与 IP -->
+          <rect x="240" y="46" width="206" height="118" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1" rx="3"/>
+          <text x="250" y="66" font-size="11.5" fill="var(--text)" font-weight="700">② EDA 工具与 IP 授权</text>
+          <line x1="250" y1="74" x2="436" y2="74" stroke="var(--border)" stroke-width="1"/>
+          <text x="250" y="90" font-size="9" fill="var(--text-soft)">Synopsys 新思 · Cadence 铿腾（美国）</text>
+          <text x="250" y="106" font-size="9" fill="var(--text-soft)">Siemens EDA（德国，原 Mentor）</text>
+          <text x="250" y="122" font-size="9" fill="var(--text-soft)">ARM（英国）· Imagination · CEVA</text>
+          <text x="250" y="138" font-size="9" fill="var(--text-soft)">芯原股份 · 晶心科技（中国大陆 / 中国台湾）</text>
+          <text x="250" y="154" font-size="9" fill="var(--text-mute)">卖的是「图纸」与「画图纸的工具」</text>
+
+          <!-- 3 Fabless -->
+          <rect x="462" y="46" width="206" height="118" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1" rx="3"/>
+          <text x="472" y="66" font-size="11.5" fill="var(--text)" font-weight="700">③ Fabless 无晶圆设计</text>
+          <line x1="472" y1="74" x2="658" y2="74" stroke="var(--border)" stroke-width="1"/>
+          <text x="472" y="90" font-size="9" fill="var(--text-soft)">高通 · 英伟达 · 博通 · AMD（美国）</text>
+          <text x="472" y="106" font-size="9" fill="var(--text-soft)">联发科 · 瑞昱 · 联咏（中国台湾）</text>
+          <text x="472" y="122" font-size="9" fill="var(--text-soft)">海思 · 紫光展锐 · 兆易创新（中国大陆）</text>
+          <text x="472" y="138" font-size="9" fill="var(--text-soft)">Marvell · 苹果（自研不出售芯片）</text>
+          <text x="472" y="154" font-size="9" fill="var(--text-mute)">卖的是芯片产品，制造全部外包</text>
+
+          <!-- 4 Foundry -->
+          <rect x="18" y="178" width="206" height="118" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1" rx="3"/>
+          <text x="28" y="198" font-size="11.5" fill="var(--text)" font-weight="700">④ Foundry 纯代工</text>
+          <line x1="28" y1="206" x2="214" y2="206" stroke="var(--border)" stroke-width="1"/>
+          <text x="28" y="222" font-size="9" fill="var(--text-soft)">台积电 TSMC（中国台湾）先进制程</text>
+          <text x="28" y="238" font-size="9" fill="var(--text-soft)">三星电子（韩国）· 格芯（美国）</text>
+          <text x="28" y="254" font-size="9" fill="var(--text-soft)">联电 · 世界先进 · 力积电（中国台湾）</text>
+          <text x="28" y="270" font-size="9" fill="var(--text-soft)">中芯国际 · 华虹 · 晶合（中国大陆）</text>
+          <text x="28" y="286" font-size="9" fill="var(--text-mute)">英特尔代工 · 高塔 Tower · X-FAB</text>
+
+          <!-- 5 IDM -->
+          <rect x="240" y="178" width="206" height="118" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1" rx="3"/>
+          <text x="250" y="198" font-size="11.5" fill="var(--text)" font-weight="700">⑤ IDM 垂直整合</text>
+          <line x1="250" y1="206" x2="436" y2="206" stroke="var(--border)" stroke-width="1"/>
+          <text x="250" y="222" font-size="9" fill="var(--text-soft)">英特尔 · 美光 · 德州仪器（美国）</text>
+          <text x="250" y="238" font-size="9" fill="var(--text-soft)">英飞凌 · 恩智浦 · 意法（欧洲）</text>
+          <text x="250" y="254" font-size="9" fill="var(--text-soft)">三星 · SK 海力士 · 铠侠 · 索尼（韩日）</text>
+          <text x="250" y="270" font-size="9" fill="var(--text-soft)">士兰微 · 华润微 · 长江存储（中国大陆）</text>
+          <text x="250" y="286" font-size="9" fill="var(--text-mute)">从设计到自家晶圆厂一手包办</text>
+
+          <!-- 6 OSAT -->
+          <rect x="462" y="178" width="206" height="118" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1" rx="3"/>
+          <text x="472" y="198" font-size="11.5" fill="var(--text)" font-weight="700">⑥ OSAT 封装与测试</text>
+          <line x1="472" y1="206" x2="658" y2="206" stroke="var(--border)" stroke-width="1"/>
+          <text x="472" y="222" font-size="9" fill="var(--text-soft)">日月光 · 矽品 · 力成（中国台湾）</text>
+          <text x="472" y="238" font-size="9" fill="var(--text-soft)">Amkor（美国）· 京元电（中国台湾）</text>
+          <text x="472" y="254" font-size="9" fill="var(--text-soft)">长电科技 · 通富微电 · 华天科技</text>
+          <text x="472" y="270" font-size="9" fill="var(--text-soft)">（以上三家为中国大陆封测主力）</text>
+          <text x="472" y="286" font-size="9" fill="var(--text-mute)">卖的是产能与良率，毛利率最低</text>
+
+          <text x="340" y="310" text-anchor="middle" font-size="9" fill="var(--text-mute)">名单会过时，判据不会：先看它有没有晶圆厂，再看它把东西卖给谁</text>
+        </svg>
+        <figcaption>图 4：产业链各环节的代表公司。记住格子里的位置，比记住名字更重要。</figcaption>
+      </figure>
+
+      <p>把这张图换成一张对照表，能看得更清楚<strong>每一环到底在卖什么、凭什么有议价权</strong>：</p>
+
+      <table>
+        <thead>
+          <tr><th>环节</th><th>代表公司</th><th>它在卖什么</th><th>议价力从哪来</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>设备</td><td>ASML（荷兰）；应用材料、泛林、科磊（美国）；东京电子、爱德万（日本）</td><td>把工艺步骤变成可执行的机器</td><td>技术独占：EUV 光刻机全球只有一家能做</td></tr>
+          <tr><td>材料</td><td>信越、SUMCO、JSR、东京应化（日本）；林德、液空（欧美）</td><td>按晶圆产量线性消耗的耗材</td><td>认证周期长，一旦上机极难切换</td></tr>
+          <tr><td>EDA / IP</td><td>Synopsys、Cadence（美国）；Siemens EDA（德国）；ARM（英国）；芯原股份（中国大陆）</td><td>设计工具的时间订阅 + 可复用设计授权</td><td>生态锁定：换工具等于重做整套流程</td></tr>
+          <tr><td>Fabless</td><td>高通、英伟达、博通、AMD（美国）；联发科（中国台湾）；海思、紫光展锐（中国大陆）</td><td>芯片产品本身</td><td>架构能力 + 软件生态 + 专利池</td></tr>
+          <tr><td>Foundry</td><td>台积电、联电（中国台湾）；三星电子（韩国）；格芯（美国）；中芯国际、华虹（中国大陆）</td><td>产能与工艺节点</td><td>资本规模 + 工艺 Know-how，先进节点供给稀缺</td></tr>
+          <tr><td>IDM</td><td>英特尔、美光、德州仪器（美国）；三星、SK 海力士（韩国）；英飞凌、恩智浦（欧洲）</td><td>自有品牌的芯片</td><td>设计与工艺的垂直耦合，规模摊薄固定成本</td></tr>
+          <tr><td>OSAT</td><td>日月光（中国台湾）；Amkor（美国）；长电科技、通富微电、华天科技（中国大陆）</td><td>封装与测试服务</td><td>产能规模，以及先进封装的技术门槛</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note"><b>拿到一家陌生半导体公司，三步就能把它扔进正确的格子里：</b>
+        <div>① <strong>看有没有厂</strong>：翻财报的固定资产与资本开支占比。有厂且占比高的，绝不是 Fabless。</div>
+        <div>② <strong>看收入形态</strong>：卖芯片（产品）、卖产能（服务）、还是卖授权（权利）——三种现金流结构完全不同。</div>
+        <div>③ <strong>看客户是谁</strong>：卖给终端消费者 / 整机厂的是产品公司；卖给其他芯片公司的是供应链公司。</div>
+      </div>
+
+      <p>最后提醒一句：这张图里藏着第 8 章要讲的<strong>脆弱性根源</strong>。
+      你会发现每一格里能挑出来的名字都不多，而某些格子——EUV 光刻、先进制程代工、高端硅片——
+      供给方高度集中在极少数地区的极少数公司手里。
+      <strong>分工的效率和分工的风险，其实是同一件事的两面。</strong></p>
+
+      <h2 id="s5">5. 代工的下单规则：四种钱与三种身份</h2>
 
       <p>一家 Fabless 要真正把芯片做出来，和代工厂打交道时会碰到<strong>四种性质完全不同的钱</strong>。
       分清它们的性质，是理解整个产业经济学的基础：</p>
@@ -329,7 +436,7 @@
           <text x="300" y="268" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">结论：小批量产品被 NRE 压死，大批量产品被变动成本决定毛利</text>
           <text x="300" y="283" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">这解释了为什么「走量的东西」和「定制的东西」在产业里是两种完全不同的生意</text>
         </svg>
-        <figcaption>图 4：四种钱的经济性质。教科书里的固定成本曲线，在半导体里就是 NRE 与晶圆报价的区别。</figcaption>
+        <figcaption>图 5：四种钱的经济性质。教科书里的固定成本曲线，在半导体里就是 NRE 与晶圆报价的区别。</figcaption>
       </figure>
 
       <div class="kv">
@@ -354,7 +461,7 @@
         很多小公司设计能力不弱，却卡在这一步。
       </div>
 
-      <h2 id="s5">5. 不造芯片照样赚钱：IP 授权与 EDA 订阅</h2>
+      <h2 id="s6">6. 不造芯片照样赚钱：IP 授权与 EDA 订阅</h2>
 
       <p>第 26 篇讲过 IP 核的概念，这里补上商业模式这一侧。ARM 是这个行业最纯粹的样本：
       它<strong>不拥有任何晶圆厂，也不直接卖任何一颗芯片</strong>，
@@ -388,7 +495,7 @@
           <text x="340" y="278" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">收入结构：授权费（一次，签约即确认）+ 版税（每出货一颗付一次，随客户销量走）</text>
           <text x="340" y="292" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">这就是为什么 IP 公司盼着整个行业的出货量涨，哪怕自己一颗 chip 都没造</text>
         </svg>
-        <figcaption>图 5：IP 生意的三层结构。越往上客户越少但自由度越高，越往下覆盖面越广但单笔金额越小。</figcaption>
+        <figcaption>图 6：IP 生意的三层结构。越往上客户越少但自由度越高，越往下覆盖面越广但单笔金额越小。</figcaption>
       </figure>
 
       <p><strong>为什么版税模式如此强大？</strong>因为它把 IP 公司的利益和<strong>整个行业的出货量</strong>绑在一起：
@@ -412,7 +519,7 @@
         <strong>可以无限次复制而不增加成本的知识产权</strong>——这正是「边际成本趋近于零」的典型生意。
       </div>
 
-      <h2 id="s6">6. 价值分配：半导体的那条曲线</h2>
+      <h2 id="s7">7. 价值分配：半导体的那条曲线</h2>
 
       <p>管理学里有一条著名的「微笑曲线」：附加值像微笑的嘴，两端高、中间低。
       半导体产业借用这个框架很有价值，但它有个<strong>重要的修正</strong>——
@@ -453,7 +560,7 @@
           <rect x="248" y="270" width="182" height="26" fill="var(--accent)" fill-opacity=".2" stroke="var(--accent)" stroke-width="1" rx="2"/>
           <text x="339" y="287" text-anchor="middle" font-size="10" fill="var(--text)">例外：先进代工站在高附加值一侧</text>
         </svg>
-        <figcaption>图 6：附加值走线。两端（设备材料、设计 IP、品牌）高，传统封测与模块组装低；但先进制程代工是这条曲线的「反例」。</figcaption>
+        <figcaption>图 7：附加值走线。两端（设备材料、设计 IP、品牌）高，传统封测与模块组装低；但先进制程代工是这条曲线的「反例」。</figcaption>
       </figure>
 
       <div class="kv">
@@ -474,7 +581,7 @@
         反过来看，低毛利环节往往是<strong>风险管理做得最干净</strong>的环节：赚的是确定的加工费。
       </div>
 
-      <h2 id="s7">7. 一颗芯片的账单：钱最后去了哪</h2>
+      <h2 id="s8">8. 一颗芯片的账单：钱最后去了哪</h2>
 
       <p>把前面所有环节拼起来，来看一颗消费级芯片的成本大致是怎样分布的。
       注意：<strong>这里的比例是量级示意，不同品类（逻辑 SoC / 模拟 / 存储 / 功率）差异极大</strong>，
@@ -513,7 +620,7 @@
           <text x="118" y="258" font-size="10.5" fill="var(--text-soft)">研发人力与 NRE 是一次性的 —— 这也是为什么「第二颗芯片」总是便宜得多</text>
           <text x="118" y="276" font-size="9.5" fill="var(--text-mute)">不同品类差异巨大：存储是另一套（几乎纯晶圆成本），模拟/功率则 Fab-lite 自产比例高</text>
         </svg>
-        <figcaption>图 7：账单拆解的量级示意。真正的差异在于「第二版是不是比第一版便宜」——一次性投入的比例决定了这门生意的规模效应强度。</figcaption>
+        <figcaption>图 8：账单拆解的量级示意。真正的差异在于「第二版是不是比第一版便宜」——一次性投入的比例决定了这门生意的规模效应强度。</figcaption>
       </figure>
 
       <p>这张图给出一个很实用的判断框架：
@@ -522,7 +629,7 @@
       前者是「能不能卖够量」的问题，后者是「能不能做得更小」的问题——
       两种芯片的成功要素完全不同，这也是为什么这两类公司的人才结构差异极大。</p>
 
-      <h2 id="s8">8. 这套体系为什么高效、又为什么脆弱</h2>
+      <h2 id="s9">9. 这套体系为什么高效、又为什么脆弱</h2>
 
       <p><strong>高效之处</strong>在于分工让每一环都能在自己的赛道上做到极致：
       Fabless 可以同时服务手机、汽车、服务器三个市场，同一套架构方法论被反复复用；
@@ -564,7 +671,7 @@
 
           <text x="340" y="238" text-anchor="middle" font-size="10" fill="var(--text-mute)">条越长 = 替代难度越高 = 断供时的连锁反应越剧烈</text>
         </svg>
-        <figcaption>图 8：环节集中度与可替代性成反比。越是「不可替代」的环节，越需要长期技术沉淀，也越容易成为产业的咽喉。</figcaption>
+        <figcaption>图 9：环节集中度与可替代性成反比。越是「不可替代」的环节，越需要长期技术沉淀，也越容易成为产业的咽喉。</figcaption>
       </figure>
 
       <p>理解了这张图，就能理解近年出现的各种产业现象：
@@ -574,7 +681,7 @@
       它不仅是技术路线，也是一种产业策略：用成熟节点的小芯片 + 先进的集成，
       绕开最卡脖子那一环的产能约束。这部分在第 19 篇讲技术，在第 32 篇我们会算它的经济账。</p>
 
-      <h2 id="s9">9. 易错点</h2>
+      <h2 id="s10">10. 易错点</h2>
 
       <ul>
         <li><strong>把「Fabless = 轻资产」理解成成本低</strong>：它没有厂房，但 NRE、IP 授权、EDA 订阅、高端人才薪酬同样是天文数字。它轻的是<strong>资产负债表的固定资产科目</strong>，不是运营投入。</li>
@@ -585,7 +692,7 @@
         <li><strong>忽略 Foundry「不与客户竞争」这条约定的分量</strong>：它不是道德口号，而是整个 Fabless 生态得以成立的基础设施。</li>
       </ul>
 
-      <h2 id="s10">10. 自测</h2>
+      <h2 id="s11">11. 自测</h2>
 
       <details class="quiz"><summary>自测 1：为什么 1980 年代之后芯片产业会发生垂直解体？请给出至少两条经济学层面的理由。</summary>
         <div>① 资本开支：每代工艺的建厂成本急剧上升，单一公司难以同时负担设计创新与产能扩张；② 分工的规模效应：一座厂服务多个客户比服务一个客户更能摊薄折旧、更快爬良率；③ 知识类型不同：设计端贴近应用（懂射频/图形/功耗），制造端贴近物理与良率，二者无法在一家公司里同等精进；④ 接口标准化（PDK + GDSII）让跨公司交付成为可能，消除了分工的技术障碍。</div>
@@ -613,6 +720,10 @@
       </details>
       <details class="quiz"><summary>自测 9：把「一次性投入 vs 变动成本」的框架用一次：一颗芯片第二版（同一设计的改版）为什么通常比第一版便宜得多？</summary>
         <div>架构探索、IP 选型与大部分设计工作已完成并可复用；EDA 订阅、大量 IP 授权已经付过；研发团队的学习曲线已经跨过。第二版主要的增量是一次性的掩模 NRE 与部分重做的人力，以及再次的流片与验证。因为这些都属于一次性投入范畴，在一颗已经定义清楚的产品上摊销得非常快——这正是半导体「经验曲线」的经济根源。</div>
+      </details>
+
+      <details class="quiz"><summary>自测 10：同一家公司常常同时落在好几个格子里（三星既是 IDM 又是 Foundry，英特尔一边做自有产品一边推代工服务）。那么「它是哪种模式」这个问题该怎么回答才准确？</summary>
+        <div>应该说「它的<strong>哪一块业务</strong>属于哪种模式」，而不是给整家公司贴一个标签。判据是三条独立的提问：① 有没有自己的晶圆厂（看固定资产与资本开支占比）；② 收入形态是卖芯片产品、卖产能服务，还是卖授权权利；③ 客户是终端消费者/整机厂，还是其他芯片公司。三星的存储与 LSI 是 IDM 行为，代工部门是 Foundry 行为；AMD 2009 年分拆出 GlobalFoundries 后从 IDM 变成 Fabless，说明模式本身也会随时间流动。所以格子描述的是「位置上此刻的状态」，不是永久身份。</div>
       </details>
 
       <div class="tip"><b>下一篇：</b>
