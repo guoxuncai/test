@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>半导体器件新手路径地图 | 设计→实验验证全流程 (详细行动清单)</title>
-<meta name="description" content="从理论学习、软件安装、仿真练习到版图设计、MPW 流片、实验测试与进阶方向的完整行动清单，附站内配套笔记导航与技能自测表。">
-<meta name="keywords" content="半导体,学习路径,器件仿真,版图设计,流片">
+    <title>半导体学习全景地图 | 学科版图 · 产业版图 · 从零到独立负责一块芯片</title>
+<meta name="description" content="一张图看懂半导体学科七层知识栈与产业链五环分工，配五阶段学习路径、四条分方向路线图、90 天压缩版时间表与技能自测表，并把本站 33 篇专题笔记挂到路径的对应位置上。">
+<meta name="keywords" content="半导体,学习路径,学科版图,产业链,岗位地图,MPW流片,集成电路">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -170,6 +170,53 @@
             font-size: 0.7rem;
             color: #2cc9c9;
         }
+        /* ---- 新增：图形与提示块 ---- */
+        .fig { margin: 1.4rem 0 1rem; }
+        .fig svg {
+            width: 100%; height: auto; display: block;
+            background: rgba(8, 18, 28, 0.55);
+            border: 1px solid rgba(44, 201, 201, 0.22);
+            border-radius: 1rem;
+        }
+        .figcap { font-size: 0.78rem; color: #9ac7d9; text-align: center; margin-top: 0.55rem; }
+        .notebox {
+            background: rgba(44, 201, 201, 0.10);
+            border-left: 3px solid #2cc9c9;
+            border-radius: 0.8rem;
+            padding: 0.85rem 1.1rem;
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: #c8e6f2;
+            margin-top: 1rem;
+        }
+        .warnbox {
+            background: rgba(251, 191, 36, 0.10);
+            border-left: 3px solid #fbbf24;
+            border-radius: 0.8rem;
+            padding: 0.85rem 1.1rem;
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: #f2e3c6;
+            margin-top: 1rem;
+        }
+        .notebox b, .warnbox b { color: #7ad0e0; }
+        .warnbox b { color: #fbbf24; }
+        table.tb { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 1rem; }
+        table.tb th {
+            text-align: left; color: #7ad0e0; font-weight: 600;
+            border-bottom: 1px solid #2cc9c9; padding: 0.55rem 0.5rem;
+        }
+        table.tb td {
+            padding: 0.5rem 0.5rem;
+            border-bottom: 1px solid rgba(44, 201, 201, 0.14);
+            vertical-align: top; color: #c8e6f2; line-height: 1.7;
+        }
+        .ckpt {
+            display: inline-block; margin-top: 0.9rem; padding: 0.4rem 1rem;
+            border-radius: 2rem; background: rgba(78, 255, 224, 0.10);
+            border: 1px dashed rgba(78, 255, 224, 0.45);
+            font-size: 0.82rem; color: #4effe0;
+        }
         @media (max-width: 760px) {
             .container {
                 padding: 1rem;
@@ -193,171 +240,556 @@
         <a href="./" style="display: inline-block; padding: 0.35rem 1.1rem; border-radius: 40px; border: 1px solid rgba(0,255,200,0.5); background: rgba(0,255,255,0.12); color: #7ad0e0; text-decoration: none; font-size: 0.8rem;">← 返回目录页</a>
     </div>
     <div class="hero">
-        <h1>🧪 半导体器件新手行动清单</h1>
-        <p>从零到实验验证 · 每月可执行步骤 · 工具/资源/第三方对接全攻略</p>
+        <h1>🧭 半导体学习全景地图</h1>
+        <p>学科版图 · 产业版图 · 从零到能独立负责一块芯片的完整路径</p>
         <div class="circuit-line" style="width: 60%; margin: 1rem auto;"></div>
-        <div><span class="badge">📖 理论学习</span> → <span class="badge">💻 软件安装</span> → <span class="badge">📐 仿真练习</span> → <span class="badge">🎨 版图设计</span> → <span class="badge">🚀 MPW流片</span> → <span class="badge">🧪 实验测试</span> → <span class="badge">🏭 产业实践</span> → <span class="badge">🌐 进阶方向</span></div>
+        <div><span class="badge">🧭 定向</span> → <span class="badge">📐 物理地基</span> → <span class="badge">⚙️ 器件与工艺</span> → <span class="badge">🎨 设计实现</span> → <span class="badge">🚀 流片闭环</span> → <span class="badge">🏭 产业认知</span> → <span class="badge">🎯 方向深耕</span></div>
     </div>
 
-    <!-- ========= 前言 ========= -->
+    <!-- ========= 一、怎么用 ========= -->
     <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">📝 前言：这份清单写给谁、怎么用</div>
-        <p style="font-size: 0.92rem; line-height: 1.9; color: #c8e6f2;">
-            这是一份面向<strong style="color: #7ad0e0;">微电子、集成电路相关专业学生</strong>以及<strong style="color: #7ad0e0;">计划转入半导体行业工程师</strong>的行动清单。
-            它回答一个具体的问题：从今天开始，如何在约四个月内走完"理论 → 仿真 → 版图 → 流片 → 测试"的完整闭环，
-            让你对芯片的理解不再停留在课本公式，而是亲手拿到过一颗自己参与设计的芯片。
+        <div class="section-title">📝 一、这份地图写给谁、怎么用</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            这是一份给<strong style="color: #7ad0e0;">微电子/集成电路专业学生</strong>、<strong style="color: #7ad0e0;">计划转入半导体行业的工程师</strong>，
+            以及<strong style="color: #7ad0e0;">需要与芯片团队打交道的相邻岗位</strong>（投资、咨询、销售、供应链）的总纲。
+            它不教你具体公式——公式在对应的专题篇里。它解决的是更前置的问题：
+            <strong style="color: #7ad0e0;">这个学科一共有几层、产业一共有几环、我应该按什么顺序走、走完能站在哪个位置上。</strong>
         </p>
-        <p style="font-size: 0.92rem; line-height: 1.9; color: #c8e6f2; margin-top: 0.8rem;">
-            使用方式：<strong style="color: #7ad0e0;">①</strong> 按四个阶段顺次推进，每个阶段内部的勾选项即每周任务；
-            <strong style="color: #7ad0e0;">②</strong> 阶段卡片底部附有本站配套笔记，理论卡壳时点击即可回到对应专题深入；
-            <strong style="color: #7ad0e0;">③</strong> 用文末「技能进度自测表」每月复盘，勾选状态就是你的真实进度。
-            流片周期不受人控制，但等待期恰好是第四阶段理论学习的好窗口——清单已按此排布。
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2; margin-top: 0.9rem;">
+            三条使用原则：
+            <strong style="color: #7ad0e0;">① 先建坐标系，再钻细节</strong>——不要在没搞清"能带是干什么的"之前去啃能带计算；
+            <strong style="color: #7ad0e0;">② 主线走完一遍再选方向</strong>——只有见过全流程，才知道自己适合工艺还是设计、抽象还是实体；
+            <strong style="color: #7ad0e0;">③ 每个阶段都要有可交付物</strong>——一份推导笔记、一次仿真、一张通过 DRC 的版图、一份测试报告。没有交付物的学习等于没学。
         </p>
-    </div>
-
-    <!-- ========= 超详细行动清单 ========= -->
-    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">✅ 第一阶段：理论基础与软件环境（第1-4周）</div>
-        <div class="checklist-grid">
-            <div class="check-item"><strong>📚 半导体物理核心</strong><br>✔ 完成《半导体物理》(刘恩科/施敏) 前5章：能带、载流子、PN结<br>✔ 观看慕课：国家智慧教育平台“半导体器件物理”<br>✔ 熟记公式：内建电势、耗尽层宽度、二极管I-V、MOSFET阈值电压</div>
-            <div class="check-item"><strong>🖥️ 安装免费EDA工具</strong><br>✔ Klayout (版图查看/编辑) — 官网下载并熟悉界面<br>✔ Ngspice / LTspice — 完成一个二极管整流仿真<br>✔ 安装 Python + PySpice (用于自动化仿真)</div>
-            <div class="check-item"><strong>📄 阅读PDK文档</strong><br>✔ 下载开源PDK: SkyWater 130nm (GitHub)<br>✔ 理解设计规则文档 (DRM) 关键条款<br>✔ 了解MPW服务: Efabless, Google ChipIgnite</div>
+        <div class="notebox"><b>本站 33 篇专题笔记与本篇的关系：</b>
+            那些篇是"专题卡片"，彼此独立，<b>不是教材顺序</b>。本篇是"目录的目录"——
+            告诉你在路径的哪一步、该点开哪一篇。所以不要按编号 1→33 顺序读，按本篇的路径走，遇到卡壳再横向点开对应专题。
+            站点的八个阶段划分（物理基础 → 器件电路 → 材料衬底 → 制造工艺 → 设计封测 → 产业实践 → 前沿展望）与下面第二章的学科分层是一一对应的。
         </div>
-        <div class="ref-row">📖 本阶段配套笔记（理论卡壳时点开复习）：
+    </div>
+
+    <!-- ========= 二、学科总览 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">🗺️ 二、学科总览：半导体到底在学什么</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            半导体最特别的一点，是它<strong style="color: #7ad0e0;">跨越了大约十个数量级的尺度</strong>：
+            一端是 0.5 纳米量级的晶格常数和几个原子层的栅介质，另一端是 300 毫米的晶圆和装进整机的系统。
+            几乎没有第二个工程学科，需要同一个人既懂量子力学，又懂成本核算。这也是它"难"的根源——
+            <strong style="color: #7ad0e0;">难不在某一层有多深，而在层与层之间的接口太多。</strong>
+        </p>
+
+        <div class="fig">
+        <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体学科七层知识栈与对应特征尺度">
+            <text x="340" y="20" text-anchor="middle" font-size="14" fill="#eef5ff" font-weight="700">学科七层栈：从上往下是应用，从下往上是地基</text>
+            <text x="340" y="36" text-anchor="middle" font-size="9.5" fill="#9ac7d9">左侧是这一层关心的特征尺度，右侧是这一层回答的问题</text>
+
+            <text x="94" y="73" text-anchor="end" font-size="9" fill="#9ac7d9">米级</text>
+            <rect x="100" y="52" width="550" height="34" fill="#2cc9c9" fill-opacity=".18" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="112" y="74" font-size="11.5" fill="#eef5ff" font-weight="700">① 系统与应用</text>
+            <text x="644" y="74" text-anchor="end" font-size="9.5" fill="#c8e6f2">芯片装进整机后，为谁解决什么问题</text>
+
+            <text x="94" y="111" text-anchor="end" font-size="9" fill="#9ac7d9">毫米级</text>
+            <rect x="100" y="90" width="550" height="34" fill="#2ac0d2" fill-opacity=".18" stroke="#2ac0d2" stroke-width="1" rx="3"/>
+            <text x="112" y="112" font-size="11.5" fill="#eef5ff" font-weight="700">② 封装与测试</text>
+            <text x="644" y="112" text-anchor="end" font-size="9.5" fill="#c8e6f2">裸片如何变成可焊、可测、可靠的器件</text>
+
+            <text x="94" y="149" text-anchor="end" font-size="9" fill="#9ac7d9">微米级</text>
+            <rect x="100" y="128" width="550" height="34" fill="#28b6db" fill-opacity=".18" stroke="#28b6db" stroke-width="1" rx="3"/>
+            <text x="112" y="150" font-size="11.5" fill="#eef5ff" font-weight="700">③ 电路设计</text>
+            <text x="644" y="150" text-anchor="end" font-size="9.5" fill="#c8e6f2">怎样用开关搭出功能、时序与功耗的平衡</text>
+
+            <text x="94" y="187" text-anchor="end" font-size="9" fill="#9ac7d9">纳米级</text>
+            <rect x="100" y="166" width="550" height="34" fill="#26ade4" fill-opacity=".18" stroke="#26ade4" stroke-width="1" rx="3"/>
+            <text x="112" y="188" font-size="11.5" fill="#eef5ff" font-weight="700">④ 制造工艺</text>
+            <text x="644" y="188" text-anchor="end" font-size="9.5" fill="#c8e6f2">图纸怎样一层层长成真实的三维结构</text>
+
+            <text x="94" y="225" text-anchor="end" font-size="9" fill="#9ac7d9">纳米级</text>
+            <rect x="100" y="204" width="550" height="34" fill="#24a3ed" fill-opacity=".18" stroke="#24a3ed" stroke-width="1" rx="3"/>
+            <text x="112" y="226" font-size="11.5" fill="#eef5ff" font-weight="700">⑤ 器件原理</text>
+            <text x="644" y="226" text-anchor="end" font-size="9.5" fill="#c8e6f2">一个晶体管为什么能开关、能放大</text>
+
+            <text x="94" y="263" text-anchor="end" font-size="9" fill="#9ac7d9">埃~毫米</text>
+            <rect x="100" y="242" width="550" height="34" fill="#229af6" fill-opacity=".18" stroke="#229af6" stroke-width="1" rx="3"/>
+            <text x="112" y="264" font-size="11.5" fill="#eef5ff" font-weight="700">⑥ 材料与衬底</text>
+            <text x="644" y="264" text-anchor="end" font-size="9.5" fill="#c8e6f2">用什么晶体做，怎么把它长出来</text>
+
+            <text x="94" y="301" text-anchor="end" font-size="9" fill="#9ac7d9">埃级</text>
+            <rect x="100" y="280" width="550" height="34" fill="#1e90ff" fill-opacity=".2" stroke="#1e90ff" stroke-width="1" rx="3"/>
+            <text x="112" y="302" font-size="11.5" fill="#eef5ff" font-weight="700">⑦ 物理基础</text>
+            <text x="644" y="302" text-anchor="end" font-size="9.5" fill="#c8e6f2">这种材料凭什么能导电、能被人控制</text>
+
+            <text x="340" y="332" text-anchor="middle" font-size="9" fill="#9ac7d9">相邻两层之间都有明确接口：物理给出参数 → 器件给出模型 → 电路给出网表 → 工艺给出硅片</text>
+        </svg>
+        <div class="figcap">图 1：学科七层栈。越靠下越"原理"，越靠上越"工程"；每一层都靠下一层给出的接口工作。</div>
+        </div>
+
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2; margin-top: 0.5rem;">
+            比七层栈更重要的，是这套知识其实说着<strong style="color: #7ad0e0;">三套完全不同的语言</strong>：
+        </p>
+        <table class="tb">
+            <thead><tr><th style="width:14%">语言</th><th style="width:24%">关键词</th><th style="width:30%">回答什么问题</th><th style="width:32%">说错场合的典型症状</th></tr></thead>
+            <tbody>
+                <tr><td><strong style="color:#7ad0e0">物理语言</strong></td><td>能带、载流子浓度、迁移率、复合</td><td>这种材料为什么会导电、能被控制</td><td>用能带理论去解释"这颗芯片为什么亏钱"</td></tr>
+                <tr><td><strong style="color:#7ad0e0">电路语言</strong></td><td>电压、电流、时序、增益、功耗</td><td>怎样把器件组成有功能的模块</td><td>拿着 I-V 曲线去讨论产能分配</td></tr>
+                <tr><td><strong style="color:#7ad0e0">产业语言</strong></td><td>良率、成本、产能、交期、折旧</td><td>能不能造得出来、造出来划不划算</td><td>用"摩尔定律到头了"去否定一颗成熟制程芯片的生意</td></tr>
+            </tbody>
+        </table>
+        <div class="warnbox"><b>新手最常见的卡壳，不是知识不够，而是在错误的层上找答案。</b>
+            想不通"为什么先进制程那么贵"时去翻量子力学，或想不通"为什么亚阈值摆幅有极限"时去查财报，都会越查越乱。
+            遇到问题时，先判断它落在哪一层（物理 / 器件 / 工艺 / 设计 / 商业），再决定用哪套语言和去翻哪一篇笔记。
+        </div>
+
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2; margin-top: 0.9rem;">把七层栈对应到本站的具体篇目，就是下面这张表——它就是本站的"知识坐标系"：</p>
+        <table class="tb">
+            <thead><tr><th style="width:16%">学科层</th><th style="width:36%">核心问题</th><th style="width:20%">典型工具</th><th style="width:28%">本站篇目</th></tr></thead>
+            <tbody>
+                <tr><td>物理基础</td><td>能带怎么来的、载流子有多少、怎么动</td><td>能带图、E-k 图</td><td>固体物理基础 / 半导体物理基础 / 量子三基石</td></tr>
+                <tr><td>材料与衬底</td><td>Si、SiC、GaN 各自适合什么场景</td><td>材料参数表</td><td>半导体材料全景 / 硅单晶生长</td></tr>
+                <tr><td>器件原理</td><td>PN 结、MOSFET 为什么是这个特性</td><td>SPICE、TCAD</td><td>PN 结原理 / MOSFET 特性 / 存储器原理 / 摩尔定律与微缩</td></tr>
+                <tr><td>制造工艺</td><td>光刻、刻蚀、沉积、掺杂、平坦化怎么做</td><td>工艺配方、量测</td><td>光刻 / 刻蚀 / 薄膜沉积 / CMP / 制造流程详解</td></tr>
+                <tr><td>电路设计</td><td>怎样从 RTL 走到可制造的版图</td><td>EDA 工具链</td><td>EDA 工具链 / 版图实战 / 数字后端物理设计 / 模拟集成电路设计</td></tr>
+                <tr><td>封装与测试</td><td>裸片怎么封装、怎么测、怎么判失效</td><td>ATE、探针台、FA</td><td>封装测试与失效分析 / 可靠性物理 / 先进封装与 Chiplet</td></tr>
+                <tr><td>系统与应用</td><td>芯片在整机里扮演什么角色</td><td>开发板、示波器</td><td>计算机发展史 / 硅基的语言 / MCU·FPGA·CPU·GPU 家族</td></tr>
+                <tr><td>产业与商业</td><td>谁造、谁赚、一颗芯片的钱流向哪</td><td>成本模型、财报</td><td>产业分工与商业模式 / 晶圆厂经济学 / 芯片诞生全流程 / 设备与产业链</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ========= 三、产业总览 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">🏭 三、产业总览：这些知识把你送到哪个位置</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            学科知识解决"是什么"和"为什么"，产业分工决定"你去做什么"。
+            半导体产业被拆成了<strong style="color: #7ad0e0;">五个环节</strong>，每个环节需要的知识结构、典型岗位、成长曲线都完全不同。
+            这一章的意义在于：<strong style="color: #7ad0e0;">岗位决定你要把知识读到多深。</strong>
+            想去代工厂做工艺整合的人，光刻要读到能调剂量；想做投资研究的人，只要知道 EUV 为什么贵、谁在卖就够了。
+        </p>
+
+        <div class="fig">
+        <svg viewBox="0 0 680 226" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="产业链五环节与所需知识及典型岗位对照">
+            <text x="340" y="20" text-anchor="middle" font-size="14" fill="#eef5ff" font-weight="700">产业链五环 × 所需知识 × 典型岗位</text>
+            <text x="340" y="36" text-anchor="middle" font-size="9.5" fill="#9ac7d9">同一家公司可能横跨多格，但岗位只会落在其中一格</text>
+
+            <rect x="18" y="58" width="118" height="110" fill="#1e90ff" fill-opacity=".14" stroke="#1e90ff" stroke-width="1" rx="3"/>
+            <text x="77" y="78" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">设备与材料</text>
+            <line x1="27" y1="86" x2="127" y2="86" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="27" y="100" font-size="8.5" fill="#9ac7d9">核心知识</text>
+            <text x="27" y="112" font-size="8.5" fill="#c8e6f2">物理 · 材料 · 工艺原理</text>
+            <text x="27" y="124" font-size="8.5" fill="#c8e6f2">装备原理与量测</text>
+            <text x="27" y="139" font-size="8.5" fill="#fbbf24">典型岗位</text>
+            <text x="27" y="151" font-size="8.5" fill="#c8e6f2">工艺工程师</text>
+            <text x="27" y="163" font-size="8.5" fill="#c8e6f2">设备 / 应用工程师</text>
+
+            <rect x="152" y="58" width="118" height="110" fill="#24a3ed" fill-opacity=".14" stroke="#24a3ed" stroke-width="1" rx="3"/>
+            <text x="211" y="78" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">EDA 与 IP</text>
+            <line x1="161" y1="86" x2="261" y2="86" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="161" y="100" font-size="8.5" fill="#9ac7d9">核心知识</text>
+            <text x="161" y="112" font-size="8.5" fill="#c8e6f2">器件模型 · 算法</text>
+            <text x="161" y="124" font-size="8.5" fill="#c8e6f2">电路与软件工程</text>
+            <text x="161" y="139" font-size="8.5" fill="#fbbf24">典型岗位</text>
+            <text x="161" y="151" font-size="8.5" fill="#c8e6f2">EDA 研发</text>
+            <text x="161" y="163" font-size="8.5" fill="#c8e6f2">IP 设计 / 验证</text>
+
+            <rect x="286" y="58" width="118" height="110" fill="#28b6db" fill-opacity=".14" stroke="#28b6db" stroke-width="1" rx="3"/>
+            <text x="345" y="78" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">设计 Fabless</text>
+            <line x1="295" y1="86" x2="395" y2="86" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="295" y="100" font-size="8.5" fill="#9ac7d9">核心知识</text>
+            <text x="295" y="112" font-size="8.5" fill="#c8e6f2">架构 · 电路 · 时序</text>
+            <text x="295" y="124" font-size="8.5" fill="#c8e6f2">PPA 与低功耗权衡</text>
+            <text x="295" y="139" font-size="8.5" fill="#fbbf24">典型岗位</text>
+            <text x="295" y="151" font-size="8.5" fill="#c8e6f2">前端 / 验证 / 后端</text>
+            <text x="295" y="163" font-size="8.5" fill="#c8e6f2">版图 / 模拟设计</text>
+
+            <rect x="420" y="58" width="118" height="110" fill="#2ac0d2" fill-opacity=".14" stroke="#2ac0d2" stroke-width="1" rx="3"/>
+            <text x="479" y="78" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">制造 Foundry</text>
+            <line x1="429" y1="86" x2="529" y2="86" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="429" y="100" font-size="8.5" fill="#9ac7d9">核心知识</text>
+            <text x="429" y="112" font-size="8.5" fill="#c8e6f2">工艺整合 · 器件</text>
+            <text x="429" y="124" font-size="8.5" fill="#c8e6f2">良率统计与成本</text>
+            <text x="429" y="139" font-size="8.5" fill="#fbbf24">典型岗位</text>
+            <text x="429" y="151" font-size="8.5" fill="#c8e6f2">工艺整合 PIE</text>
+            <text x="429" y="163" font-size="8.5" fill="#c8e6f2">良率 / 器件工程师</text>
+
+            <rect x="554" y="58" width="118" height="110" fill="#2cc9c9" fill-opacity=".14" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="613" y="78" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">封测 OSAT</text>
+            <line x1="563" y1="86" x2="663" y2="86" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="563" y="100" font-size="8.5" fill="#9ac7d9">核心知识</text>
+            <text x="563" y="112" font-size="8.5" fill="#c8e6f2">封装结构 · 可靠性</text>
+            <text x="563" y="124" font-size="8.5" fill="#c8e6f2">测试与失效分析</text>
+            <text x="563" y="139" font-size="8.5" fill="#fbbf24">典型岗位</text>
+            <text x="563" y="151" font-size="8.5" fill="#c8e6f2">封装 / 测试工程师</text>
+            <text x="563" y="163" font-size="8.5" fill="#c8e6f2">可靠性 / FA 工程师</text>
+
+            <line x1="136" y1="113" x2="150" y2="113" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="270" y1="113" x2="284" y2="113" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="404" y1="113" x2="418" y2="113" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="538" y1="113" x2="552" y2="113" stroke="#4effe0" stroke-width="1.4"/>
+
+            <text x="340" y="192" text-anchor="middle" font-size="9.5" fill="#9ac7d9">左端最"重"：资本与装备壁垒高；右端最"重"：人力与规模壁垒高</text>
+            <text x="340" y="210" text-anchor="middle" font-size="9.5" fill="#9ac7d9">中间的设计与代工两头吃：一边要懂器件，一边要懂成本</text>
+        </svg>
+        <div class="figcap">图 2：产业五环的知识结构与岗位出口。选哪一格，决定你该把哪一段知识读到什么深度。</div>
+        </div>
+
+        <table class="tb">
+            <thead><tr><th style="width:16%">环节</th><th style="width:28%">入门必懂</th><th style="width:26%">典型岗位</th><th style="width:30%">入门门槛与成长特点</th></tr></thead>
+            <tbody>
+                <tr><td>设备与材料</td><td>工艺步骤的物理化学本质、量测原理</td><td>工艺工程师、设备工程师、应用工程师</td><td>材料/物理/化学背景友好；经验沉淀慢但极难被替代</td></tr>
+                <tr><td>EDA 与 IP</td><td>器件模型、算法与数据结构、电路行为</td><td>EDA 研发、IP 设计、验证工程师</td><td>软件能力要求最高；国内缺口大，成长快</td></tr>
+                <tr><td>Fabless 设计</td><td>数字/模拟电路、验证方法学、时序与功耗</td><td>前端设计、验证、DFT、后端、版图、模拟设计</td><td>岗位最细分、机会最多；工具链上手门槛高但开源生态正在降低门槛</td></tr>
+                <tr><td>Foundry 制造</td><td>工艺整合、器件特性、良率统计、成本模型</td><td>工艺整合（PIE）、良率、器件、产能规划</td><td>需要进厂，平台依赖强；资深 PIE 极稀缺</td></tr>
+                <tr><td>OSAT 封测</td><td>封装结构、热与应力、测试原理、失效分析</td><td>封装、测试、可靠性、FA 工程师</td><td>上手相对快；先进封装方向正在抬高技术含量</td></tr>
+            </tbody>
+        </table>
+        <div class="notebox"><b>怎么快速判断一家公司属于哪一格？</b>
+            三步：① 看它有没有自己的晶圆厂（翻财报的固定资产与资本开支占比）；
+            ② 看收入形态——卖芯片产品、卖产能服务，还是卖授权权利；
+            ③ 看客户是终端消费者/整机厂，还是其他芯片公司。
+            完整的公司名单与判据见第 31 篇。
+        </div>
+    </div>
+
+    <!-- ========= 四、学习路径 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">🛤️ 四、学习路径：五阶段主线</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            下面这条主线是我建议的顺序：<strong style="color: #7ad0e0;">先纵向打通一次全流程，再横向选方向深耕。</strong>
+            它分五段，合计约 20-26 周（流片等待期不计入有效学习时间，但清单里已安排好这段空窗该做什么）。
+            每个阶段都有明确的"完成标志"——做不到就不要往下走，否则后面每一层都是空的。
+        </p>
+
+        <div class="fig">
+        <svg viewBox="0 0 680 302" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五阶段学习路线图与完成标志">
+            <text x="340" y="20" text-anchor="middle" font-size="14" fill="#eef5ff" font-weight="700">五阶段主线：纵向打通一次，再横向选方向</text>
+            <text x="340" y="36" text-anchor="middle" font-size="9.5" fill="#9ac7d9">右侧是建议时长与完成标志；做不到就不要往下走</text>
+
+            <rect x="18" y="56" width="34" height="34" fill="#2cc9c9" fill-opacity=".22" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="35" y="78" text-anchor="middle" font-size="14" fill="#4effe0" font-weight="700">0</text>
+            <text x="62" y="70" font-size="12" fill="#eef5ff" font-weight="700">定向：搞清自己在哪、要去哪</text>
+            <text x="664" y="70" text-anchor="end" font-size="10" fill="#7ad0e0">3-5 天</text>
+            <text x="62" y="86" font-size="9.5" fill="#c8e6f2">读完本篇，选定一个目标岗位，列出它的知识清单</text>
+            <text x="664" y="86" text-anchor="end" font-size="9" fill="#fbbf24">✓ 能说出想去哪一格</text>
+
+            <rect x="18" y="102" width="34" height="34" fill="#2cc9c9" fill-opacity=".22" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="35" y="124" text-anchor="middle" font-size="14" fill="#4effe0" font-weight="700">1</text>
+            <text x="62" y="116" font-size="12" fill="#eef5ff" font-weight="700">物理与器件地基</text>
+            <text x="664" y="116" text-anchor="end" font-size="10" fill="#7ad0e0">4-6 周</text>
+            <text x="62" y="132" font-size="9.5" fill="#c8e6f2">能带与载流子 → PN 结 → MOSFET：把公式推一遍</text>
+            <text x="664" y="132" text-anchor="end" font-size="9" fill="#fbbf24">✓ 能解释 I-V 曲线从哪来</text>
+
+            <rect x="18" y="148" width="34" height="34" fill="#28b6db" fill-opacity=".22" stroke="#28b6db" stroke-width="1" rx="3"/>
+            <text x="35" y="170" text-anchor="middle" font-size="14" fill="#4effe0" font-weight="700">2</text>
+            <text x="62" y="162" font-size="12" fill="#eef5ff" font-weight="700">纵向走通全流程</text>
+            <text x="664" y="162" text-anchor="end" font-size="10" fill="#7ad0e0">6-8 周</text>
+            <text x="62" y="178" font-size="9.5" fill="#c8e6f2">工艺 → 设计 → 版图 → 封测：每个环节做一次</text>
+            <text x="664" y="178" text-anchor="end" font-size="9" fill="#fbbf24">✓ 有一张过 DRC 的版图</text>
+
+            <rect x="18" y="194" width="34" height="34" fill="#26ade4" fill-opacity=".22" stroke="#26ade4" stroke-width="1" rx="3"/>
+            <text x="35" y="216" text-anchor="middle" font-size="14" fill="#4effe0" font-weight="700">3</text>
+            <text x="62" y="208" font-size="12" fill="#eef5ff" font-weight="700">真实闭环：投片与测试</text>
+            <text x="664" y="208" text-anchor="end" font-size="10" fill="#7ad0e0">8-12 周</text>
+            <text x="62" y="224" font-size="9.5" fill="#c8e6f2">MPW 投片 → 等待期补产业课 → 回片实测</text>
+            <text x="664" y="224" text-anchor="end" font-size="9" fill="#fbbf24">✓ 有一份仿真对实测的报告</text>
+
+            <rect x="18" y="240" width="34" height="34" fill="#1e90ff" fill-opacity=".22" stroke="#1e90ff" stroke-width="1" rx="3"/>
+            <text x="35" y="262" text-anchor="middle" font-size="14" fill="#4effe0" font-weight="700">4</text>
+            <text x="62" y="254" font-size="12" fill="#eef5ff" font-weight="700">方向深耕与产出</text>
+            <text x="664" y="254" text-anchor="end" font-size="10" fill="#7ad0e0">长期</text>
+            <text x="62" y="270" font-size="9.5" fill="#c8e6f2">在选定方向上做出能对外展示的作品与判断力</text>
+            <text x="664" y="270" text-anchor="end" font-size="9" fill="#fbbf24">✓ 能独立负责一块电路</text>
+
+            <text x="340" y="292" text-anchor="middle" font-size="9" fill="#9ac7d9">阶段 3 的流片等待期（通常 2-4 个月）不是空窗：那是补产业与商业认知的最佳窗口</text>
+        </svg>
+        <div class="figcap">图 3：五阶段主线与每阶段的完成标志。时长按每周投入 8-10 小时估算。</div>
+        </div>
+
+        <!-- 阶段 0 -->
+        <div class="section-title" style="font-size: 1.3rem; margin-top: 1.6rem;">阶段 0 · 定向（3-5 天）</div>
+        <div class="checklist-grid">
+            <div class="check-item"><strong>🎯 选定一个目标岗位</strong><br>✔ 从图 2 的五格里挑一格，写下它的 3 个核心能力要求<br>✔ 去招聘网站搜 5 个对应岗位，统计高频技能词<br>✔ 把高频词与本篇第二章的表对照，标出自己的空白区</div>
+            <div class="check-item"><strong>🧭 建立坐标系</strong><br>✔ 记住七层栈与"三套语言"的概念<br>✔ 遇到问题时先判断它落在哪一层，再去翻对应篇目<br>✔ 明确：你是要"能设计"还是"能判断"——两者深度不同</div>
+            <div class="check-item"><strong>📓 开一个学习仓库</strong><br>✔ 每个知识点记一份自己的推导笔记（不是抄书）<br>✔ 每完成一个阶段写一篇复盘，记录卡住的地方<br>✔ 这份仓库本身就是你未来的求职作品集</div>
+        </div>
+
+        <!-- 阶段 1 -->
+        <div class="section-title" style="font-size: 1.3rem; margin-top: 1.6rem;">阶段 1 · 物理与器件地基（4-6 周）</div>
+        <div class="checklist-grid">
+            <div class="check-item"><strong>📚 物理与器件</strong><br>✔ 能带、载流子浓度、漂移扩散：每个公式自己推一遍<br>✔ PN 结：内建电势、耗尽层宽度、I-V 方程<br>✔ MOSFET：阈值电压、三个工作区、亚阈值摆幅为什么有极限</div>
+            <div class="check-item"><strong>🧮 动手算</strong><br>✔ 手算一次本征载流子浓度与室温 kT/q（26 mV）<br>✔ 用 SPICE 跑通一个二极管整流与一个反相器<br>✔ 对比手算与仿真结果的差异，写清差异来源</div>
+            <div class="check-item"><strong>🖥️ 装好工具链</strong><br>✔ Klayout（版图查看/编辑）+ Ngspice 或 LTspice（电路仿真）<br>✔ 下载开源 PDK：SkyWater 130nm<br>✔ 跑通一个官方示例，确认环境没问题再往后走</div>
+        </div>
+        <div class="ckpt">🎯 完成标志：合上书本，能向别人解释"MOSFET 的 I-V 曲线为什么长这个形状"，并且能说出亚阈值摆幅 60 mV/dec 这个极限从哪来。</div>
+        <div class="ref-row">📖 配套笔记（理论卡壳时点开）：
             <a class="ref-link" href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">固体物理基础 · 晶格/晶向/晶面</a>
             <a class="ref-link" href="2026-10-01-半导体物理基础-能带与载流子.html">半导体物理基础 · 能带与载流子</a>
             <a class="ref-link" href="2026-10-01-PN结原理与特性.html">PN 结原理与特性</a>
-        </div>
-    </div>
-
-    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">✅ 第二阶段：器件仿真与版图入门（第5-8周）</div>
-        <div class="checklist-grid">
-            <div class="check-item"><strong>⚙️ TCAD入门</strong><br>✔ 安装免费/试用版: Silvaco TCAD Student, Lumerical Student, 或 Sentaurus 教学版<br>✔ 跑通官方PN结示例 (电流-电压特性)<br>✔ 修改掺杂浓度，观察击穿电压变化</div>
-            <div class="check-item"><strong>🎨 版图实战</strong><br>✔ 用Klayout绘制简单MOSFET版图 (源、漏、栅、接触孔)<br>✔ 运行DRC (使用Sky130规则文件)<br>✔ 提取寄生参数 (使用开源Magic或Klayout+netgen)</div>
-            <div class="check-item"><strong>📊 模型提取练习</strong><br>✔ 用LTspice拟合二极管SPICE模型 (Rs, N, Is)<br>✔ 尝试用QucsStudio进行小信号增益仿真</div>
-        </div>
-        <div class="ref-row">📖 本阶段配套笔记（仿真建模前先吃透器件）：
             <a class="ref-link" href="2026-10-01-MOSFET工作原理与特性曲线.html">MOSFET 工作原理与特性曲线</a>
             <a class="ref-link" href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">CMOS 集成电路基础</a>
+            <a class="ref-link" href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">量子三基石（进阶）</a>
+        </div>
+
+        <!-- 阶段 2 -->
+        <div class="section-title" style="font-size: 1.3rem; margin-top: 1.6rem;">阶段 2 · 纵向走通全流程（6-8 周）</div>
+        <div class="checklist-grid">
+            <div class="check-item"><strong>⚙️ 工艺这一段</strong><br>✔ 把光刻→刻蚀→沉积掺杂→CMP 的顺序与作用讲清楚<br>✔ 理解每一步"为什么必须按这个顺序"<br>✔ 知道 EUV 为什么贵、多重曝光为什么存在</div>
+            <div class="check-item"><strong>🎨 设计这一段</strong><br>✔ 走一遍 RTL → 综合 → 布局布线 → 签核的流程<br>✔ 理解建立/保持时间、时钟偏斜、PPA 三角<br>✔ 模拟方向另加：电流镜、带隙基准、运放与相位裕度</div>
+            <div class="check-item"><strong>📐 版图这一次</strong><br>✔ 用 Klayout 画一个反相器或简单器件版图<br>✔ 跑通 DRC 与 LVS，理解两者在查什么<br>✔ 认识天线效应、闩锁效应、闩锁防护环的作用</div>
+        </div>
+        <div class="ckpt">🎯 完成标志：有一张通过 DRC/LVS 的版图，并且能说出它会被怎样制造出来（用到哪几层、哪几步工艺）。</div>
+        <div class="ref-row">📖 配套笔记：
+            <a class="ref-link" href="2026-10-01-芯片制造工艺流程详解.html">芯片制造工艺流程详解</a>
+            <a class="ref-link" href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">光刻工艺详解</a>
+            <a class="ref-link" href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">刻蚀工艺详解</a>
+            <a class="ref-link" href="2026-10-01-薄膜沉积与掺杂工艺详解.html">薄膜沉积与掺杂</a>
+            <a class="ref-link" href="2026-10-01-CMP平坦化量测与良率控制.html">CMP 平坦化与良率控制</a>
+            <a class="ref-link" href="2026-10-01-芯片设计与EDA工具链.html">芯片设计与 EDA 工具链</a>
+            <a class="ref-link" href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">数字后端物理设计</a>
+            <a class="ref-link" href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">模拟集成电路设计</a>
             <a class="ref-link" href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">版图设计实战 · DRC/LVS</a>
         </div>
-    </div>
 
-    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">✅ 第三阶段：流片准备与第三方对接（第9-12周）</div>
+        <!-- 阶段 3 -->
+        <div class="section-title" style="font-size: 1.3rem; margin-top: 1.6rem;">阶段 3 · 真实闭环：投片与测试（8-12 周）</div>
         <div class="checklist-grid">
-            <div class="check-item"><strong>🚀 MPW申请</strong><br>✔ 注册Efabless平台，了解ChipIgnite流程 (150美元起)<br>✔ 准备设计文档、GDSII、引脚说明<br>✔ 联系国内MPW代理: 中科院微电子所MPW中心 / 摩尔精英</div>
-            <div class="check-item"><strong>🤝 设计服务咨询</strong><br>✔ 获取欣峰扬科技/创意电子报价 (版图外包或全流程)<br>✔ 签署NDA，获取目标代工厂PDK (TSMC, 中芯国际, 华虹)<br>✔ 学习PDK中的器件模型与DRC/LVS规则</div>
-            <div class="check-item"><strong>📋 流片签核清单</strong><br>✔ GDSII完整性检查<br>✔ 天线效应检查 (Antenna rule)<br>✔ 金属密度填充验证 (Dummy fill)</div>
+            <div class="check-item"><strong>🚀 投片准备</strong><br>✔ 选一个足够小但完整的项目（如环形振荡器、带隙基准）<br>✔ 完成全套签核：DRC / LVS / 天线 / 密度 / 时序<br>✔ 提交 MPW（Efabless ChipIgnite、国内 MPW 计划等）</div>
+            <div class="check-item"><strong>⏳ 等待期别空着</strong><br>✔ 学产业：分工模式、成本模型、量产全流程（见下方链接）<br>✔ 学可靠性：电迁移、TDDB、NBTI、ESD 这些"芯片为什么会老"<br>✔ 提前联系测试机构，预约回片后的机时</div>
+            <div class="check-item"><strong>🧪 回片实测</strong><br>✔ 测 I-V / C-V，提取阈值电压与跨导<br>✔ 与仿真对比，写清每一处偏差的可能原因<br>✔ 有条件做一次失效分析或可靠性试验</div>
         </div>
-        <div class="ref-row">📖 本阶段配套笔记（理解你的设计将被如何制造）：
-            <a class="ref-link" href="2026-10-01-芯片制造工艺流程详解.html">芯片制造工艺流程详解</a>
-            <a class="ref-link" href="2026-10-01-芯片设计与EDA工具链.html">芯片设计流程与 EDA 工具链</a>
-            <a class="ref-link" href="2026-10-01-硅单晶生长与衬底制备工艺.html">硅单晶生长与衬底制备</a>
-        </div>
-    </div>
-
-    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">✅ 第四阶段：实验验证与表征（第13-16周·收到芯片后）</div>
-        <div class="checklist-grid">
-            <div class="check-item"><strong>🔌 电学测试准备</strong><br>✔ 联系第三方测试实验室 (华测蔚思博/广电计量/胜科纳米) 预约探针台+参数分析仪时间<br>✔ 准备PCB测试夹具或探针卡 (可找季丰电子定制)<br>✔ 学习使用Keysight B1500 / Keithley 4200 基础操作</div>
-            <div class="check-item"><strong>📈 典型测试项</strong><br>✔ 输出特性 (I<sub>d</sub>-V<sub>ds</sub>)<br>✔ 转移特性 (I<sub>d</sub>-V<sub>gs</sub>) 提取V<sub>t</sub>、跨导<br>✔ 击穿电压、漏电流、C-V曲线</div>
-            <div class="check-item"><strong>🔬 失效分析与可靠性</strong><br>✔ 委托扫描电镜 (SEM) 观察器件截面<br>✔ 做高温存储/温度循环实验 (可外包)<br>✔ 撰写测试报告，对比仿真与实测差异</div>
-        </div>
-        <div class="ref-row">📖 本阶段配套笔记（测试与良率的工程背景）：
-            <a class="ref-link" href="2026-10-01-芯片封装测试与失效分析.html">芯片封装、测试与失效分析</a>
-            <a class="ref-link" href="2026-10-01-CMP平坦化量测与良率控制.html">CMP 平坦化、量测与良率控制</a>
-        </div>
-    </div>
-
-    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
-        <div class="section-title">✅ 第五阶段：进阶方向与视野扩展（长期）</div>
-        <div class="checklist-grid">
-            <div class="check-item"><strong>🧭 选定细分方向</strong><br>✔ 数字/模拟/射频/功率/存储各有不同知识图谱，回看自测表里最强的那几项<br>✔ 功率方向 → SiC/GaN 宽禁带器件；存储方向 → DRAM/NAND 阵列结构<br>✔ 订阅 1-2 个方向的技术期刊（IEDM/VLSI 会议摘要即可）</div>
-            <div class="check-item"><strong>🌐 建立产业视角</strong><br>✔ 理解 IDM / Fabless / Foundry / OSAT 的分工与各自盈利模式<br>✔ 能手算一颗 die 的成本：掩模 NRE、良率、面积三者如何决定毛利<br>✔ 能讲清一颗芯片从需求到量产的完整时间轴，知道自己做的事在哪一段<br>✔ 跟踪先进封装与 Chiplet 趋势：后摩尔时代的新赛道<br>✔ 关注摩尔定律演进：FinFET → GAA → 背面供电的路线图</div>
-            <div class="check-item"><strong>💼 理解生意与岗位</strong><br>✔ 分清 EDA 订阅、IP 授权费、版税这些「不造芯片也赚钱」的模式<br>✔ 对照岗位地图定位：架构/前端/验证/DFT/后端/版图/模拟/工艺/良率/封测/FA<br>✔ 判断自己喜欢「从零创造」还是「诊断问题」，偏好抽象还是实体</div>
-            <div class="check-item"><strong>🤝 积累行业连接</strong><br>✔ 把第一次流片+测试写成技术博客或报告（求职作品）<br>✔ 参加开源芯片社区（如 Efficient Electronics Challenge 类活动）<br>✔ 实习优先选择能摸到真实 PDK 与机台的岗位</div>
-        </div>
-        <div class="ref-row">📖 本阶段配套笔记（从工程师视角回到产业全景）：
-            <a class="ref-link" href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">摩尔定律与器件微缩</a>
-            <a class="ref-link" href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">半导体材料全景 · SiC/GaN</a>
-            <a class="ref-link" href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">存储器 · DRAM/NAND</a>
-            <a class="ref-link" href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">先进封装与 Chiplet</a>
-            <a class="ref-link" href="2026-10-02-半导体设备与产业链-核心装备全景.html">半导体设备与产业链</a>
+        <div class="ckpt">🎯 完成标志：一份"仿真 vs 实测"的对比报告，能解释主要偏差来自模型、工艺 fluctuation 还是测试方法。</div>
+        <div class="ref-row">📖 配套笔记（等待期正好补这三块）：
             <a class="ref-link" href="2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html">产业分工与商业模式</a>
             <a class="ref-link" href="2026-10-07-晶圆厂经济学与芯片成本模型.html">晶圆厂经济学与成本模型</a>
             <a class="ref-link" href="2026-10-07-一颗芯片的诞生全流程-从需求到量产.html">一颗芯片的诞生全流程</a>
+            <a class="ref-link" href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">芯片可靠性物理</a>
+            <a class="ref-link" href="2026-10-01-芯片封装测试与失效分析.html">封装测试与失效分析</a>
+            <a class="ref-link" href="2026-10-02-半导体设备与产业链-核心装备全景.html">半导体设备与产业链</a>
+        </div>
+
+        <!-- 阶段 4 -->
+        <div class="section-title" style="font-size: 1.3rem; margin-top: 1.6rem;">阶段 4 · 方向深耕与产出（长期）</div>
+        <div class="checklist-grid">
+            <div class="check-item"><strong>🧭 选定方向深挖</strong><br>✔ 从第五章四条路线里选一条，把它的核心书目与工具吃透<br>✔ 在细分方向做出能展示的东西（项目、报告、专利、论文）<br>✔ 跟踪该方向顶会（IEDM / VLSI / ISSCC）的摘要，知道前沿在争什么</div>
+            <div class="check-item"><strong>💼 建立职业资产</strong><br>✔ 把流片 + 测试的完整过程写成技术文章（这是最好的求职作品）<br>✔ 参与开源芯片社区，贡献过哪怕一个 PR<br>✔ 实习优先选能摸到真实 PDK 或真实机台的岗位</div>
+            <div class="check-item"><strong>🌐 视野升级</strong><br>✔ 关注后摩尔路线：Chiplet/先进封装、背面供电、宽禁带<br>✔ 关注新计算范式：光计算、类脑与存算一体、量子计算<br>✔ 能讲清这些方向各自解决什么问题、现在卡在哪</div>
+        </div>
+        <div class="ref-row">📖 配套笔记：
+            <a class="ref-link" href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">先进封装与 Chiplet</a>
+            <a class="ref-link" href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">摩尔定律与器件微缩</a>
+            <a class="ref-link" href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">半导体材料全景 · SiC/GaN</a>
+            <a class="ref-link" href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">存储器原理</a>
+            <a class="ref-link" href="2026-10-05-光计算-用光子代替电子的算力革命.html">光计算</a>
+            <a class="ref-link" href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">类脑计算与存算一体</a>
+            <a class="ref-link" href="2026-10-05-量子计算-从量子比特到量子优越性.html">量子计算</a>
         </div>
     </div>
 
-    <div class="card" style="padding: 1.6rem; margin-bottom: 1.5rem;">
-        <div class="section-title">📌 新手资源直通车（点击式行动指南）</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;">
-            <div style="flex:1; min-width: 200px;">
-                <span class="chip">📖 免费教材</span><br>
-                - 半导体器件物理 (施敏) PDF<br>
-                - Purdue NanoHub TCAD教程<br>
-                - 油管频道: "Semiconductor Devices" by NPTEL
-            </div>
-            <div style="flex:1; min-width: 200px;">
-                <span class="chip">🛠️ 开源工具链</span><br>
-                - Klayout + Sky130 PDK<br>
-                - Ngspice + Magic VLSI<br>
-                - OpenRoad (数字APR)
-            </div>
-            <div style="flex:1; min-width: 200px;">
-                <span class="chip">🏭 MPW快速入口</span><br>
-                - Efabless: 每月报名<br>
-                - 中芯国际 MPW 高校计划<br>
-                - 欧洲 EUROPRACTICE
-            </div>
-            <div style="flex:1; min-width: 200px;">
-                <span class="chip">🧪 测试外协联系</span><br>
-                - 胜科纳米 (失效分析)<br>
-                - 华测蔚思博 (车规认证)<br>
-                - 季丰电子 (测试硬件)
-            </div>
+    <!-- ========= 五、四条分方向路线 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">🔀 五、四条分方向路线：同一条主干，四个出口</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            走完前三个阶段（主干）之后，就该选出口了。下面四条路线的<strong style="color: #7ad0e0;">主干部分完全相同</strong>，差别在于深耕什么、以及"入门了"的判据不同。
+            选的依据不是"哪个更热门"，而是<strong style="color: #7ad0e0;">你更喜欢从零创造，还是诊断问题；更偏好抽象符号，还是实体机台。</strong>
+        </p>
+
+        <div class="fig">
+        <svg viewBox="0 0 680 312" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四条分方向路线：器件工艺、数字设计、模拟设计、产业市场">
+            <text x="340" y="20" text-anchor="middle" font-size="14" fill="#eef5ff" font-weight="700">主干相同，出口不同：四条分方向路线</text>
+            <text x="340" y="36" text-anchor="middle" font-size="9.5" fill="#9ac7d9">选的依据不是热度，而是你偏好抽象还是实体、创造还是诊断</text>
+
+            <rect x="18" y="70" width="112" height="216" fill="#2cc9c9" fill-opacity=".16" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="74" y="100" text-anchor="middle" font-size="11.5" fill="#eef5ff" font-weight="700">共同主干</text>
+            <line x1="30" y1="110" x2="118" y2="110" stroke="#2c6a7a" stroke-width="1"/>
+            <text x="74" y="132" text-anchor="middle" font-size="9.5" fill="#c8e6f2">物理与器件</text>
+            <text x="74" y="150" text-anchor="middle" font-size="9.5" fill="#c8e6f2">制造工艺</text>
+            <text x="74" y="168" text-anchor="middle" font-size="9.5" fill="#c8e6f2">电路与版图</text>
+            <text x="74" y="186" text-anchor="middle" font-size="9.5" fill="#c8e6f2">一次流片闭环</text>
+            <text x="74" y="216" text-anchor="middle" font-size="9" fill="#9ac7d9">约 20-26 周</text>
+            <text x="74" y="240" text-anchor="middle" font-size="9" fill="#9ac7d9">阶段 0 - 3</text>
+            <text x="74" y="264" text-anchor="middle" font-size="9" fill="#fbbf24">先纵向打通</text>
+
+            <line x1="130" y1="86" x2="160" y2="86" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="130" y1="146" x2="160" y2="146" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="130" y1="206" x2="160" y2="206" stroke="#4effe0" stroke-width="1.4"/>
+            <line x1="130" y1="266" x2="160" y2="266" stroke="#4effe0" stroke-width="1.4"/>
+
+            <rect x="160" y="60" width="500" height="52" fill="#1e90ff" fill-opacity=".14" stroke="#1e90ff" stroke-width="1" rx="3"/>
+            <text x="172" y="80" font-size="11.5" fill="#eef5ff" font-weight="700">A · 器件与工艺</text>
+            <text x="172" y="98" font-size="9" fill="#c8e6f2">TCAD 仿真、工艺整合、良率统计、可靠性物理</text>
+            <text x="648" y="80" text-anchor="end" font-size="9" fill="#fbbf24">工艺整合 / 良率 / 器件工程师</text>
+            <text x="648" y="98" text-anchor="end" font-size="9" fill="#9ac7d9">判据：能解释一批 wafer 的良率异常</text>
+
+            <rect x="160" y="120" width="500" height="52" fill="#24a3ed" fill-opacity=".14" stroke="#24a3ed" stroke-width="1" rx="3"/>
+            <text x="172" y="140" font-size="11.5" fill="#eef5ff" font-weight="700">B · 数字 IC 设计</text>
+            <text x="172" y="158" font-size="9" fill="#c8e6f2">RTL 设计、验证方法学、综合与后端、时序与低功耗</text>
+            <text x="648" y="140" text-anchor="end" font-size="9" fill="#fbbf24">前端 / 验证 / DFT / 后端</text>
+            <text x="648" y="158" text-anchor="end" font-size="9" fill="#9ac7d9">判据：独立跑通一块模块的 RTL 到 GDS</text>
+
+            <rect x="160" y="180" width="500" height="52" fill="#28b6db" fill-opacity=".14" stroke="#28b6db" stroke-width="1" rx="3"/>
+            <text x="172" y="200" font-size="11.5" fill="#eef5ff" font-weight="700">C · 模拟 IC 设计</text>
+            <text x="172" y="218" font-size="9" fill="#c8e6f2">电流镜、带隙基准、运放与补偿、噪声与匹配、混合信号</text>
+            <text x="648" y="200" text-anchor="end" font-size="9" fill="#fbbf24">模拟设计 / 版图 / 混合信号</text>
+            <text x="648" y="218" text-anchor="end" font-size="9" fill="#9ac7d9">判据：一个带隙基准过全工艺角</text>
+
+            <rect x="160" y="240" width="500" height="52" fill="#2cc9c9" fill-opacity=".14" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="172" y="260" font-size="11.5" fill="#eef5ff" font-weight="700">D · 产业与市场</text>
+            <text x="172" y="278" font-size="9" fill="#c8e6f2">分工模式、成本模型、产能与周期、财报与产业研究</text>
+            <text x="648" y="260" text-anchor="end" font-size="9" fill="#fbbf24">产业研究 / 投资 / 战略 / 销售</text>
+            <text x="648" y="278" text-anchor="end" font-size="9" fill="#9ac7d9">判据：能拆一颗芯片的成本与钱流</text>
+
+            <text x="340" y="306" text-anchor="middle" font-size="9" fill="#9ac7d9">A 偏实体与机台，B/C 偏抽象与工具，D 偏判断与数据——先认清自己的偏好再选</text>
+        </svg>
+        <div class="figcap">图 4：四条出口的主干与分叉。每条右侧给出了"算入门了"的具体判据。</div>
         </div>
-        <div class="circuit-line"></div>
-        <div class="sub-glow" style="text-align: center;">🔥 推荐新手第一个项目：设计一个简单的肖特基二极管或环形振荡器，通过开源MPW流片，回片后在第三方实验室完成IV测试 — 完整闭环仅需3-4个月。</div>
+
+        <table class="tb">
+            <thead><tr><th style="width:14%">方向</th><th style="width:22%">核心能力</th><th style="width:32%">优先深读的篇目</th><th style="width:32%">入门判据与常见坑</th></tr></thead>
+            <tbody>
+                <tr><td><strong style="color:#7ad0e0">A 器件与工艺</strong></td><td>TCAD 仿真、DOE 实验设计、良率数据分析、失效定位</td><td>MOSFET 特性 / 摩尔定律与微缩 / 光刻 / 刻蚀 / 薄膜沉积 / CMP / 可靠性物理 / 封装测试与失效分析</td><td>能解释一批 wafer 的良率异常并给出改进假设。<b>坑：</b>只会跑机台不懂物理，遇到新问题无法归因</td></tr>
+                <tr><td><strong style="color:#7ad0e0">B 数字 IC 设计</strong></td><td>RTL 设计、UVM 验证、综合与 STA、PPA 与低功耗</td><td>CMOS 基础 / EDA 工具链 / 数字后端物理设计 / 版图实战 / 存储器原理 / 计算机发展史</td><td>能独立把一块模块从 RTL 做到 GDS 并通过签核。<b>坑：</b>只写代码不看时序报告，流片才发现建立时间违例</td></tr>
+                <tr><td><strong style="color:#7ad0e0">C 模拟 IC 设计</strong></td><td>器件小信号模型、匹配与失配、反馈与稳定性、噪声</td><td>模拟集成电路设计 / 半导体物理基础 / 版图实战（匹配部分）/ 可靠性物理</td><td>一个带隙基准或运放在全工艺角下都达标。<b>坑：</b>仿真过了就以为完了，忽略版图失配与寄生</td></tr>
+                <tr><td><strong style="color:#7ad0e0">D 产业与市场</strong></td><td>成本建模、产业链拆解、产能与周期判断、财报阅读</td><td>产业分工与商业模式 / 晶圆厂经济学 / 芯片诞生全流程 / 设备与产业链 / 先进封装</td><td>能拆出一颗芯片的成本结构与各环节的钱流。<b>坑：</b>只看份额排名，不理解良率与折旧如何决定毛利</td></tr>
+            </tbody>
+        </table>
+        <div class="warnbox"><b>不要在第一周就选方向。</b>
+            最常见的新手错误是还没见过全流程就"决定做模拟"或"决定做工艺"，结果学了一堆用不上的细节。
+            主干阶段（0-3）大约 20 周，走完它再回头看这张表，你的选择会靠谱得多——因为你终于知道每条路的日常工作长什么样。
+        </div>
     </div>
 
-    <!-- 进度追踪表（自我评估）-->
-    <div class="card" style="padding: 1.6rem;">
-        <div class="section-title">📋 个人技能进度自测表</div>
+    <!-- ========= 六、90 天压缩版 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">⏱️ 六、90 天压缩版时间表</div>
+        <p style="font-size: 0.92rem; line-height: 1.95; color: #c8e6f2;">
+            如果时间紧（比如暑期、转行空窗期），可以把主干压到 90 天。代价是：物理推导会略过，主要靠"够用就好"的理解往下推。
+            <strong style="color: #7ad0e0;">压缩版的原则是"先拿到闭环，再回头补地基"</strong>——先让自己摸到一颗真实的芯片，比把公式推漂亮更能建立直觉。
+        </p>
+
+        <div class="fig">
+        <svg viewBox="0 0 680 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="90 天压缩版学习甘特图">
+            <text x="340" y="20" text-anchor="middle" font-size="14" fill="#eef5ff" font-weight="700">90 天压缩版：先拿闭环，再补地基</text>
+
+            <line x1="90" y1="56" x2="660" y2="56" stroke="#2c6a7a" stroke-width="1"/>
+            <line x1="90" y1="56" x2="90" y2="188" stroke="#2c6a7a" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="280" y1="56" x2="280" y2="188" stroke="#2c6a7a" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="470" y1="56" x2="470" y2="188" stroke="#2c6a7a" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="660" y1="56" x2="660" y2="188" stroke="#2c6a7a" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="90" y="48" text-anchor="middle" font-size="9" fill="#9ac7d9">第 0 天</text>
+            <text x="280" y="48" text-anchor="middle" font-size="9" fill="#9ac7d9">第 30 天</text>
+            <text x="470" y="48" text-anchor="middle" font-size="9" fill="#9ac7d9">第 60 天</text>
+            <text x="660" y="48" text-anchor="end" font-size="9" fill="#9ac7d9">第 90 天</text>
+
+            <text x="84" y="91" text-anchor="end" font-size="9.5" fill="#c8e6f2">定向 + 物理</text>
+            <rect x="90" y="76" width="241" height="22" fill="#1e90ff" fill-opacity=".3" stroke="#1e90ff" stroke-width="1" rx="3"/>
+            <text x="210" y="91" text-anchor="middle" font-size="9" fill="#eef5ff">七层栈 + 能带/PN 结/MOSFET 够用版</text>
+
+            <text x="84" y="121" text-anchor="end" font-size="9.5" fill="#c8e6f2">工具与仿真</text>
+            <rect x="217" y="106" width="266" height="22" fill="#24a3ed" fill-opacity=".3" stroke="#24a3ed" stroke-width="1" rx="3"/>
+            <text x="350" y="121" text-anchor="middle" font-size="9" fill="#eef5ff">Klayout / SPICE / 工艺与流程各过一遍</text>
+
+            <text x="84" y="151" text-anchor="end" font-size="9.5" fill="#c8e6f2">版图与签核</text>
+            <rect x="407" y="136" width="241" height="22" fill="#28b6db" fill-opacity=".3" stroke="#28b6db" stroke-width="1" rx="3"/>
+            <text x="527" y="151" text-anchor="middle" font-size="9" fill="#eef5ff">画版图 · 过 DRC/LVS · 准备交付文件</text>
+
+            <text x="84" y="181" text-anchor="end" font-size="9.5" fill="#c8e6f2">MPW 投片</text>
+            <rect x="597" y="166" width="63" height="22" fill="#2cc9c9" fill-opacity=".32" stroke="#2cc9c9" stroke-width="1" rx="3"/>
+            <text x="628" y="181" text-anchor="middle" font-size="8.5" fill="#eef5ff">投片</text>
+
+            <text x="340" y="208" text-anchor="middle" font-size="9.5" fill="#fbbf24">第 100-150 天（回片后）：实测 + 对比报告 + 补产业与可靠性认知</text>
+            <text x="340" y="226" text-anchor="middle" font-size="9" fill="#9ac7d9">压缩版省略的部分，建议在第 4-6 个月回填：完整物理推导、可靠性物理、成本模型</text>
+        </svg>
+        <div class="figcap">图 5：90 天甘特。投片后还有 2-3 个月的等待期，正好用来补产业与可靠性这两块。</div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 0.5rem;">
+            <div><span class="chip">第 1-30 天</span> 定向 + 物理器件够用版 + 装好工具链</div>
+            <div><span class="chip">第 31-60 天</span> 仿真 + 工艺流程过一遍 + 报名 MPW</div>
+            <div><span class="chip">第 61-90 天</span> 版图实战 + 签核 + 投片</div>
+            <div><span class="chip">第 91-150 天</span> 等待期补产业课 / 回片后完成实测报告</div>
+        </div>
+    </div>
+
+    <!-- ========= 七、误区 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">⚠️ 七、六个常见误区</div>
+        <div class="checklist-grid">
+            <div class="check-item"><strong>❌ 按篇号顺序从头读到尾</strong><br>本站 33 篇是专题卡片不是教材。正确做法是：走本篇的路径，卡壳时再横向点开对应专题。顺序读会在第 5 篇就耗尽耐心。</div>
+            <div class="check-item"><strong>❌ 在错误的层上找答案</strong><br>用能带理论解释成本、用财报解释亚阈值摆幅，都会越查越乱。先判断问题落在哪一层，再决定用什么语言。</div>
+            <div class="check-item"><strong>❌ 物理不牢就冲设计</strong><br>不会推阈值电压的人画版图，遇到器件异常时没有任何诊断能力。地基阶段省下的时间，会在流片失败时加倍还回来。</div>
+            <div class="check-item"><strong>❌ 仿真过了就以为完了</strong><br>仿真用的是理想模型，实测面对的是工艺波动、寄生、封装与测试链路。两者的差距，正是工程师的价值所在。</div>
+            <div class="check-item"><strong>❌ 把流片当成终点</strong><br>投片只是开始。真正的能力来自"回片后解释清楚每一个偏差"——那才是工程师和学生的分界线。</div>
+            <div class="check-item"><strong>❌ 只学技术不看产业</strong><br>不理解成本与良率，就判断不了"这个方案值不值得做"。同样的电路，在 28nm 和 5nm 上是两门完全不同的生意。</div>
+        </div>
+    </div>
+
+    <!-- ========= 八、自测表 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 2rem;">
+        <div class="section-title">📋 八、个人技能进度自测表</div>
+        <p style="font-size: 0.88rem; line-height: 1.85; color: #c8e6f2;">
+            每月复盘一次。<strong style="color: #7ad0e0;">"入门"= 听得懂别人在说什么；"熟练"= 能独立做出来；"精通"= 能带别人做、能判断方案好坏。</strong>
+            三档之间是数量级差距，不要高估自己。
+        </p>
         <div style="overflow-x: auto;">
-            <table style="width:100%; border-collapse: collapse; font-size: 0.85rem;">
-                <thead><tr style="border-bottom: 1px solid #2cc9c9;"><th>技能项</th><th>入门(了解概念)</th><th>熟练(独立操作)</th><th>精通(可带项目)</th></tr></thead>
+            <table class="tb">
+                <thead><tr><th style="width:34%">技能项</th><th style="width:22%">入门（了解概念）</th><th style="width:22%">熟练（独立操作）</th><th style="width:22%">精通（可带项目）</th></tr></thead>
                 <tbody>
-                    <tr><td>半导体物理基础</td><td>✓</td><td>□</td><td>□</td></tr>
-                    <tr><td>Klayout版图设计</td><td>✓</td><td>□</td><td>□</td></tr>
-                    <tr><td>TCAD器件仿真 (Sentaurus/Silvaco)</td><td>□</td><td>□</td><td>□</td></tr>
-                    <tr><td>PDK规则 & DRC验证</td><td>□</td><td>□</td><td>□</td></tr>
-                    <tr><td>MPW流片流程</td><td>□</td><td>□</td><td>□</td></tr>
-                    <tr><td>探针台/参数分析仪操作</td><td>□</td><td>□</td><td>□</td></tr>
-                    <tr><td>第三方测试对接经验</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>半导体物理（能带、载流子、迁移率）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>PN 结 / MOSFET 器件特性与推导</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>制造工艺全流程（光刻到 CMP）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>SPICE 电路仿真与模型理解</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>TCAD 器件仿真（Sentaurus / Silvaco）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>版图设计 + DRC / LVS / 寄生提取</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>数字前端（RTL / 验证）或后端（P&amp;R / STA）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>模拟电路（电流镜 / 基准 / 运放 / 稳定性）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>MPW 流程与投片签核</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>探针台 / 参数分析仪操作与数据分析</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>可靠性与失效分析（EM / TDDB / ESD / FA）</td><td>□</td><td>□</td><td>□</td></tr>
+                    <tr><td>成本建模与产业链判断（良率 / 折旧 / 分工）</td><td>□</td><td>□</td><td>□</td></tr>
                 </tbody>
             </table>
         </div>
-        <div class="sub-glow" style="margin-top: 1rem;">每月复盘，勾选已完成的技能，持续迭代。</div>
+        <div class="sub-glow" style="margin-top: 1rem;">建议：任何一个季度内，只在<b>一个方向上</b>推进"熟练 → 精通"。同时铺开四条线，通常一条都走不通。</div>
     </div>
 
-    <!-- 总结建议 -->
-    <div class="card" style="margin-top: 1.5rem; text-align: center;">
-        <div class="section-title" style="display: block; text-align: center; border-left: none;">🎯 新手90天路线图（压缩版）</div>
-        <div class="circuit-line"></div>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
-            <div><span class="chip">第1-30天</span> 基础 + 软件安装 + 开源PDK熟悉</div>
-            <div><span class="chip">第31-60天</span> TCAD仿真 + 版图设计 + 报名MPW</div>
-            <div><span class="chip">第61-90天</span> 等待流片期间学习实验设备原理 + 提前联系测试机构</div>
-            <div><span class="chip">收到芯片后2周</span> 完成测试并分析数据，迭代设计</div>
+    <!-- ========= 九、资源 ========= -->
+    <div class="card" style="padding: 1.6rem; margin-bottom: 1.5rem;">
+        <div class="section-title">📌 九、资源直通车</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;">
+            <div style="flex:1; min-width: 200px;">
+                <span class="chip">📖 教材与课程</span><br>
+                - 半导体器件物理（施敏）<br>
+                - 半导体物理（刘恩科）<br>
+                - Purdue NanoHub 的 TCAD 与工艺教程<br>
+                - NPTEL "Semiconductor Devices" 视频课
+            </div>
+            <div style="flex:1; min-width: 200px;">
+                <span class="chip">🛠️ 开源工具链</span><br>
+                - Klayout（版图）+ Sky130 PDK<br>
+                - Ngspice / Xyce（电路仿真）<br>
+                - Magic + Netgen（DRC/LVS）<br>
+                - OpenLane / OpenROAD（数字全流程）
+            </div>
+            <div style="flex:1; min-width: 200px;">
+                <span class="chip">🚀 MPW 入口</span><br>
+                - Efabless ChipIgnite（低价、周期固定）<br>
+                - 国内高校 MPW 计划（中科院微电子所等）<br>
+                - 欧洲 EUROPRACTICE<br>
+                - 先做小项目：环形振荡器 / 带隙基准
+            </div>
+            <div style="flex:1; min-width: 200px;">
+                <span class="chip">🧪 测试与外协</span><br>
+                - 探针台 + 参数分析仪（高校共享平台优先）<br>
+                - 失效分析：SEM / FIB / 剥离层分析<br>
+                - 可靠性试验：高温存储、温度循环<br>
+                - 提前 4-6 周预约机时
+            </div>
         </div>
-        <div class="sub-glow" style="margin-top: 1.2rem;">💡 建议加入半导体行业社群 (EETOP, 知乎圈子, 知识星球“半导体器件与工艺”) 获取最新MPW团购和测试拼盘信息。</div>
+        <div class="circuit-line"></div>
+        <div class="sub-glow" style="text-align: center;">🔥 推荐的第一个项目：环形振荡器（数字）或带隙基准（模拟）——结构小、指标明确、回片后一根探针就能测出结果，最容易跑完整闭环。</div>
+        <div class="sub-glow" style="text-align: center; margin-top: 0.6rem;">💡 建议加入半导体社区（EETOP、开源芯片社区、行业知识星球）获取 MPW 团购与测试拼盘信息——这两项对个人来说单做都很贵，拼单能省一大半。</div>
     </div>
 
     <div class="footer">
-        🧭 半导体器件新手行动清单 | 细致到每周任务 · 工具链+第三方资源+测试实战 | 从零到流片验证可执行
+        🧭 半导体学习全景地图 | 学科七层栈 · 产业五环 · 五阶段路径 · 四条分方向 | 本站 33 篇专题的导航中枢
     </div>
 </div>
 </body>
