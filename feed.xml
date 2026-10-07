@@ -5,13 +5,20 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 07 Oct 2026 00:34:07 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 07 Oct 2026 15:02:06 +0800</lastBuildDate>
     <item>
       <title>芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html</guid>
       <pubDate>Wed, 07 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[芯片出厂合格不等于十年后还活着。用浴盆曲线、电迁移 Black 方程、栅氧 TDDB、NBTI/HCI 老化与 ESD 静电防护，讲透芯片可靠性的物理根源]]></description>
+    </item>
+    <item>
+      <title>芯片产业分工与商业模式：IDM、Fabless、Foundry 与 OSAT</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html</guid>
+      <pubDate>Wed, 07 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[为什么做芯片的公司大多不建厂？从垂直解体讲到五种商业模式，拆解代工下单规则、IP 授权与 EDA 订阅制，算清一颗芯片的钱最终流向谁口袋]]></description>
     </item>
     <item>
       <title>模拟集成电路设计：电流镜、带隙基准与运放</title>
@@ -21,11 +28,25 @@
       <description><![CDATA[模拟 IC 与数字 IC 有什么本质不同？用 PVT 漂移、电流镜、带隙基准、两级运放与相位裕度，讲透模拟芯片设计的核心套路与混合信号速览]]></description>
     </item>
     <item>
+      <title>晶圆厂经济学与芯片成本模型：为什么面积翻倍，利润可以归零</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-晶圆厂经济学与芯片成本模型.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-晶圆厂经济学与芯片成本模型.html</guid>
+      <pubDate>Wed, 07 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[从资本开支、设备折旧与稼动率出发，推导出每片晶圆的 die 数与 Murphy 良率公式，算清「面积×4 为什么不是贵 4 倍而是贵 6 倍」，并给出 Chiplet 拆片的真实经济账]]></description>
+    </item>
+    <item>
       <title>数字后端物理设计：布局布线、时钟树与静态时序分析</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html</guid>
       <pubDate>Wed, 07 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[逻辑综合给出的网表怎么变成 GDS？用后端全流程、时钟树综合、建立/保持时间与 STA、以及低功耗三板斧（时钟门控/电源门控/DVFS），讲透数字芯片物理设计]]></description>
+    </item>
+    <item>
+      <title>一颗芯片的诞生全流程：从一句需求到百万颗量产</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-一颗芯片的诞生全流程-从需求到量产.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-一颗芯片的诞生全流程-从需求到量产.html</guid>
+      <pubDate>Wed, 07 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[把芯片从需求定义、架构、RTL 验证、物理实现、流片、硅后 bring-up、量产爬坡到失效迭代的完整时间轴讲透，并把本站全部笔记映射到这条产业链流程上，给出清晰的岗位分工与学习脉络]]></description>
     </item>
     <item>
       <title>计算机发展史：计算机是如何工作的</title>
@@ -264,27 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-25瑾年财经早报_.html</guid>
       <pubDate>Fri, 25 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[沪指跌1.22%，深成指跌2.34%，创业板指跌2.68%，科创50跌2.35%。两市合计成交约21,353亿元，较前一交易日有所缩量。]]></description>
-    </item>
-    <item>
-      <title>每日财经早报 | 2026年9月24日</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-24每日财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-24每日财经早报_.html</guid>
-      <pubDate>Thu, 24 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[上证指数报收跌 -0.39% ，深证成指跌 -0.64% ，创业板指跌 -0.60% ，科创50微跌 -0.25% ，沪深300跌 -0.60%。两市合计成交约2.66万亿元，量能维持高位。]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月23日 周三</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/202-09-23zaobao_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/202-09-23zaobao_.html</guid>
-      <pubDate>Wed, 23 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[房地产服务板块表现亮眼，涨幅超3%，媒体、信息技术等科技板块也较为活跃。海上运输板块受国际运价回落影响跌幅居前。]]></description>
-    </item>
-    <item>
-      <title>财经周报 | 美联储加息靴子落地，A股探底反弹，下周怎么走？</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-20财经周报_网页版_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-20财经周报_网页版_.html</guid>
-      <pubDate>Sun, 20 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[下周中秋假期前仅三个交易日，但宏观数据和产业大会密集，市场情绪有望延续修复。本期周报带你全面复盘本周行情，前瞻下周关键事件，并分享"美联储加息如何影响A股"的分析框架。]]></description>
     </item>
   </channel>
 </rss>

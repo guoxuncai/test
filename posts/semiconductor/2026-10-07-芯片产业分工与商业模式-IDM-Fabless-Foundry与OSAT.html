@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>芯片产业分工与商业模式：IDM、Fabless、Foundry 与 OSAT</title>
+<meta name="description" content="为什么做芯片的公司大多不建厂？从垂直解体讲到五种商业模式，拆解代工下单规则、IP 授权与 EDA 订阅制，算清一颗芯片的钱最终流向谁口袋。">
+<meta name="keywords" content="Fabless,Foundry,IDM,OSAT,商业模式,IP授权,EDA,垂直分工,半导体产业链">
+<meta name="date" content="2026-10-07">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 产业实践</span>
+    <h1 class="title">芯片产业分工与商业模式：谁造、谁卖、谁赚钱</h1>
+    <div class="meta">
+      <span>2026-10-07</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 31 篇</span><span class="sep"></span>
+      <span>阅读约 28 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        前面三十篇，我们把一颗芯片<strong>从能带到 SoC</strong> 的物理与工程讲透了。
+        但真实世界里，一颗手机芯片不是一个人、也不是一家公司做出来的：
+        它的指令集可能来自英国剑桥的一家<strong>不造芯片</strong>的公司，
+         设计工具来自三家美国/德国公司的<strong>订阅授权</strong>，
+        电路完成后由加州团队交给中国台湾地区的一家工厂生产，
+        封装再飞到东南亚，最后装进某个品牌的手机。
+        这一篇补齐「理论 → 产业」断掉的那一段：
+        <strong>这条链为什么长成这样、每一环靠什么赚钱、钱最后流向谁</strong>。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">一颗芯片要淌过多少家公司</a></li>
+          <li><a href="#s2">垂直解体：为什么没人再从头做到尾</a></li>
+          <li><a href="#s3">五种商业模式对照</a></li>
+          <li><a href="#s4">代工的下单规则：四种钱与三种身份</a></li>
+          <li><a href="#s5">不造芯片照样赚钱：IP 授权与 EDA 订阅</a></li>
+          <li><a href="#s6">价值分配：半导体的那条曲线</a></li>
+          <li><a href="#s7">一颗芯片的账单：钱最后去了哪</a></li>
+          <li><a href="#s8">这套体系为什么高效、又为什么脆弱</a></li>
+          <li><a href="#s9">易错点</a></li>
+          <li><a href="#s10">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 一颗芯片要淌过多少家公司</h2>
+
+      <p>先建立一个全局图景。半导体产业通常被画成<strong>一条链路</strong>，但更准确地说是<strong>一个「三层 + 五环」的结构</strong>：
+      上层提供工具与权利、中层负责把想法变成硅、下游把它装进产品。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体产业链三层五环全景">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">半导体产业链：三层支撑 + 五环主干</text>
+
+          <rect x="20" y="42" width="150" height="44" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="95" y="60" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">半导体材料</text>
+          <text x="95" y="76" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">硅片 · 光刻胶 · 特气 · 靶材</text>
+
+          <rect x="183" y="42" width="150" height="44" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="258" y="60" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">设备</text>
+          <text x="258" y="76" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">光刻 · 刻蚀 · 薄膜 · 量测</text>
+
+          <rect x="346" y="42" width="150" height="44" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="421" y="60" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">EDA 工具</text>
+          <text x="421" y="76" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">仿真 · 综合 · 布局布线</text>
+
+          <rect x="509" y="42" width="150" height="44" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="584" y="60" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">IP 与设计服务</text>
+          <text x="584" y="76" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">处理器核 · 接口 · 物理库</text>
+
+          <text x="12" y="66" font-size="9.5" fill="var(--text-mute)">上游</text>
+          <text x="12" y="80" font-size="9.5" fill="var(--text-mute)">支撑</text>
+
+          <path d="M95 92 L95 128" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M258 92 L258 128" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M421 92 L421 128" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M584 92 L584 128" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+
+          <rect x="30" y="134" width="190" height="52" fill="var(--semi)" fill-opacity=".26" stroke="var(--semi)" stroke-width="1.4" rx="3"/>
+          <text x="125" y="154" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">设计</text>
+          <text x="125" y="172" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">架构 · RTL · 验证 · 物理实现</text>
+
+          <rect x="245" y="134" width="190" height="52" fill="var(--accent)" fill-opacity=".26" stroke="var(--accent)" stroke-width="1.4" rx="3"/>
+          <text x="340" y="154" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">晶圆制造</text>
+          <text x="340" y="172" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">光刻 · 刻蚀 · 沉积 · CMP</text>
+
+          <rect x="460" y="134" width="190" height="52" fill="var(--fin)" fill-opacity=".24" stroke="var(--fin)" stroke-width="1.4" rx="3"/>
+          <text x="555" y="154" text-anchor="middle" font-size="12.5" fill="var(--text)" font-weight="700">封装与测试</text>
+          <text x="555" y="172" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">切割 · 键合 · CP/FT · 老化</text>
+
+          <text x="12" y="158" font-size="9.5" fill="var(--text-mute)">中游</text>
+          <text x="12" y="172" font-size="9.5" fill="var(--text-mute)">主干</text>
+
+          <path d="M220 160 L243 160" stroke="var(--text)" stroke-width="1.6"/>
+          <path d="M435 160 L458 160" stroke="var(--text)" stroke-width="1.6"/>
+
+          <path d="M125 190 L125 224" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M340 190 L340 224" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M555 190 L555 224" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+
+          <rect x="30" y="228" width="300" height="46" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="180" y="248" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">模块与系统集成</text>
+          <text x="180" y="264" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">模组厂 · ODM · 板卡 · 整机组装</text>
+
+          <rect x="350" y="228" width="300" height="46" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="500" y="248" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">终端品牌与市场</text>
+          <text x="500" y="264" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">手机 · 汽车 · 服务器 · 工业</text>
+
+          <text x="12" y="250" font-size="9.5" fill="var(--text-mute)">下游</text>
+          <text x="12" y="264" font-size="9.5" fill="var(--text-mute)">应用</text>
+        </svg>
+        <figcaption>图 1：产业链的三层结构。上游卖「工具与权利」，中游把想法变成硅片，下游把硅片变成产品。</figcaption>
+      </figure>
+
+      <p>这张图里藏着一个反直觉的事实：<strong>产业链上最赚钱的几家公司，有些并不生产芯片</strong>。
+      ARM 从 1990 年成立起就没有自己的晶圆厂，却几乎出现在每一部手机里；
+      EDA 三巨头不流片、不量产，却从每一款芯片里抽成；
+      一座两千亿元人民币量级的新工厂能带动整座城市的供应链，但它本身可能十年才回本。
+      要理解这些，得先看这场分工是怎么发生的。</p>
+
+      <h2 id="s2">2. 垂直解体：为什么没人再从头做到尾</h2>
+
+      <p>早期半导体公司是<strong>一条龙</strong>的。Intel 1968 年成立时，自己设计 CPU、自己盖厂、自己做光刻工艺、
+      自己封装测试、自己贴牌销售。这在当时不是选择，而是<strong>唯一可行的方式</strong>——
+      因为电路设计与制造工艺在当时是一件事：
+      你怎么掺杂质、怎么定器件结构，直接决定了你打算怎么画电路，两者无法分开。</p>
+
+      <p>但这种模式的致命缺陷随着摩尔定律显现出来：<strong>建一座晶圆厂的成本每一代都要翻上去</strong>，
+      而一家公司如果每两年就要重新掏钱建一座厂，它根本没有余力同时做创新设计。
+      「设计的规模经济」和「制造的规模经济」开始向相反方向拉扯：</p>
+
+      <ul>
+        <li><strong>制造端</strong>：越集中、越标准化，良率爬坡越快、设备折旧摊得越薄。一座厂服务十个客户，显然比服务一个客户更能把成本吃下去。</li>
+        <li><strong>设计端</strong>：越贴近应用、越懂系统，越值钱。做手机的懂射频、做显卡的懂图形、做 MCU 的懂功耗——这些知识无法被一座工厂继承。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体产业垂直解体时间线">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">垂直解体：从一条龙到专业分工（1968 — 2020s）</text>
+
+          <line x1="40" y1="150" x2="650" y2="150" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <path d="M650 146 L658 150 L650 154 Z" fill="var(--text-mute)"/>
+
+          <circle cx="70" cy="150" r="4.5" fill="var(--semi)"/>
+          <text x="70" y="140" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1968</text>
+          <rect x="30" y="168" width="130" height="52" fill="var(--semi)" fill-opacity=".2" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="95" y="186" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">IDM 时代</text>
+          <text x="95" y="200" text-anchor="middle" font-size="9" fill="var(--text-mute)">设计 / 制造 / 封测</text>
+          <text x="95" y="213" text-anchor="middle" font-size="9" fill="var(--text-mute)">全在公司内部</text>
+
+          <circle cx="196" cy="150" r="4.5" fill="var(--accent)"/>
+          <text x="196" y="140" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1984</text>
+          <rect x="152" y="72" width="130" height="52" fill="var(--accent)" fill-opacity=".2" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="217" y="90" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">Fabless 出现</text>
+          <text x="217" y="104" text-anchor="middle" font-size="9" fill="var(--text-mute)">设计成立独立生意</text>
+          <text x="217" y="117" text-anchor="middle" font-size="9" fill="var(--text-mute)">制造外包出去</text>
+          <path d="M196 124 L196 146" stroke="var(--text-mute)" stroke-width="1"/>
+
+          <circle cx="322" cy="150" r="4.5" fill="var(--accent)"/>
+          <text x="322" y="140" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1987</text>
+          <rect x="282" y="168" width="130" height="56" fill="var(--accent)" fill-opacity=".2" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="347" y="186" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">纯代工模式诞生</text>
+          <text x="347" y="200" text-anchor="middle" font-size="9" fill="var(--text-mute)">TSMC 在中国台湾地区</text>
+          <text x="347" y="214" text-anchor="middle" font-size="9" fill="var(--text-mute)">成立：只做制造</text>
+
+          <circle cx="448" cy="150" r="4.5" fill="var(--fin)"/>
+          <text x="448" y="140" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1990s</text>
+          <rect x="404" y="72" width="130" height="56" fill="var(--fin)" fill-opacity=".2" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="469" y="90" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">设计与 IP 起飞</text>
+          <text x="469" y="104" text-anchor="middle" font-size="9" fill="var(--text-mute)">Fabless 公司成群</text>
+          <text x="469" y="117" text-anchor="middle" font-size="9" fill="var(--text-mute)">IP 授权生意成型</text>
+          <path d="M448 128 L448 146" stroke="var(--text-mute)" stroke-width="1"/>
+
+          <circle cx="574" cy="150" r="4.5" fill="var(--up)"/>
+          <text x="574" y="140" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">2010s</text>
+          <rect x="530" y="168" width="130" height="56" fill="var(--up)" fill-opacity=".2" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="595" y="186" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">封测专业化</text>
+          <text x="595" y="200" text-anchor="middle" font-size="9" fill="var(--text-mute)">OSAT 独立壮大</text>
+          <text x="595" y="214" text-anchor="middle" font-size="9" fill="var(--text-mute)">摩尔之外靠封装</text>
+
+          <text x="340" y="255" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">→ 时间轴：每个环节不断被剥离出来，成为一门可以独立核算的生意</text>
+        </svg>
+        <figcaption>图 2：垂直解体的关键节点。每一环被剥离的前提，是「界面标准化的解决」——设计能用 GDSII 交付给代工，才谈得上分工。</figcaption>
+      </figure>
+
+      <div class="note"><b>解体的真正前提是「接口标准化」：</b>
+        分工不是口号，它需要一个可被双方共同遵守的契约。半导体里这个契约叫
+        <strong>PDK（工艺设计套件）</strong>：代工厂把器件模型、设计规则、版图层定义打包交给客户，
+        客户在自己的工具里按这套规则画图，最后交付 <strong>GDSII 图形文件</strong>。
+        只要双方都认这套格式，设计方和制造方就可以是两家公司。
+        前面 LVS/DRC 那些规则，本质上就是这个契约的条款。
+      </div>
+
+      <h2 id="s3">3. 五种商业模式对照</h2>
+
+      <p>解体之后，各环节演化出几种典型的公司形态。区分它们的维度只有一个：
+      <strong>这条价值链上，哪些环节在公司内部、哪些在市场里买</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五种商业模式的环节归属矩阵">
+          <text x="340" y="20" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">谁拥有哪个环节：五种模式对照</text>
+
+          <text x="160" y="44" font-size="10.5" fill="var(--text-mute)" text-anchor="middle">架构与电路设计</text>
+          <text x="290" y="44" font-size="10.5" fill="var(--text-mute)" text-anchor="middle">晶圆制造</text>
+          <text x="420" y="44" font-size="10.5" fill="var(--text-mute)" text-anchor="middle">封装测试</text>
+          <text x="550" y="44" font-size="10.5" fill="var(--text-mute)" text-anchor="middle">品牌与销售</text>
+
+          <line x1="80" y1="52" x2="660" y2="52" stroke="var(--border)" stroke-width="1"/>
+
+          <text x="76" y="82" font-size="11.5" fill="var(--text)" font-weight="700" text-anchor="end">IDM</text>
+          <rect x="120" y="66" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="160" y="82" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+          <rect x="250" y="66" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="290" y="82" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+          <rect x="380" y="66" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="420" y="82" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+          <rect x="510" y="66" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="550" y="82" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+
+          <text x="76" y="118" font-size="11.5" fill="var(--text)" font-weight="700" text-anchor="end">Fabless</text>
+          <rect x="120" y="102" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="160" y="118" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+          <rect x="250" y="102" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="290" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">外包代工</text>
+          <rect x="380" y="102" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="420" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">外包 OSAT</text>
+          <rect x="510" y="102" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="550" y="118" text-anchor="middle" font-size="9.5" fill="var(--text)">自有品牌</text>
+
+          <text x="76" y="154" font-size="11.5" fill="var(--text)" font-weight="700" text-anchor="end">Foundry</text>
+          <rect x="120" y="138" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="160" y="154" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">不做设计</text>
+          <rect x="250" y="138" width="80" height="24" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="290" y="154" text-anchor="middle" font-size="9.5" fill="var(--text)">核心业务</text>
+          <rect x="380" y="138" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="420" y="154" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">多半转包</text>
+          <rect x="510" y="138" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="550" y="154" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">不碰终端</text>
+
+          <text x="76" y="190" font-size="11.5" fill="var(--text)" font-weight="700" text-anchor="end">OSAT</text>
+          <rect x="120" y="174" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="160" y="190" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">不涉及</text>
+          <rect x="250" y="174" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="290" y="190" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">不涉及</text>
+          <rect x="380" y="174" width="80" height="24" fill="var(--fin)" fill-opacity=".55" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="420" y="190" text-anchor="middle" font-size="9.5" fill="var(--text)">核心业务</text>
+          <rect x="510" y="174" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="550" y="190" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">不涉及</text>
+
+          <text x="76" y="226" font-size="11.5" fill="var(--text)" font-weight="700" text-anchor="end">Fab-lite</text>
+          <rect x="120" y="210" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="160" y="226" text-anchor="middle" font-size="9.5" fill="var(--text)">自有</text>
+          <rect x="250" y="210" width="80" height="24" fill="var(--accent)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 2" rx="2"/>
+          <text x="290" y="226" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">只留特色工艺</text>
+          <rect x="380" y="210" width="80" height="24" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3" rx="2"/>
+          <text x="420" y="226" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">外包为主</text>
+          <rect x="510" y="210" width="80" height="24" fill="var(--semi)" fill-opacity=".55" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="550" y="226" text-anchor="middle" font-size="9.5" fill="var(--text)">自有品牌</text>
+
+          <text x="340" y="256" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">实心 = 公司自己做；虚线 = 向市场采购。模式之间会互相流动</text>
+        </svg>
+        <figcaption>图 3：五种模式的环节归属。判别一家半导体公司的第一件事，是先问「它的厂在哪」。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>IDM</span><span>设计、制造、封测、销售全在自己手里。重资产，但工艺与设计能深度耦合——先进节点的「DTCO」优势常来自这种耦合</span></div>
+        <div class="kv-row"><span>Fabless</span><span>只设计与卖芯片，制造委外。轻资产、周转快，但产能与工艺窗口掌握在别人手里</span></div>
+        <div class="kv-row"><span>Foundry</span><span>只做制造的纯代工厂。承诺不与客户竞争（不做自己的品牌芯片），这是 TSMC 立身的关键约定</span></div>
+        <div class="kv-row"><span>OSAT</span><span>只做封装与测试。人力密集 + 设备密集，毛利率显著低于设计与设备环节</span></div>
+        <div class="kv-row"><span>Fab-lite</span><span>保留少数「差异化工艺」（如模拟高压、BCD、射频 SOI）自产，标准数字 CMOS 外包——兼顾特色与资本效率</span></div>
+        <div class="kv-row"><span>Chipless / IP</span><span>连芯片都不卖，只授权知识产权与设计。ARM 是最典型的例子：收入来自授权费 + 每颗芯片抽成</span></div>
+      </div>
+
+      <p>值得单独说一句 <strong>Foundry 的「不与客户竞争」</strong>。
+      TSMC 1987 年成立时最重要的商业承诺，就是<strong>永远不做自己的芯片产品</strong>。
+      这条自我约束看似放弃了利润，实则换来了整个 Fabless 生态的信任——
+      高通、英伟达、苹果都敢把最核心的图纸交给他，因为他们知道这家工厂不会转身去卖同款芯片。
+      <strong>商业模式里，「不做什么」往往比「做什么」更能决定生死。</strong></p>
+
+      <h2 id="s4">4. 代工的下单规则：四种钱与三种身份</h2>
+
+      <p>一家 Fabless 要真正把芯片做出来，和代工厂打交道时会碰到<strong>四种性质完全不同的钱</strong>。
+      分清它们的性质，是理解整个产业经济学的基础：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="一次性成本与变动成本的分界">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">芯片项目里的「四种钱」：一次性投入 vs 随产量变动</text>
+
+          <line x1="80" y1="230" x2="650" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="80" y1="60" x2="80" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="646" y="246" font-size="10" fill="var(--text-mute)" text-anchor="end">累计产量</text>
+          <text x="86" y="70" font-size="10" fill="var(--text-mute)">单片成本</text>
+
+          <rect x="80" y="196" width="560" height="34" fill="var(--semi)" fill-opacity=".28" stroke="var(--semi)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="92" y="212" font-size="10.5" fill="var(--text)">固定 / 一次性：IP 授权 + EDA + 光罩 NRE + 研发人力</text>
+          <text x="92" y="225" font-size="9.5" fill="var(--text-mute)">不随产量变化 —— 卖得越多摊得越薄</text>
+
+          <rect x="80" y="80" width="560" height="34" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="92" y="96" font-size="10.5" fill="var(--text)">变动成本：晶圆 + 封装 + 测试 + 物流</text>
+          <text x="92" y="109" font-size="9.5" fill="var(--text-mute)">与出货量成正比 —— 每一颗都要再付一次</text>
+
+          <path d="M80 190 Q 200 150 330 140 Q 470 133 640 131" fill="none" stroke="var(--up)" stroke-width="2.2"/>
+          <path d="M80 190 Q 200 150 328 140" fill="none" stroke="var(--up)" stroke-width="2.2" stroke-opacity=".35"/>
+          <text x="470" y="126" font-size="10.5" fill="var(--up)" font-weight="700">平均总成本 = 每片摊销 + 变动成本</text>
+
+          <line x1="640" y1="131" x2="640" y2="230" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M644 131 L636 131" stroke="var(--text-mute)" stroke-width="1"/>
+          <text x="420" y="176" font-size="10" fill="var(--text-mute)">大规模量产后，曲线贴住变动成本线</text>
+          <text x="420" y="190" font-size="10" fill="var(--text-mute)">此时再压价只能靠良率与面积</text>
+
+          <text x="300" y="268" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">结论：小批量产品被 NRE 压死，大批量产品被变动成本决定毛利</text>
+          <text x="300" y="283" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">这解释了为什么「走量的东西」和「定制的东西」在产业里是两种完全不同的生意</text>
+        </svg>
+        <figcaption>图 4：四种钱的经济性质。教科书里的固定成本曲线，在半导体里就是 NRE 与晶圆报价的区别。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>IP 授权费</span><span>一次性 licence（买断使用权）+ 按芯片售价抽 royalty。指令集、处理器核、DDR/PCIe 接口都要付</span></div>
+        <div class="kv-row"><span>EDA 订阅</span><span>按「席位 × 年限」的时间制许可，工具本身通常按年度付费；一套先进节点工具链的年费是千万级人民币量级</span></div>
+        <div class="kv-row"><span>光罩 NRE</span><span>把 GDSII 做成可量产的整套掩模（mask set），节点越先进、层数越多，价格越呈指数上升</span></div>
+        <div class="kv-row"><span>晶圆与封测</span><span>按片 / 按颗付费。这是唯一「卖一颗付一次」的钱，也是毛利率的天花板来源</span></div>
+      </div>
+
+      <p>下单时客户还有三种典型身份，决定了它能拿到什么条件：</p>
+
+      <ul>
+        <li><strong>量产客户</strong>：提前数月甚至数年预付产能保证金（文中常见的「长期供货协议」），换取优先产能与较优价格。代价是巨大的现金占用与需求预测的赌注。</li>
+        <li><strong>MPW（多项目晶圆）客户</strong>：多家客户共享一片晶圆的光罩成本与加工批次，用于小批量验证和小公司试产。它没有客户专属的完整掩模成本，适合原型验证与高校流片。</li>
+        <li><strong>IDP / 长期合作客户</strong>：与代工厂在工艺定义阶段就深度绑定，参与新节点的器件规格制定，换来的是产能优先权与技术窗口。</li>
+      </ul>
+
+      <div class="warn"><b>「产能」本身就是产品：</b>
+        先进制程的生产能力在很长时间里是稀缺的。代工厂分配产能时优先看的不是谁出价高，
+        而是谁<strong>长期、稳定、量大且能一起承担工艺开发风险</strong>。
+        这意味着 Fabless 公司真实的护城河，除了 IP，还包括<strong>能否进入代工厂的核心客户名单</strong>。
+        很多小公司设计能力不弱，却卡在这一步。
+      </div>
+
+      <h2 id="s5">5. 不造芯片照样赚钱：IP 授权与 EDA 订阅</h2>
+
+      <p>第 26 篇讲过 IP 核的概念，这里补上商业模式这一侧。ARM 是这个行业最纯粹的样本：
+      它<strong>不拥有任何晶圆厂，也不直接卖任何一颗芯片</strong>，
+      却几乎出现在每一部智能手机和绝大多数嵌入式设备里。它的生意分三层：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IP 授权的三层商业模式">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">ARM 式生意：授权的三层金字塔</text>
+
+          <polygon points="340,52 452,112 340,112 228,112" fill="var(--up)" fill-opacity=".26" stroke="var(--up)" stroke-width="1.4"/>
+          <text x="340" y="80" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">架构授权</text>
+          <text x="340" y="96" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">买「指令集」，自己设计实现</text>
+          <text x="470" y="80" font-size="9.5" fill="var(--text-mute)">客户最少</text>
+          <text x="470" y="94" font-size="9.5" fill="var(--text-mute)">单笔最大</text>
+
+          <polygon points="252,124 428,124 448,184 232,184" fill="var(--semi)" fill-opacity=".26" stroke="var(--semi)" stroke-width="1.4"/>
+          <text x="340" y="146" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">处理器 IP 授权</text>
+          <text x="340" y="162" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">拿现成的核，集成进自己的 SoC</text>
+          <text x="470" y="150" font-size="9.5" fill="var(--text-mute)">客户最多</text>
+          <text x="470" y="164" font-size="9.5" fill="var(--text-mute)">按颗抽成</text>
+
+          <polygon points="196,196 484,196 508,252 172,252" fill="var(--accent)" fill-opacity=".24" stroke="var(--accent)" stroke-width="1.4"/>
+          <text x="340" y="218" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="700">物理 IP / 单元库 / 设计服务</text>
+          <text x="340" y="234" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">标准单元库、存储编译器、接口 PHY</text>
+
+          <text x="120" y="80" font-size="10" fill="var(--text-soft)" text-anchor="end">自由度↑</text>
+          <text x="120" y="94" font-size="10" fill="var(--text-soft)" text-anchor="end">门槛↑</text>
+          <text x="560" y="222" font-size="10" fill="var(--text-soft)">覆盖面↑</text>
+          <text x="560" y="236" font-size="10" fill="var(--text-soft)">单笔金额↓</text>
+
+          <text x="340" y="278" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">收入结构：授权费（一次，签约即确认）+ 版税（每出货一颗付一次，随客户销量走）</text>
+          <text x="340" y="292" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">这就是为什么 IP 公司盼着整个行业的出货量涨，哪怕自己一颗 chip 都没造</text>
+        </svg>
+        <figcaption>图 5：IP 生意的三层结构。越往上客户越少但自由度越高，越往下覆盖面越广但单笔金额越小。</figcaption>
+      </figure>
+
+      <p><strong>为什么版税模式如此强大？</strong>因为它把 IP 公司的利益和<strong>整个行业的出货量</strong>绑在一起：
+      手机卖得好，它抽成；汽车智能化，它抽成；服务器换代，它抽成。
+      它不需要参与任何一场竞争，只要<strong>生态标准不倒</strong>，收入就跟着水涨船高。
+      反过来说，这也是它的软肋——一旦某个应用场景绕过了它的指令集生态，收入立刻失速。</p>
+
+      <p>EDA 的模式稍有不同。三家巨头给客户的是<strong>时间制的工具租赁</strong>（通常是多年期的绑定式合约），
+      而非一次性买断。这个设计有深刻的商业理由：</p>
+
+      <ul>
+        <li>工具必须跟着工艺节点年年升级，一次性买断会让厂商失去持续投入的动力；</li>
+        <li>订阅制让收入可预测、可交叉补贴——用成熟节点的现金流养先进节点的研发投入；</li>
+        <li>多年合约 + 工具链深度嵌入客户流程，形成极高的<strong>替换成本</strong>：换工具意味着整个团队重学、整套设计数据重来。</li>
+      </ul>
+
+      <div class="note"><b>把 EDA 和 IP 放在一起看，会发现它们其实卖的是同一样东西：</b>
+        它们都<strong>不卖制造的产物，而卖「设计的能力」</strong>。
+        EDA 卖的是把想法变成图纸的<strong>工具</strong>，IP 卖的是可以复用的<strong>图纸本身</strong>。
+        它们的毛利率远高于封测与 IDM 的平均水平，因为它们的核心资产是
+        <strong>可以无限次复制而不增加成本的知识产权</strong>——这正是「边际成本趋近于零」的典型生意。
+      </div>
+
+      <h2 id="s6">6. 价值分配：半导体的那条曲线</h2>
+
+      <p>管理学里有一条著名的「微笑曲线」：附加值像微笑的嘴，两端高、中间低。
+      半导体产业借用这个框架很有价值，但它有个<strong>重要的修正</strong>——
+      中间那一环并不是全线塌陷，而是一分为二：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半导体价值链附加值分布">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">半导体的附加值分布：一条「被掰下一次」的曲线</text>
+
+          <line x1="46" y1="240" x2="658" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="46" y1="50" x2="46" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="50" y="60" font-size="9.5" fill="var(--text-mute)">附加</text>
+          <text x="50" y="72" font-size="9.5" fill="var(--text-mute)">值率</text>
+
+          <path d="M90 96 Q 120 210 200 214 Q 300 220 360 150 Q 420 220 520 216 Q 600 212 630 106"
+                fill="none" stroke="var(--up)" stroke-width="2.4"/>
+          <path d="M90 96 Q 120 210 200 214" fill="none" stroke="var(--up)" stroke-width="2.4" stroke-opacity=".4"/>
+          <path d="M360 150 L360 214" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="360" y="232" font-size="9.5" fill="var(--down)" text-anchor="middle">OSAT：典型的低毛利高强度</text>
+
+          <circle cx="90" cy="96" r="4" fill="var(--up)"/>
+          <text x="90" y="86" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">设备材料</text>
+          <text x="90" y="72" text-anchor="middle" font-size="9" fill="var(--text-mute)">垄断性 Know-how</text>
+
+          <circle cx="200" cy="214" r="4" fill="var(--text-mute)"/>
+          <text x="200" y="200" font-size="10.5" fill="var(--text)" font-weight="700" text-anchor="middle">标准化零件</text>
+
+          <circle cx="360" cy="150" r="4" fill="var(--fin)"/>
+          <text x="360" y="140" font-size="10.5" fill="var(--text)" font-weight="700" text-anchor="middle">封测（成熟）</text>
+
+          <circle cx="520" cy="216" r="4" fill="var(--text-mute)"/>
+          <text x="520" y="202" font-size="10.5" fill="var(--text)" font-weight="700" text-anchor="middle">模块与代工组装</text>
+
+          <circle cx="630" cy="106" r="4" fill="var(--up)"/>
+          <text x="630" y="96" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">设计与品牌</text>
+          <text x="630" y="82" text-anchor="middle" font-size="9" fill="var(--text-mute)">贴近需求定价权</text>
+
+          <rect x="248" y="270" width="182" height="26" fill="var(--accent)" fill-opacity=".2" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="339" y="287" text-anchor="middle" font-size="10" fill="var(--text)">例外：先进代工站在高附加值一侧</text>
+        </svg>
+        <figcaption>图 6：附加值走线。两端（设备材料、设计 IP、品牌）高，传统封测与模块组装低；但先进制程代工是这条曲线的「反例」。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>高附加值</span><span>垄断性的 Know-how（光刻机精密度）、可复制的权利（IP）、不可替换的工具默认标准（EDA）</span></div>
+        <div class="kv-row"><span>中等</span><span>差异化设计与 PDK 深度整合能力，以及先进制程这个「只剩极少数玩家」的稀缺产能</span></div>
+        <div class="kv-row"><span>低附加值</span><span>可被多个竞争者替代的标准化加工能力，竞争主要靠规模与成本效率</span></div>
+      </div>
+
+      <p>为什么<strong>先进代工站在高附加值的一侧</strong>？因为它同时具备三重稀缺性：
+      天文数字的资本门槛、极难复制的良率 know-how、以及全世界几乎唯一的合规供应来源。
+      当供给无法在短期内被复制时，定价权就回到了卖方手里——这一点与传统封测形成鲜明对照。</p>
+
+      <div class="warn"><b>别把「毛利率」当道德批判：</b>
+        高毛利的环节往往是前期<strong>投入最大、回报周期最长、失败风险最高</strong>的那一环。
+        光刻机的一束极紫外光源背后是十几年的物理学和光学工程沉淀；一座晶圆厂动辄数百亿资本开支、
+        数年回本，中途工艺路线走错就可能全部作废。
+        <strong>高毛利是对「极高不确定性」的定价，而不是理所当然的暴利。</strong>
+        反过来看，低毛利环节往往是<strong>风险管理做得最干净</strong>的环节：赚的是确定的加工费。
+      </div>
+
+      <h2 id="s7">7. 一颗芯片的账单：钱最后去了哪</h2>
+
+      <p>把前面所有环节拼起来，来看一颗消费级芯片的成本大致是怎样分布的。
+      注意：<strong>这里的比例是量级示意，不同品类（逻辑 SoC / 模拟 / 存储 / 功率）差异极大</strong>，
+      具体数字要看公开财报与成本模型的拆算。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="一颗逻辑芯片的成本构成拆解">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">一颗逻辑芯片：账单大致流向谁（量级示意）</text>
+
+          <text x="110" y="50" font-size="10.5" fill="var(--text-mute)" text-anchor="end">晶圆制造</text>
+          <rect x="118" y="40" width="330" height="18" fill="var(--accent)" fill-opacity=".45" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="456" y="54" font-size="10.5" fill="var(--text-soft)">占比最高的一片：含设备折旧与良率损失</text>
+
+          <text x="110" y="80" font-size="10.5" fill="var(--text-mute)" text-anchor="end">封装与测试</text>
+          <rect x="118" y="70" width="190" height="18" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="316" y="84" font-size="10.5" fill="var(--text-soft)">异质集成正在把这一项抬上去</text>
+
+          <text x="110" y="110" font-size="10.5" fill="var(--text-mute)" text-anchor="end">IP 授权与版税</text>
+          <rect x="118" y="100" width="110" height="18" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="236" y="114" font-size="10.5" fill="var(--text-soft)">处理器核、接口、存储编译器</text>
+
+          <text x="110" y="140" font-size="10.5" fill="var(--text-mute)" text-anchor="end">EDA 与工具摊销</text>
+          <rect x="118" y="130" width="80" height="18" fill="var(--semi)" fill-opacity=".5" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="206" y="144" font-size="10.5" fill="var(--text-soft)">一次性投入，靠产量摊薄</text>
+
+          <text x="110" y="170" font-size="10.5" fill="var(--text-mute)" text-anchor="end">研发人力</text>
+          <rect x="118" y="160" width="240" height="18" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="366" y="174" font-size="10.5" fill="var(--text-soft)">占比常常被低估的一项</text>
+
+          <text x="110" y="200" font-size="10.5" fill="var(--text-mute)" text-anchor="end">光罩 NRE</text>
+          <rect x="118" y="190" width="90" height="18" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="216" y="204" font-size="10.5" fill="var(--text-soft)">一次性，节点越先进越贵</text>
+
+          <line x1="118" y1="222" x2="660" y2="222" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="118" y="242" font-size="10.5" fill="var(--text-soft)">三者之和（晶圆 + 封测 + IP/EDA）≈ 现金成本的主体</text>
+          <text x="118" y="258" font-size="10.5" fill="var(--text-soft)">研发人力与 NRE 是一次性的 —— 这也是为什么「第二颗芯片」总是便宜得多</text>
+          <text x="118" y="276" font-size="9.5" fill="var(--text-mute)">不同品类差异巨大：存储是另一套（几乎纯晶圆成本），模拟/功率则 Fab-lite 自产比例高</text>
+        </svg>
+        <figcaption>图 7：账单拆解的量级示意。真正的差异在于「第二版是不是比第一版便宜」——一次性投入的比例决定了这门生意的规模效应强度。</figcaption>
+      </figure>
+
+      <p>这张图给出一个很实用的判断框架：
+      <strong>一次性投入（NRE + 人力 + IP/EDA）占比越高的芯片，就越依赖出货量来摊薄</strong>；
+      反过来，<strong>晶圆成本占比越高的芯片（例如 DRAM、NAND），就越依赖工艺良率和面积微缩</strong>。
+      前者是「能不能卖够量」的问题，后者是「能不能做得更小」的问题——
+      两种芯片的成功要素完全不同，这也是为什么这两类公司的人才结构差异极大。</p>
+
+      <h2 id="s8">8. 这套体系为什么高效、又为什么脆弱</h2>
+
+      <p><strong>高效之处</strong>在于分工让每一环都能在自己的赛道上做到极致：
+      Fabless 可以同时服务手机、汽车、服务器三个市场，同一套架构方法论被反复复用；
+      Foundry 用一座厂服务几十个客户，把良率和成本的规模效应吃到底；
+      IP 公司让一个小团队在几个月内就能集成起一颗别人需要三年自研的 SoC。
+      没有这套分工，今天手机里的 SoC 不可能在两年内完成一次迭代。</p>
+
+      <p><strong>脆弱之处</strong>恰恰来自同样的原因：<strong>高度专业化意味着单点不可替代</strong>。
+      整条链上某些环节只有极少数供应商，一旦中断，下游全线停摆。
+      这个特征在近年的全球缺芯、地震停工、以及出口管制体系调整中反复被验证。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="产业链集中度与单点依赖">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">专业化的代价：单点依赖的分布</text>
+
+          <text x="80" y="52" font-size="10.5" fill="var(--text-mute)" text-anchor="end">高端光刻</text>
+          <rect x="88" y="42" width="480" height="20" fill="var(--up)" fill-opacity=".5" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="576" y="57" font-size="10" fill="var(--text-soft)">极少数供应商</text>
+
+          <text x="80" y="82" font-size="10.5" fill="var(--text-mute)" text-anchor="end">EDA 全流程</text>
+          <rect x="88" y="72" width="430" height="20" fill="var(--up)" fill-opacity=".4" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="526" y="87" font-size="10" fill="var(--text-soft)">三家巨头</text>
+
+          <text x="80" y="112" font-size="10.5" fill="var(--text-mute)" text-anchor="end">先进逻辑制造</text>
+          <rect x="88" y="102" width="380" height="20" fill="var(--up)" fill-opacity=".32" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="476" y="117" font-size="10" fill="var(--text-soft)">集中度极高</text>
+
+          <text x="80" y="142" font-size="10.5" fill="var(--text-mute)" text-anchor="end">指令集生态</text>
+          <rect x="88" y="132" width="300" height="20" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="396" y="147" font-size="10" fill="var(--text-soft)">少数生态并存</text>
+
+          <text x="80" y="172" font-size="10.5" fill="var(--text-mute)" text-anchor="end">大尺寸硅片</text>
+          <rect x="88" y="162" width="240" height="20" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="336" y="177" font-size="10" fill="var(--text-soft)">数家供应</text>
+
+          <text x="80" y="202" font-size="10.5" fill="var(--text-mute)" text-anchor="end">传统封测</text>
+          <rect x="88" y="192" width="150" height="20" fill="var(--accent)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="246" y="207" font-size="10" fill="var(--text-soft)">竞争充分，可替换性高</text>
+
+          <text x="340" y="238" text-anchor="middle" font-size="10" fill="var(--text-mute)">条越长 = 替代难度越高 = 断供时的连锁反应越剧烈</text>
+        </svg>
+        <figcaption>图 8：环节集中度与可替代性成反比。越是「不可替代」的环节，越需要长期技术沉淀，也越容易成为产业的咽喉。</figcaption>
+      </figure>
+
+      <p>理解了这张图，就能理解近年出现的各种产业现象：
+      为什么各国都在补贴本土产线，为什么设备与材料的自主供应被反复强调，
+      为什么「多源供应」在采购端变成硬指标，
+      以及为什么<strong>先进封装（Chiplet）会被寄予厚望</strong>——
+      它不仅是技术路线，也是一种产业策略：用成熟节点的小芯片 + 先进的集成，
+      绕开最卡脖子那一环的产能约束。这部分在第 19 篇讲技术，在第 32 篇我们会算它的经济账。</p>
+
+      <h2 id="s9">9. 易错点</h2>
+
+      <ul>
+        <li><strong>把「Fabless = 轻资产」理解成成本低</strong>：它没有厂房，但 NRE、IP 授权、EDA 订阅、高端人才薪酬同样是天文数字。它轻的是<strong>资产负债表的固定资产科目</strong>，不是运营投入。</li>
+        <li><strong>把代工厂想成「接单加工」的代工 jobs</strong>：先进代工参与的是工艺定义、器件建模、DTCO 协同，是一条高度共研的关系，而不是简单的来图加工。</li>
+        <li><strong>混淆「营收规模」与「产业话语权」</strong>：封测环节营收体量不小，但附加值与可替代性决定了它在分配中的位置。<strong>看一个环节的强弱，要同时看营收、毛利与可替代性三项。</strong></li>
+        <li><strong>用单一厂商的毛利率推算整个环节</strong>：龙头与二线在同一环节的差距，常常大于环节之间的平均差距。<strong>环节的平均值常常掩盖个体分化。</strong></li>
+        <li><strong>以为「IDM 落后、Fabless 先进」</strong>：两者只是资本与协同的不同取舍。需要设计与工艺深度耦合的场景（功率、模拟特色工艺、某些存储）里 IDM 依然强势。</li>
+        <li><strong>忽略 Foundry「不与客户竞争」这条约定的分量</strong>：它不是道德口号，而是整个 Fabless 生态得以成立的基础设施。</li>
+      </ul>
+
+      <h2 id="s10">10. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：为什么 1980 年代之后芯片产业会发生垂直解体？请给出至少两条经济学层面的理由。</summary>
+        <div>① 资本开支：每代工艺的建厂成本急剧上升，单一公司难以同时负担设计创新与产能扩张；② 分工的规模效应：一座厂服务多个客户比服务一个客户更能摊薄折旧、更快爬良率；③ 知识类型不同：设计端贴近应用（懂射频/图形/功耗），制造端贴近物理与良率，二者无法在一家公司里同等精进；④ 接口标准化（PDK + GDSII）让跨公司交付成为可能，消除了分工的技术障碍。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：Fabless 公司「不建厂」，为什么现金流压力依然巨大？</summary>
+        <div>它要付 IP 授权的一次性 licence 与按颗版税、EDA 多年期订阅、光刻掩模 NRE、以及最贵的一块——研发人力（往往占项目投入的最大比例）。此外为了拿到产能，往往还要预付产能保证金。它轻的是固定资产科目，不是现金消耗。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：为什么 Foundry「承诺不做自有品牌芯片」如此重要？</summary>
+        <div>因为这消除了客户最大的顾虑：把最核心的设计图纸、架构细节、路线图交给一家可能转身成为竞争对手的供应商。有了这条自我约束，高通、英伟达、苹果才敢把最先进的产品放在同一家工厂生产，整个 Fabless 生态得以成立。这属于「用放弃一部分利润，换取整个生态的信任」。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：小批量定制芯片与大批量标准品，各自的成本瓶颈在哪里？</summary>
+        <div>小批量：瓶颈是一次性投入（NRE、掩模、IP、人力），因为没有足够出货量把它摊薄，单颗成本居高不下 → 对策是 MPW 共享晶圆、复用成熟 IP、用 FPGA 或成熟节点替代。大批量：一次性投入已摊平，瓶颈转到变动成本——晶圆单价、每片 die 数（面积）、良率、封测单价 → 对策是面积优化、良率提升、先进封装。</div>
+      </details>
+      <details class="quiz"><summary>自测 5：IP 公司与 EDA 公司的商业模式核心差异是什么？两者为什么都能维持高毛利？</summary>
+        <div>差异：IP 卖的是「可复用的图纸本身」——收入由一次性授权费 + 按出货量抽的版税构成，跟着整个行业的出货量水涨船高；EDA 卖的是「把想法变成图纸的工具」——收入是多年期的时间制订阅，与客户规模和工艺节点绑定。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：为什么它们都能长期维持远高于封测的毛利率？</summary>
+        <div>因为两者的核心资产都是<strong>可以无限次复制而几乎不增加成本的知识产权</strong>——边际成本趋近于零。IP 每授权一个新客户，只需极少的额外交付成本；EDA 每多卖一个席位，复制的是软件许可而非实物。同时二者都有极高的替换成本：EDA 深度嵌入客户流程，更换意味着全团队重学、数据重来；IP 一旦成为生态标准，绕开它的代价远大于付版税。相比之下，封测的每一颗都要重新投入实打实的材料、设备工时与人力，边际成本无法压缩。</div>
+      </details>
+      <details class="quiz"><summary>自测 7：为什么同样不是最小的一环，传统封测毛利率低而先进逻辑代工毛利率高？</summary>
+        <div>因为两者的稀缺性来源完全不同。传统封测可替代供应商多、竞争主要靠价格与规模，附加值率自然被压低；先进逻辑代工则集合了三重稀缺——天文数字的资本门槛、极难复制的良率 know-how、近乎唯一的供应来源，供给短期不可复制，定价权就留在卖方。附加值的本质是可替代性的反面。</div>
+      </details>
+      <details class="quiz"><summary>自测 8：有人说「毛利率高的环节一定在剥削下游」，这个说法错在哪？</summary>
+        <div>高毛利往往对应高前置投入、长回报周期与高失败风险：光刻机背后是十余年的光学与精密工程积累；晶圆厂数百亿资本开支、数年回本，工艺路线走错可能全部作废。高毛利是对这种不确定性的定价。反过来，低毛利环节往往是风险管理最干净的——赚确定的加工费。评价一个环节应同时看营收、毛利与可替代性，而不是只看毛利数字。</div>
+      </details>
+      <details class="quiz"><summary>自测 9：把「一次性投入 vs 变动成本」的框架用一次：一颗芯片第二版（同一设计的改版）为什么通常比第一版便宜得多？</summary>
+        <div>架构探索、IP 选型与大部分设计工作已完成并可复用；EDA 订阅、大量 IP 授权已经付过；研发团队的学习曲线已经跨过。第二版主要的增量是一次性的掩模 NRE 与部分重做的人力，以及再次的流片与验证。因为这些都属于一次性投入范畴，在一颗已经定义清楚的产品上摊销得非常快——这正是半导体「经验曲线」的经济根源。</div>
+      </details>
+
+      <div class="tip"><b>下一篇：</b>
+        第 32 篇把这一篇里提到的「晶圆单价、良率、掩模 NRE」变成可以自己动手算的公式：
+        给你一张晶圆、一个 die 面积，你能算出<strong>为什么面积翻倍，利润可以归零</strong>。
+        第 33 篇则把从需求到量产的整条时间轴拉出来，你会发现
+        <strong>过去三十篇的学习顺序，其实就是这条时间轴的顺序</strong>。
+      </div>
+
+    </div>
+
+    <div class="series">
+      <div class="series-title">集成电路学习路径 · 全系列导航</div>
+      <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li class="current">第 31 篇：芯片产业分工与商业模式 · IDM、Fabless、Foundry 与 OSAT</li>
+            <li><a href="2026-10-07-晶圆厂经济学与芯片成本模型.html">第 32 篇：晶圆厂经济学与芯片成本模型</a></li>
+            <li><a href="2026-10-07-一颗芯片的诞生全流程-从需求到量产.html">第 33 篇：一颗芯片的诞生全流程 · 从需求到量产</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+      </ol>
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#产业分工</span>
+      <span class="chip">#Fabless</span>
+      <span class="chip">#Foundry</span>
+      <span class="chip">#IDM</span>
+      <span class="chip">#商业模式</span>
+      <span class="chip">#IP授权</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

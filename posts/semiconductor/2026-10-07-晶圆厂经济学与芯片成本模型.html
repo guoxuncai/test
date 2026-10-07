@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>晶圆厂经济学与芯片成本模型：为什么面积翻倍，利润可以归零</title>
+<meta name="description" content="从资本开支、设备折旧与稼动率出发，推导出每片晶圆的 die 数与 Murphy 良率公式，算清「面积×4 为什么不是贵 4 倍而是贵 6 倍」，并给出 Chiplet 拆片的真实经济账。">
+<meta name="keywords" content="晶圆厂,资本开支,折旧,良率模型,Murphy,die成本,NRE,MPW,Chiplet经济学">
+<meta name="date" content="2026-10-07">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 集成电路学习笔记</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 产业实践</span>
+    <h1 class="title">晶圆厂经济学与芯片成本模型</h1>
+    <div class="meta">
+      <span>2026-10-07</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 32 篇</span><span class="sep"></span>
+      <span>阅读约 30 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        第 31 篇讲了<strong>产业链怎么分工、谁赚谁的钱</strong>，但有一件事没交代清楚：
+        为什么同样是「把面积做大一点」，有时只是多花几块钱，有时却能让整颗芯片从赚钱变成赔钱？
+        这一篇要把<strong>「做出来」和「做得起」</strong>之间的账算明白：
+        从一座晶圆厂的资本开支出发，一路推导到一颗 die 的单价，
+        最后你会发现——<strong>面积乘以 4，成本涨的不是 4 倍，而是接近 6 倍</strong>；
+        而<strong>拆成小芯片（Chiplet）</strong>之所以成立，也不需要任何神秘理由，就是一道算术题。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">反常现象：为什么越先进的工艺不一定越便宜</a></li>
+          <li><a href="#s2">一座晶圆厂的账：资本开支怎么堆起来</a></li>
+          <li><a href="#s3">折旧与稼动率：同一台机器，两种命运</a></li>
+          <li><a href="#s4">一片晶圆能切出多少颗：几何的惩罚</a></li>
+          <li><a href="#s5">良率：面积 ×4，为什么贵了 6 倍</a></li>
+          <li><a href="#s6">掩模 NRE：让「试一次」变成一件大事</a></li>
+          <li><a href="#s7">MPW：把光罩成本摊给一群人的办法</a></li>
+          <li><a href="#s8">Chiplet 的经济学：一道纯粹的算术题</a></li>
+          <li><a href="#s9">剩下的账：封装、测试时间与已知好片</a></li>
+          <li><a href="#s10">合起来：一颗 die 的完整成本公式</a></li>
+          <li><a href="#s11">易错点</a></li>
+          <li><a href="#s12">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 反常现象：为什么越先进的工艺不一定越便宜</h2>
+
+      <p>摩尔定律给公众留下的印象是：<strong>晶体管越做越小、东西越来越便宜</strong>。
+      这句话在很长一段时间里确实成立，但它的成立依赖一个前提——
+      <strong>每一代工艺带来的密度提升，必须快于它带来的成本上升</strong>。
+      大约在 <strong>28 nm 节点附近，这个平衡开始松动</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="单个晶体管成本随工艺节点的演变趋势">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">单个晶体管的成本：那条「走不平」的下降曲线</text>
+
+          <line x1="70" y1="250" x2="650" y2="250" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="70" y1="50" x2="70" y2="250" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="70" y="44" font-size="10" fill="var(--text-mute)">成本 / 晶体管</text>
+          <text x="646" y="266" font-size="10" fill="var(--text-mute)" text-anchor="end">工艺节点 →</text>
+
+          <path d="M92 96 Q 160 168 246 208 Q 330 236 400 238 Q 500 240 560 226 Q 610 214 640 196"
+                fill="none" stroke="var(--up)" stroke-width="2.4"/>
+          <path d="M92 96 Q 160 168 246 208 Q 330 236 400 238" fill="none" stroke="var(--down)" stroke-width="2.4"/>
+
+          <line x1="400" y1="50" x2="400" y2="250" stroke="var(--text-mute)" stroke-width="1.1" stroke-dasharray="4 3"/>
+          <text x="404" y="64" font-size="10.5" fill="var(--text-soft)">约 28 nm 附近</text>
+          <text x="404" y="78" font-size="9.5" fill="var(--text-mute)">下降明显放缓</text>
+
+          <text x="352" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">28 nm</text>
+          <text x="246" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">90 nm</text>
+          <text x="160" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">180 nm</text>
+          <text x="466" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">16 nm</text>
+          <text x="540" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">7 nm</text>
+          <text x="614" y="254" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">3 nm</text>
+
+          <rect x="440" y="94" width="200" height="52" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="540" y="112" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">为什么走不平？</text>
+          <text x="540" y="128" text-anchor="middle" font-size="9" fill="var(--text-mute)">多重曝光/ EUV 设备贵、掩模层数暴涨</text>
+          <text x="540" y="141" text-anchor="middle" font-size="9" fill="var(--text-mute)">器件结构复杂、工艺步骤数上升</text>
+          <path d="M540 146 L540 176" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+
+          <text x="200" y="224" font-size="10.5" fill="var(--down)">这一段：密度红利 &gt; 成本上升</text>
+          <text x="470" y="204" font-size="10.5" fill="var(--up)">这一段：红利被稀释</text>
+        </svg>
+        <figcaption>图 1：每晶体管成本的演变（趋势示意，非实际报价）。下降曲线在 28 nm 附近明显放缓甚至局部回升。</figcaption>
+      </figure>
+
+      <div class="note"><b>请注意这张图的读法：</b>
+        纵轴是<strong>单个晶体管的成本</strong>而不是芯片总价。
+        28 nm 之后之所以「变贵」，不是因为制造变差了，而是因为
+        <strong>每一代节点的工艺复杂度和设备价格上升得太快</strong>：多重曝光的次数、
+        掩模的层数、工艺步骤的数量都在涨。
+        「能做得更小」和「做得更便宜」在近代终于分道扬镳，这正是 Chiplet、先进封装、
+        以及成熟节点长期存在且活得很好的根本原因。
+      </div>
+
+      <h2 id="s2">2. 一座晶圆厂的账：资本开支怎么堆起来</h2>
+
+      <p>理解成本的第一步，是知道<strong>钱是在哪一刻花出去的</strong>。
+      建一座晶圆厂的资本开支（CapEx）里，绝大部分并不是厂房，而是<strong>里面的机器</strong>。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="晶圆厂资本开支构成与折旧年限">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">一座晶圆厂的钱都花在哪了</text>
+
+          <text x="118" y="52" font-size="10.5" fill="var(--text-mute)" text-anchor="end">制程设备</text>
+          <rect x="126" y="42" width="420" height="20" fill="var(--accent)" fill-opacity=".5" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="554" y="57" font-size="10.5" fill="var(--text-soft)">占比最大，且随节点暴涨</text>
+
+          <text x="118" y="82" font-size="10.5" fill="var(--text-mute)" text-anchor="end">洁净室与厂房</text>
+          <rect x="126" y="72" width="110" height="20" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="244" y="87" font-size="10.5" fill="var(--text-soft)">土建 + 微振动控制 + 洁净等级墙体</text>
+
+          <text x="118" y="112" font-size="10.5" fill="var(--text-mute)" text-anchor="end">厂务动力</text>
+          <rect x="126" y="102" width="78" height="20" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="212" y="117" font-size="10.5" fill="var(--text-soft)">电力、超纯水、排酸碱废气、冷冻水</text>
+
+          <text x="118" y="142" font-size="10.5" fill="var(--text-mute)" text-anchor="end">土地与基建</text>
+          <rect x="126" y="132" width="48" height="20" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="182" y="147" font-size="10.5" fill="var(--text-soft)">征地、道路、变电站配套</text>
+
+          <line x1="126" y1="166" x2="660" y2="166" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 3"/>
+
+          <text x="126" y="188" font-size="11" fill="var(--text)" font-weight="700">制程设备内部，又是谁最贵？</text>
+
+          <rect x="126" y="198" width="240" height="20" fill="var(--accent)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="246" y="213" text-anchor="middle" font-size="10" fill="var(--text)">光刻（含 EUV）单机最贵</text>
+          <rect x="374" y="198" width="140" height="20" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="444" y="213" text-anchor="middle" font-size="10" fill="var(--text)">刻蚀 / 薄膜</text>
+          <rect x="522" y="198" width="110" height="20" fill="var(--fin)" fill-opacity=".45" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="577" y="213" text-anchor="middle" font-size="10" fill="var(--text)">量测 / 离子注入</text>
+
+          <text x="126" y="244" font-size="10.5" fill="var(--text-soft)">折旧规则（常见做法）：设备按约 5 年直线折旧，厂房建筑约 20~25 年</text>
+          <text x="126" y="262" font-size="9.5" fill="var(--text-mute)">这意味着：一条产线开动的第一天起，每一天都在产生固定成本 —— 不管有没有订单</text>
+        </svg>
+        <figcaption>图 2：晶圆厂资本开支的结构。设备是大头，而设备里最贵的又往往是光刻相关的部分。</figcaption>
+      </figure>
+
+      <p>注意最后一行字里的重点：<strong>折旧是从交付之日起按时间走的，与产量无关</strong>。
+      这就引出了晶圆厂最要命的一个指标——稼动率。</p>
+
+      <h2 id="s3">3. 折旧与稼动率：同一台机器，两种命运</h2>
+
+      <p>假设一台设备总价 <strong>2000 万美元</strong>，按 5 年直线折旧，每年产出 2 万片晶圆（满产）。
+      那么无论当年实际生产多少片，<strong>每年账面上的折旧都是 400 万美元</strong>。</p>
+
+      <div class="fl">单片分摊折旧 = 年折旧额 ÷ 当年实际产出片数</div>
+
+      <p>把不同稼动率代进去，会得到一张非常有冲击力的表：</p>
+
+      <table>
+        <thead>
+          <tr><th>稼动率</th><th>年产出（片）</th><th>单片分摊折旧</th><th>相对 100% 的水平</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>100%（满产）</td><td>20 000</td><td>200 美元</td><td>基准</td></tr>
+          <tr><td>90%</td><td>18 000</td><td>222 美元</td><td>+11%</td></tr>
+          <tr><td>70%</td><td>14 000</td><td>286 美元</td><td>+43%</td></tr>
+          <tr><td>50%</td><td>10 000</td><td>400 美元</td><td>+100%</td></tr>
+          <tr><td>30%</td><td>6 000</td><td>667 美元</td><td>+233%</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="稼动率对单片折旧分摊的影响曲线">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">稼动率的惩罚：产量掉一半，单片成本翻倍</text>
+
+          <line x1="80" y1="230" x2="650" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="80" y1="50" x2="80" y2="230" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="84" y="62" font-size="10" fill="var(--text-mute)">单片分摊折旧</text>
+
+          <path d="M600 78 Q 420 96 300 116 Q 190 140 140 168 Q 108 190 92 208"
+                fill="none" stroke="var(--up)" stroke-width="2.4"/>
+
+          <circle cx="600" cy="78" r="4" fill="var(--down)"/>
+          <text x="600" y="70" text-anchor="middle" font-size="10" fill="var(--text)">100%</text>
+          <text x="600" y="56" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">200 美元</text>
+
+          <circle cx="300" cy="116" r="4" fill="var(--semi)"/>
+          <text x="300" y="108" text-anchor="middle" font-size="10" fill="var(--text)">70%</text>
+          <text x="300" y="94" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">286 美元</text>
+
+          <circle cx="140" cy="168" r="4" fill="var(--up)"/>
+          <text x="140" y="160" text-anchor="middle" font-size="10" fill="var(--text)">50%</text>
+          <text x="140" y="146" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">400 美元</text>
+
+          <circle cx="92" cy="208" r="4" fill="var(--up)"/>
+          <text x="112" y="224" font-size="10" fill="var(--text)">30%</text>
+          <text x="112" y="238" font-size="9.5" fill="var(--text-mute)">667 美元</text>
+
+          <text x="646" y="246" font-size="10" fill="var(--text-mute)" text-anchor="end">稼动率 →</text>
+
+          <rect x="360" y="46" width="210" height="56" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="465" y="64" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">为什么这座厂必须一直开着</text>
+          <text x="465" y="80" text-anchor="middle" font-size="9" fill="var(--text-mute)">折旧按时间走，不按产量走</text>
+          <text x="465" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">停线 = 成本照走，收入为零</text>
+        </svg>
+        <figcaption>图 3：单片折旧随稼动率非线性上升。这正是半导体周期里「产能一过剩，利润就塌」的算术根源。</figcaption>
+      </figure>
+
+      <div class="warn"><b>别只盯着「每片多少钱」：</b>
+        很多初学者算成本时只问「晶圆报价多少」，忽略了<strong>折旧这台永动机</strong>。
+        真相是：晶圆报价本身里就含有折旧分摊，而折旧分摊的多少又取决于
+        <strong>这座厂整体的稼动率</strong>。
+        所以当行业下行、订单不足时，代工厂面临的不是「少赚一点」，而是
+        <strong>单片成本自动上升</strong>——收入降、成本升，双杀。
+        理解这一点，就能理解为什么半导体周期的下行段利润会跌得比营收更凶。
+      </div>
+
+      <h2 id="s4">4. 一片晶圆能切出多少颗：几何的惩罚</h2>
+
+      <p>芯片是<strong>方形</strong>的，晶圆是<strong>圆形</strong>的。这个几何事实带来两层损失：</p>
+
+      <ul>
+        <li><strong>边缘 die 必然残缺</strong>：靠近圆周的方块会被切掉一角，无法使用；</li>
+        <li><strong>面积越小，边缘损失占比越低</strong>：同样的圆，切小块比切大块的边界浪费更少。</li>
+      </ul>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="晶圆上 die 的排列与边缘损失">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">圆的场地，方的砖：边缘 die 是白付的钱</text>
+
+          <circle cx="220" cy="150" r="118" fill="none" stroke="var(--text-mute)" stroke-width="1.6"/>
+                    <rect x="181" y="7" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="207" y="7" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="233" y="7" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="155" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="181" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="207" y="33" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="259" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="285" y="33" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="59" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="59" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="155" y="59" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="59" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="59" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="59" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="59" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="59" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="311" y="59" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="85" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="155" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="85" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="311" y="85" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="77" y="111" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="111" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="155" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="111" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="311" y="111" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="337" y="111" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="77" y="137" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="129" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="155" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="311" y="137" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="337" y="137" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="77" y="163" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="163" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="155" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="163" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="311" y="163" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="337" y="163" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="189" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="155" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="189" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="311" y="189" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="103" y="215" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="215" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="155" y="215" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="181" y="215" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="207" y="215" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="215" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="259" y="215" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="285" y="215" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="311" y="215" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="129" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="155" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="181" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="207" y="241" width="26" height="26" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="0.9"/>
+          <rect x="233" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="259" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="285" y="241" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="181" y="267" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="207" y="267" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+          <rect x="233" y="267" width="26" height="26" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" stroke-opacity=".65"/>
+
+          <text x="220" y="294" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">深色 = 完整可用；浅虚线 = 被晶圆边缘切掉，只能报废</text>
+
+          <path d="M360 96 L470 96" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 140 L470 140" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 184 L470 184" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 228 L470 228" stroke="var(--text-mute)" stroke-width="1"/>
+
+          <text x="478" y="100" font-size="10.5" fill="var(--text)">代入 300 mm 晶圆（半径 15 cm）</text>
+          <text x="478" y="116" font-size="9.5" fill="var(--text-mute)">圆面积 = π × 15² ≈ 707 cm²</text>
+
+          <text x="478" y="144" font-size="10.5" fill="var(--text)">die = 10 mm × 10 mm = 1 cm²</text>
+          <text x="478" y="160" font-size="9.5" fill="var(--text-mute)">粗算 707 颗，扣除边缘后 ≈ 640 颗</text>
+
+          <text x="478" y="188" font-size="10.5" fill="var(--text)">die = 20 mm × 20 mm = 4 cm²</text>
+          <text x="478" y="204" font-size="9.5" fill="var(--text-mute)">粗算 177 颗，扣除边缘后 ≈ 143 颗</text>
+
+          <text x="478" y="232" font-size="10.5" fill="var(--text)">面积 ×4 → 数量只有 22%</text>
+          <text x="478" y="248" font-size="9.5" fill="var(--text-mute)">而不是直觉里的 25%</text>
+        </svg>
+        <figcaption>图 4：die 排列（示意比例）。越靠近边缘，完整方块的比例越低——这部分是被几何白白吃掉的成本。</figcaption>
+      </figure>
+
+      <p>工程上常用的估算公式把这两层损失都写进去了：</p>
+
+      <div class="fl">每片 die 数 DPW ≈ π·(Ø/2)² / A &nbsp;−&nbsp; π·Ø / √(2A)&nbsp;&nbsp;（第一项：面积相除；第二项：边缘修正）</div>
+
+      <p>其中 Ø 是晶圆直径（300 mm = 30 cm），A 是 die 面积（单位 cm²）。
+      第二项来源于「圆周长 ÷ die 对角线」，是典型的几何惩罚项：
+      <strong>die 越大，它的对角线越长，理论数量就越多地被边缘吃掉。</strong></p>
+
+      <div class="kv">
+        <div class="kv-row"><span>die 10 mm 见方</span><span>DPW ≈ 706.9 − 66.6 ≈ <strong>640 颗</strong>（损失约 9%）</span></div>
+        <div class="kv-row"><span>die 20 mm 见方</span><span>DPW ≈ 176.7 − 33.3 ≈ <strong>143 颗</strong>（损失约 19%）</span></div>
+        <div class="kv-row"><span>面积 ×4 的结果</span><span>数量从 640 降到 143，只剩 <strong>22.3%</strong>，而不是 25%</span></div>
+      </div>
+
+      <h2 id="s5">5. 良率：面积 ×4，为什么贵了 6 倍</h2>
+
+      <p>几何只是第一层惩罚，真正致命的是<strong>良率</strong>。
+      晶圆上存在随机缺陷（灰尘、光刻毛刺、 CMP 划痕，CMP 篇详细说过它们的来源）。
+      一个 die 只要踩中一个致命缺陷就报废——于是 die 越大，被踩中的概率越高。</p>
+
+      <p>业界常用的经验模型之一是 <strong>Murphy 模型</strong>：</p>
+
+      <div class="fl">Y = [ (1 − e<sup>−A·D</sup>) / (A·D) ]²&nbsp;&nbsp;（A = die 面积 cm²，D = 缺陷密度 个/cm²）</div>
+
+      <p>取一个不算糟糕的缺陷密度 <strong>D = 0.1 个/cm²</strong>，代入三种面积：</p>
+
+      <table>
+        <thead>
+          <tr><th>die 面积</th><th>A·D</th><th>Murphy 良率</th><th>备注</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1 cm²（10 mm 见方）</td><td>0.10</td><td>90.6%</td><td>小芯片的常态</td></tr>
+          <tr><td>2.25 cm²（15 mm 见方）</td><td>0.225</td><td>80.2%</td><td>面积 ×2.25</td></tr>
+          <tr><td>4 cm²（20 mm 见方）</td><td>0.40</td><td>68.0%</td><td>面积 ×4，良率从九成掉到不足七成</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="良率随 die 面积下降曲线与成本放大">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">良率随面积下滑，成本被二次放大</text>
+
+          <line x1="80" y1="240" x2="652" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="80" y1="50" x2="80" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="84" y="62" font-size="10" fill="var(--text-mute)">良率 Y</text>
+          <text x="648" y="258" font-size="10" fill="var(--text-mute)" text-anchor="end">die 面积 A (cm²) →</text>
+
+          <path d="M92 68 Q 160 118 240 152 Q 340 190 440 208 Q 540 222 620 230"
+                fill="none" stroke="var(--down)" stroke-width="2.4"/>
+
+          <path d="M92 68 Q 130 200 220 216 Q 330 232 440 236 Q 540 238 620 239"
+                fill="none" stroke="var(--up)" stroke-width="2.4"/>
+          <text x="300" y="252" font-size="10.5" fill="var(--up)">单片分摊成本：面积越大越贵</text>
+
+          <circle cx="92" cy="68" r="4.5" fill="var(--down)"/>
+          <text x="92" y="58" text-anchor="middle" font-size="10" fill="var(--text)">90.6%</text>
+          <text x="92" y="44" text-anchor="middle" font-size="9" fill="var(--text-mute)">A = 1</text>
+
+          <circle cx="240" cy="152" r="4.5" fill="var(--semi)"/>
+          <text x="240" y="142" text-anchor="middle" font-size="10" fill="var(--text)">80.2%</text>
+          <text x="240" y="128" text-anchor="middle" font-size="9" fill="var(--text-mute)">A = 2.25</text>
+
+          <circle cx="440" cy="208" r="4.5" fill="var(--up)"/>
+          <text x="440" y="198" text-anchor="middle" font-size="10" fill="var(--text)">68.0%</text>
+          <text x="440" y="184" text-anchor="middle" font-size="9" fill="var(--text-mute)">A = 4</text>
+
+          <rect x="452" y="66" width="210" height="58" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="557" y="84" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">双重惩罚叠加</text>
+          <text x="557" y="100" text-anchor="middle" font-size="9" fill="var(--text-mute)">几何：可用 die 数只到 22.3%</text>
+          <text x="557" y="114" text-anchor="middle" font-size="9" fill="var(--text-mute)">良率：再乘 68.0% ÷ 90.6% = 0.75</text>
+          <path d="M557 124 L557 186" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="3 3"/>
+        </svg>
+        <figcaption>图 5：面积放大带来的两级挤压。良率曲线下降的同时，单片成本线被抬起来。</figcaption>
+      </figure>
+
+      <p>现在把两个效应合在一起，算一笔完整的账。假设晶圆报价 <strong>3000 美元</strong>（示意数值）：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>die = 1 cm²</span><span>每片好 die = 640 × 90.6% ≈ <strong>580 颗</strong> → 单颗裸片成本 ≈ <strong>5.2 美元</strong></span></div>
+        <div class="kv-row"><span>die = 4 cm²</span><span>每片好 die = 143 × 68.0% ≈ <strong>97 颗</strong> → 单颗裸片成本 ≈ <strong>30.9 美元</strong></span></div>
+        <div class="kv-row"><span>比值</span><span>面积 ×4，单颗成本 ×<strong>5.9</strong> —— 多出来的 1.9 倍，是几何与良率合送的「罚款」</span></div>
+      </div>
+
+      <div class="warn"><b>这就是「面积翻一倍，利润归零」的算术来源：</b>
+        一颗 4 cm² 的芯片，它需要的<strong>硅片资源是 1 cm² 的近 6 倍</strong>，
+        而不是直觉中的 4 倍。如果产品售价不变，
+        毛利会被这 1.9 倍的额外成本吃干。
+        这也是每一个做 SoC 的团队，都会把「砍面积」当成第一优先级优化目标的根本原因——
+        <strong>在芯片上，面积就是钱，而且是带复利的钱。</strong>
+      </div>
+
+      <h2 id="s6">6. 掩模 NRE：让「试一次」变成一件大事</h2>
+
+      <p>在晶圆成本之前，还有一笔钱必须先付：<strong>掩模套（mask set）</strong>。
+      你的 GDSII 图形不会自己印到硅片上，得先做成一套几十层物理掩模。
+      而它的价格随节点呈指数上升：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="掩模随工艺节点的价格量级变化">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">一套完整掩模的量级：为什么大家不敢「随便试一次」</text>
+
+          <line x1="90" y1="240" x2="650" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <line x1="90" y1="60" x2="90" y2="240" stroke="var(--text-mute)" stroke-width="1.4"/>
+          <text x="94" y="70" font-size="10" fill="var(--text-mute)">量级</text>
+
+          <rect x="112" y="216" width="60" height="24" fill="var(--semi)" fill-opacity=".4" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="142" y="232" text-anchor="middle" font-size="10" fill="var(--text)">180 nm</text>
+
+          <rect x="204" y="196" width="60" height="44" fill="var(--semi)" fill-opacity=".45" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="234" y="232" text-anchor="middle" font-size="10" fill="var(--text)">90 nm</text>
+
+          <rect x="296" y="170" width="60" height="70" fill="var(--accent)" fill-opacity=".45" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="326" y="232" text-anchor="middle" font-size="10" fill="var(--text)">28 nm</text>
+
+          <rect x="388" y="122" width="60" height="118" fill="var(--up)" fill-opacity=".35" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="418" y="232" text-anchor="middle" font-size="10" fill="var(--text)">16 nm</text>
+
+          <rect x="480" y="86" width="60" height="154" fill="var(--up)" fill-opacity=".45" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="510" y="232" text-anchor="middle" font-size="10" fill="var(--text)">7 nm</text>
+
+          <rect x="572" y="66" width="60" height="174" fill="var(--up)" fill-opacity=".6" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="602" y="232" text-anchor="middle" font-size="10" fill="var(--text)">3 nm</text>
+
+          <text x="340" y="262" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">每往前一代，层数更多、精度要求更高、价格呈指数上升（示意量级，非实际报价）</text>
+          <text x="340" y="280" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">多重曝光会把「一个图形」拆成好几张掩模 —— 这是层数和价格同时暴涨的直接原因</text>
+        </svg>
+        <figcaption>图 6：掩模 NRE 的量级趋势。节点越先进，「流一次片」的门票越贵。</figcaption>
+      </figure>
+
+      <p>这笔钱的性质决定了芯片项目的行为方式：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>一次性</span><span>不管最后卖 1 万颗还是 1 亿颗，这套掩模的成本只付一次</span></div>
+        <div class="kv-row"><span>不可撤销</span><span>设计错了就整套作废，重做要再付一次</span></div>
+        <div class="kv-row"><span>随节点暴涨</span><span>同样的探索性设计，在先进节点试错的代价可能高一个数量级</span></div>
+        <div class="kv-row"><span>影响行为</span><span>团队被迫把「第一次就做对」放在极其优先的位置——于是有了庞大的验证投入与多层签核</span></div>
+      </div>
+
+      <div class="note"><b>这解释了为什么「验证工程师比设计工程师多」：</b>
+        一次性投入越大，越要把错误在<strong>流片之前</strong>抓出来。
+        一套先进节点的掩模 NRE 足以支撑一支几十人的验证团队工作数年——
+        这笔账怎么算都是划算的。第 33 篇会展开这条逻辑：
+        <strong>芯片项目的日程表，本质是一张「风险控制表」。</strong>
+      </div>
+
+      <h2 id="s7">7. MPW：把光罩成本摊给一群人的办法</h2>
+
+      <p>如果一次性投入太贵，最自然的思路就是<strong>合伙</strong>。
+      <strong>MPW（Multi-Project Wafer，多项目晶圆）</strong>就是这个思路：
+      多个项目共享一次投片批次和部分掩模费用，把各自的 die 区域安排在同一片晶圆上。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="多项目晶圆 MPW 的分区示意">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">MPW：同一批投片，不同客户的项目挤在一起</text>
+
+          <circle cx="220" cy="158" r="118" fill="var(--surface-2)" stroke="var(--text-mute)" stroke-width="1.6"/>
+
+          <rect x="126" y="86" width="86" height="56" fill="var(--semi)" fill-opacity=".3" stroke="var(--semi)" stroke-width="1" rx="2"/>
+          <text x="169" y="112" text-anchor="middle" font-size="10" fill="var(--text)">项目 A</text>
+          <text x="169" y="128" text-anchor="middle" font-size="9" fill="var(--text-mute)">公司甲的 SoC</text>
+
+          <rect x="222" y="86" width="86" height="56" fill="var(--accent)" fill-opacity=".3" stroke="var(--accent)" stroke-width="1" rx="2"/>
+          <text x="265" y="112" text-anchor="middle" font-size="10" fill="var(--text)">项目 B</text>
+          <text x="265" y="128" text-anchor="middle" font-size="9" fill="var(--text-mute)">公司乙的模拟 IP</text>
+
+          <rect x="126" y="152" width="86" height="56" fill="var(--fin)" fill-opacity=".3" stroke="var(--fin)" stroke-width="1" rx="2"/>
+          <text x="169" y="178" text-anchor="middle" font-size="10" fill="var(--text)">项目 C</text>
+          <text x="169" y="194" text-anchor="middle" font-size="9" fill="var(--text-mute)">高校课题</text>
+
+          <rect x="222" y="152" width="86" height="56" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1" rx="2"/>
+          <text x="265" y="178" text-anchor="middle" font-size="10" fill="var(--text)">项目 D</text>
+          <text x="265" y="194" text-anchor="middle" font-size="9" fill="var(--text-mute)">初创公司原型</text>
+
+          <text x="220" y="292" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">共享一次投片的工艺批次，各付各的区域费用</text>
+
+          <path d="M360 92 L470 92" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 136 L470 136" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 180 L470 180" stroke="var(--text-mute)" stroke-width="1"/>
+          <path d="M360 224 L470 224" stroke="var(--text-mute)" stroke-width="1"/>
+
+          <text x="478" y="96" font-size="10.5" fill="var(--text)">代价一：周期固定</text>
+          <text x="478" y="112" font-size="9.5" fill="var(--text-mute)">要等批次排程，不能说走就走</text>
+
+          <text x="478" y="140" font-size="10.5" fill="var(--text)">代价二：面积受限</text>
+          <text x="478" y="156" font-size="9.5" fill="var(--text-mute)">区域配额有限，大芯片放不下</text>
+
+          <text x="478" y="184" font-size="10.5" fill="var(--text)">收益：把门票降到可承受</text>
+          <text x="478" y="200" font-size="9.5" fill="var(--text-mute)）">小团队 / 学生也能真流一次片</text>
+
+          <text x="478" y="228" font-size="10.5" fill="var(--text)">典型用途</text>
+          <text x="478" y="244" font-size="9.5" fill="var(--text-mute)">原型验证、IP 硅验证、教学</text>
+        </svg>
+        <figcaption>图 7：MPW 的分区逻辑。把固定的工艺批次成本摊薄，让「第一次」变得负担得起。</figcaption>
+      </figure>
+
+      <div class="kv">
+        <div class="kv-row"><span>适合 MPW</span><span>小面积、原型验证、IP 硅附录、教学与科研项目</span></div>
+        <div class="kv-row"><span>不适合 MPW</span><span>大面积量产芯片、需要专属工艺参数微调的产品、量级大的商业项目</span></div>
+        <div class="kv-row"><span>关键取舍</span><span>用「时间不自由 + 面积受限」换取「一次性的钱大幅下降」</span></div>
+      </div>
+
+      <h2 id="s8">8. Chiplet 的经济学：一道纯粹的算术题</h2>
+
+      <p>现在我们手上有全部工具了，可以回答那个著名的产业问题：
+      <strong>为什么不把芯片做得更大一点，而要把它拆成几个小 die 再用先进封装拼起来？</strong>
+      常见答案是「性能」「灵活性」，但最原始的答案其实是<strong>一道算术题</strong>。</p>
+
+      <p>回到第 5 节的例子。假设有一颗 <strong>4 cm²</strong> 的 SoC，现在把它切成 <strong>4 个 1 cm² 的小 die</strong>（总面积不变，实际会略有 overhead，此处先忽略）：</p>
+
+      <table>
+        <thead>
+          <tr><th>方案</th><th>每片 die 数</th><th>单片良率</th><th>每片可用「系统」数</th><th>等效单套成本</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>整颗大 die（4 cm²）</td><td>143 颗</td><td>68.0%</td><td>97 套</td><td>30.9 美元</td></tr>
+          <tr><td>4 个小 die（各 1 cm²）</td><td>640 颗 → 每 4 颗一套</td><td>90.6%</td><td><strong>145 套</strong></td><td><strong>20.7 美元</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="fl">640 × 90.6% = 580 个好小 die &nbsp;÷ 4 颗/套 &nbsp;≈&nbsp; 145 套　对比　143 × 68.0% ≈ 97 套</div>
+
+      <p><strong>同样的晶圆，能装出的系统数量多了约 49%</strong>，单位裸片成本下降约 <strong>33%</strong>。
+      这个提升不需要任何新材料、新器件、新架构——
+      它纯粹来自「<strong>一个缺陷只毁掉 1/4 的系统，而不是整颗 4 cm² 的大芯片</strong>」。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chiplet 拆片的良率收益与成本对比">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">同一个缺陷，两种命运：整片损失 vs 局部损失</text>
+
+          <rect x="60" y="50" width="150" height="150" fill="var(--up)" fill-opacity=".3" stroke="var(--up)" stroke-width="1.4" rx="3"/>
+          <text x="135" y="72" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">整颗大 die</text>
+          <text x="135" y="90" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">4 cm² 一整片</text>
+          <circle cx="100" cy="140" r="7" fill="var(--up)"/>
+          <text x="115" y="145" font-size="9.5" fill="var(--up)">一处缺陷</text>
+          <text x="135" y="182" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">整颗报废</text>
+          <text x="135" y="196" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">损失 4 cm² 的全部价值</text>
+
+          <path d="M220 125 L252 125" stroke="var(--text-mute)" stroke-width="1.6"/>
+          <text x="236" y="118" font-size="9.5" fill="var(--text-mute)" text-anchor="middle">切</text>
+
+          <rect x="260" y="50" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="296" y="88" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">小 die 1</text>
+
+          <rect x="340" y="50" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="376" y="88" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">小 die 2</text>
+          <circle cx="376" cy="88" r="7" fill="var(--up)"/>
+          <text x="376" y="112" text-anchor="middle" font-size="9.5" fill="var(--up)">只废这一颗</text>
+
+          <rect x="420" y="50" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="456" y="88" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">小 die 3</text>
+
+          <rect x="260" y="130" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="296" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">小 die 4</text>
+
+          <rect x="340" y="130" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="376" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">备用</text>
+
+          <rect x="420" y="130" width="72" height="72" fill="var(--down)" fill-opacity=".3" stroke="var(--down)" stroke-width="1.2" rx="2"/>
+          <text x="456" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">备用</text>
+
+          <text x="376" y="228" text-anchor="middle" font-size="11" fill="var(--down)" font-weight="700">剩下三颗仍然可以出货</text>
+          <text x="376" y="242" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">损失被限制在 1 cm² 之内</text>
+
+          <rect x="520" y="60" width="140" height="46" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="590" y="78" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">裸片成本 −33%</text>
+          <text x="590" y="94" text-anchor="middle" font-size="9" fill="var(--text-mute)">30.9 → 20.7 美元</text>
+
+          <rect x="520" y="116" width="140" height="46" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="2"/>
+          <text x="590" y="134" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">但要扣回来</text>
+          <text x="590" y="150" text-anchor="middle" font-size="9" fill="var(--text-mute)">封装 / 互联 / 测试开销</text>
+
+          <text x="590" y="186" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">净收益 = 良率红利</text>
+          <text x="590" y="200" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">减去新增集成成本</text>
+        </svg>
+        <figcaption>图 8：拆片的收益本质是「把损失关进小格子」。它不是魔法，是一道关于缺陷分布的算术。</figcaption>
+      </figure>
+
+      <div class="warn"><b>别把 Chiplet 的账算得太乐观。</b>
+        上面的 33% 是<strong>裸片层面</strong>的收益，真实方案还要扣掉：
+        ① <strong>先进封装成本</strong>——中介层、微凸块、TSV、键合都是钱，还可能引入新的良率损失；
+        ② <strong>互联代价</strong>——die 间通信比片内通信更慢、更耗电，可能反过来要求更大的缓存或更强的接口；
+        ③ <strong>测试复杂度</strong>——每颗小 die 都要单独测、还要保证是已知好片（KGD）；
+        ④ <strong>设计与验证复杂度</strong>——划分边界、跨 die 时序、一致性模型都是新难题。
+        <strong>只有当良率红利明显大于这些新增成本时，Chiplet 才划算。</strong>
+        这也解释了为什么它首先在大算力、大面积、高单价的场景落地——
+        <strong>面积越大，良率这块蛋糕才越大。</strong>
+      </div>
+
+      <h2 id="s9">9. 剩下的账：封装、测试时间与已知好片</h2>
+
+      <p>裸片成本不是终点。一颗能卖出去的芯片，还要经过封装与测试，而且这两项同样有精明的经济学：</p>
+
+      <div class="kv">
+        <div class="kv-row"><span>封装成本</span><span>引脚越多、层数越多、散热要求越高，封装越贵。先进封装可以把这项从「小头」推成「大头」</span></div>
+        <div class="kv-row"><span>测试时间是钱</span><span>测试机按秒计费。一套测试程序多跑 1 秒，乘以千万颗出货量就是一笔巨款——所以 ATPG 压缩向量、并行同测都是直接省钱</span></div>
+        <div class="kv-row"><span>KGD</span><span>Known Good Die：只有确认合格的单 die 才能进先进封装，否则一颗坏 die 会让整个昂贵的模组报废</span></div>
+        <div class="kv-row"><span>并行同测</span><span>一次同时测 4/8/16 颗（multi-site），把单机时间成本摊薄，是测试环节最直接的降本手段</span></div>
+      </div>
+
+      <div class="note"><b>「测试成本」解释了 DFT 为什么值钱：</b>
+        第 18 篇讲过扫描链与 ATPG。它们的商业动机不是技术炫技，而是<strong>把「看不见的内部缺陷」用很便宜的方式扫出来</strong>。
+        测试覆盖率高 → 出厂后返修与退货少；测试向量压缩好 → 每颗测试时间更短。
+        两条都直接变成钱。这就是为什么 DFT 工程师在大型团队里是标配岗位。
+      </div>
+
+      <h2 id="s10">10. 合起来：一颗 die 的完整成本公式</h2>
+
+      <p>把所有环节拼成一条式子，就是这一篇的主干结论：</p>
+
+      <div class="fl">单颗成本 ≈ [ 晶圆报价 ÷ (DPW × Y) ] &nbsp;+&nbsp; 封装 &nbsp;+&nbsp; 测试 &nbsp;+&nbsp; ( NRE + IP + EDA + 人力 ) ÷ 总出货量</div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="芯片成本的完整构成与优化杠杆">
+          <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">成本公式里的四个「旋钮」，各自归谁管</text>
+
+          <rect x="40" y="44" width="140" height="86" fill="var(--accent)" fill-opacity=".24" stroke="var(--accent)" stroke-width="1.2" rx="3"/>
+          <text x="110" y="64" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">晶圆报价</text>
+          <text x="110" y="82" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">节点选择</text>
+          <text x="110" y="98" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">产能谈判</text>
+          <text x="110" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">产品定义阶段就锁定</text>
+
+          <rect x="196" y="44" width="140" height="86" fill="var(--semi)" fill-opacity=".24" stroke="var(--semi)" stroke-width="1.2" rx="3"/>
+          <text x="266" y="64" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">die 数量 DPW</text>
+          <text x="266" y="82" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">面积优化</text>
+          <text x="266" y="98" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">布局利用率</text>
+          <text x="266" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">架构与后端共同决定</text>
+
+          <rect x="352" y="44" width="140" height="86" fill="var(--fin)" fill-opacity=".24" stroke="var(--fin)" stroke-width="1.2" rx="3"/>
+          <text x="422" y="64" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">良率 Y</text>
+          <text x="422" y="82" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">缺陷密度控制</text>
+          <text x="422" y="98" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">冗余与修复设计</text>
+          <text x="422" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">工艺 + 设计 + 冗余</text>
+
+          <rect x="508" y="44" width="140" height="86" fill="var(--up)" fill-opacity=".2" stroke="var(--up)" stroke-width="1.2" rx="3"/>
+          <text x="578" y="64" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">一次性摊销</text>
+          <text x="578" y="82" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">NRE / IP / EDA</text>
+          <text x="578" y="98" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">出货量摊薄</text>
+          <text x="578" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">产品规划决定生死</text>
+
+          <path d="M266 138 L266 168" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <path d="M266 168 L110 168 L110 176" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <path d="M422 138 L422 168" stroke="var(--text-mute)" stroke-width="1.2"/>
+          <path d="M422 168 L578 168 L578 176" stroke="var(--text-mute)" stroke-width="1.2"/>
+
+          <rect x="40" y="182" width="608" height="52" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1" rx="3"/>
+          <text x="344" y="202" text-anchor="middle" font-size="11.5" fill="var(--text)" font-weight="700">单颗成本 = [ 报价 ÷ (DPW × Y) ] + 封装 + 测试 + 一次性投入 ÷ 出货量</text>
+          <text x="344" y="222" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">前三项是「每做一颗就付一次」，最后一项是「做得越多摊得越薄」</text>
+
+          <text x="344" y="258" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">产品定义锁死晶圆报价，架构锁死面积，工艺与设计共担良率，市场决定摊销</text>
+          <text x="344" y="274" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">—— 这四个旋钮分布在四个不同的部门，这就是为什么「降成本」从来不是一个部门的事</text>
+        </svg>
+        <figcaption>图 9：成本公式的四个旋钮。它们分布在产品、设计、工艺、市场四个部门，决定了降本一定是一场跨部门战役。</figcaption>
+      </figure>
+
+      <p>把这个式子读熟，你会发现很多产业现象一下子变得可以解释：</p>
+
+      <ul>
+        <li><strong>为什么 MCU 能卖几毛钱</strong>：成熟节点、die 面积极小、良率极高、出货量以亿计把 NRE 摊到接近零。</li>
+        <li><strong>为什么大算力芯片卖得上千美元</strong>：面积逼近光罩极限、良率受限、先进封装昂贵、NRE 天文数字。</li>
+        <li><strong>为什么成熟节点长期活得很好</strong>：设备早已折旧完毕，报价可以压得很低，面积稍大也不心疼。</li>
+        <li><strong>为什么一个产品失败常常是「产品定义」的失败</strong>：选错节点、面积没压住、出货量不及预期——三个错误分别对应公式里的三项。</li>
+      </ul>
+
+      <h2 id="s11">11. 易错点</h2>
+
+      <ul>
+        <li><strong>以为「面积翻倍成本翻倍」</strong>：实际接近 <strong>6 倍</strong>（几何损失 × 良率下降的叠加），这是本篇最重要的数字。</li>
+        <li><strong>只看晶圆报价，忽略稼动率</strong>：稼动率从 100% 掉到 50%，单片分摊的折旧会翻倍。<strong>周期性行业下行段利润塌方，根子在这里。</strong></li>
+        <li><strong>把 NRE 当可变成本</strong>：它的一次性本质决定了「出货量」才是最强的降本杠杆。<strong>同样的设计，卖 100 万颗和 1 亿颗是两个生意。</strong></li>
+        <li><strong>以为 Chiplet 一定省钱</strong>：它省的是<strong>大芯片的良率损失</strong>，代价是封装、互联、测试与设计复杂度的上升。小芯片拆片只有成本没有收益。</li>
+        <li><strong>把 node 名当成性能与价格的标尺</strong>：「3 nm」「5 nm」早已脱离物理栅长，也不代表便宜。真正决定成本的是<strong>器件密度、掩模层数与该节点的产能供需</strong>。</li>
+        <li><strong>忘记测试时间的金钱属性</strong>：测试按秒计费，一次节省 0.5 秒乘以千万颗，可能比某个性能优化更有财务价值。</li>
+        <li><strong>用单一节点的价格推断另一节点</strong>：不同产品的晶圆报价差距可达一个数量级，且受产能预定、长期合约影响很大。</li>
+      </ul>
+
+      <h2 id="s12">12. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：为什么大约在 28 nm 之后，单个晶体管的成本下降明显放缓？</summary>
+        <div>因为每一代节点的工艺复杂度与设备价格上升得太快：多重曝光次数增加、EUV 等设备的单机价格极高、掩模层数与工艺步骤数暴涨、器件结构（FinFET/GAA）更复杂。当「密度带来的红利」被「复杂度带来的成本」抵消，曲线就走平甚至局部回升。这也解释了为什么成熟节点长期存在、以及为什么产业转向 Chiplet 与先进封装去寻找新的成本收益。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：一台 2000 万美元、5 年折旧的机台，满产每年 2 万片。稼动率降到 50% 时，单片分摊折旧是多少？这说明什么？</summary>
+        <div>年折旧恒定 = 2000 万 ÷ 5 = 400 万美元；50% 稼动率下年产出 1 万片 → 单片分摊 400 美元，而满产时是 200 美元，正好翻倍。这说明折旧是<strong>按时间走而非按产量走</strong>的固定成本：订单不足时，单片成本会自动上升，形成「收入降 + 成本升」的双杀，这是半导体周期下行段利润塌陷远快于营收的算术根源。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：300 mm 晶圆上，20 mm 见方的 die 用面积相除得约 177 颗，为什么工程估算只有约 143 颗？</summary>
+        <div>因为边缘修正项 π·Ø/√(2A)。晶圆是圆形而 die 是方形，靠近圆周的 die 会被切掉一角而无法使用。die 越大，对角线越长，边缘吃掉的数量越多。代入 Ø=30 cm、A=4 cm²：π×30/√8 ≈ 33.3，于是 176.7 − 33.3 ≈ 143 颗，损失约 19%。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：缺陷密度 D = 0.1/cm² 时，把 die 面积从 1 cm² 放大到 4 cm²， Murphy 良率从多少掉到多少？</summary>
+        <div>用 Y = [(1 − e^(−AD))/(AD)]²：A=1 时 AD=0.1，(1−e^−0.1)/0.1 = 0.9516，平方得 90.6%；A=4 时 AD=0.4，(1−e^−0.4)/0.4 = 0.8242，平方得 68.0%。面积 ×4，良率从九成掉到不足七成。</div>
+      </details>
+      <details class="quiz"><summary>自测 5：接上题，把几何损失与良率损失合起来算，单颗裸片成本是原来的几倍？（晶圆报价不变）</summary>
+        <div>1 cm²：640 × 90.6% ≈ 580 颗好 die；4 cm²：143 × 68.0% ≈ 97 颗。在同样报价 3000 美元下，单颗成本从约 5.2 美元涨到约 30.9 美元，是原来的约 5.9 倍。理想情况应该是 4 倍，多出来的近 1.9 倍由几何边缘损失和良率下降共同贡献。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：Chiplet 为什么能省 33% 的裸片成本？请给出算式的逻辑。</summary>
+        <div>把 4 cm² 整片切成 4 个 1 cm²：整片方案每片产出 143×68% ≈ 97 套；切片方案每片产出 640×90.6% ≈ 580 个好小 die，每 4 颗组成一套 ≈ 145 套。产出从 97 提升到 145（+49%），单位裸片成本从 30.9 美元降到约 20.7 美元（−33%）。核心是「一个缺陷只毁掉 1/4 的系统，而不是整颗大芯片」——这是缺陷分布带来的算术收益。</div>
+      </details>
+      <details class="quiz"><summary>自测 7：既然拆片能省 33%，为什么不是所有芯片都用 Chiplet？</summary>
+        <div>净收益 = 良率红利 − 新增成本，而新增成本有四块：① 先进封装本身昂贵（中介层、微凸块、TSV、键合），还会引入新的封装良率损失；② 互联代价，die 间通信比片内更慢更耗电，可能需要更大的缓存或更强的接口电路；③ 测试复杂度上升，每颗小 die 都要测试并保证 KGD；④ 设计复杂度上升，划分边界、跨 die 时序、一致性模型都是新难题。此外，<strong>面积越小，良率蛋糕越小</strong>——小芯片拆片没有红利只有开销。所以 Chiplet 首先落在大算力、大面积、高单价的场景。</div>
+      </details>
+      <details class="quiz"><summary>自测 8：为什么 MPW 能大幅降低流片门槛？它换来的是什么代价？</summary>
+        <div>MPW 让多个项目共享一次投片批次与部分掩模费用，把固定成本摊给一群人。代价是：① 要服从批次排程，时间不自由；② 每个项目能占的面积有限，大芯片放不下；③ 工艺参数通常不能为某个项目单独微调。它用「时间不自由 + 面积受限」换取「一次性投入大幅下降」，适合原型验证、IP 硅验证、教学与科研项目，不适合量产产品。</div>
+      </details>
+      <details class="quiz"><summary>自测 9：为什么验证团队的人数常常超过设计团队？用成本公式解释。</summary>
+        <div>一次性投入（NRE + IP + EDA + 人力）需要在投产前一次性付清且不可撤销——设计错了整套掩模作废。先进节点的 NRE 足以支撑一支几十人的验证团队工作数年，而一套存在缺陷的量产芯片，其召回/返修/改版代价远高于前期验证投入。用成本公式看：验证投入属于「一次性投入」项，它买断的是「少 respin 一次」的巨大确定性收益，性价比极高。</div>
+      </details>
+
+      <div class="tip"><b>下一篇：</b>
+        第 33 篇把过去三十二篇串成一条时间轴——
+        从一句「我们要做一颗什么芯片」，到最后 EVT/DVT/PVT 通过进入量产，
+        <strong>你会看到这套学习笔记的顺序，就是产业里真实的工序顺序</strong>。
+        第 16 篇讲的 EDA 流程、第 29 篇讲的后端签核、第 18 篇讲的 CP/FT、
+        第 32 篇讲的流片门槛，都会在这条时间轴上找到自己的位置。
+      </div>
+
+    </div>
+
+    <div class="series">
+      <div class="series-title">集成电路学习路径 · 全系列导航</div>
+      <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li><a href="2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html">第 31 篇：芯片产业分工与商业模式 · IDM、Fabless、Foundry 与 OSAT</a></li>
+            <li class="current">第 32 篇：晶圆厂经济学与芯片成本模型</li>
+            <li><a href="2026-10-07-一颗芯片的诞生全流程-从需求到量产.html">第 33 篇：一颗芯片的诞生全流程 · 从需求到量产</a></li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+      </ol>
+    </div>
+
+    <div class="tagbar">
+      <span class="chip">#晶圆厂</span>
+      <span class="chip">#资本开支</span>
+      <span class="chip">#折旧</span>
+      <span class="chip">#良率模型</span>
+      <span class="chip">#die成本</span>
+      <span class="chip">#Chiplet</span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>

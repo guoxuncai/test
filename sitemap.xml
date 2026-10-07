@@ -2,8 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url><loc>https://guoxuncai.github.io/test/</loc><priority>1.0</priority></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html</loc><lastmod>2026-10-07</lastmod></url>
+    <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html</loc><lastmod>2026-10-07</lastmod></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html</loc><lastmod>2026-10-07</lastmod></url>
+    <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-晶圆厂经济学与芯片成本模型.html</loc><lastmod>2026-10-07</lastmod></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html</loc><lastmod>2026-10-07</lastmod></url>
+    <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-一颗芯片的诞生全流程-从需求到量产.html</loc><lastmod>2026-10-07</lastmod></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html</loc><lastmod>2026-10-06</lastmod></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html</loc><lastmod>2026-10-06</lastmod></url>
     <url><loc>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html</loc><lastmod>2026-10-06</lastmod></url>
