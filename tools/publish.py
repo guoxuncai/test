@@ -12,9 +12,17 @@
 常用命令：
   python tools/publish.py              # 扫描 + 更新索引 + 提交推送
   python tools/publish.py --no-push    # 只更新索引，不推送（先本地看看）
+  python tools/publish.py --sync-only  # 只把另一台电脑的最新改动拉到本机
   python tools/publish.py --serve      # 更新索引并启动本地预览服务
   python tools/publish.py --draft finance 2026-10-01-标题关键词
                                        # 从模板新建一篇草稿文件
+
+多台电脑共同维护（已内建，无需额外操作）：
+  每次发布前都会自动 fetch + pull --rebase 远端，再生成索引、提交、推送；
+  所以两台电脑只要都用本脚本发布，就不会互相覆盖。
+  生成文件（data/posts.js / posts.json / feed.xml / sitemap.xml）若冲突会自动消解并重新生成；
+  只有两台电脑改了同一篇文章的同一段时才会需要人工处理，届时会明确列出冲突文件。
+  新电脑第一次使用请先双击 setup-pc.bat（配置钩子与 git 参数）。
 ==========================================================
 """
 import os
@@ -266,29 +274,152 @@ def build_tags(src):
     return out[:6]
 
 
-def run_git(args, check=True):
-    r = subprocess.run(["git"] + args, cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
+def run_git(args, check=True, env=None):
+    r = subprocess.run(["git"] + args, cwd=ROOT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=env)
     if check and r.returncode != 0:
         raise RuntimeError("git %s 失败：%s" % (" ".join(args), (r.stderr or r.stdout).strip()))
     return r.stdout.strip()
 
 
-def git_sync():
+# 由脚本生成的产物文件：两台电脑同时发布时必然"同时修改"它们，
+# 但内容完全由 posts/ 决定，所以冲突可以自动丢弃任意一侧、随后重新生成。
+GENERATED_FILES = [
+    os.path.join("data", "posts.js"),
+    os.path.join("data", "posts.json"),
+    "feed.xml",
+    "sitemap.xml",
+]
+
+
+class SyncConflict(Exception):
+    """需要人工处理的冲突（正文/文章类文件冲突）。"""
+
+    def __init__(self, files):
+        Exception.__init__(self, "需要人工处理冲突：%s" % ", ".join(files))
+        self.files = files
+
+
+def _norm(p):
+    return p.replace("\\", "/").lstrip("./")
+
+
+def _is_generated(p):
+    return _norm(p) in [_norm(g) for g in GENERATED_FILES]
+
+
+def conflicted_files():
+    out = run_git(["diff", "--name-only", "--diff-filter=U"], check=False)
+    return [l.strip() for l in out.splitlines() if l.strip()]
+
+
+def in_rebase():
+    for name in ("rebase-merge", "rebase-apply"):
+        d = run_git(["rev-parse", "--git-path", name], check=False)
+        if d and os.path.exists(os.path.join(ROOT, d)):
+            return True
+    return False
+
+
+def discard_generated_changes():
+    """丢弃生成文件的本地未提交改动（随后会重新生成），从源头避免双机冲突。"""
+    dirty = run_git(["status", "--porcelain", "--"] + GENERATED_FILES, check=False)
+    if dirty.strip():
+        run_git(["checkout", "--"] + GENERATED_FILES, check=False)
+        print("  已丢弃生成文件的本地未提交改动（索引稍后重新生成）")
+
+
+def ensure_hooks_path():
+    """启用仓库自带的 .githooks（内含 pre-push 拦截，防止落后于远端时强推）。"""
+    if not os.path.isdir(os.path.join(ROOT, ".githooks")):
+        return
+    cur = run_git(["config", "--get", "core.hooksPath"], check=False)
+    if cur.strip():
+        return
+    run_git(["config", "core.hooksPath", ".githooks"], check=False)
+    print("  已启用仓库钩子：core.hooksPath=.githooks（pre-push 会拦截落后于远端的推送）")
+
+
+def git_sync(max_rounds=10):
     """多机协作：把远端最新改动 rebase 进本机。
 
-    工作区若有未提交改动会自动 stash 并在同步后恢复；
-    一旦出现冲突则回滚到同步前状态再抛出，绝不留下 rebase 中间态。
+    - 工作区有未提交改动时自动 stash，同步后自动恢复；
+    - 生成文件（data/posts.js、feed.xml 等）的本地改动先丢弃，稍后重新生成；
+    - 若 rebase 只在这些生成文件上冲突，自动取一侧并继续（内容随后会重算）；
+    - 若文章/正文类文件冲突，回滚到同步前状态并抛出 SyncConflict，不留 rebase 中间态。
     """
     branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], check=False) or "main"
     upstream = run_git(["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"], check=False)
     if not upstream:
         run_git(["branch", "--set-upstream-to", "origin/%s" % branch, branch], check=False)
     run_git(["fetch", "origin", branch])
+
+    discard_generated_changes()
+    env = dict(os.environ, GIT_EDITOR="true")
     try:
-        return run_git(["pull", "--rebase", "--autostash", "origin", branch])
+        out = run_git(["pull", "--rebase", "--autostash", "origin", branch], env=env)
     except RuntimeError:
+        pass
+    else:
+        return out
+
+    # 到这里说明 rebase 过程中有冲突，逐轮消解
+    rounds = 0
+    while in_rebase() and rounds < max_rounds:
+        rounds += 1
+        cs = conflicted_files()
+        if not cs:
+            break
+        hard = [c for c in cs if not _is_generated(c)]
+        if hard:
+            run_git(["rebase", "--abort"], check=False)
+            raise SyncConflict(hard)
+        for c in cs:
+            run_git(["checkout", "--theirs", "--", c], check=False)
+            run_git(["add", "--", c], check=False)
+        r = subprocess.run(["git", "rebase", "--continue"], cwd=ROOT, capture_output=True,
+                           text=True, encoding="utf-8", errors="replace", env=env)
+        if r.returncode == 0 and not in_rebase():
+            break
+
+    if in_rebase():
+        cs = conflicted_files()
         run_git(["rebase", "--abort"], check=False)
-        raise
+        raise SyncConflict(cs or ["（未知文件）"])
+    return "已与远端同步（生成文件冲突已自动消解）"
+
+
+def git_push(branch, tries=3):
+    """推送；若远端在本机发布期间又前进了，自动同步后重试。"""
+    last = ""
+    for i in range(tries):
+        try:
+            run_git(["push", "origin", branch])
+            return True
+        except RuntimeError as e:
+            last = str(e)
+            if i == tries - 1:
+                break
+            print("  推送被拒绝（远端又有新提交），自动同步后重试 …")
+            try:
+                git_sync()
+            except SyncConflict as sc:
+                print("! 同步时出现需人工处理的冲突：%s" % ", ".join(sc.files))
+                raise
+    raise RuntimeError(last)
+
+
+def machine_name():
+    """本机名，写进提交信息，方便回溯是哪台电脑发布的。"""
+    for key in ("COMPUTERNAME", "HOSTNAME"):
+        v = os.environ.get(key)
+        if v:
+            return v
+    try:
+        import socket
+        return socket.gethostname()
+    except Exception:
+        return ""
 
 
 def site_url():
@@ -465,6 +596,7 @@ def main():
     ap.add_argument("--no-push", action="store_true", help="只生成索引，不执行 git 提交推送")
     ap.add_argument("--no-pull", action="store_true", help="跳过开工前的远端自动同步（离线时使用）")
     ap.add_argument("--sync-only", action="store_true", help="只同步远端最新改动，不生成索引也不推送")
+    ap.add_argument("--no-machine", action="store_true", help="提交信息里不附加本机电脑名")
     ap.add_argument("--serve", action="store_true", help="生成索引后启动本地预览服务 http://127.0.0.1:8000")
     ap.add_argument("--draft", nargs=2, metavar=("分类", "文件名"), help="从模板新建草稿，如 --draft finance 2026-10-01-早报")
     ap.add_argument("--message", "-m", default=None, help="自定义提交信息")
@@ -485,11 +617,22 @@ def main():
         print("=" * 56)
         return
 
+    ensure_hooks_path()
+
     if not args.no_pull:
-        print("\n同步远端最新改动 …")
+        print("\n① 同步远端最新改动 …")
         try:
             out = git_sync()
             print("  %s" % (out.splitlines()[-1] if out else "本机已是最新"))
+        except SyncConflict as e:
+            print("! 同步冲突，已自动回滚到同步前状态（本机改动都还在）：")
+            for f in e.files:
+                print("    × %s" % f)
+            print("  处理办法：打开上面这些文件，搜索 <<<<<<< 标记，保留想要的内容后保存，")
+            print("  然后执行：git add -A && git rebase --continue")
+            print("  或者先跳过同步继续本地预览：python tools/publish.py --no-pull --no-push")
+            print("=" * 56)
+            return
         except Exception as e:
             print("! 自动同步失败：%s" % e)
             print("  请手动执行 git pull --rebase 处理冲突后重试。")
@@ -548,11 +691,20 @@ def main():
         msg = args.message or ("docs: 更新博客索引 %s（共 %d 篇%s）" % (
             datetime.date.today().isoformat(), len(posts),
             "，新增 %d 篇" % added if added > 0 else ""))
+        pc = machine_name()
+        if pc and not args.no_machine:
+            msg = "%s [%s]" % (msg, pc)
         run_git(["commit", "-m", msg])
         print("提交信息：%s" % msg)
         branch = run_git(["rev-parse", "--abbrev-ref", "HEAD"], check=False) or "main"
-        run_git(["push", "origin", branch])
+        git_push(branch)
         print("推送成功！GitHub Pages 约 1-2 分钟后更新：%s" % base)
+    except SyncConflict as e:
+        print("! 同步冲突，已自动回滚到同步前状态（本机改动都还在）：")
+        for f in e.files:
+            print("    × %s" % f)
+        print("  处理办法：打开上面这些文件，搜索 <<<<<<< 标记，保留想要的内容后保存，")
+        print("  然后执行：git add -A && git rebase --continue")
     except Exception as e:
         print("! Git 操作失败：%s" % e)
         print("  索引文件已生成，可稍后手动执行 git add / commit / push，或双击 发布更新.bat 重试。")
