@@ -5,7 +5,14 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 07 Oct 2026 22:37:10 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 20 Oct 2026 06:28:34 +0800</lastBuildDate>
+    <item>
+      <title>现代光电子技术：从一束激光到一张光子芯片</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-20-现代光电子技术-从激光到光子集成.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-20-现代光电子技术-从激光到光子集成.html</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[系统梳理现代光电子技术：光与物质相互作用、激光、光纤通信、光电探测、光显示、光存储、光子集成，及其在通信、医疗、工业、国防与消费电子领域的典型应用原理，并给出前沿趋势与学习路径]]></description>
+    </item>
     <item>
       <title>芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html</link>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-25jinnian_finance_daily_.html</guid>
       <pubDate>Fri, 25 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[两市成交额1.67万亿元，较前一交易日继续缩量，节前观望情绪浓厚。领涨 综合消费者服务 +1.46% 领涨 居家用品Ⅲ +0.94% 领涨 石油天然气 +0.72% 领跌 贵金属 -4.66% 领跌 生命科学工具和服务Ⅲ -3.51% 领跌…]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月25日</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-25瑾年财经早报_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-25瑾年财经早报_.html</guid>
-      <pubDate>Fri, 25 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[沪指跌1.22%，深成指跌2.34%，创业板指跌2.68%，科创50跌2.35%。两市合计成交约21,353亿元，较前一交易日有所缩量。]]></description>
     </item>
   </channel>
 </rss>
