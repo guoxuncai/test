@@ -5,7 +5,14 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 20 Oct 2026 06:28:34 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Oct 2026 16:59:33 +0800</lastBuildDate>
+    <item>
+      <title>太阳能电池全解：光伏效应、材料、工艺与未来</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-太阳能电池-光伏效应材料工艺与未来.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-太阳能电池-光伏效应材料工艺与未来.html</guid>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[系统讲解太阳能电池：光伏效应物理机制、关键参数（Voc/Jsc/FF/效率）、晶硅从石英砂到组件的完整工艺链与核心设备、PERC→TOPCon→HJT→BC 结构演进、薄膜与钙钛矿路线，以及技术局限与未来方向]]></description>
+    </item>
     <item>
       <title>现代光电子技术：从一束激光到一张光子芯片</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-20-现代光电子技术-从激光到光子集成.html</link>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-9-27财经周日刊_精美排版.html</guid>
       <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[国庆前最后一周：超级数据周来袭，A股节后行情如何演绎？各位朋友大家好！]]></description>
-    </item>
-    <item>
-      <title>瑾年财经早报 | 2026年9月25日 周五</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-09-25jinnian_finance_daily_.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-25jinnian_finance_daily_.html</guid>
-      <pubDate>Fri, 25 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[两市成交额1.67万亿元，较前一交易日继续缩量，节前观望情绪浓厚。领涨 综合消费者服务 +1.46% 领涨 居家用品Ⅲ +0.94% 领涨 石油天然气 +0.72% 领跌 贵金属 -4.66% 领跌 生命科学工具和服务Ⅲ -3.51% 领跌…]]></description>
     </item>
   </channel>
 </rss>

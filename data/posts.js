@@ -1,6 +1,23 @@
 /* 本文件由 tools/publish.py 自动生成，请勿手动编辑 */
-/* 生成时间: 2026-10-20 06:28:34  共 60 篇 */
+/* 生成时间: 2026-10-22 16:59:33  共 61 篇 */
 window.SITE_POSTS = [
+  {
+    "title": "太阳能电池全解：光伏效应、材料、工艺与未来",
+    "url": "posts/semiconductor/2026-10-22-太阳能电池-光伏效应材料工艺与未来.html",
+    "date": "2026-10-22",
+    "category": "semiconductor",
+    "categoryLabel": "半导体",
+    "desc": "系统讲解太阳能电池：光伏效应物理机制、关键参数（Voc/Jsc/FF/效率）、晶硅从石英砂到组件的完整工艺链与核心设备、PERC→TOPCon→HJT→BC 结构演进、薄膜与钙钛矿路线，以及技术局限与未来方向",
+    "tags": [
+      "太阳能电池",
+      "光伏效应",
+      "转换效率",
+      "PERC",
+      "TOPCon",
+      "HJT"
+    ],
+    "size": 67.8
+  },
   {
     "title": "现代光电子技术：从一束激光到一张光子芯片",
     "url": "posts/semiconductor/2026-10-20-现代光电子技术-从激光到光子集成.html",
@@ -16,7 +33,7 @@ window.SITE_POSTS = [
       "EDFA",
       "WDM"
     ],
-    "size": 73.3
+    "size": 73.4
   },
   {
     "title": "芯片可靠性物理：电迁移、TDDB、NBTI 与 ESD",
@@ -33,7 +50,7 @@ window.SITE_POSTS = [
       "HCI",
       "ESD"
     ],
-    "size": 35.7
+    "size": 35.9
   },
   {
     "title": "芯片产业分工与商业模式：IDM、Fabless、Foundry 与 OSAT",
@@ -50,7 +67,7 @@ window.SITE_POSTS = [
       "商业模式",
       "IP授权"
     ],
-    "size": 72.8
+    "size": 73.0
   },
   {
     "title": "模拟集成电路设计：电流镜、带隙基准与运放",
@@ -67,7 +84,7 @@ window.SITE_POSTS = [
       "相位裕度",
       "ADC"
     ],
-    "size": 47.1
+    "size": 47.3
   },
   {
     "title": "晶圆厂经济学与芯片成本模型：为什么面积翻倍，利润可以归零",
@@ -84,7 +101,7 @@ window.SITE_POSTS = [
       "Murphy",
       "die成本"
     ],
-    "size": 72.5
+    "size": 72.7
   },
   {
     "title": "数字后端物理设计：布局布线、时钟树与静态时序分析",
@@ -101,7 +118,7 @@ window.SITE_POSTS = [
       "静态时序分析",
       "STA"
     ],
-    "size": 39.8
+    "size": 40.0
   },
   {
     "title": "一颗芯片的诞生全流程：从一句需求到百万颗量产",
@@ -118,7 +135,7 @@ window.SITE_POSTS = [
       "量产爬坡",
       "良率学习曲线"
     ],
-    "size": 62.8
+    "size": 63.0
   },
   {
     "title": "计算机发展史：计算机是如何工作的",
@@ -135,7 +152,7 @@ window.SITE_POSTS = [
       "巴贝奇",
       "图灵"
     ],
-    "size": 42.0
+    "size": 42.2
   },
   {
     "title": "薛定谔方程、泡利不相容与费米-狄拉克分布：固体物理的量子三基石",
@@ -152,7 +169,7 @@ window.SITE_POSTS = [
       "费米能级",
       "量子隧穿"
     ],
-    "size": 39.9
+    "size": 40.1
   },
   {
     "title": "硅基的语言：从晶体管开关到编程语言与操作系统",
@@ -169,7 +186,7 @@ window.SITE_POSTS = [
       "解释器",
       "高级语言"
     ],
-    "size": 99.2
+    "size": 99.3
   },
   {
     "title": "数字电路、模拟电路与芯片家族：MCU、FPGA、CPU、GPU 到底是什么",
@@ -186,7 +203,7 @@ window.SITE_POSTS = [
       "CPU",
       "GPU"
     ],
-    "size": 44.1
+    "size": 44.3
   },
   {
     "title": "雷达信号处理全链路：从回波到目标",
@@ -203,7 +220,7 @@ window.SITE_POSTS = [
       "MTI",
       "MTD"
     ],
-    "size": 43.5
+    "size": 43.7
   },
   {
     "title": "量子计算：从量子比特到量子优越性",
@@ -220,7 +237,7 @@ window.SITE_POSTS = [
       "Shor算法",
       "量子优越性"
     ],
-    "size": 65.4
+    "size": 65.5
   },
   {
     "title": "类脑计算与存算一体：后摩尔时代的两条突围路线",
@@ -237,7 +254,7 @@ window.SITE_POSTS = [
       "忆阻器",
       "脉冲神经网络"
     ],
-    "size": 69.8
+    "size": 70.0
   },
   {
     "title": "光计算：用光子代替电子的算力革命",
@@ -254,7 +271,7 @@ window.SITE_POSTS = [
       "微环谐振器",
       "CPO"
     ],
-    "size": 64.3
+    "size": 64.4
   },
   {
     "title": "摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA",
@@ -271,7 +288,7 @@ window.SITE_POSTS = [
       "GAA",
       "HKMG"
     ],
-    "size": 58.1
+    "size": 58.2
   },
   {
     "title": "存储器 · DRAM、NAND 与新型存储",
@@ -288,7 +305,7 @@ window.SITE_POSTS = [
       "3D",
       "浮栅"
     ],
-    "size": 88.0
+    "size": 88.2
   },
   {
     "title": "半导体设备与产业链 · 核心装备全景",
@@ -305,7 +322,7 @@ window.SITE_POSTS = [
       "离子注入",
       "CMP"
     ],
-    "size": 123.6
+    "size": 123.8
   },
   {
     "title": "半导体材料全景 · Si、SiC、GaN 与宽禁带",
@@ -322,7 +339,7 @@ window.SITE_POSTS = [
       "碳化硅",
       "氮化镓"
     ],
-    "size": 182.8
+    "size": 182.9
   },
   {
     "title": "先进封装与系统级集成 · 2.5D、3D 与 Chiplet",
@@ -339,7 +356,7 @@ window.SITE_POSTS = [
       "TSV",
       "hybrid"
     ],
-    "size": 72.9
+    "size": 73.0
   },
   {
     "title": "薄膜沉积与掺杂工艺详解 · CVD/ALD/PVD、注入与退火",
@@ -356,7 +373,7 @@ window.SITE_POSTS = [
       "PECVD",
       "离子注入"
     ],
-    "size": 79.1
+    "size": 79.3
   },
   {
     "title": "芯片设计流程与 EDA 工具链",
@@ -373,7 +390,7 @@ window.SITE_POSTS = [
       "布局布线",
       "DRC"
     ],
-    "size": 48.7
+    "size": 48.8
   },
   {
     "title": "芯片封装、测试与失效分析",
@@ -390,7 +407,7 @@ window.SITE_POSTS = [
       "参数分析仪",
       "失效分析"
     ],
-    "size": 70.6
+    "size": 70.8
   },
   {
     "title": "芯片制造工艺流程详解",
@@ -407,7 +424,7 @@ window.SITE_POSTS = [
       "CMP",
       "晶圆"
     ],
-    "size": 54.6
+    "size": 54.8
   },
   {
     "title": "硅单晶生长与衬底制备工艺",
@@ -424,7 +441,7 @@ window.SITE_POSTS = [
       "硅片抛光",
       "外延"
     ],
-    "size": 72.6
+    "size": 72.8
   },
   {
     "title": "瑾年财经早报 | 2026年10月1日",
@@ -451,7 +468,7 @@ window.SITE_POSTS = [
       "共质心",
       "天线效应"
     ],
-    "size": 65.7
+    "size": 65.9
   },
   {
     "title": "固体物理基础 · 晶格、晶向、晶胞与晶面",
@@ -468,7 +485,7 @@ window.SITE_POSTS = [
       "晶面",
       "米勒指数"
     ],
-    "size": 72.4
+    "size": 72.5
   },
   {
     "title": "半导体物理基础 · 能带与载流子",
@@ -485,7 +502,7 @@ window.SITE_POSTS = [
       "有效质量",
       "态密度"
     ],
-    "size": 89.0
+    "size": 89.2
   },
   {
     "title": "刻蚀工艺详解 · 湿法、等离子体与深硅刻蚀",
@@ -502,7 +519,7 @@ window.SITE_POSTS = [
       "选择比",
       "各向异性"
     ],
-    "size": 77.6
+    "size": 77.7
   },
   {
     "title": "光刻工艺详解 · 从光学原理到 EUV",
@@ -519,7 +536,7 @@ window.SITE_POSTS = [
       "EUV",
       "High-NA"
     ],
-    "size": 62.1
+    "size": 62.3
   },
   {
     "title": "PN 结原理与特性",
@@ -536,7 +553,7 @@ window.SITE_POSTS = [
       "内建电势",
       "耗尽层"
     ],
-    "size": 30.9
+    "size": 31.1
   },
   {
     "title": "MOSFET 工作原理与特性曲线",
@@ -553,7 +570,7 @@ window.SITE_POSTS = [
       "短沟道效应",
       "CMOS"
     ],
-    "size": 57.3
+    "size": 57.5
   },
   {
     "title": "CMP 平坦化、量测与良率控制",
@@ -570,7 +587,7 @@ window.SITE_POSTS = [
       "终点检测",
       "椭偏仪"
     ],
-    "size": 87.8
+    "size": 87.9
   },
   {
     "title": "CMOS 集成电路基础 · 反相器与逻辑门",
@@ -587,7 +604,7 @@ window.SITE_POSTS = [
       "或非门",
       "传输门"
     ],
-    "size": 102.9
+    "size": 103.1
   },
   {
     "title": "瑾年财经早报 | 2026年9月30日 星期三",
@@ -850,7 +867,7 @@ window.SITE_POSTS = [
       "岗位地图",
       "MPW流片"
     ],
-    "size": 69.7
+    "size": 69.9
   }
 ];
 
@@ -858,7 +875,7 @@ window.SITE_CATS = [
   {
     "id": "semiconductor",
     "label": "半导体",
-    "count": 36
+    "count": 37
   },
   {
     "id": "finance",

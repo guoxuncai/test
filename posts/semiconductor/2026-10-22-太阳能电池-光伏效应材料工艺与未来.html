@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>太阳能电池全解：光伏效应、材料、工艺与未来</title>
+<meta name="description" content="系统讲解太阳能电池：光伏效应物理机制、关键参数（Voc/Jsc/FF/效率）、晶硅从石英砂到组件的完整工艺链与核心设备、PERC→TOPCon→HJT→BC 结构演进、薄膜与钙钛矿路线，以及技术局限与未来方向。">
+<meta name="keywords" content="太阳能电池,光伏效应,转换效率,PERC,TOPCon,HJT,BC电池,钙钛矿,叠层电池,金刚线切片,PECVD,丝网印刷,薄膜电池">
+<meta name="date" content="2026-10-22">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+<!-- favicon -->
+<link rel="icon" href="../../assets/img/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/apple-touch-icon.png">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 光伏与新能源</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 光伏与新能源</span>
+    <h1 class="title">太阳能电池全解：光伏效应、材料、工艺与未来</h1>
+    <div class="meta">
+      <span>2026-10-22</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 35 篇</span><span class="sep"></span>
+      <span>阅读约 40 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        太阳能电池是最被低估的「半导体产品」：它的物理内核就是你已经学过的 <strong>PN 结</strong>（第 3 篇），
+        它的制造流程几乎复刻了芯片工艺（第 10~13 篇），而它的产业规模与成本曲线，正是「摩尔定律放缓之后，
+        半导体工艺去哪创造价值」的最好答案。
+        这一篇把光伏讲透：光伏效应的完整物理链条、必须认识的四个参数（V<sub>oc</sub>/J<sub>sc</sub>/FF/η）、
+        从一粒石英砂到一块组件的<strong>全工艺链与核心设备</strong>、晶硅/薄膜/钙钛矿三条技术路线的攻守，
+        以及这门产业当前的<strong>真实局限</strong>与下一步的优化方向。
+        读完你就能看懂任何一份光伏技术新闻里「效率破纪录」「N 型接棒 P 型」到底意味着什么。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">光伏效应：一束光如何变成电流</a></li>
+          <li><a href="#s2">发展脉络：从实验室好奇到万亿产业</a></li>
+          <li><a href="#s3">核心物理：效率的「天花板」从哪来</a></li>
+          <li><a href="#s4">关键性能参数：读懂电池的成绩单</a></li>
+          <li><a href="#s5">材料类型全景：六大技术路线</a></li>
+          <li><a href="#s6">晶硅产业链：从石英砂到组件的完整流程</a></li>
+          <li><a href="#s7">电池结构演进：PERC → TOPCon → HJT → BC</a></li>
+          <li><a href="#s8">核心设备清单：光伏工厂的「光刻机们」</a></li>
+          <li><a href="#s9">薄膜电池：CdTe、CIGS 的工艺与兴衰</a></li>
+          <li><a href="#s10">钙钛矿：涨得最快、也最难伺候的挑战者</a></li>
+          <li><a href="#s11">技术优势，以及优势从何而来</a></li>
+          <li><a href="#s12">局限性与存在的问题</a></li>
+          <li><a href="#s13">未来优化方向</a></li>
+          <li><a href="#s14">与本站学习路径的衔接</a></li>
+          <li><a href="#s15">易错点</a></li>
+          <li><a href="#s16">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 光伏效应：一束光如何变成电流</h2>
+
+      <p><strong>光伏效应（Photovoltaic Effect）</strong>：光照射到材料上，光的能量直接转换为电压与电流——中间没有燃烧、没有蒸汽、没有旋转的转子。
+      1839 年法国人贝克勒尔在电解液里首次观察到它，比麦克斯韦方程组还早二十多年。</p>
+
+      <p>现代太阳能电池把它实现为一个优雅的半导体故事，完整链条分四步：</p>
+
+      <ol>
+        <li><strong>吸收</strong>：能量大于带隙的光子被半导体吸收，把一个电子从价带踢上导带，产生<strong>电子–空穴对</strong>（第 2 篇的能带图在这里直接复用）；</li>
+        <li><strong>分离</strong>：新生载流子在 <strong>PN 结内建电场</strong>的作用下被拆开——电子被推向 N 区，空穴被推向 P 区（第 3 篇的耗尽区电场就是那台「载流子分离机」）；</li>
+        <li><strong>输运与收集</strong>：电子空穴各自扩散/漂移到电池两端的电极，途中任何复合（缺陷、表面）都是损失；</li>
+        <li><strong>做功</strong>：接上外电路，电子经负载流回 P 区与空穴复合，电流做功——光能变成了电能。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="光伏效应原理：PN 结分离光生载流子">
+          <defs>
+            <marker id="ar35-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--up)"/>
+            </marker>
+            <marker id="ar35-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--semi)"/>
+            </marker>
+            <marker id="ar35-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">光伏效应：光生电子–空穴对被 PN 结内建电场分离</text>
+          <!-- 太阳与入射光 -->
+          <circle cx="70" cy="70" r="18" fill="var(--up)" fill-opacity=".8"/>
+          <line x1="90" y1="88" x2="150" y2="140" stroke="var(--up)" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar35-a)"/>
+          <line x1="110" y1="70" x2="200" y2="140" stroke="var(--up)" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar35-a)"/>
+          <text x="70" y="106" text-anchor="middle" font-size="11" fill="var(--up)">阳光 hν &gt; E_g</text>
+          <!-- 电池剖面 -->
+          <rect x="150" y="130" width="380" height="34" fill="var(--up)" fill-opacity=".35"/>
+          <text x="340" y="152" text-anchor="middle" font-size="11" fill="var(--text)">N⁺ 发射极（栅线电极之间）</text>
+          <rect x="150" y="164" width="380" height="18" fill="var(--text)" fill-opacity=".18"/>
+          <text x="340" y="178" text-anchor="middle" font-size="10" fill="var(--text-mute)">← 耗尽区内建电场 E →</text>
+          <rect x="150" y="182" width="380" height="44" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="340" y="209" text-anchor="middle" font-size="11" fill="var(--text)">P 型基体</text>
+          <rect x="150" y="226" width="380" height="16" fill="var(--accent)" fill-opacity=".35"/>
+          <text x="340" y="239" text-anchor="middle" font-size="10" fill="var(--text)">背场 / 背面钝化（BSF）</text>
+          <!-- 载流子运动 -->
+          <circle cx="250" cy="196" r="5" fill="var(--text)"/>
+          <line x1="250" y1="190" x2="250" y2="148" stroke="var(--text)" stroke-width="1.6" marker-end="url(#ar35-c)"/>
+          <text x="262" y="172" font-size="10" fill="var(--text-soft)">电子 ↑</text>
+          <circle cx="420" cy="196" r="5" fill="var(--up)"/>
+          <line x1="420" y1="202" x2="420" y2="238" stroke="var(--up)" stroke-width="1.6" marker-end="url(#ar35-a)"/>
+          <text x="430" y="228" font-size="10" fill="var(--up)">空穴 ↓</text>
+          <!-- 栅线 -->
+          <line x1="160" y1="126" x2="520" y2="126" stroke="var(--text-mute)" stroke-width="3"/>
+          <line x1="200" y1="120" x2="200" y2="130" stroke="var(--text-mute)" stroke-width="2"/>
+          <line x1="300" y1="120" x2="300" y2="130" stroke="var(--text-mute)" stroke-width="2"/>
+          <line x1="400" y1="120" x2="400" y2="130" stroke="var(--text-mute)" stroke-width="2"/>
+          <line x1="500" y1="120" x2="500" y2="130" stroke="var(--text-mute)" stroke-width="2"/>
+          <text x="560" y="126" font-size="10" fill="var(--text-mute)">正面栅线电极</text>
+          <!-- 外电路 -->
+          <path d="M530 133 L620 133 L620 244 L534 244" fill="none" stroke="var(--semi)" stroke-width="1.8" marker-start="url(#ar35-b)"/>
+          <circle cx="620" cy="188" r="18" fill="none" stroke="var(--semi)" stroke-width="1.6"/>
+          <text x="620" y="192" text-anchor="middle" font-size="10" fill="var(--semi)">负载</text>
+          <text x="620" y="220" text-anchor="middle" font-size="10" fill="var(--semi)">电流做功 → 回到 P 区复合</text>
+          <!-- 底注 -->
+          <text x="340" y="280" text-anchor="middle" font-size="11" fill="var(--text-mute)">注意方向：电子向 N 区、空穴向 P 区 —— 电场就是那台「载流子分离机」</text>
+          <text x="340" y="300" text-anchor="middle" font-size="11" fill="var(--text-mute)">分离得越快越彻底，复合损失越小，电流与电压越高</text>
+        </svg>
+      </figure>
+
+      <div class="note"><b>为什么必须要有 PN 结？</b>
+        没有内建电场，光生电子和空穴只会原地复合，光能变成一点热——这就是为什么一块均匀的硅晒不出发电。
+        内建电场给了两类载流子「相反的推力」，把它们在复合前物理分开。光伏与 LED、探测器（第 34 篇）共用同一个 PN 结：
+        <strong>正偏发光（LED），反偏收光（探测器），光照发电（太阳能电池）</strong>——三个方向，三种产品。</div>
+
+      <h2 id="s2">2. 发展脉络：从实验室好奇到万亿产业</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="太阳能电池发展时间线">
+          <defs>
+            <marker id="ar35-tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">光伏 187 年：效率曲线如何爬向天花板</text>
+          <line x1="40" y1="160" x2="650" y2="160" stroke="var(--text-mute)" stroke-width="1.5" marker-end="url(#ar35-tl)"/>
+          <circle cx="80" cy="160" r="4.5" fill="var(--semi)"/>
+          <line x1="80" y1="156" x2="80" y2="92" stroke="var(--border)" stroke-width="1"/>
+          <text x="80" y="84" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">1839 光伏效应发现</text>
+          <text x="80" y="68" text-anchor="middle" font-size="10" fill="var(--text-mute)">贝克勒尔（电解液）</text>
+          <circle cx="196" cy="160" r="4.5" fill="var(--semi)"/>
+          <line x1="196" y1="164" x2="196" y2="228" stroke="var(--border)" stroke-width="1"/>
+          <text x="196" y="244" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">1954 贝尔实验室 6%</text>
+          <text x="196" y="260" text-anchor="middle" font-size="10" fill="var(--text-mute)">第一块实用硅电池</text>
+          <circle cx="300" cy="160" r="4.5" fill="var(--semi)"/>
+          <line x1="300" y1="156" x2="300" y2="92" stroke="var(--border)" stroke-width="1"/>
+          <text x="300" y="84" text-anchor="middle" font-size="11" fill="var(--semi)" font-weight="700">1958~70s 航天专用</text>
+          <text x="300" y="68" text-anchor="middle" font-size="10" fill="var(--text-mute)">先锋一号卫星「不计成本」</text>
+          <circle cx="404" cy="160" r="4.5" fill="var(--accent)"/>
+          <line x1="404" y1="164" x2="404" y2="228" stroke="var(--border)" stroke-width="1"/>
+          <text x="404" y="244" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">2004~2010 德国 EEG 补贴</text>
+          <text x="404" y="260" text-anchor="middle" font-size="10" fill="var(--text-mute)">地面市场引爆，中国产能登场</text>
+          <circle cx="500" cy="160" r="4.5" fill="var(--accent)"/>
+          <line x1="500" y1="156" x2="500" y2="92" stroke="var(--border)" stroke-width="1"/>
+          <text x="500" y="84" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">2011 金刚线切片</text>
+          <text x="500" y="68" text-anchor="middle" font-size="10" fill="var(--text-mute)">硅料用量砍半，成本悬崖式下降</text>
+          <circle cx="588" cy="160" r="4.5" fill="var(--up)"/>
+          <line x1="588" y1="164" x2="588" y2="228" stroke="var(--border)" stroke-width="1"/>
+          <text x="588" y="244" text-anchor="middle" font-size="11" fill="var(--up)" font-weight="700">2019~ N 型时代</text>
+          <text x="588" y="260" text-anchor="middle" font-size="10" fill="var(--text-mute)">TOPCon/HJT 量产，钙钛矿叠层破 34%</text>
+          <text x="644" y="292" text-anchor="end" font-size="10.5" fill="var(--text-mute)">2020s：全球新增装机的主力电源已是光伏</text>
+        </svg>
+      </figure>
+
+      <p>光伏史有一条清晰的主轴：<strong>先贵族、后平民</strong>。前五十年它是太空里的奢侈品（每瓦几百美元）；
+      2004 年德国《可再生能源法》用固定上网电价创造出一个确定的地面市场，需求规模化 → 工艺改进 → 成本下降 → 更大需求的飞轮开始转动。
+      2010 年到 2024 年，组件价格从约 2 美元/瓦跌到约 0.1 美元/瓦，<strong>二十年跌去 95%</strong>——这是人类工业史上罕见的成本曲线，
+      学习曲线率约 20%（累计产量每翻一倍，价格降约 20%），比芯片之外几乎任何产业都陡。</p>
+
+      <h2 id="s3">3. 核心物理：效率的「天花板」从哪来</h2>
+
+      <h3>3.1 带隙是一道单选题</h3>
+      <p>半导体带隙 E<sub>g</sub> 决定两件互相打架的事：</p>
+      <ul>
+        <li><strong>E<sub>g</sub> 太小</strong>：几乎所有光子都能被吸收（电流大），但输出电压最多约等于 E<sub>g</sub>，而且低能光子太多导致电压上不去（电压低）；</li>
+        <li><strong>E<sub>g</sub> 太大</strong>：电压高，但能量低于 E<sub>g</sub> 的光子全部穿过去不被吸收（电流小）。</li>
+      </ul>
+
+      <div class="formula-block">
+        <span class="fl">可吸收光子的截止波长：λ_max(μm) ≈ 1.24 / E_g(eV)　　硅 E_g=1.12 eV → λ_max ≈ 1.1 μm</span>
+        <span class="fnote">比 1.1 μm 更长的光子（约占太阳光谱 20%）硅「看不见」，直接透过；更短的光子虽有富余能量，
+        但多余部分以热的形式浪费掉（热化损失）。<strong>单一带隙天生吃不完整个太阳光谱</strong>——这是后面叠层电池的立论根基。</span>
+      </div>
+
+      <h3>3.2 Shockley–Queisser 极限：单结电池的 33.7%</h3>
+
+      <p>1961 年 Shockley 与 Queisser 用细致平衡原理算出了单结电池的理论极限：标准太阳光谱下，
+      <strong>最优带隙约 1.34 eV，极限效率 33.7%</strong>。损失的来源可以精确拆账：</p>
+
+      <ol>
+        <li><strong>热化损失 ~30%</strong>：高能光子的富余能量变成热；</li>
+        <li><strong>透射损失 ~20%</strong>：低于带隙的光子直接穿过；</li>
+        <li><strong>热力学电压损失 ~30%</strong>：即使完美电池，输出电压也远低于带隙对应的能量（辐射复合决定的玻尔兹曼损失）；</li>
+        <li><strong>填充满的几何与反射损失</strong>：剩余空间才是可以靠工艺去抢的。</li>
+      </ol>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shockley-Queisser 效率极限曲线">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">S-Q 极限：单结效率 vs 带隙（AM1.5G）</text>
+          <!-- 坐标 -->
+          <line x1="80" y1="60" x2="80" y2="250" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="80" y1="250" x2="620" y2="250" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="40" y="58" font-size="10.5" fill="var(--text-mute)">效率 %</text>
+          <text x="616" y="268" text-anchor="end" font-size="10.5" fill="var(--text-mute)">带隙 E_g (eV) →</text>
+          <text x="72" y="72" text-anchor="end" font-size="9.5" fill="var(--text-mute)">40</text>
+          <text x="72" y="165" text-anchor="end" font-size="9.5" fill="var(--text-mute)">20</text>
+          <text x="72" y="250" text-anchor="end" font-size="9.5" fill="var(--text-mute)">0</text>
+          <!-- 刻度 -->
+          <text x="140" y="266" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">0.7</text>
+          <text x="260" y="266" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1.1 硅</text>
+          <text x="340" y="266" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1.34 最优</text>
+          <text x="460" y="266" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">1.7</text>
+          <text x="570" y="266" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">2.2</text>
+          <!-- 曲线：钟形，峰在1.34 -->
+          <path d="M120 242 C200 210 260 120 340 96 C420 120 480 210 560 244" fill="none" stroke="var(--semi)" stroke-width="2.2"/>
+          <!-- 峰 -->
+          <circle cx="340" cy="96" r="4.5" fill="var(--up)"/>
+          <text x="340" y="84" text-anchor="middle" font-size="10.5" fill="var(--up)" font-weight="700">33.7% @ 1.34 eV</text>
+          <!-- 硅 -->
+          <circle cx="260" cy="130" r="4.5" fill="var(--accent)"/>
+          <text x="242" y="122" text-anchor="end" font-size="10.5" fill="var(--accent)">硅 1.12 eV → 32%（理论）</text>
+          <!-- 钙钛矿 -->
+          <circle cx="460" cy="130" r="4.5" fill="var(--fin)"/>
+          <text x="478" y="122" font-size="10.5" fill="var(--fin)">钙钛矿 ~1.6 eV → 30%（理论）</text>
+          <!-- 实际 -->
+          <line x1="260" y1="130" x2="260" y2="196" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="260" cy="196" r="4.5" fill="var(--accent)"/>
+          <text x="276" y="200" font-size="10.5" fill="var(--accent)">晶硅实验室实绩 ≈ 27.3%</text>
+          <text x="340" y="292" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">理论与实绩之间的差距 = 复合损失、串联电阻、光学反射 —— 全是工程要抢的分</text>
+        </svg>
+      </figure>
+
+      <div class="warn"><b>这个极限解释了光伏产业最重要的一场路线之争：</b>
+        晶硅（1.12 eV）的 S-Q 极限约 32%，实验室实绩已到 27.3%，<strong>剩余空间只剩不到 5 个百分点</strong>——单结晶硅的效率战争已近尾声。
+        而「宽带隙顶电池 + 硅底电池」的两结叠层理论极限约 43%，这正是钙钛矿/晶硅叠层被全行业押注的原因（见第 13 节）。</div>
+
+      <h2 id="s4">4. 关键性能参数：读懂电池的成绩单</h2>
+
+      <p>衡量一片太阳能电池，只需要在标准测试条件（STC：1000 W/m²、25 °C、AM1.5 光谱）下画一条电流–电压（I–V）曲线，四个数字决定一切：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="太阳能电池 I-V 曲线与四个关键参数">
+          <defs>
+            <marker id="ar35-iv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">I–V 曲线：四个参数定生死</text>
+          <line x1="90" y1="60" x2="90" y2="260" stroke="var(--border)" stroke-width="1.2" marker-end="url(#ar35-iv)"/>
+          <line x1="90" y1="260" x2="600" y2="260" stroke="var(--border)" stroke-width="1.2" marker-end="url(#ar35-iv)"/>
+          <text x="52" y="60" font-size="11" fill="var(--text-soft)">电流 I</text>
+          <text x="600" y="280" text-anchor="end" font-size="11" fill="var(--text-soft)">电压 V →</text>
+          <!-- I-V 曲线 -->
+          <path d="M90 90 L330 96 C420 102 470 130 500 190 C516 224 524 244 528 260" fill="none" stroke="var(--semi)" stroke-width="2.4"/>
+          <!-- Isc -->
+          <circle cx="90" cy="90" r="4.5" fill="var(--up)"/>
+          <text x="98" y="84" font-size="11" fill="var(--up)" font-weight="700">短路电流 I_sc</text>
+          <text x="98" y="104" font-size="9.5" fill="var(--text-mute)">V=0，全吸收能力的体现</text>
+          <!-- Voc -->
+          <circle cx="528" cy="260" r="4.5" fill="var(--accent)"/>
+          <text x="536" y="256" font-size="11" fill="var(--accent)" font-weight="700">开路电压 V_oc</text>
+          <text x="536" y="276" font-size="9.5" fill="var(--text-mute)">I=0，复合水平的体现</text>
+          <!-- MPP -->
+          <rect x="452" y="168" width="44" height="92" fill="var(--up)" fill-opacity=".18" stroke="var(--up)" stroke-width="1.2"/>
+          <circle cx="496" cy="176" r="4.5" fill="var(--semi)"/>
+          <text x="470" y="152" font-size="11" fill="var(--semi)" font-weight="700">最大功率点 MPP</text>
+          <text x="470" y="286" font-size="9.5" fill="var(--text-mute)">逆变器每天在追的点</text>
+          <!-- FF 矩形对比 -->
+          <path d="M90 90 L496 90 L496 260 Z" fill="none" stroke="var(--text-mute)" stroke-width="1" stroke-dasharray="5 4"/>
+          <text x="240" y="118" font-size="10" fill="var(--text-mute)">虚线矩形 = 理想矩形功率；FF = 实际面积 ÷ 理想面积</text>
+          <text x="340" y="312" text-anchor="middle" font-size="11" fill="var(--text-mute)">曲线越「方」，FF 越接近 1 —— 曲线的方度就是电池的品质</text>
+        </svg>
+      </figure>
+
+      <table class="term-table">
+        <tr><th>参数</th><th>定义</th><th>物理决定因素</th><th>典型值（晶硅）</th></tr>
+        <tr><td><strong>开路电压 V<sub>oc</sub></strong></td><td>断路时电池两端的最大电压</td><td>带隙与<strong>复合水平</strong>：复合越少，V<sub>oc</sub> 越接近带隙极限</td><td>0.70~0.75 V</td></tr>
+        <tr><td><strong>短路电流 J<sub>sc</sub></strong></td><td>短路时的电流密度（单位面积）</td><td>光吸收能力：光学陷光、减反射、体内/表面复合</td><td>40~43 mA/cm²</td></tr>
+        <tr><td><strong>填充因子 FF</strong></td><td>最大功率 ÷ (V<sub>oc</sub>×J<sub>sc</sub>)</td><td>曲线「方度」：串联电阻（拉低）、并联漏电（削平）、理想因子 n</td><td>0.80~0.85</td></tr>
+        <tr><td><strong>转换效率 η</strong></td><td>最大功率 ÷ 入射光功率</td><td>三者的乘积归一</td><td>量产 23~26.5%</td></tr>
+      </table>
+
+      <div class="formula-block">
+        <span class="fl">η = V_oc × J_sc × FF / P_in　　（P_in = 100 mW/cm² @ STC）</span>
+        <span class="fnote">乘法结构意味着<strong>三者木桶效应</strong>：任何一项短板都直接线性吃掉效率。
+        提效的工程语言因此非常明确——Voc 靠钝化（压复合）、Jsc 靠光学（减反+陷光+少遮挡）、FF 靠电学（降串阻、提并阻）。</span>
+      </div>
+
+      <p>另外三个常出现在新闻里、但容易被忽略的指标：</p>
+      <ul>
+        <li><strong>EQE / IQE（外/内量子效率）</strong>：每个波长的光子有多少比例变成电子。EQE 曲线是电池的「体检报告」——短波端塌陷是表面复合，长波端塌陷是背面对长波的吸收不足；</li>
+        <li><strong>温度系数</strong>：晶硅约 −0.30~−0.35%/°C。夏天组件温度可达 60~70 °C，比 STC 高 40 度，<strong>实际发电要打约 13% 的折扣</strong>——这也是 HJT（约 −0.24%/°C）的隐性卖点；</li>
+        <li><strong>衰减（degradation）</strong>：首年 LID（光致衰减，硼氧复合对造成，P 型硅专属问题，可达 2~3%）、LeTID、逐年 PID（电位诱发衰减，钠离子迁移）。质保一般写「30 年不低于 87%」。</li>
+      </ul>
+
+      <h2 id="s5">5. 材料类型全景：六大技术路线</h2>
+
+      <table class="term-table">
+        <tr><th>路线</th><th>代表材料 / 带隙</th><th>实验室效率</th><th>优势</th><th>短板</th></tr>
+        <tr><td><strong>晶硅（单晶）</strong></td><td>c-Si / 1.12 eV</td><td>27.3%（HBC）</td><td>产业链成熟、无毒性、资源丰富、寿命 30 年</td><td>间接带隙吸收弱（需 ~180 μm 厚）、单结近极限</td></tr>
+        <tr><td>多晶硅</td><td>mc-Si</td><td>—</td><td>曾经更便宜</td><td>晶界复合，效率低 2~3 点，已被单晶淘汰</td></tr>
+        <tr><td><strong>薄膜：CdTe</strong></td><td>碲化镉 / 1.5 eV</td><td>23.1%（First Solar）</td><td>直接带隙只需 ~2 μm、工序少、温度系数好、成本低</td><td>镉毒性、碲资源稀缺、玻璃基板笨重</td></tr>
+        <tr><td>薄膜：CIGS</td><td>铜铟镓硒 / 1.0~1.7 eV 可调</td><td>23.6%</td><td>带隙可调、柔性衬底（BIPV）</td><td>铟稀缺、工艺窗口窄、重复性差</td></tr>
+        <tr><td>薄膜：a-Si（非晶硅）</td><td>~1.7 eV</td><td>14% 级</td><td>极低温工艺、可做柔性</td><td>Staebler-Wronski 光衰、效率太低，仅余特殊用途</td></tr>
+        <tr><td><strong>III-V 多结聚光</strong></td><td>GaInP/GaAs/Ge 三结</td><td>47.6%（聚光）</td><td>效率天花板最高、抗辐照</td><td>成本贵两个数量级，仅卫星/无人机</td></tr>
+        <tr><td><strong>钙钛矿</strong></td><td>ABX₃ / 1.5~1.8 eV 可调</td><td>单结 26.7%，叠层 34.6%</td><td>带隙可调、可溶液低温印刷、与硅叠层完美</td><td>湿热稳定性、大面积均匀性、含铅</td></tr>
+        <tr><td>有机 / 量子点</td><td>聚合物、胶体量子点</td><td>~20%</td><td>可印刷、半透明、色彩可调</td><td>寿命极短，尚未走出实验室商业化</td></tr>
+      </table>
+
+      <div class="note"><b>为什么晶硅赢了市场份额（约 95%）却没赢物理？</b>
+        论光学，硅的间接带隙是差生——吸收一个光子平均要走 100 μm，所以电池必须做得厚、还得靠陷光结构把光「困住」；
+        论工艺，硅却是满分生：<strong>它站在人类最成熟的半导体制造体系上</strong>（第 8~13 篇的全部积累），规模每翻一倍成本降一截。
+        商业竞争里，「能借到最深的工艺护城河」往往比「物理上最优雅」更决定胜负。钙钛矿能否翻盘，本质就是能否建立自己的工艺护城河。</div>
+
+      <h2 id="s6">6. 晶硅产业链：从石英砂到组件的完整流程</h2>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="晶硅光伏产业链全流程">
+          <defs>
+            <marker id="ar35-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--text-mute)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">五段式产业链：砂 → 料 → 片 → 池 → 板</text>
+          <g font-size="11" fill="var(--text)">
+            <rect x="30" y="60" width="104" height="64" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="82" y="86" text-anchor="middle" font-weight="700" fill="var(--text)">多晶硅料</text>
+            <text x="82" y="104" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">西门子法 99.9999999%</text>
+            <rect x="162" y="60" width="104" height="64" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="214" y="86" text-anchor="middle" font-weight="700" fill="var(--text)">硅片</text>
+            <text x="214" y="104" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">单晶炉拉棒+金刚线切片</text>
+            <rect x="294" y="60" width="104" height="64" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="346" y="86" text-anchor="middle" font-weight="700" fill="var(--text)">电池片</text>
+            <text x="346" y="104" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">制结/钝化/印刷烧结</text>
+            <rect x="426" y="60" width="104" height="64" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="478" y="86" text-anchor="middle" font-weight="700" fill="var(--text)">组件</text>
+            <text x="478" y="104" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">串焊+层压封装</text>
+            <rect x="558" y="60" width="92" height="64" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+            <text x="604" y="86" text-anchor="middle" font-weight="700" fill="var(--text)">电站</text>
+            <text x="604" y="104" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">支架/逆变器/并网</text>
+          </g>
+          <g stroke="var(--text-mute)" stroke-width="1.4" fill="none">
+            <line x1="134" y1="92" x2="158" y2="92" marker-end="url(#ar35-p)"/>
+            <line x1="266" y1="92" x2="290" y2="92" marker-end="url(#ar35-p)"/>
+            <line x1="398" y1="92" x2="422" y2="92" marker-end="url(#ar35-p)"/>
+            <line x1="530" y1="92" x2="554" y2="92" marker-end="url(#ar35-p)"/>
+          </g>
+          <text x="82" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">技术壁垒：能耗与纯度</text>
+          <text x="214" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">壁垒：良率与出片率</text>
+          <text x="346" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">壁垒：效率与成本（利润最厚也最卷）</text>
+          <text x="478" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">壁垒：可靠性 25 年质保</text>
+          <text x="604" y="152" text-anchor="middle" font-size="10" fill="var(--text-mute)">壁垒：项目开发与资金</text>
+          <text x="340" y="196" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">价值微笑曲线：硅料与电站两端重资产，电池片环节拼技术迭代 —— 谁先量产新结构，谁吃超额利润</text>
+          <text x="340" y="220" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">中国在各环节全球产能占比均超过 80%（硅片环节曾超 95%）</text>
+        </svg>
+      </figure>
+
+      <h3>6.1 硅料提纯：冶金级到太阳能级</h3>
+      <ol>
+        <li><strong>石英砂 → 冶金级硅（MG-Si，~99%）</strong>：电弧炉里碳热还原 SiO₂，约 11~13 kWh/kg；</li>
+        <li><strong>西门子法 → 多晶硅料（9N~11N）</strong>：把硅变成三氯氢硅 SiHCl₃ 精馏提纯，再在 1100 °C 钟罩里用氢气还原，沉积出棒状多晶硅。副产品四氯化硅通过冷氢化闭环回收。改良西门子法占全球九成；流化床法（FBR）颗粒硅电耗低约 30%，是重要补充。</li>
+      </ol>
+
+      <h3>6.2 拉晶与切片（第 9 篇的花园里长出的经济作物）</h3>
+      <ul>
+        <li><strong>CZ 直拉单晶</strong>：多晶硅料在石英坩埚里 1420 °C 熔化，籽晶旋转提拉，长成 8~10 英寸、2~3 m 长的单晶棒；热场设计与晶体生长控制直接决定氧碳缺陷与电阻率均匀性。光伏硅大量采用<strong>连续加料（CCZ）与复投</strong>提高单炉产量；</li>
+        <li><strong>金刚线切片</strong>：镀金刚石的钢线把硅棒切成 130~150 μm 的薄片。<strong>2010 年砂浆切片被金刚线替代</strong>是光伏史上教科书级的工艺革命——切口损耗（kerf）从 180 μm 降到 50 μm 以下，单片硅耗近乎砍半，配合硅片大尺寸化（M6→M10→210 mm），是成本曲线最陡的一段；</li>
+        <li>切完的硅片分档：电阻率、少子寿命、厚度 TTV/翘曲，不合格品直接降级。</li>
+      </ul>
+
+      <h3>6.3 电池片制造：七道主工序</h3>
+      <ol>
+        <li><strong>制绒</strong>：碱液（NaOH/IPA）在(100)面各向异性刻蚀出金字塔绒面，把表面反射率从 30%+ 压到 10% 以下——<strong>陷光的本质是让光「二次进宫」</strong>（晶向与刻蚀的关系正是第 1 篇晶面知识的变现）；</li>
+        <li><strong>扩散制结</strong>：管式炉中 POCl₃ 携带磷源，850~900 °C 下向 P 型硅片扩散，形成 0.3~0.5 μm 深、方块电阻 100~200 Ω/□ 的 N⁺ 发射极——这就是那台「载流子分离机」的制造过程；</li>
+        <li><strong>边缘刻蚀 + PSG 清洗</strong>：去掉周边扩散形成的短路环与表面磷硅玻璃；</li>
+        <li><strong>钝化膜</strong>：PECVD 沉积 70~80 nm 氮化硅（SiN<sub>x</sub>），一身三职——减反射（折射率 ~2.0 恰在硅与空气之间）、体钝化（氢钝化悬挂键）、护甲；TOPCon 还要加超薄 SiO₂ 隧穿层 + 多晶硅层（LPCVD/PECVD）；</li>
+        <li><strong>电极印刷与烧结</strong>：丝网印刷银浆（正面细栅+主栅）与铝浆（背面），850 °C 共烧，浆料烧穿钝化膜形成欧姆接触。银浆是电池片第一大非硅成本；</li>
+        <li><strong>光注入/退火</strong>： regeneration 工艺消除 LeTID 衰减；</li>
+        <li><strong>测试分档</strong>：太阳模拟器打 IV 曲线，按功率分 26 档，EL（电致发光）相机给每片电池拍「X 光片」检隐裂。</li>
+      </ol>
+
+      <h3>6.4 组件封装</h3>
+      <p>电池片 → 串焊机（焊带串接）→ 铺设（玻璃/EVA/电池/EVA/背板五层三明治）→ 层压机抽真空加热把 EVA 熔融固化 → 装框装接线盒 → EL+功率终检。
+      封装是「给半导体盖三十年房子」：玻璃要透光抗冲击，EVA/POE 要透光抗黄变，所有材料都要经得起 85 °C/85% 湿度两千小时的双 85 测试。</p>
+
+      <h2 id="s7">7. 电池结构演进：PERC → TOPCon → HJT → BC</h2>
+
+      <p>过去十年晶硅提效的主旋律只有一句话：<strong>把金属接触区的复合干掉</strong>。金属-硅接触是复合的「高速公路」，历代结构演进就是给这条公路修收费站：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PERC TOPCon HJT BC 电池结构对比">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">四代结构的层叠对比（自下而上：基体 → 接触 → 电极）</text>
+          <!-- PERC -->
+          <text x="110" y="52" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">PERC（P 型，2015~）</text>
+          <rect x="40" y="66" width="140" height="16" fill="var(--text-mute)" fill-opacity=".5"/>
+          <text x="110" y="97" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">Al 背电极（全接触）</text>
+          <rect x="40" y="86" width="140" height="10" fill="var(--accent)" fill-opacity=".4"/>
+          <text x="110" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">Al₂O₃+SiNx 钝化（开孔）</text>
+          <rect x="40" y="106" width="140" height="24" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="110" y="150" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">P 型基体 + 正面 N⁺ 发射极</text>
+          <text x="110" y="170" text-anchor="middle" font-size="10" fill="var(--text-soft)">量产效率 23.5% 封顶</text>
+          <!-- TOPCon -->
+          <text x="290" y="52" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">TOPCon（N 型，2022~）</text>
+          <rect x="220" y="66" width="140" height="12" fill="var(--text-mute)" fill-opacity=".5"/>
+          <rect x="220" y="82" width="140" height="8" fill="var(--up)" fill-opacity=".45"/>
+          <text x="290" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">Poly-Si 隧穿氧化层钝化接触 ← 关键</text>
+          <rect x="220" y="94" width="140" height="24" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="290" y="150" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">N 型基体 + 硼扩发射极</text>
+          <text x="290" y="170" text-anchor="middle" font-size="10" fill="var(--text-soft)">量产 25.5~26.5%，当前主流</text>
+          <!-- HJT -->
+          <text x="470" y="52" text-anchor="middle" font-size="12" fill="var(--up)" font-weight="700">HJT 异质结（N 型）</text>
+          <rect x="400" y="66" width="140" height="10" fill="var(--text-mute)" fill-opacity=".5"/>
+          <rect x="400" y="78" width="140" height="8" fill="var(--fin)" fill-opacity=".5"/>
+          <text x="470" y="102" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">非晶硅双面钝化薄膜 ← 低温全程</text>
+          <rect x="400" y="88" width="140" height="26" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="470" y="150" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">本征 a-Si:H + n/p a-Si 夹 N 晶硅</text>
+          <text x="470" y="170" text-anchor="middle" font-size="10" fill="var(--text-soft)">26%+，温度系数最好，工序最少但投资最大</text>
+          <!-- BC -->
+          <text x="622" y="52" text-anchor="middle" font-size="12" fill="var(--fin)" font-weight="700">BC 全背接触</text>
+          <rect x="574" y="66" width="96" height="34" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="622" y="118" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">正面零栅线 ← 挡光最少</text>
+          <text x="622" y="136" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">正负电极全部藏到背面</text>
+          <text x="622" y="170" text-anchor="middle" font-size="10" fill="var(--text-soft)">HBC 实验室 27.3% 天花板</text>
+          <!-- 底注 -->
+          <text x="340" y="230" text-anchor="middle" font-size="11" fill="var(--text-soft)">演进逻辑：P 型 → N 型（无硼氧衰减、少子寿命高）</text>
+          <text x="340" y="252" text-anchor="middle" font-size="11" fill="var(--text-soft)">全接触 → 局部钝化接触（复合降一个量级，Voc 突破 0.74 V）</text>
+          <text x="340" y="274" text-anchor="middle" font-size="11" fill="var(--text-soft)">正面栅线 → 全背接触（正面光学零损失，Jsc 抢回 0.3~0.5 mA/cm²）</text>
+          <text x="340" y="308" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">成本代价：N 型银耗更高、HJT 靶材（ITO）与低温银浆更贵 —— 提效收益必须跑赢新增成本</text>
+        </svg>
+      </figure>
+
+      <table class="term-table">
+        <tr><th>维度</th><th>PERC</th><th>TOPCon</th><th>HJT</th><th>BC（TBC/HBC）</th></tr>
+        <tr><td>基体</td><td>P 型</td><td>N 型</td><td>N 型</td><td>N 型为主</td></tr>
+        <tr><td>背面接触</td><td>铝全接触（高复合）</td><td>SiO₂ 隧穿层 + Poly-Si 选择性接触</td><td>本征非晶硅钝化 + TCO</td><td>双极性交错背接触</td></tr>
+        <tr><td>最高量产效率</td><td>~23.5%</td><td>~26.5%</td><td>~26.2%</td><td>~27%+</td></tr>
+        <tr><td>工序数</td><td>~10</td><td>12~13</td><td>4~6（但洁净度要求高）</td><td>~14（光刻/激光图形化）</td></tr>
+        <tr><td>核心劣势</td><td>效率到顶</td><td>银耗高、良率爬坡</td><td>设备贵、低温银浆贵</td><td>工艺最复杂、成本最高</td></tr>
+      </table>
+
+      <h2 id="s8">8. 核心设备清单：光伏工厂的「光刻机们」</h2>
+
+      <table class="term-table">
+        <tr><th>环节</th><th>核心设备</th><th>作用 / 关键指标</th><th>国产化状态</th></tr>
+        <tr><td>硅料</td><td>还原炉、冷氢化装置</td><td>电耗是成本命门（综合 ~50 kWh/kg 以下）</td><td>全面国产</td></tr>
+        <tr><td>拉晶</td><td>单晶炉（热场、晶体生长控制）</td><td>缺陷控制、连续拉晶产能</td><td>全面国产（晶盛机电等）</td></tr>
+        <tr><td>切片</td><td>金刚线切片机 + 金刚线</td><td>出片率、线径 40 μm 级、TTV 控制</td><td>全面国产（上机数控、美凌等）</td></tr>
+        <tr><td>制绒清洗</td><td>槽式/链式湿法设备</td><td>反射率 &lt;10%、陷光均匀性</td><td>全面国产</td></tr>
+        <tr><td>扩散/退火</td><td>管式扩散炉（POCl₃/BBr₃）</td><td>结深与方块电阻均匀性、产能/管</td><td>全面国产（捷佳伟创、北方华创）</td></tr>
+        <tr><td>镀膜</td><td>PECVD、LPCVD、ALD、PVD</td><td>钝化质量（少子寿命）、膜厚均匀性 ±2%</td><td>国产为主，HJT 部分靶材/设备仍进口</td></tr>
+        <tr><td>电极</td><td>丝网印刷线（含激光 SE 掺杂）</td><td>细栅宽 18~25 μm、湿重精度、断栅率</td><td>全面国产（迈为等）</td></tr>
+        <tr><td>激光</td><td>激光开槽/SE 掺杂/BC 图形化</td><td>选择性发射极、BC 电池离不开激光</td><td>国产（帝尔激光等）</td></tr>
+        <tr><td>组件</td><td>串焊机、层压机、IV/EL 测试</td><td>零破片焊接、MBB/SMBB 焊带、EL 检隐裂</td><td>全面国产（奥特维等）</td></tr>
+      </table>
+
+      <div class="note"><b>与半导体设备业（第 15 篇）对照着看很有启发：</b>
+        光伏设备的精度要求比芯片低 2~3 个数量级，但<strong>对产能与单片成本的压榨更极致</strong>——一台管式扩散炉一管装上千片，
+        芯片扩散炉一管只有几十片。光伏设备的竞争是「单位产能投资额」的战争，这也解释了为什么中国设备商能在光伏完成全面替代、
+        在半导体还在攻坚：两者的取胜维度不同。</div>
+
+      <h2 id="s9">9. 薄膜电池：CdTe、CIGS 的工艺与兴衰</h2>
+
+      <p>薄膜路线的逻辑很直接：直接带隙材料 1~2 μm 就能吸干光（对比硅的 160 μm+），材料省两个数量级，工序还少。三种主流薄膜各有工艺绝活：</p>
+
+      <ul>
+        <li><strong>CdTe（碲化镉）</strong>：First Solar 独步天下的<strong>气相输运沉积（VTD）</strong>——CdTe 粉末在真空室里升华，直接凝华到 550 °C 玻璃上，一条线日铺上万平米，沉积速率是晶硅扩散没法比的。叠上 CdS 窗口层 + 后部氯化退火晶粒长大，组件成本曾长期低于晶硅。实验室 23.1%，是薄膜之王；</li>
+        <li><strong>CIGS</strong>：四元素共蒸发或溅射+硒化，带隙靠镓/铟比例从 1.0 调到 1.7 eV，可做在不锈钢/聚合物柔性衬底上（BIPV、车载）。死穴是四元素工艺窗口极窄、良率随面积恶化，量产始终难上量；</li>
+        <li><strong>a-Si 非晶硅</strong>：曾凭「低温+大面积」统治过 calculators 与早期电站，但 Staebler–Wronski 光致衰减（氢化非晶硅光照后缺陷自增）压死了效率上限，如今退居特殊细分市场。</li>
+      </ul>
+
+      <div class="warn"><b>薄膜为什么会输给晶硅？</b>
+        不是效率（CdTe 实验室效率与 PERC 差距不大），而是<strong>「效率/成本/寿命」三者的乘积效应 + 产业生态</strong>：
+        晶硅的硅片、设备、人才、供应链全部与芯片工业共享，学习曲线有人垫背；薄膜各自为战，材料纯度、专用设备都要自己从零建立。
+        加上晶硅效率提升持续快于 CdTe，组件每瓦价格战里薄膜再无缓冲。教训值得记：<strong>选择技术路线时，产业生态的复利比单点参数优势更有决定性</strong>。</div>
+
+      <h2 id="s10">10. 钙钛矿：涨得最快、也最难伺候的挑战者</h2>
+
+      <p><strong>钙钛矿</strong>指 ABX₃ 型晶体结构（以 MAPbI₃ 为代表：A=甲胺/甲脒/铯，B=铅，X=碘/溴）。2009 年首篇论文效率只有 3.8%，2025 年单结已超 26.7%、钙钛矿/硅叠层达 34.6%——<strong>16 年走完了晶硅 60 年的路</strong>，是光伏史上爬坡最快的材料。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="钙钛矿 ABX3 晶体结构与特性">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">ABX₃ 钙钛矿结构：A 位调带隙，B 位管吸收，X 位传电荷</text>
+          <!-- 单胞1：立方 -->
+          <g>
+            <rect x="70" y="60" width="120" height="120" fill="none" stroke="var(--border)" stroke-width="1.3"/>
+            <line x1="70" y1="120" x2="190" y2="120" stroke="var(--border)" stroke-width=".8" stroke-dasharray="3 3"/>
+            <line x1="130" y1="60" x2="130" y2="180" stroke="var(--border)" stroke-width=".8" stroke-dasharray="3 3"/>
+            <circle cx="130" cy="120" r="9" fill="var(--semi)"/>
+            <text x="130" y="124" text-anchor="middle" font-size="8.5" fill="var(--text)">B</text>
+            <circle cx="70" cy="60" r="7" fill="var(--up)"/>
+            <circle cx="190" cy="60" r="7" fill="var(--up)"/>
+            <circle cx="70" cy="180" r="7" fill="var(--up)"/>
+            <circle cx="190" cy="180" r="7" fill="var(--up)"/>
+            <text x="130" y="46" text-anchor="middle" font-size="9.5" fill="var(--up)">A 位阳离子（角）</text>
+            <text x="130" y="216" text-anchor="middle" font-size="9.5" fill="var(--semi)">B 位 Pb（体心）</text>
+          </g>
+          <!-- 说明 -->
+          <g font-size="10.5" fill="var(--text-soft)">
+            <text x="240" y="80" fill="var(--text-soft)">· A 位：甲脒 FA⁺ / 铯 Cs⁺ / 铷 Rb⁺ —— 调节带隙与热稳定性</text>
+            <text x="240" y="106" fill="var(--text-soft)">· B 位：Pb²⁺（锡为无铅候选）—— 决定光吸收与载流子输运</text>
+            <text x="240" y="132" fill="var(--text-soft)">· X 位：I⁻/Br⁻ —— 卤素比例细调带隙 1.5~1.8 eV</text>
+            <text x="240" y="162" font-weight="700" fill="var(--text)">为什么它天生适合太阳能：</text>
+            <text x="240" y="186" fill="var(--text-soft)">吸收系数是硅的 10 倍（500 nm 就够）；载流子扩散长度 μm 级；</text>
+            <text x="240" y="210" fill="var(--text-soft)">缺陷容忍度反常地高（缺陷多为浅能级）；带隙恰好卡在叠层顶电池最优点</text>
+          </g>
+          <!-- 三大问题 -->
+          <g>
+            <rect x="240" y="228" width="400" height="56" rx="8" fill="var(--down)" fill-opacity=".12" stroke="var(--down)" stroke-width="1"/>
+            <text x="256" y="250" font-size="10.5" fill="var(--down)" font-weight="700">三大拦路虎：</text>
+            <text x="256" y="272" font-size="10" fill="var(--text-soft)">① 湿热分解（对水氧敏感）② 离子迁移 → 迟滞与相变 ③ 含铅毒性与回收</text>
+          </g>
+        </svg>
+      </figure>
+
+      <h3>10.1 工艺：像印报纸一样造电池</h3>
+      <p>钙钛矿最颠覆的野心在于制造方式：它可以在<strong>低温（&lt;150 °C）</strong>下由溶液法制备——
+      狭缝涂布、刮涂、旋涂、喷墨打印，甚至卷对卷（R2R）连续印刷在柔性薄膜上，像印报纸一样印太阳能电池。
+      典型 stack：透明导电玻璃（FTO）→ 电子传输层（TiO₂/SnO₂）→ 钙钛矿吸光层 → 空穴传输层（Spiro-OMeTAD 或 NiO<sub>x</sub>）→ 金属电极，全程与晶硅产线几乎不共享设备。
+      大面积结晶的均匀性靠<strong>反溶剂法、气相辅助、真空闪蒸</strong>等手段控制成核–生长动力学——「涂布一杯咖啡大小的均匀膜容易，涂布 2.8 m² 组件一模一样难」，这正是产业化的真正战场。</p>
+
+      <h3>10.2 三大问题的对策进展</h3>
+      <ul>
+        <li><strong>稳定性</strong>：组分工程（FA/Cs 混合 A 位、少量 Rb）、2D/3D 异质结构（大体积胺盐在表面生成疏水 2D 钙钛矿护层）、封装强化。目前头部企业组件已通过 IEC 61215 双 85 认证，实测户外数年衰减可控，但「25 年质保」的置信度仍不及晶硅的三十年数据积累；</li>
+        <li><strong>离子迁移与迟滞</strong>：I⁻ 在电场下迁移造成 I–V 迟滞与性能漂移；对策包括界面钝化、低维化、传输层优化；</li>
+        <li><strong>铅</strong>：锡基（MASnI₃）带隙合适但 Sn²⁺ 极易氧化，效率落后 10 个点；产业当前共识是「铅用量受控 + 组件全生命周期回收 + 现场防泄漏封装」并行。</li>
+      </ul>
+
+      <h2 id="s11">11. 技术优势，以及优势从何而来</h2>
+
+      <table class="term-table">
+        <tr><th>优势</th><th>根本原因</th></tr>
+        <tr><td>发电无燃料、无排放</td><td>能量直接来自光子→电子的量子过程，不经过热机（不受卡诺限制的燃料循环），无燃料价格波动</td></tr>
+        <tr><td>无运动部件、免维护</td><td>发电是固态电子过程——没有转子、没有轴承，30 年寿命里几乎不消耗任何东西</td></tr>
+        <tr><td>成本持续下降</td><td>它是半导体工业的下游：晶体生长、薄膜、印刷、测试全部复用成熟工艺，吃到了整个半导体工业的学习曲线红利</td></tr>
+        <tr><td>部署灵活、可分布式</td><td>模块化：1 块组件到 1 GW 电站用同一款产品，装机规模与单位成本无关（火电/水电的规模效应是相反的）</td></tr>
+        <tr><td>资源约束弱</td><td>硅来自石英砂（地壳含量 26%），能量回收期（EPBT）在主流辐照地区已缩短到 1~1.5 年，而组件寿命 30 年</td></tr>
+        <tr><td>白天峰值与负荷吻合</td><td>空调负荷与日照高度相关，光伏天然是「削峰」电源</td></tr>
+      </table>
+
+      <div class="tip"><b>看懂成本结构，才能看懂竞争格局：</b>
+        组件成本 = 硅料（40%）+ 硅片（20%）+ 电池（20%）+ 封装材料与制造（20%），硅是绝对大头。
+        所以光伏降本史就是「<strong>少用硅、用好硅</strong>」的历史：拉棒单耗 ↓、硅片变薄（300→130 μm）、尺寸变大（156→210 mm，单片功率翻倍）、效率提升（同面积多发电）。
+        每一次「平价上网—装机爆发—利润反哺研发」的循环，都由这四件事驱动。</div>
+
+      <h2 id="s12">12. 局限性与存在的问题</h2>
+
+      <ol>
+        <li><strong>间歇性与不可调度</strong>：光伏只在白天发电、云一遮就掉线，晚高峰恰好缺席。没有储能配套，「鸭子曲线」（净负荷午后深谷+黄昏陡坡）会让电网调频压力剧增——<strong>光伏渗透率越高，储能和灵活性资源的价值越大</strong>，二者是捆绑销售的一对；</li>
+        <li><strong>单结效率天花板已近</strong>：晶硅量产 26.5% 距离 S-Q 极限只剩 5~6 个点，且每 0.5% 的提效成本越来越高；</li>
+        <li><strong>温度与弱光</strong>：晶硅温度系数 −0.3%/°C，夏天正午实际出力打八折；阴雨天出力跌到 10~20%；</li>
+        <li><strong>资源瓶颈</strong>：银（每片电池 ~60 mg，光伏已占全球工业用银两成以上）、碲/铟（薄膜）、以及钙钛矿的铅；</li>
+        <li><strong>回收体系缺位</strong>：2030 年代将迎来第一波退役潮。组件是玻璃-硅-金属-EVA 的强结合复合体，热解/酸法回收成本高于残值，缺乏经济性闭环；</li>
+        <li><strong>制造端能耗与碳足迹</strong>：多晶硅综合电耗约 50~60 kWh/kg，若用煤电生产，「清洁能源」的碳足迹要靠多年发电才能追回——绿色制造（水电硅、绿电园区）是产业升级的一部分；</li>
+        <li><strong>土地与电网消纳</strong>：大型电站占地大，跨省送出依赖特高压建设节奏；分布式则受屋顶产权、配网承载力制约。</li>
+      </ol>
+
+      <h2 id="s13">13. 未来优化方向</h2>
+
+      <table class="term-table">
+        <tr><th>方向</th><th>在做什么</th><th>潜力 / 卡点</th></tr>
+        <tr><td><strong>钙钛矿/晶硅叠层</strong></td><td>宽带隙钙钛矿顶电池（1.68 eV）+ 硅底电池四端/两端串联</td><td>理论 43%，实验室 34.6% 已破单结纪录；卡点：大面积均匀性 + 长期稳定性 + 叠层专用设备</td></tr>
+        <tr><td>BC + 钙钛矿混合</td><td>全背接触与叠层结合（顶电池透明背面电极）</td><td>兼顾正面美学与最高效率，是 30% 量产化的最可能路径</td></tr>
+        <tr><td>降银 / 去银</td><td>SMBB 多主栅、0BB 无主栅、铜电镀代银</td><td>银耗减半以上；铜电镀的粘附与可靠性待验证</td></tr>
+        <tr><td>硅片持续薄化</td><td>130 → 100 μm，HJT 天然适配薄片</td><td>硅料成本再降两成；碎片率与良率是红线</td></tr>
+        <tr><td>无铅钙钛矿</td><td>锡基、锗基、双钙钛矿</td><td>环保意义大，效率尚落后 8~10 个点</td></tr>
+        <tr><td>光储一体</td><td>电站配储、微逆+储能、虚拟电厂聚合</td><td>把「不可调度电」变成「可调度电」，是渗透率天花板的决定因素</td></tr>
+        <tr><td>回收与循环</td><td>热解分层、酸浸提纯、硅料再造</td><td>2030 年代退役潮之前必须建立经济性闭环</td></tr>
+        <tr><td>新兴场景</td><td>BIPV 光伏建筑、车载光伏、农光/牧光互补、空间光伏</td><td>从「电站思维」走向「材料思维」，边际市场不断外扩</td></tr>
+      </table>
+
+      <div class="note"><b>一个产业级的判断框架：</b>
+        光伏技术迭代永远在回答同一个问题——<strong>「新增效率收益 &gt; 新增工艺成本？」</strong>PERC→TOPCon 成立（效率 +2 点，设备改造有限）；
+        TOPCon→HJT 摇摆（效率 +0.5 点，产线投资翻倍）；单结→叠层正在验证（效率 +4 点以上，全新产线）。
+        任何「颠覆性光伏技术」的新闻，都可以用这一条公式先过一遍。</div>
+
+      <h2 id="s14">14. 与本站学习路径的衔接</h2>
+
+      <ul>
+        <li><strong>第 2、3 篇（能带、PN 结）</strong>：光伏是 PN 结的第三种打开方式（LED 发光、探测器收光、光伏发电），能带图与耗尽区电场完全通用；</li>
+        <li><strong>第 8、9 篇（材料、拉晶衬底）</strong>：CZ 单晶炉、石英坩埚、金刚线切片是同一条产线——光伏与芯片在「硅材料工业」上游完全同源，区别只在纯度（9N vs 11N）与尺寸；</li>
+        <li><strong>第 11~13 篇（光刻、刻蚀、薄膜掺杂）</strong>：BC 电池的激光图形化、TOPCon 的 LPCVD/PECVD、扩散制结，都是芯片工艺的「放大版、降精版」；</li>
+        <li><strong>第 34 篇（光电子技术）</strong>：光伏本质是「面向能源的光电探测」——同一套光吸收物理，一个追求信号保真，一个追求能量收割；S-Q 极限与光刻的瑞利判据一样，都是阿贝光学/细致平衡在不同赛道的投影；</li>
+        <li><strong>第 15 篇（设备与产业链）</strong>：「卖铲人」模式、国产化路径、成本曲线分析方法完全平行，可以对照阅读。</li>
+      </ul>
+
+      <h2 id="s15">15. 易错点</h2>
+
+      <ol>
+        <li><strong>「效率 26% 意味着浪费了 74%」</strong>：对单结电池来说，其中约 30% 是热化损失、20% 是亚带隙透射——这是单结物理的<strong>不可修复损失</strong>，工程能抢的只是剩下的部分。看到「效率要向 100% 冲」的科普，直接可以打叉；</li>
+        <li><strong>「实验室效率 = 量产效率」</strong>：实验室冠军电池是 3 cm² 小面积、慢工细活；量产还要考虑大尺寸均匀性、良率与节拍，通常差 3~5 个点。看新闻先问一句：什么面积？</li>
+        <li><strong>「组件标称功率 = 实际发电功率」</strong>：STC 是 25 °C、1000 W/m² 的理想条件。真实运行要扣温度损失（~10%）、系统损失（逆变器、线损、灰尘、失配，共 10~15%），容量系数（实际发电/理论满发）在中国大部分地区只有 12~20%；</li>
+        <li><strong>「钙钛矿效率超过晶硅了」</strong>：新闻里的数字经常把单结/叠层、实验室/量产、小面积/组件混在一起比。当前的真实格局：晶硅量产 26%+（三十年数据背书），钙钛矿单结实验室 26.7%（稳定性待证），叠层 34.6%（前景最大）；</li>
+        <li><strong>「薄膜电池死了」</strong>：CdTe 在美国仍占一成市场且成本结构独特，柔性 CIGS 在 BIPV/车载有不可替代性——「非主流」不等于「消亡」，光伏的应用场景足够容纳多条路线；</li>
+        <li><strong>「光伏发电不环保（制造耗能）」</strong>：用 EPBT（能量回收期）说话——1~1.5 年回收 vs 30 年寿命，净能量收益 20 倍以上；真正要盯的是制造用能的清洁度与回收体系，而不是「制造也耗能」这个伪命题。</li>
+      </ol>
+
+      <h2 id="s16">16. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：硅的带隙 1.12 eV 并不是 S-Q 最优点（1.34 eV），为什么产业仍然选择了硅？请从物理和产业两个角度回答。</summary>
+        <div>物理角度：1.12 eV 离 1.34 eV 不远，理论极限仍有约 32%（最优是 33.7%），只让渡约 1.7 个点；且硅对 1100 nm 以下全谱吸收，亚带隙损失可控。产业角度是决定性的：硅是地壳丰度最高的半导体元素、无毒、带隙恰好耐高温，更关键的是它能直接复用人类最庞大的半导体制造体系——提纯、 CZ 拉晶、切片、扩散、镀膜、印刷全线成熟，学习曲线有整个芯片工业垫背。CdTe 物理上更优（直接带隙 1.5 eV），但生态单薄。这个案例说明：<strong>技术选型是「物理上限 × 工艺生态」的联合优化，不是单点参数比较</strong>。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：一块标称 550 W 的组件，夏天正午组件温度 65 °C、辐照 900 W/m²，实际输出大约多少？（温度系数 −0.33%/°C，系统损失 12%）</summary>
+        <div>分三步折算：① 温度：65−25=40 °C，40×0.33%≈13.2%，效率等比下降 → 550×(1−0.132)≈477 W；② 辐照：900/1000=0.9 → 477×0.9≈430 W（近似线性）；③ 系统损失 12%：430×0.88≈378 W。结论：标称 550 W 的组件实际只有约 380 W——所以电站规划必须用「容量系数 + PR（性能比）」思维，而不是拿标称功率乘小时数。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：PERC 的铝背场为什么限制了效率天花板？TOPCon 的「隧穿氧化层+Poly-Si」解决了什么问题？</summary>
+        <div>PERC 背面是铝浆与硅的全区域接触：金属-半导体界面存在高密度悬挂键，是复合速率极高的「高速公路」，背表面复合速度可达数百 cm/s，压低了 Voc 与长波响应；虽然 Al₂O₃ 钝化层开了接触孔，但孔内仍是直接金属接触。TOPCon 在背面先长 1.5 nm 超薄 SiO₂ 隧穿层，再盖一层重掺杂 Poly-Si：载流子靠量子隧穿穿过氧化层进入多晶硅再被金属收集——<strong>既实现了选择性导电，又让金属永远不直接碰硅</strong>，接触复合降到 ~10 cm/s 量级，Voc 因此突破 0.74 V。这就是「钝化接触」三个字的含义，也是 PERC→N 型结构跃迁的核心增量。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：钙钛矿实验室效率 16 年从 3.8% 涨到 26.7%，为什么至今没有大规模取代晶硅？说出至少三个量产瓶颈。</summary>
+        <div>① 大面积均匀性：小面积（0.1 cm²）冠军电池靠旋涂+反溶剂精细控制结晶，而组件是 2~3 m² 级，狭缝涂布成膜时溶剂挥发速率稍有波动就产生针孔与厚度不均，效率随面积显著衰减；② 长期稳定性：湿热分解、离子迁移、紫外老化使性能漂移，虽然头部产品已过 IEC 认证，但缺少晶硅那样的 30 年户外数据背书，金融机构不敢按同样逻辑给资产定价；③ 含铅与回收：法规风险与泄漏责任未闭环。此外还有传输层（Spiro 贵、TiO₂ 需高温）与叠层专用设备不成熟等工程问题。一句话：<strong>钙钛矿赢在物理，卡在「把 0.1 cm² 的魔法复制到 2 m² 上并保住 25 年」的工程上</strong>。</div>
+      </details>
+
+      <div class="tip"><b>下一篇预告：</b>
+        光伏把「能量采集」讲完了；接下来我们把视角转向能量的「存储与搬运」——电池的另一半故事：
+        锂离子电池的嵌入化学、电芯工艺链与光伏+储能的系统经济学。</div>
+
+      <div class="tagbar">
+        <span class="chip">#太阳能电池</span>
+        <span class="chip">#光伏效应</span>
+        <span class="chip">#TOPCon</span>
+        <span class="chip">#HJT</span>
+        <span class="chip">#钙钛矿</span>
+        <span class="chip">#叠层电池</span>
+        <span class="chip">#Shockley-Queisser</span>
+        <span class="chip">#金刚线</span>
+      </div>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 全系列导航</div>
+        <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li><a href="2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html">第 31 篇：芯片产业分工与商业模式 · IDM、Fabless、Foundry 与 OSAT</a></li>
+            <li><a href="2026-10-07-晶圆厂经济学与芯片成本模型.html">第 32 篇：晶圆厂经济学与芯片成本模型</a></li>
+            <li><a href="2026-10-07-一颗芯片的诞生全流程-从需求到量产.html">第 33 篇：一颗芯片的诞生全流程 · 从需求到量产</a></li>
+            <li><a href="2026-10-20-现代光电子技术-从激光到光子集成.html">第 34 篇：现代光电子技术 · 从一束激光到一张光子芯片</a></li>
+            <li class="current">第 35 篇：太阳能电池全解 · 光伏效应、材料、工艺与未来</li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
