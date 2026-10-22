@@ -5,13 +5,20 @@
     <link>https://guoxuncai.github.io/test/</link>
     <description>半导体知识脉络与每日财经金融简报</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 22 Oct 2026 16:59:33 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Oct 2026 17:17:14 +0800</lastBuildDate>
     <item>
       <title>太阳能电池全解：光伏效应、材料、工艺与未来</title>
       <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-太阳能电池-光伏效应材料工艺与未来.html</link>
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-太阳能电池-光伏效应材料工艺与未来.html</guid>
       <pubDate>Thu, 22 Oct 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[系统讲解太阳能电池：光伏效应物理机制、关键参数（Voc/Jsc/FF/效率）、晶硅从石英砂到组件的完整工艺链与核心设备、PERC→TOPCon→HJT→BC 结构演进、薄膜与钙钛矿路线，以及技术局限与未来方向]]></description>
+    </item>
+    <item>
+      <title>光电探测器全解：从光电效应到单光子计数</title>
+      <link>https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-光电探测器-从光电效应到单光子计数.html</link>
+      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/semiconductor/2026-10-22-光电探测器-从光电效应到单光子计数.html</guid>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 +0800</pubDate>
+      <description><![CDATA[系统讲解光电探测器：外光电与内光电效应的区别、PIN/APD/PMT/CCD/CMOS/光电导六大类型结构与机制、响应度与量子效率等关键参数、噪声与 NEP/D*、Si/Ge/InGaAs/GaN 材料波长地图、按波段选型、对比总结表与技术]]></description>
     </item>
     <item>
       <title>现代光电子技术：从一束激光到一张光子芯片</title>
@@ -278,13 +285,6 @@
       <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-09-28每日财经早报_.html</guid>
       <pubDate>Mon, 28 Sep 2026 00:00:00 +0800</pubDate>
       <description><![CDATA[推荐业绩+股息兼具的江苏银行、宁波银行、苏州银行、杭州银行等；具备转债预期的重庆银行、常熟银行 长江证券（周度追踪）： 银行股回调后迎配置买点。息差企稳、营收加速、资产质量包袱消化推动估值修复，推荐港股国有行和A股优质城商行 银河证券（业绩…]]></description>
-    </item>
-    <item>
-      <title>财经周日刊 | 国庆前最后一周：超级数据周来袭，A股节后行情如何演绎？</title>
-      <link>https://guoxuncai.github.io/test/posts/finance/2026-9-27财经周日刊_精美排版.html</link>
-      <guid isPermaLink="true">https://guoxuncai.github.io/test/posts/finance/2026-9-27财经周日刊_精美排版.html</guid>
-      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
-      <description><![CDATA[国庆前最后一周：超级数据周来袭，A股节后行情如何演绎？各位朋友大家好！]]></description>
     </item>
   </channel>
 </rss>

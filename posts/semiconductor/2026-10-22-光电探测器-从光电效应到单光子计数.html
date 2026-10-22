@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>光电探测器全解：从光电效应到单光子计数</title>
+<meta name="description" content="系统讲解光电探测器：外光电与内光电效应的区别、PIN/APD/PMT/CCD/CMOS/光电导六大类型结构与机制、响应度与量子效率等关键参数、噪声与 NEP/D*、Si/Ge/InGaAs/GaN 材料波长地图、按波段选型、对比总结表与技术难点及二维材料/量子点优化方向。">
+<meta name="keywords" content="光电探测器,光电效应,PIN光电二极管,APD,SPAD,PMT,CCD,CMOS图像传感器,响应度,量子效率,暗电流,NEP,InGaAs,GaN,二维材料">
+<meta name="date" content="2026-10-22">
+
+<link rel="stylesheet" href="../../assets/css/article.css">
+<!-- favicon -->
+<link rel="icon" href="../../assets/img/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/apple-touch-icon.png">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="./">← 返回目录页</a>
+    <span class="crumb">半导体 · 光电子技术</span>
+    <div class="topbar-spacer"></div>
+  </div>
+</div>
+
+<main class="article">
+  <div class="article-inner">
+
+    <span class="cat-badge semi">半导体 · 光电子技术</span>
+    <h1 class="title">光电探测器全解：从光电效应到单光子计数</h1>
+    <div class="meta">
+      <span>2026-10-22</span><span class="sep"></span>
+      <span>集成电路学习路径 · 第 36 篇</span><span class="sep"></span>
+      <span>阅读约 40 分钟</span>
+    </div>
+
+    <div class="content">
+
+      <div class="box">
+        <span class="box-title">这一篇要解决什么</span>
+        第 34 篇我们把光电子技术的信号链串了一遍，其中「接收端」只开了个头。
+        但事实上，<strong>探测器决定了一切光学系统的上限</strong>：光通信 receiver 的灵敏度压着链路预算，
+        手机拍照的画质一半在像素里，LiDAR 能不能看见「穿黑衣的人」取决于单光子灵敏度，
+        天文台能不能拍到百亿光年外的星系取决于噪声地板。
+        这一篇把探测器的知识体系补齐：两种光电效应的分野、六大探测器家族的结构与机制、
+        必须掌握的性能参数（响应度/量子效率/暗电流/带宽/噪声/NEP/D*）、
+        材料与波长的匹配地图、按波段选型指南，最后用一张大表完成选型总结，
+        并直面当前的<strong>技术难点</strong>与<strong>新材料突围方向</strong>。
+        读完后，给你任何一个「把光变成电」的需求，你都应能快速锁定 2~3 个候选方案。
+      </div>
+
+      <div class="toc">
+        <div class="toc-title">目录</div>
+        <ol>
+          <li><a href="#s1">探测器：一切光学系统的咽喉</a></li>
+          <li><a href="#s2">两种光电效应：外光电 vs 内光电</a></li>
+          <li><a href="#s3">六大探测器家族：结构与工作机制</a></li>
+          <li><a href="#s4">关键性能参数：定义、物理意义与相互关系</a></li>
+          <li><a href="#s5">噪声与探测极限：NEP、D* 与散粒噪声地板</a></li>
+          <li><a href="#s6">材料地图：波长决定材料</a></li>
+          <li><a href="#s7">按工作波段选型：紫外到中长波红外</a></li>
+          <li><a href="#s8">总结对比：一张表完成选型</a></li>
+          <li><a href="#s9">当前技术难点与不足</a></li>
+          <li><a href="#s10">优化方向与新材料</a></li>
+          <li><a href="#s11">与本站学习路径的衔接</a></li>
+          <li><a href="#s12">易错点</a></li>
+          <li><a href="#s13">自测</a></li>
+        </ol>
+      </div>
+
+      <h2 id="s1">1. 探测器：一切光学系统的咽喉</h2>
+
+      <p>任何光学系统都可以抽象成三段：<strong>光源 → 信道 → 探测器</strong>。发射端可以堆功率、信道可以扩带宽，
+      但探测器一旦「看不清」，前面全部白费——它决定了系统的灵敏度、速度与动态范围的天花板。
+      换个角度说：发射端决定「你能说什么」，探测器决定「你能听到什么」。</p>
+
+      <p>从物理上看，探测器做的事只有一件：<strong>把光子的能量与「到达」这个事件，转换成可测的电学量</strong>——电流、电压或电荷。
+      围绕这件事，人类走过两条技术路线（两种光电效应），长出了六大器件家族，覆盖了从 10 nm 极紫外到 100 μm 太赫兹的整个电磁波谱。
+      这一篇就是这条脉络的完整地图。</p>
+
+      <h2 id="s2">2. 两种光电效应：外光电 vs 内光电</h2>
+
+      <p>爱因斯坦因解释光电效应获得 1921 年诺贝尔奖——注意，他解释的是<strong>外</strong>光电效应；而今天数量占绝对多数的半导体探测器，用的是<strong>内</strong>光电效应。两者的分野是探测器分类的第一刀：</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="外光电效应与内光电效应对比">
+          <defs>
+            <marker id="ar36-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--up)"/>
+            </marker>
+            <marker id="ar36-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--semi)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">电子越狱（外光电） vs 电子搬家（内光电）</text>
+          <!-- 左：外光电 -->
+          <rect x="40" y="48" width="290" height="252" rx="12" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="185" y="76" text-anchor="middle" font-size="13" fill="var(--semi)" font-weight="700">外光电效应（光电子发射）</text>
+          <!-- 金属表面 -->
+          <rect x="70" y="150" width="200" height="26" fill="var(--text)" fill-opacity=".55"/>
+          <text x="170" y="196" text-anchor="middle" font-size="10" fill="var(--text-mute)">金属 / 半导体阴极（逸出功 φ ≈ 1~5 eV）</text>
+          <line x1="96" y1="108" x2="140" y2="146" stroke="var(--up)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ar36-a)"/>
+          <line x1="150" y1="100" x2="196" y2="146" stroke="var(--up)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ar36-a)"/>
+          <text x="106" y="98" font-size="10.5" fill="var(--up)">光子 hν</text>
+          <line x1="150" y1="144" x2="196" y2="94" stroke="var(--semi)" stroke-width="2" marker-end="url(#ar36-b)"/>
+          <line x1="190" y1="144" x2="242" y2="86" stroke="var(--semi)" stroke-width="2" marker-end="url(#ar36-b)"/>
+          <text x="206" y="76" font-size="10.5" fill="var(--semi)">光电子飞出表面 →</text>
+          <text x="60" y="228" font-size="10.5" fill="var(--text-soft)">· 电子获得足够能量，真空中脱离材料</text>
+          <text x="60" y="250" font-size="10.5" fill="var(--text-soft)">· 阈值：hν ≥ φ（逸出功），与禁带无关</text>
+          <text x="60" y="272" font-size="10.5" fill="var(--text-soft)">· 必须真空/充气管件，可加倍增链</text>
+          <text x="60" y="292" font-size="10.5" fill="var(--semi)" font-weight="700">代表：光电管、光电倍增管 PMT</text>
+          <!-- 右：内光电 -->
+          <rect x="350" y="48" width="290" height="252" rx="12" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="495" y="76" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">内光电效应（束缚→自由）</text>
+          <!-- 能带 -->
+          <line x1="390" y1="130" x2="600" y2="130" stroke="var(--semi)" stroke-width="2.5"/>
+          <text x="610" y="134" font-size="10" fill="var(--text-mute)">导带</text>
+          <line x1="390" y1="220" x2="600" y2="220" stroke="var(--accent)" stroke-width="2.5"/>
+          <text x="610" y="224" font-size="10" fill="var(--text-mute)">价带</text>
+          <circle cx="440" cy="212" r="5" fill="var(--up)"/>
+          <line x1="440" y1="205" x2="440" y2="140" stroke="var(--up)" stroke-width="2" marker-end="url(#ar36-a)"/>
+          <text x="398" y="164" font-size="10" fill="var(--up)">hν ≥ E_g</text>
+          <circle cx="440" cy="134" r="5" fill="var(--text)"/>
+          <text x="454" y="140" font-size="10" fill="var(--text-soft)">电子进入导带（留在体内）</text>
+          <text x="370" y="250" font-size="10.5" fill="var(--text-soft)">· 电子从束缚态变为自由载流子，不离开材料</text>
+          <text x="370" y="272" font-size="10.5" fill="var(--text-soft)">· 阈值：hν ≥ E_g（半导体的带隙）</text>
+          <text x="370" y="292" font-size="10.5" fill="var(--accent)" font-weight="700">两个分支：光电导（改变电导）· 光生伏特（PN 结发电流）</text>
+        </svg>
+      </figure>
+
+      <table class="term-table">
+        <tr><th>维度</th><th>外光电效应</th><th>内光电效应</th></tr>
+        <tr><td>物理过程</td><td>光子把电子打出材料表面（进入真空）</td><td>光子在材料内部激发电子–空穴对</td></tr>
+        <tr><td>能量阈值</td><td>hν ≥ 逸出功 φ</td><td>hν ≥ 带隙 E<sub>g</sub></td></tr>
+        <tr><td>器件形态</td><td>真空管：光电管、PMT、微通道板</td><td>固态：光电导器件、PIN、APD、SPAD、CCD/CMOS</td></tr>
+        <tr><td>增益机制</td><td>打拿极二次电子发射，10⁶~10⁸ 倍</td><td>雪崩倍增 10~10⁶（SPAD 盖革模式）或无增益</td></tr>
+        <tr><td>波长可调性</td><td>由阴极材料逸出功决定，长波极限 ~1.7 μm</td><td>由带隙决定，从极紫外到远红外全覆盖</td></tr>
+        <tr><td>优势场景</td><td>单光子级可见/紫外探测、大面积、快脉冲</td><td>集成、阵列、成本、可靠性（现代主流）</td></tr>
+        <tr><td>劣势</td><td>怕震动、怕磁场、需高压、体积大、寿命有限</td><td>单器件灵敏度通常低于 PMT（SPAD 除外）</td></tr>
+      </table>
+
+      <div class="note"><b>一个容易忽略的物理事实：</b>
+        外光电的阈值由<strong>逸出功</strong>决定（约 1~5 eV，对应波长上限 ~1.2 μm），内光电由<strong>带隙</strong>决定——
+        所以红外探测器（λ&gt;1.7 μm）在外光电路线<strong>根本没有对应物</strong>（没有逸出功这么小的稳定阴极材料）。
+        中长波红外探测 100% 依赖内光电与热探测，这是两条路线「适用范围」最硬的分界线。</div>
+
+      <h2 id="s3">3. 六大探测器家族：结构与工作机制</h2>
+
+      <h3>3.1 光电导探测器：最古老的内光电器件</h3>
+      <p>一块均匀半导体加上两个欧姆电极，光照改变电导率，测电阻变化即知光强——这就是<strong>光电导（photoconductive）探测器</strong>。
+      光照产生载流子 → 电导率 σ = q(nμ<sub>n</sub> + pμ<sub>p</sub>) 上升 → 偏压下电流增大。
+      经典代表是 CdS 光敏电阻（可见光开关、路灯控制，响应慢但便宜到论斤卖）和 PbS/PbSe 多晶膜（1~5 μm 红外）。
+      特点：<strong>结构极简、有内增益</strong>（光导增益 = 载流子寿命/渡越时间，可达 10³，代价是速度极慢 ms~s 级）、1/f 噪声高。
+      适合「有没有光」级别的开关判断，不适合通信与精密测量。</p>
+
+      <h3>3.2 PIN 光电二极管：速度与效率的工业标准</h3>
+      <p>普通 PN 结的耗尽区太薄，大部分光子在<strong>中性区</strong>被吸收，那里没有电场，载流子靠缓慢扩散运动——速度上不去。
+      PIN 的解法优雅至极：在 P⁺ 与 N⁺ 之间夹一层<strong>高纯度本征（I）层</strong>，把耗尽区拉宽到几微米到几十微米：</p>
+
+      <ul>
+        <li><strong>光子在强电场区被吸收</strong> → 载流子直接被电场扫走（漂移而非扩散），响应时间从 μs 级降到 ns 级；</li>
+        <li><strong>I 层厚度 = 吸收深度</strong>：按材料吸收系数设计（硅 850 nm 约 10 μm，InGaAs 1550 nm 约 2~3 μm），兼顾量子效率与渡越时间；</li>
+        <li><strong>低电容</strong>：耗尽区宽 → 结电容小 → RC 带宽高，配合 50 Ω 系统轻松做到几十 GHz。</li>
+      </ul>
+
+      <h3>3.3 APD 与 SPAD：让电子「撞出」电子</h3>
+      <p>当反向偏压高到接近击穿，耗尽区电场超过 ~3×10⁵ V/cm，漂移的电子撞进晶格会<strong>碰撞电离</strong>出一个新的电子–空穴对，新载流子又被加速再撞——雪崩开始。
+      <strong>APD</strong> 工作在击穿以下的线性区，倍增因子 M = 10~100，等效于把「接收机灵敏度」的白送一个量级；
+      <strong>SPAD</strong>（单光子雪崩二极管）工作在击穿以上的<strong>盖革模式</strong>：一个光子触发完全雪崩，宏观脉冲幅度与光子数无关，
+      用淬灭电路复位后即可计数——这就是「单光子计数」，探测极限的物理终点。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PIN 与 APD 结构及电场分布对比">
+          <defs>
+            <marker id="ar36-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--up)"/>
+            </marker>
+          </defs>
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">PIN（左）与拉通型 APD（右）：吸收区与倍增区分离的艺术</text>
+          <!-- 左 PIN -->
+          <text x="180" y="50" text-anchor="middle" font-size="12" fill="var(--semi)" font-weight="700">PIN 光电二极管</text>
+          <rect x="60" y="66" width="40" height="20" fill="var(--up)" fill-opacity=".45"/>
+          <rect x="100" y="66" width="160" height="20" fill="var(--semi)" fill-opacity=".3"/>
+          <rect x="260" y="66" width="40" height="20" fill="var(--accent)" fill-opacity=".45"/>
+          <text x="80" y="80" text-anchor="middle" font-size="10" fill="var(--text)">P⁺</text>
+          <text x="180" y="80" text-anchor="middle" font-size="10" fill="var(--text)">I 本征区（吸收）</text>
+          <text x="280" y="80" text-anchor="middle" font-size="10" fill="var(--text)">N⁺</text>
+          <line x1="150" y1="42" x2="150" y2="62" stroke="var(--up)" stroke-width="1.8" marker-end="url(#ar36-c)"/>
+          <text x="86" y="36" font-size="10.5" fill="var(--up)">入射光</text>
+          <!-- 电场分布 -->
+          <text x="180" y="112" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">电场分布（均匀矩形）</text>
+          <path d="M100 180 L100 128 L260 128 L260 180" fill="none" stroke="var(--semi)" stroke-width="2"/>
+          <text x="180" y="198" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">全耗尽区一个场强，只漂移不倍增</text>
+          <text x="180" y="224" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">无增益 · 噪声低 · 线性好 · 带宽可至 GHz+</text>
+          <!-- 右 APD -->
+          <text x="510" y="50" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">拉通型 APD（吸收/倍增分离）</text>
+          <rect x="390" y="66" width="40" height="20" fill="var(--up)" fill-opacity=".45"/>
+          <rect x="430" y="66" width="120" height="20" fill="var(--semi)" fill-opacity=".3"/>
+          <rect x="550" y="66" width="40" height="20" fill="var(--down)" fill-opacity=".4"/>
+          <rect x="590" y="66" width="40" height="20" fill="var(--accent)" fill-opacity=".45"/>
+          <text x="410" y="80" text-anchor="middle" font-size="10" fill="var(--text)">N⁺</text>
+          <text x="490" y="80" text-anchor="middle" font-size="10" fill="var(--text)">吸收区 (π)</text>
+          <text x="570" y="80" text-anchor="middle" font-size="10" fill="var(--text)">倍增区</text>
+          <text x="610" y="80" text-anchor="middle" font-size="10" fill="var(--text)">P⁺</text>
+          <line x1="450" y1="42" x2="450" y2="62" stroke="var(--up)" stroke-width="1.8" marker-end="url(#ar36-c)"/>
+          <!-- 电场：梯度抬升到倍增峰 -->
+          <text x="510" y="112" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">电场分布（缓坡 + 倍增尖峰）</text>
+          <path d="M390 180 L390 150 L540 144 L556 120 L590 122 L590 180" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <text x="575" y="110" text-anchor="middle" font-size="9.5" fill="var(--down)">雪崩在此</text>
+          <text x="465" y="172" font-size="9.5" fill="var(--text-mute)">吸收区场强只够漂移</text>
+          <text x="510" y="224" text-anchor="middle" font-size="10.5" fill="var(--text-soft)">M=10~100 · 过剩噪声 F(M) · 温度敏感 · 需偏压控制</text>
+          <!-- 底注 -->
+          <text x="340" y="268" text-anchor="middle" font-size="11" fill="var(--text-mute)">共通设计哲学：让「产生载流子的地方」与「放大信号的地方」物理分开，各取所需</text>
+          <text x="340" y="292" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">SPAD = 把 APD 推过击穿线：单光子触发雪崩 → 淬灭电路复位 → 计数（dToF 激光雷达的核心）</text>
+        </svg>
+      </figure>
+
+      <h3>3.4 PMT：真空管时代的单光子之王</h3>
+      <p>光电倍增管是外光电效应的巅峰之作：<strong>光电阴极</strong>（逸出功很低的碱金属化合物）吸收光子发射光电子 →
+      电子被电场加速打到第一<strong>打拿极</strong>（dynode），撞出 3~5 个二次电子 → 逐级倍增 10 级 →
+      阳极收到 10⁶~10⁸ 个电子的宏观脉冲。特点：</p>
+      <ul>
+        <li><strong>增益 10⁶ 起步且噪声极低</strong>（二次发射是「干净的」倍增，过剩噪声远小于雪崩）——单光子计数的祖师爷；</li>
+        <li><strong>大面积</strong>：2 英寸、5 英寸阴极轻松可得，收集宇宙线/闪烁体荧光；</li>
+        <li><strong>快</strong>：电子渡越时间 ns 级，脉冲线性好；</li>
+        <li>代价：玻璃真空外壳怕震怕磁场（需磁屏蔽）、要上千伏高压、体积大、长期使用阴极疲劳。正电子发射断层扫描 PET、高能物理、化学发光免疫分析至今离不开它。</li>
+      </ul>
+
+      <h3>3.5 CCD 与 CMOS 图像传感器：把阵列做进芯片</h3>
+      <p>两者都用硅的光伏效应把光子变成「像素井里的电荷」，差别在读出方式：</p>
+      <ul>
+        <li><strong>CCD</strong>：电荷在势阱中<strong>逐行逐位搬运</strong>到统一出口放大。优点是均一性极好、读出噪声低（科学成像、天文仍用它）；缺点是全局串行读出慢、一个坏行拖累整列、功耗高、工艺特殊（不能与逻辑电路集成）；</li>
+        <li><strong>CMOS</strong>：<strong>每个像素自带放大器</strong>（PPD 4T 像素：光电二极管 + 传输门 + 浮置扩散 + 源极跟随器），列并行 ADC 同时读出。快、省电、可开窗、可集成逻辑——背照式（BSI）与堆栈式（像素层和逻辑层晶圆键合）进一步把量子效率推到 80%+、做出 1000 fps 手机慢动作。2000 年代后 CMOS 全面取代 CCD，成为「人类部署量最大的光电系统」。</li>
+      </ul>
+
+      <div class="note"><b>CCD 为什么输在「产业生态」而不是画质：</b>
+        CCD 的电荷搬运结构天生无法与标准 CMOS 逻辑工艺集成，永远是一条独立产线；而 CMOS 传感器直接搭上了半导体工艺的摩尔快车——
+        像素做小、堆栈、片上 AI。这与第 35 篇「晶硅赢在生态」是同一个道理的第四次重演：<strong>工艺生态的复利，胜过单点性能</strong>。</div>
+
+      <h2 id="s4">4. 关键性能参数：定义、物理意义与相互关系</h2>
+
+      <table class="term-table">
+        <tr><th>参数</th><th>定义</th><th>物理意义 / 决定因素</th></tr>
+        <tr><td><strong>响应度 R</strong></td><td>输出光电流 ÷ 入射光功率（A/W）</td><td>「每瓦光换来多少安电流」，含量子效率与波长因素；R(λ) 是光电探测的「频率响应」</td></tr>
+        <tr><td><strong>量子效率 QE</strong></td><td>产生的载流子对数 ÷ 入射光子数（%）</td><td>光子级的转换概率；分外量子效率 EQE（含反射/吸收损失）与内量子效率 IQE（吸收之后的部分）</td></tr>
+        <tr><td><strong>暗电流 I_d</strong></td><td>无光照时的反向电流（nA~fA）</td><td>「假信号」的来源：热生载流子 + 表面漏电 + 隧穿；决定最低可测光强，随温度指数上升</td></tr>
+        <tr><td><strong>响应速度 / 带宽</strong></td><td>能跟随光强变化的最高频率（3 dB 带宽）</td><td>三重限制：载流子渡越时间（吸收区厚度）、RC 时间常数（结电容×负载）、扩散尾巴（中性区慢载流子）</td></tr>
+        <tr><td><strong>增益 G</strong></td><td>每光子产生的最终电子数（内增益）</td><td>APD 雪崩 M、SPAD 盖革脉冲、PMT 二次发射链；增益总是伴随新噪声</td></tr>
+        <tr><td><strong>动态范围</strong></td><td>可线性工作的最大/最小光强之比（dB）</td><td>上限：饱和（满阱/空间电荷效应）；下限：噪声地板；成像中靠 HDR 多帧扩展</td></tr>
+        <tr><td><strong>NEP</strong></td><td>产生 SNR=1 所需的最小光功率（W/√Hz）</td><td>「能听到的最小声音」，越小越灵敏</td></tr>
+        <tr><td><strong>D*</strong></td><td>归一化探测率 = √(面积×带宽)/NEP</td><td>把不同面积器件拉到同一标尺比较灵敏度，越大越好（Jones 单位）</td></tr>
+      </table>
+
+      <div class="formula-block">
+        <span class="fl">响应度与量子效率的关系：R = η · q/(hν) = η · λ(μm) / 1.24　（A/W）</span>
+        <span class="fnote">即使 QE=100%，响应度也随波长线性上升（1.55 μm 时约 1.25 A/W）——
+        因为长波光子能量小，同样一个光子换来的电流在「每瓦」口径下更大。<strong>所以比较两颗探测器的 R 必须指明波长，比较 QE 则不用</strong>。</span>
+      </div>
+
+      <div class="formula-block">
+        <span class="fl">带宽的三重约束：f_3dB ≈ 1 / (2π·R_L·C_j)　与　f_t ≈ 0.45 / t_tr（渡越时间）　取两者较小值</span>
+        <span class="fnote">想要高带宽：I 层要薄（渡越短）但又要厚（吸收全）——<strong>厚度设计是量子效率与带宽的直接交换</strong>。
+        高速 InGaAs PIN 的经典解法是「法布里–珀罗谐振腔增强」：用反射镜让光多穿几遍薄吸收层，鱼与熊掌兼得。</span>
+      </div>
+
+      <h2 id="s5">5. 噪声与探测极限：NEP、D* 与散粒噪声地板</h2>
+
+      <p>探测的终极问题是：<strong>信号淹没在哪些噪声里？</strong>光电探测系统的噪声账本有四页：</p>
+
+      <ol>
+        <li><strong>散粒噪声（shot noise）</strong>：光子到达与载流子激发都是离散随机事件，i_n = √(2q·I·B)——注意电流里既有光电流也有暗电流，<strong>暗电流大等于把噪声地板垫高</strong>；</li>
+        <li><strong>热噪声（Johnson–Nyquist）</strong>：电阻里的载流子热运动，i_n = √(4kTB/R)，与偏置无关、无法消除只能制冷；跨阻放大器的反馈电阻就是最大嫌疑犯；</li>
+        <li><strong>1/f 噪声</strong>：低频段陷阱与界面态的调制噪声，精密直流测量（辐射计）的天敌；</li>
+        <li><strong>倍增噪声</strong>：APD 的雪崩过程随机（过剩噪声因子 F(M)），PMT 的二次发射也有涨落——<strong>增益不是免费的，它同时放大信号和注入新噪声</strong>。</li>
+      </ol>
+
+      <div class="formula-block">
+        <span class="fl">散粒噪声极限下的信噪比：SNR = I_p² / (2q·(I_p + I_d + I_b)·B)　　NEP = √(2q·I_total) / R　（W/√Hz）</span>
+        <span class="fnote">I_p 光电流、I_d 暗电流、I_b 背景光电流。当 I_p ≪ I_d 时系统工作在「暗电流受限」区——
+        制冷、钝化、guard ring 全都是为了把 I_d 打下来。量子极限（I_p 主导）是物理允许的最好情况：
+        <strong>此时探测 1 个光子的 SNR≈1，一切灵敏度优化都是在向这个地板逼近</strong>。</span>
+      </div>
+
+      <div class="note"><b>外差探测：绕过散粒噪声的「作弊码」。</b>
+        直接探测只测光强；而<strong>相干（外差）探测</strong>让本振激光与信号光在探测器上拍频，本振把信号「抬」到散粒极限之上，
+        还能保住相位信息——这是相干光通信（第 34 篇）与激光雷达 FMCW 的共同底牌：
+        <strong>当背景光淹没了直接探测，就把本振开到足够强，让散粒噪声按本振比例增长、信号按平方增长</strong>。</div>
+
+      <h2 id="s6">6. 材料地图：波长决定材料</h2>
+
+      <p>探测器选型的第一定律：<strong>先看波长，再谈性能</strong>。截止波长由带隙唯一决定：λ_c(μm) = 1.24 / E_g(eV)。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="探测器材料与波长覆盖地图">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">材料–波长地图：λ_c = 1.24 / E_g(eV)</text>
+          <!-- 波长轴（对数感） -->
+          <line x1="80" y1="292" x2="640" y2="292" stroke="var(--border)" stroke-width="1.2"/>
+          <g font-size="9.5" fill="var(--text-mute)">
+            <text x="100" y="308" fill="var(--<text x="196" y="308" fill="var(<text x="292" y="308" fill="var(--text-soft)"<text x="388" y="308" fill="var(<text x="484" y="308" fill="va<text x="580" y="308" fill="va<text x="628" y="308" fill="var(--text-soft)">="308">0.8</text>
+            <text x="388" y="308" fill="var(--text-mute)">1.6</text><text x="484" y="308" fill="var(--text-mute)">3</text><text x="580" y="308" fill="var(--text-mute)">5</text><text x="628" y="308" fill="var(--text-mute)">8</text>
+          </g>
+          <text x="640" y="326" text-anchor="end" font-size="10" fill="var(--text-mute)">波长 →（可见光区 0.4~0.8 μm）</text>
+          <!-- 可见区背景 -->
+          <rect x="176" y="40" width="116" height="248" fill="var(--text)" fill-opacity=".05"/>
+          <!-- 各材料条 -->
+          <g font-size="10">
+            <rect x="100" y="52" width="196" height="26" rx="6" fill="var(--up)" fill-opacity=".4"/>
+            <text x="106" y="69" fill="var(--text-soft)">Si 硅（1.12 eV）→ 1.1 μm</text>
+            <rect x="240" y="88" width="220" height="26" rx="6" fill="var(--semi)" fill-opacity=".4"/>
+            <text x="246" y="105" fill="var(--text-soft)">Ge 锗（0.66 eV）→ 1.85 μm</text>
+            <rect x="238" y="124" width="270" height="26" rx="6" fill="var(--accent)" fill-opacity=".4"/>
+            <text x="244" y="141" fill="var(--text-soft)">InGaAs（0.73 eV）→ 1.7~2.6 μm</text>
+            <rect x="60" y="160" width="120" height="26" rx="6" fill="var(--fin)" fill-opacity=".45"/>
+            <text x="66" y="177" fill="var(--text-soft)">GaN/AlGaN → 365/280 nm</text>
+            <rect x="80" y="196" width="100" height="26" rx="6" fill="var(--down)" fill-opacity=".4"/>
+            <text x="86" y="213" fill="var(--text-soft)">SiC → 日盲 ~280 nm</text>
+            <rect x="420" y="160" width="200" height="26" rx="6" fill="var(--up)" fill-opacity=".25"/>
+            <text x="426" y="177" fill="var(--text-soft)">InSb / MCT → 5 / 14 μm</text>
+            <rect x="470" y="196" width="150" height="26" rx="6" fill="var(--semi)" fill-opacity=".25"/>
+            <text x="476" y="213" fill="var(--text-soft)">微测辐射热计 → 8~14 μm</text>
+            <rect x="240" y="232" width="270" height="26" rx="6" fill="var(--accent)" fill-opacity=".22"/>
+            <text x="24<text x="430" y="258" fill="var(--text-soft)">-text-soft)">胶体量子点 / 二维材料：波长可设计</text>
+          </g>
+          <!-- 大气窗口标注 -->
+          <g font-size="9.5" fill="var(--text-mute)">
+            <text x="430" y="258" fill="var(--text-mute)">↓ 两个红外大气窗口：3~5 μm（中波）与 8~14 μm（长波）</text>
+          </g>
+          <text x="340" y="44" text-anchor="middle" font-size="10" fill="var(--text-mute)">深紫外 ← 紫外 → 可见 → 近红外 → SWIR → 中波红外 → 长波红外</text>
+        </svg>
+      </figure>
+
+      <table class="term-table">
+        <tr><th>材料</th><th>带隙 (eV)</th><th>截止波长</th><th>优势</th><th>劣势</th></tr>
+        <tr><td><strong>Si 硅</strong></td><td>1.12</td><td>~1.1 μm</td><td>CMOS 工艺、阵列化、便宜、成熟到极致</td><td>看不见近红外通信波段；间接带隙吸收弱（需较厚）</td></tr>
+        <tr><td><strong>Ge 锗</strong></td><td>0.66</td><td>~1.85 μm</td><td>可外延在硅上（Ge-on-Si），硅光集成首选</td><td>暗电流大（小带隙+表面态）、材料软化（纯度极限 ~10¹⁵）</td></tr>
+        <tr><td><strong>InGaAs</strong></td><td>0.73</td><td>1.7 μm（In₀.₅₃Ga₀.₄₇As）</td><td>通信波段性能之王：QE&gt;90%、暗电流极低、速度快</td><td>InP 衬底贵、难与硅 CMOS 单片集成（只能混合集成）</td></tr>
+        <tr><td><strong>GaN / AlGaN</strong></td><td>3.4~4.9</td><td>365 nm → 250 nm（日盲）</td><td>紫外硬探测：可见光盲、耐高温抗辐照</td><td>p 型掺杂难、位错密度高、暗电流与良率仍待优化</td></tr>
+        <tr><td><strong>SiC（4H）</strong></td><td>3.26</td><td>~380 nm</td><td>日盲区（200~280 nm 配合滤光）、极端环境（火焰检测/核辐射场）</td><td>外延缺陷与暗电流水平仍高于理论值</td></tr>
+        <tr><td><strong>InSb / MCT</strong></td><td>0.17~0.23 可调</td><td>5~14 μm</td><td>中长波红外性能之王（制冷型）</td><td>必须 77 K 制冷、碲镉汞组分控制难、贵、易碎</td></tr>
+        <tr><td>氧化钒/非晶硅（热电堆类）</td><td>—（热探测）</td><td>全波长</td><td><strong>室温工作</strong>、便宜、轮胎式量产（手机热成像）</td><td>灵敏度低 2~3 个量级、慢（ms）、无波长分辨</td></tr>
+      </table>
+
+      <div class="note"><b>热探测器为什么值得一列：</b>
+        以上全是「光子探测器」（量子型）；另一大类是<strong>热探测器</strong>——吸收光变热、测温（微测辐射热计 bolometer、热电堆、热释电）。
+        它的灵敏度天生低两三个量级，但<strong>不需要制冷就能看 8~14 μm</strong>，把长波红外从「军品价」打成「手机配件价」（iPhone 的 FLiR 模组）。
+        选型口诀：<strong>要极致灵敏度找光子型（上制冷），要室温低成本看热型</strong>。</div>
+
+      <h2 id="s7">7. 按工作波段选型：紫外到中长波红外</h2>
+
+      <table class="term-table">
+        <tr><th>波段</th><th>范围 / 特点</th><th>典型代表</th><th>应用</th></tr>
+        <tr><td><strong>紫外 UV</strong></td><td>10~400 nm；太阳背景强，需「日盲」</td><td>Si PMT（日盲型）、AlGaN、SiC、BGO+PMT</td><td>电晕放电检测、火焰传感、生化分析、紫外通信（日盲区背景近零，抗干扰极强）</td></tr>
+        <tr><td><strong>可见光</strong></td><td>400~700 nm</td><td>Si CMOS/CCD、SPAD 阵列、PMT</td><td>手机摄影、机器视觉、荧光显微、化学发光检测（PMT 主场）</td></tr>
+        <tr><td><strong>近红外 NIR</strong></td><td>0.7~1.1 μm（硅的领地）</td><td>Si PIN/APD、SiPM</td><td>850 nm 光通信短距、940 nm 3D 传感、dToF 激光雷达</td></tr>
+        <tr><td><strong>通信/短波红外</strong></td><td>1.1~1.7 μm（硅盲区）</td><td>InGaAs PIN/APD/SPAD、Ge-on-Si</td><td>1310/1550 nm 光纤通信、LiDAR 1550 nm（人眼安全）、SWIR 成像（穿透雾、半导体检测）</td></tr>
+        <tr><td><strong>中波红外 MWIR</strong></td><td>3~5 μm（大气窗口 ①）</td><td>InSb、MCT、II 类超晶格</td><td>导弹预警与制导（尾焰 4.3 μm CO₂ 带）、气体检测、制冷型热像</td></tr>
+        <tr><td><strong>长波红外 LWIR</strong></td><td>8~14 μm（大气窗口 ②）</td><td>MCT（制冷）、氧化钒微测辐射热计（室温）</td><td>热成像（人体辐射峰值 ~9.5 μm）、周界监控、工业测温、车载夜视</td></tr>
+      </table>
+
+      <div class="tip"><b>记住三组「波段–物理」锚点：</b>
+        ① 1.1 μm 是硅的硬墙（带隙 1.12 eV），跨过去必须换材料；② 1.55 μm 既是光纤损耗谷又是人眼安全波长（角膜对它的透过率低），所以高端 LiDAR 都用它——但代价是必须用 InGaAs/SPAD；③ 3~5 与 8~14 μm 两个大气窗口是红外制导与热成像的「频谱不动产」，谁控制窗口谁定义装备形态。</div>
+
+      <h2 id="s8">8. 总结对比：一张表完成选型</h2>
+
+      <table class="term-table">
+        <tr><th>类型</th><th>增益</th><th>速度</th><th>灵敏度</th><th>优点</th><th>缺点</th><th>典型应用</th></tr>
+        <tr><td>光电导（CdS/PbS）</td><td>10²~10³（光导增益）</td><td>ms~s（慢）</td><td>低~中</td><td>极便宜、电路简单、耐用</td><td>慢、非线性、温度漂移大</td><td>光控开关、路灯、火焰监测</td></tr>
+        <tr><td>PIN 光电二极管</td><td>1（无）</td><td>ns 级，GHz+ 带宽</td><td>中（受噪声地板限制）</td><td>线性极好、噪声低、便宜、寿命长</td><td>无内增益，弱光需后级放大</td><td>光通信接收端、光功率计、编码器</td></tr>
+        <tr><td>APD</td><td>10~100（线性雪崩）</td><td>ns 级，GHz</td><td>高</td><td>灵敏度增益双丰收，可紧凑集成</td><td>过剩噪声、温度敏感、需高压偏置电路</td><td>长距 PON、1550 nm LiDAR、OTDR</td></tr>
+        <tr><td>SPAD / SiPM</td><td>10⁶（盖革）</td><td>ns 计数、死时间 ps~ns</td><td>单光子极限</td><td>数光子、可阵列、CMOS 可集成</td><td>死时间、后脉冲、动态范围靠计数堆</td><td>dToF 激光雷达、PET、量子通信、荧光寿命</td></tr>
+        <tr><td>PMT</td><td>10⁶~10⁸</td><td>ns 级</td><td>单光子极限（噪声最干净）</td><td>大面积、增益高且稳、脉冲线性好</td><td>怕震怕磁场、高压、大、玻璃易碎</td><td>PET、高能物理、化学发光/免疫分析、光谱仪</td></tr>
+        <tr><td>CCD</td><td>1</td><td>帧级（全帧转移慢）</td><td>极高（读出噪声 ~2 e⁻）</td><td>均一性佳、科学级画质</td><td>慢、怕辐射（转移损失）、工艺独立成本高</td><td>天文、科学相机、X 射线间接成像</td></tr>
+        <tr><td>CMOS 传感器</td><td>1（像素内放大）</td><td>快（列并行，数千 fps 可达）</td><td>中~高（BSI 后 QE&gt;80%）</td><td>低功耗、集成逻辑、开窗、便宜</td><td>均一性与滚动快门伪影需校准</td><td>手机/车载成像、机器视觉、医疗内窥</td></tr>
+      </table>
+
+      <p><strong>选型四步法</strong>：① 波长落在哪个材料的地盘？② 需要测「功率」还是「数光子」——决定 PIN/APD vs SPAD/PMT；
+      ③ 速度需求：通信/雷达要 GHz，热成像 ms 即可；④ 阵列化与成本：单片集成选 Si/CMOS 路线，极致性能接受混合集成与制冷。</p>
+
+      <h2 id="s9">9. 当前技术难点与不足</h2>
+
+      <ol>
+        <li><strong>暗电流抑制逼近物理极限</strong>：暗电流 ∝ exp(−E_g/kT)，小带隙红外器件尤其遭殃；Ge-on-Si 的暗电流比 InGaAs 高几个量级，是硅光集成的最大心结。手段只剩降温、位错控制与边缘钝化，每一步都是硬工艺；</li>
+        <li><strong>红外室温工作与成本的矛盾</strong>：MCT/InSb 要 77 K 制冷（制冷机占体积、功耗、寿命的一半），II 类超晶格降低了位错要求但仍需制冷；室温长波只有热探测器，灵敏度差 2~3 个量级——「室温 + 高灵敏 + 阵列」是红外领域 40 年未竟的目标；</li>
+        <li><strong>硅的波长边界与集成矛盾</strong>：硅光平台需要 1310/1550 nm 探测，Ge 外延勉强补位但带宽-暗电流-响应度三角难全；InGaAs 性能最好却无法单片集成，混合集成的对准、键合良率拖累成本；</li>
+        <li><strong>单光子阵列的系统问题</strong>：SPAD 阵列不是像素越多越好——死时间、后脉冲、串扰让有效占空比下降；百万像素级 SPAD 相机的读出与数据量是算力难题；</li>
+        <li><strong>极端条件探测</strong>：深紫外（日盲）、太赫兹、单中红外光子（超导纳米线 SNSPD 要 2~4 K）各自都有材料或制冷的墙；</li>
+        <li><strong>成本与产业规模</strong>：InGaAs、MCT 的小批量手工工艺与 CMOS 的十亿美元产线相比毫无规模经济——「高性能材料做成大产业」需要的正是下面这些新材料路线。</li>
+      </ol>
+
+      <h2 id="s10">10. 优化方向与新材料</h2>
+
+      <table class="term-table">
+        <tr><th>方向</th><th>在做什么</th><th>为什么有希望 / 卡点</th></tr>
+        <tr><td><strong>胶体量子点（CQD）</strong></td><td>溶液合成 PbS 量子点，带隙随尺寸 0.4~1.4 eV 连续可调，旋涂成膜</td><td>把 SWIR 探测做成「涂出来的」，室温工作、成本逼近 CMOS；卡点：表面钝化与稳定性、迁移率</td></tr>
+        <tr><td><strong>二维材料</strong></td><td>石墨烯（超宽带 300 nm~THz、超快 ps 响应）、MoS₂/WSe₂（原子层光电二极管）、黑磷（带隙随层数 0.3~2 eV，中红外潜力）</td><td>原子级薄 → 与任意衬底集成、柔性；卡点：吸收率只有 ~2%（需波导/腔增强）、大面积均匀性与接触电阻</td></tr>
+        <tr><td><strong>SiC / Ga₂O₃ 日盲紫外</strong></td><td>宽禁带（3.2~4.9 eV）本征日盲：可见光天然不响应</td><td>免滤光片、耐极端环境；卡点：p 型掺杂与外延缺陷，暗电流仍需降 1~2 个量级</td></tr>
+        <tr><td><strong>SPAD 大阵列化</strong></td><td>3D 堆栈 SPAD 相机（传感层+逻辑层键合）、SiPM 全数字化</td><td>dToF/量子成像的产业引擎；卡点：后脉冲与暗计数随工艺收窄</td></tr>
+        <tr><td><strong>超导纳米线 SNSPD</strong></td><td>2~4 K 下 NbN/NbTiN 纳米线，探测效率 &gt;98%、暗计数极低、抖动 &lt;15 ps</td><td>量子通信/光量子计算的事实标准；卡点：制冷系统（正在从液氦向紧凑脉冲管过渡）与良率</td></tr>
+        <tr><td><strong>钙钛矿探测器</strong></td><td>与钙钛矿太阳能同源：吸收强、缺陷容忍、可低温印刷，X 射线/可见光探测均已展示</td><td>成本革命候选；卡点与太阳能一样是稳定性与含铅</td></tr>
+        <tr><td><strong>异质集成</strong></td><td>InGaAs/InP 薄膜剥离键合到硅、微透镜+谐振腔增强薄吸收层</td><td>在「InGaAs 的性能」与「CMOS 的成本」之间架桥；卡点：键合良率与热预算</td></tr>
+      </table>
+
+      <div class="note"><b>趋势判断：</b>
+        探测器产业的演进方向与成像/通信系统同频——<strong>从「一个好器件」走向「一个可集成的阵列 + 片上智能」</strong>。
+        硅 CMOS 已证明「工艺生态 &gt; 单点性能」，下一代竞争者（量子点、二维材料、钙钛矿）的共同卖点是
+        「<strong>能搭上某种成熟工艺的顺风车</strong>」：量子点搭印刷电子、二维材料搭任意衬底异质集成、SNSPD 搭量子信息产业。
+        判断一项探测器新技术的前景，就看它离哪条成熟产线最近。</div>
+
+      <h2 id="s11">11. 与本站学习路径的衔接</h2>
+
+      <ul>
+        <li><strong>第 2、3 篇（能带、PN 结）</strong>：内光电效应就是 PN 结的第三次出场；暗电流的本质是耗尽区热生载流子，与漏电流同源；</li>
+        <li><strong>第 6 篇（器件微缩）</strong>：SPAD 像素的暗计数率与后脉冲，随工艺缩小而恶化——「缩小不总是好事」的又一例；</li>
+        <li><strong>第 8 篇（材料）</strong>：材料地图一张图就是带隙工程的应用题；SiC/GaN/钙钛矿三条新材料线与功率/光电子共享同一个材料体系；</li>
+        <li><strong>第 18 篇（封测）</strong>：PMT 的真空封装、InGaAs 的倒装焊、SPAD 的 3D 堆栈键合——探测器的性能上限常常死在封装上；</li>
+        <li><strong>第 34 篇（光电子技术）</strong>：本篇是其第 6 节的完整展开——发光、传光、收光三兄弟在此合体；</li>
+        <li><strong>第 35 篇（太阳能电池）</strong>：光伏效应的同一场戏，太阳能电池追求「收能量」，探测器追求「收信息」——噪声观完全不同。</li>
+      </ul>
+
+      <h2 id="s12">12. 易错点</h2>
+
+      <ol>
+        <li><strong>「响应度大 = 器件好」</strong>：R 随波长线性上升（R = ηλ/1.24），比较必须同波长；两颗不同材料器件的 R 高低，更可能反映波长而不是优劣——比 QE 更公平；</li>
+        <li><strong>「增益越高越灵敏」</strong>：增益只放大「进入器件后的信号」，不改善「进入器件前的信噪比」；APD/PMT 的价值是在后级放大器噪声占优时把信号抬过门槛——若热噪声本就不构成瓶颈，加增益只是白添过剩噪声；</li>
+        <li><strong>「暗电流只是常数偏移」</strong>：暗电流的涨落（散粒噪声）才是真正的伤害——直流失调可以扣，噪声地板扣不掉；这也是「暗电流减半 ≈ 灵敏度提升 √2」的原因；</li>
+        <li><strong>「硅探测器做不好是工艺问题」</strong>：1.1 μm 截止是带隙 1.12 eV 的物理决定，工艺再好也造不出室温硅 1550 nm 探测器（除非借锗、缺陷工程或双光子吸收等非主流路径）；</li>
+        <li><strong>「NEP 越大越灵敏」</strong>：反了，NEP 是「等效最小可测功率」，越小越好；而它的归一化孪生 D* 越大越好——两个指标方向相反，念报告时别混；</li>
+        <li><strong>「带宽只是 RC 问题」</strong>：把 I 层做厚减小电容，渡越时间同时变长；真正的带宽设计是「渡越时间、RC、扩散尾巴」三者的联合优化，有时还要加谐振腔。</li>
+      </ol>
+
+      <h2 id="s13">13. 自测</h2>
+
+      <details class="quiz"><summary>自测 1：光纤通信为什么在 1310/1550 nm 不能用硅探测器？Ge-on-Si 和 InGaAs 各自怎么权衡？</summary>
+        <div>硅带隙 1.12 eV，截止波长 ~1.1 μm，1310/1550 nm 光子能量（0.95/0.8 eV）低于带隙，半导体完全透明——这是带隙决定的物理边界，与工艺无关。InGaAs（In₀.₅₃Ga₀.₄₇As 晶格匹配 InP）是性能最优解：QE&gt;90%、暗电流 nA 级、带宽可到 50 GHz，但生长在 InP 上，无法与硅 CMOS 单片集成，只能混合集成（倒装/键合），成本高。Ge-on-Si 用外延 Ge 补位（Ge 带 0.66 eV，覆盖到 1.85 μm），与 CMOS 兼容、可在波导上直接生长实现单片集成，代价是暗电流大 2~3 个量级（小带隙 + Ge/Si 界面位错）且材料纯度受限。结论：<strong>分立高性能器件选 InGaAs，硅光集成选 Ge-on-Si</strong>——「性能 vs 集成度」是这条边界上永恒的交换。</div>
+      </details>
+      <details class="quiz"><summary>自测 2：PMT 增益 10⁶、又便宜不了，为什么科研与医疗至今没被 APD/SPAD 全面取代？</summary>
+        <div>四个不可替代性：① <strong>噪声最干净的增益</strong>——二次电子发射的过剩噪声远低于雪崩碰撞电离，单光子计数时脉冲幅度分布更集中，甄别阈值好设；② <strong>大面积</strong>——2~5 英寸阴极轻松可得，PET 环探测、闪烁体耦合、大视场光谱都吃这个红利，而 SPAD 阵列拼面积成本高且占空比下降；③ <strong>可见光到 UV 的成熟阴极体系</strong>（双碱、多碱、GaAsP）配合闪烁体产业链几十年验证；④ <strong>动态范围</strong>：模拟工作模式下从单光子到 nA 级连续线性。SPAD 的优势在阵列化与 CMOS 集成（dToF、PET 数字化转型中 SiPM 正在攻入），但在「单通道 + 大面积 + 极限计数」场景，PMT 仍是性价比与性能的交集。</div>
+      </details>
+      <details class="quiz"><summary>自测 3：暗电流为什么随温度指数上升？工程上有哪些抑制手段，各付出什么代价？</summary>
+        <div>暗电流的主项是耗尽区与中性区的热生载流子，生成率 ∝ exp(−E_g/2kT)（中性区）到 exp(−E_g/kT)（耗尽区/表面），再加带-带隧穿在高场下陡增——温度每升高 7~10 °C 暗电流约翻倍。抑制手段与代价：① <strong>制冷</strong>：每降一档温度暗电流指数下降（InGaAs -40 °C 可达 fA 级），代价是制冷器功耗、体积与冷凝防护；② <strong>钝化与边缘工程</strong>：low-rate 表面态钝化、guard ring 收集边缘漏电，代价是工艺复杂度与有效面积缩小；③ <strong>结构</strong>：PIN 加宽耗尽区降低单位体积生成贡献、雪崩区远离表面，代价是带宽/噪声再平衡；④ <strong>材料</strong>：换更大带隙材料代价是牺牲长波响应——波长与暗电流在带隙这一点上「一根绳上的两个蚂蚱」。</div>
+      </details>
+      <details class="quiz"><summary>自测 4：CMOS 传感器靠什么在画质不占优的情况下取代了 CCD？两者今天的残余阵地分别在哪？</summary>
+        <div>CMOS 的胜利是系统工程性的：① <strong>像素内放大 + 列并行 ADC</strong>——并行读出绕开了 CCD 全局串行搬运的速度天花板，做出千帧级高速与全局快门之外的灵活开窗；② <strong>低功耗与单片集成</strong>：像素与逻辑同片（曝光控制、HDR、片上 AI 预处理），BSI 与堆栈式键合把 QE 推到 80%+ 的同时缩小模组；③ <strong>搭上 CMOS 工艺摩尔快车</strong>：像素缩小、晶圆级光学、成本随规模指数下降。CCD 的画质优势（读出噪声 ~2 e⁻、均一性、满阱线性）在低照度科学场景仍不可替代——今天的天文相机、科学级 X 射线成像、高精度光度测量仍是 CCD/SCMOS 的阵地；而 sCMOS（科学级 CMOS）正在用「CCD 的画质 + CMOS 的速度」两头蚕食。这场替代再次验证：<strong>阵列化 + 工艺生态 + 系统集成 的复合优势，最终压过单点画质参数</strong>。</div>
+      </details>
+
+      <div class="tip"><b>下一篇预告：</b>
+        到这里，光电子的「发射—传输—接收」三段全部闭环。接下来我们转向信息世界的另一半根基——
+        显示与人机交互，看看从 LCD 到 Micro-LED 的像素战争如何与半导体工艺深度绑定。</div>
+
+      <div class="tagbar">
+        <span class="chip">#光电探测器</span>
+        <span class="chip">#光电效应</span>
+        <span class="chip">#PIN</span>
+        <span class="chip">#APD</span>
+        <span class="chip">#SPAD</span>
+        <span class="chip">#PMT</span>
+        <span class="chip">#CMOS传感器</span>
+        <span class="chip">#InGaAs</span>
+        <span class="chip">#量子点</span>
+      </div>
+
+      <div class="series">
+        <div class="series-title">集成电路学习路径 · 全系列导航</div>
+        <ol>
+            <li><a href="2026-10-01-固体物理基础-晶格晶向晶胞与晶面.html">第 1 篇：固体物理基础 · 晶格、晶向、晶胞与晶面</a></li>
+            <li><a href="2026-10-06-薛定谔方程泡利不相容与费米狄拉克分布-固体物理的量子三基石.html">第 2 篇：薛定谔方程、泡利不相容与费米-狄拉克分布 · 固体物理的量子三基石</a></li>
+            <li><a href="2026-10-01-半导体物理基础-能带与载流子.html">第 3 篇：半导体物理基础 · 能带与载流子</a></li>
+            <li><a href="2026-10-01-PN结原理与特性.html">第 4 篇：PN 结原理与特性</a></li>
+            <li><a href="2026-10-01-MOSFET工作原理与特性曲线.html">第 5 篇：MOSFET 工作原理与特性曲线</a></li>
+            <li><a href="2026-10-01-CMOS集成电路基础-反相器与逻辑门.html">第 6 篇：CMOS 集成电路基础 · 反相器与逻辑门</a></li>
+            <li><a href="2026-10-02-摩尔定律与器件微缩-从平面到FinFET与GAA.html">第 7 篇：摩尔定律与器件微缩 · 从平面到 FinFET 与 GAA</a></li>
+            <li><a href="2026-10-02-存储器原理-DRAM-NAND与新型存储.html">第 8 篇：存储器 · DRAM、NAND 与新型存储</a></li>
+            <li><a href="2026-10-02-半导体材料全景-Si-SiC-GaN与宽禁带.html">第 9 篇：半导体材料全景 · Si、SiC、GaN 与宽禁带</a></li>
+            <li><a href="2026-10-01-硅单晶生长与衬底制备工艺.html">第 10 篇：硅单晶生长与衬底制备工艺</a></li>
+            <li><a href="2026-10-01-芯片制造工艺流程详解.html">第 11 篇：芯片制造工艺流程详解</a></li>
+            <li><a href="2026-10-01-光刻工艺详解-从光学原理到EUV.html">第 12 篇：光刻工艺详解 · 从光学原理到 EUV</a></li>
+            <li><a href="2026-10-01-刻蚀工艺详解-湿法与等离子体.html">第 13 篇：刻蚀工艺详解 · 湿法与等离子体</a></li>
+            <li><a href="2026-10-01-薄膜沉积与掺杂工艺详解.html">第 14 篇：薄膜沉积与掺杂工艺详解</a></li>
+            <li><a href="2026-10-01-CMP平坦化量测与良率控制.html">第 15 篇：CMP 平坦化、量测与良率控制</a></li>
+            <li><a href="2026-10-01-芯片设计与EDA工具链.html">第 16 篇：芯片设计与 EDA 工具链</a></li>
+            <li><a href="2026-10-01-版图设计实战-DRC-LVS与匹配技巧.html">第 17 篇：版图设计实战 · DRC、LVS 与匹配技巧</a></li>
+            <li><a href="2026-10-01-芯片封装测试与失效分析.html">第 18 篇：芯片封装测试与失效分析</a></li>
+            <li><a href="2026-10-02-先进封装与系统级集成-2.5D-3D-Chiplet与HBM.html">第 19 篇：先进封装与系统级集成 · 2.5D/3D、Chiplet 与 HBM</a></li>
+            <li><a href="2026-10-02-半导体设备与产业链-核心装备全景.html">第 20 篇：半导体设备与产业链 · 核心装备全景</a></li>
+            <li><a href="2026-10-05-类脑计算与存算一体-后摩尔时代的两条突围路线.html">第 21 篇：类脑计算与存算一体 · 后摩尔时代的两条突围路线</a></li>
+            <li><a href="2026-10-05-光计算-用光子代替电子的算力革命.html">第 22 篇：光计算 · 用光子代替电子的算力革命</a></li>
+            <li><a href="2026-10-05-量子计算-从量子比特到量子优越性.html">第 23 篇：量子计算 · 从量子比特到量子优越性</a></li>
+            <li><a href="2026-10-05-雷达信号处理全链路-从回波到目标.html">第 24 篇：雷达信号处理全链路 · 从回波到目标</a></li>
+            <li><a href="2026-10-06-计算机发展史-从电子管到晶体管-计算机如何工作.html">第 25 篇：计算机发展史 · 从电子管到晶体管，计算机如何工作</a></li>
+            <li><a href="2026-10-06-数字电路模拟电路与芯片家族-MCU-FPGA-CPU-GPU.html">第 26 篇：数字电路、模拟电路与芯片家族 · MCU、FPGA、CPU、GPU 是什么</a></li>
+            <li><a href="2026-10-06-硅基的语言-从晶体管开关到编程语言与操作系统.html">第 27 篇：硅基的语言 · 从晶体管开关到编程语言与操作系统</a></li>
+            <li><a href="2026-10-07-模拟集成电路设计-电流镜带隙基准与运放.html">第 28 篇：模拟集成电路设计 · 电流镜、带隙基准与运放</a></li>
+            <li><a href="2026-10-07-数字后端物理设计-布局布线时钟树与静态时序分析.html">第 29 篇：数字后端物理设计 · 布局布线、时钟树与静态时序分析</a></li>
+            <li><a href="2026-10-07-芯片可靠性物理-电迁移TDDB-NBTI与ESD.html">第 30 篇：芯片可靠性物理 · 电迁移、TDDB、NBTI 与 ESD</a></li>
+            <li><a href="2026-10-07-芯片产业分工与商业模式-IDM-Fabless-Foundry与OSAT.html">第 31 篇：芯片产业分工与商业模式 · IDM、Fabless、Foundry 与 OSAT</a></li>
+            <li><a href="2026-10-07-晶圆厂经济学与芯片成本模型.html">第 32 篇：晶圆厂经济学与芯片成本模型</a></li>
+            <li><a href="2026-10-07-一颗芯片的诞生全流程-从需求到量产.html">第 33 篇：一颗芯片的诞生全流程 · 从需求到量产</a></li>
+            <li><a href="2026-10-20-现代光电子技术-从激光到光子集成.html">第 34 篇：现代光电子技术 · 从一束激光到一张光子芯片</a></li>
+            <li><a href="2026-10-22-太阳能电池-光伏效应材料工艺与未来.html">第 35 篇：太阳能电池全解 · 光伏效应、材料、工艺与未来</a></li>
+            <li class="current">第 36 篇：光电探测器全解 · 从光电效应到单光子计数</li>
+            <li><a href="2026-06-01-半导体器件新手路径地图.html">附：半导体器件新手路径地图（总纲）</a></li>
+        </ol>
+      </div>
+
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 半导体 · 财经 学习笔记</div>
+  <div><a href="../../index.html">回到主页</a></div>
+</footer>
+
+</body>
+</html>
