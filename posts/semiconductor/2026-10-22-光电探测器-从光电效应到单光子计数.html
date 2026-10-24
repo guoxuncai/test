@@ -104,7 +104,7 @@
           <text x="562" y="166" text-anchor="middle" font-size="10" fill="var(--text-soft)">灵敏但慢/噪声大</text>
           <rect x="370" y="186" width="252" height="44" rx="8" fill="var(--surface)" stroke="var(--up)" stroke-width="1.1"/>
           <text x="382" y="206" font-size="11" fill="var(--text)" font-weight="700">过饱和增益（雪崩）</text>
-          <text x="382" y="224" font-size="10" fill="var(--text-soft)">SPAD / SiPM · 单光子计数 · dToF/量子成像</text>
+          <text x="382" y="224" font-size="10" fill="var(--text-soft)">SPAD / SiPM · 单光子计数 · dToF</text>
           <!-- 底部：阵列 -->
           <text x="340" y="284" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">成像阵列（CCD / CMOS）本质是「无增益光伏型 + 读出电路」的二维化 —— 器件形态独立于上述分类，单独成族</text>
         </svg>
@@ -290,15 +290,16 @@
           <line x1="132" y1="138" x2="132" y2="162" stroke="var(--up)" stroke-width="1.8"/>
           <text x="132" y="196" text-anchor="middle" font-size="10.5" fill="var(--up)">I_ph = R·P</text>
           <line x1="146" y1="150" x2="190" y2="150" stroke="var(--up)" stroke-width="1.8"/>
-          <!-- 并联 Rsh Cj -->
+          <!-- 并联 Rsh 与 Cj -->
           <line x1="190" y1="100" x2="190" y2="200" stroke="var(--text)" stroke-width="1.6"/>
           <rect x="168" y="110" width="44" height="26" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
           <text x="190" y="127" text-anchor="middle" font-size="10" fill="var(--text-soft)">R_sh</text>
-          <line x1="212" y1="110" x2="236" y2="110" stroke="var(--text)" stroke-width="1.4"/>
-          <line x1="236" y1="100" x2="236" y2="120" stroke="var(--text)" stroke-width="1.4"/>
-          <line x1="248" y1="100" x2="248" y2="120" stroke="var(--text)" stroke-width="1.4"/>
-          <line x1="248" y1="110" x2="212" y2="110" stroke="var(--text)" stroke-width="1.4"/>
-          <text x="262" y="130" font-size="10" fill="var(--text-soft)">C_j</text>
+          <line x1="190" y1="100" x2="252" y2="100" stroke="var(--text)" stroke-width="1.4"/>
+          <line x1="252" y1="100" x2="252" y2="112" stroke="var(--text)" stroke-width="1.4"/>
+          <line x1="238" y1="112" x2="266" y2="112" stroke="var(--text)" stroke-width="1.6"/>
+          <line x1="238" y1="126" x2="266" y2="126" stroke="var(--text)" stroke-width="1.6"/>
+          <line x1="252" y1="126" x2="252" y2="150" stroke="var(--text)" stroke-width="1.4"/>
+          <text x="276" y="124" font-size="10" fill="var(--text-soft)">C_j</text>
           <!-- 串联 Rs -->
           <line x1="190" y1="150" x2="260" y2="150" stroke="var(--up)" stroke-width="1.8"/>
           <rect x="260" y="136" width="60" height="28" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.2"/>
@@ -311,12 +312,12 @@
           <line x1="380" y1="157" x2="380" y2="230" stroke="var(--semi)" stroke-width="1.4"/>
           <!-- 参数映射 -->
           <g font-size="10.5" fill="var(--text-soft)">
-            <text x="420" y="70" fill="var(--text-mute)">I_ph：</text><text x="470" y="70" fill="var(--text-mute)">响应度 R（A/W）· 量子效率 η</text>
-            <text x="420" y="98" fill="var(--text-mute)">R_sh：</text><text x="470" y="98" fill="var(--text-mute)">暗电流与漏电 → 噪声地板</text>
-            <text x="420" y="126" fill="var(--text-mute)">C_j：</text><text x="470" y="126" fill="var(--text-mute)">带宽（RC 上限）· 动态范围</text>
-            <text x="420" y="154" fill="var(--text-mute)">R_s：</text><text x="470" y="154" fill="var(--text-mute)">填充因子 · 大信号失真</text>
-            <text x="420" y="190" fill="var(--text-mute)">NEP / D* 由「I_ph 大小 + R_sh 噪声」共同决定</text>
-            <text x="420" y="212" fill="var(--text-mute)">灵敏度优化的全部功夫 = 做大 I_ph、压小 R_sh 的热噪声</text>
+            <text x="420" y="70" fill="var(--text-soft)">I_ph：</text><text x="470" y="70" fill="var(--text-soft)">响应度 R（A/W）· 量子效率 η</text>
+            <text x="420" y="98" fill="var(--text-soft)">R_sh：</text><text x="470" y="98" fill="var(--text-soft)">暗电流与漏电 → 噪声地板</text>
+            <text x="420" y="126" fill="var(--text-soft)">C_j：</text><text x="470" y="126" fill="var(--text-soft)">带宽（RC 上限）· 动态范围</text>
+            <text x="420" y="154" fill="var(--text-soft)">R_s：</text><text x="470" y="154" fill="var(--text-soft)">填充因子 · 大信号失真</text>
+            <text x="420" y="190" fill="var(--text-mute)">NEP / D*：I_ph 与 R_sh 噪声决定</text>
+            <text x="420" y="212" fill="var(--text-mute)">灵敏度优化 = 做大 I_ph、压小噪声</text>
           </g>
         </svg>
       </figure>
@@ -416,34 +417,39 @@
           </defs>
           <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">选型五步：每一步都在砍一半选项</text>
           <!-- 步骤块 -->
-          <g font-size="11">
-            <rect x="40" y="44" width="180" height="56" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
-            <text x="52" y="68" fill="var(--semi)" font-weight="700">① 波长 → 材料</text>
-            <text x="52" y="88" fill="var(--text-soft)" font-size="10">λ_c = 1.24/E_g：Si/Ge/InGaAs/MCT/Ga₂O₃</text>
-            <rect x="260" y="44" width="180" height="56" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.3"/>
-            <text x="272" y="68" fill="var(--accent)" font-weight="700">② 测什么 → 结构</text>
-            <text x="272" y="88" fill="var(--text-soft)" font-size="10">功率/波形→PIN；弱光线性→APD；单光子→SPAD/PMT</text>
-            <rect x="480" y="44" width="160" height="56" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.3"/>
-            <text x="492" y="68" fill="var(--up)" font-weight="700">③ 速度 → 厚度</text>
-            <text x="492" y="88" fill="var(--text-soft)" font-size="10">GHz 级薄 I 层 + RCE；kHz 级随意</text>
-            <rect x="150" y="140" width="180" height="56" rx="10" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1.3"/>
-            <text x="162" y="164" fill="var(--fin)" font-weight="700">④ 规模 → 生态</text>
-            <text x="162" y="184" fill="var(--text-soft)" font-size="10">阵列化选 CMOS 集成；单通道可混合集成</text>
-            <rect x="370" y="140" width="180" height="56" rx="10" fill="var(--surface-2)" stroke="var(--down)" stroke-width="1.3"/>
-            <text x="382" y="164" fill="var(--down)" font-weight="700">⑤ 场景 → 成本/制冷</text>
-            <text x="382" y="184" fill="var(--text-soft)" font-size="10">消费级室温低成本；科研军品可制冷可高压</text>
+          <g>
+            <rect x="40" y="44" width="200" height="68" rx="10" fill="var(--surface-2)" stroke="var(--semi)" stroke-width="1.3"/>
+            <text x="52" y="66" font-size="11" fill="var(--semi)" font-weight="700">① 波长 → 材料</text>
+            <text x="52" y="86" font-size="9.5" fill="var(--text-soft)">λ_c = 1.24 / E_g(eV)</text>
+            <text x="52" y="102" font-size="9.5" fill="var(--text-soft)">Si / Ge / InGaAs / MCT / Ga₂O₃</text>
+            <rect x="268" y="44" width="200" height="68" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.3"/>
+            <text x="280" y="66" font-size="11" fill="var(--accent)" font-weight="700">② 测什么 → 结构</text>
+            <text x="280" y="86" font-size="9.5" fill="var(--text-soft)">功率 / 波形 → PIN</text>
+            <text x="280" y="102" font-size="9.5" fill="var(--text-soft)">弱光→APD · 单光子→SPAD</text>
+            <rect x="496" y="44" width="164" height="68" rx="10" fill="var(--surface-2)" stroke="var(--up)" stroke-width="1.3"/>
+            <text x="508" y="66" font-size="11" fill="var(--up)" font-weight="700">③ 速度 → 厚度</text>
+            <text x="508" y="86" font-size="9.5" fill="var(--text-soft)">GHz：薄 I 层 + RCE 腔</text>
+            <text x="508" y="102" font-size="9.5" fill="var(--text-soft)">kHz：厚度随意</text>
+            <rect x="140" y="150" width="200" height="68" rx="10" fill="var(--surface-2)" stroke="var(--fin)" stroke-width="1.3"/>
+            <text x="152" y="172" font-size="11" fill="var(--fin)" font-weight="700">④ 规模 → 生态</text>
+            <text x="152" y="192" font-size="9.5" fill="var(--text-soft)">阵列化 → CMOS 集成</text>
+            <text x="152" y="208" font-size="9.5" fill="var(--text-soft)">单通道 → 混合集成</text>
+            <rect x="380" y="150" width="200" height="68" rx="10" fill="var(--surface-2)" stroke="var(--down)" stroke-width="1.3"/>
+            <text x="392" y="172" font-size="11" fill="var(--down)" font-weight="700">⑤ 场景 → 成本/制冷</text>
+            <text x="392" y="192" font-size="9.5" fill="var(--text-soft)">消费级：室温低成本</text>
+            <text x="392" y="208" font-size="9.5" fill="var(--text-soft)">科研/军品：可制冷高压</text>
           </g>
           <!-- 箭头 -->
           <g stroke="var(--text-mute)" stroke-width="1.3" fill="none">
-            <path d="M222 72 L256 72" marker-end="url(#ar36r-b)"/>
-            <path d="M442 72 L476 72" marker-end="url(#ar36r-b)"/>
-            <path d="M560 102 C 620 120 240 130 240 138" marker-end="url(#ar36r-b)"/>
-            <path d="M332 168 L366 168" marker-end="url(#ar36r-b)"/>
+            <path d="M242 76 L264 76" marker-end="url(#ar36r-b)"/>
+            <path d="M470 76 L492 76" marker-end="url(#ar36r-b)"/>
+            <path d="M578 114 C 610 132 300 126 244 146" marker-end="url(#ar36r-b)"/>
+            <path d="M342 184 L376 184" marker-end="url(#ar36r-b)"/>
           </g>
           <!-- 结论 -->
-          <rect x="40" y="228" width="600" height="64" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.2"/>
-          <text x="56" y="252" font-size="11" fill="var(--text)" font-weight="700">输出：2~3 个候选 + 每个的「软肋清单」</text>
-          <text x="56" y="274" font-size="10" fill="var(--text-soft)">例：1550 nm 车用激光雷达 → InGaAs SPAD（软肋：DCR/成本）或 Si SPAD+倍频（软肋：效率低）</text>
+          <rect x="40" y="236" width="600" height="64" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.2"/>
+          <text x="56" y="260" font-size="11" fill="var(--text)" font-weight="700">输出：2~3 个候选 + 每个的「软肋清单」</text>
+          <text x="56" y="282" font-size="10" fill="var(--text-soft)">例：1550 nm 车用激光雷达 → InGaAs SPAD（软肋：DCR/成本）或 Si SPAD+倍频（软肋：效率低）</text>
         </svg>
       </figure>
 
@@ -504,7 +510,7 @@
       <h3>14.1 材料画像：天选之日盲，也是偏科之怪才</h3>
 
       <figure class="diagram">
-        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="超宽禁带半导体带隙与日盲窗口">
+        <svg viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="超宽禁带半导体带隙与日盲窗口">
           <text x="340" y="22" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">带隙决定日盲截止：Ga₂O₃ 卡在 250 nm 的黄金位</text>
           <rect x="60" y="36" width="120" height="200" fill="var(--up)" fill-opacity=".07"/>
           <text x="120" y="54" text-anchor="middle" font-size="10" fill="var(--up)">日盲区 200~280 nm</text>
@@ -527,9 +533,9 @@
             <rect x="288" y="170" width="72" height="22" rx="5" fill="var(--text-mute)" fill-opacity=".45"/>
             <text x="294" y="185" fill="var(--text-soft)">GaN 3.4 eV</text>
           </g>
-          <text x="400" y="185" font-size="10" fill="var(--text-soft)">→ 380 nm（勉强日盲）</text>
-          <text x="400" y="157" font-size="10" fill="var(--text-soft)">→ 365 nm</text>
-          <text x="340" y="228" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">Ga₂O₃ 既保日盲纯度，又比 AlN/金刚石容易长晶做器件 —— 性价比最优点</text>
+          <text x="368" y="185" font-size="10" fill="var(--text-soft)">→ 380 / 365 nm（勉强日盲）</text>
+          
+          <text x="340" y="276" text-anchor="middle" font-size="10.5" fill="var(--text-mute)">Ga₂O₃ 既保日盲纯度，又比 AlN/金刚石容易长晶做器件 —— 性价比最优点</text>
         </svg>
       </figure>
 
