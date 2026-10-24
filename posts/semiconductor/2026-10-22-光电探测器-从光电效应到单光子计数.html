@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>光电探测器全解：从光电效应到单光子计数</title>
 <meta name="description" content="系统讲解光电探测器：外光电与内光电效应的区别、PIN/APD/PMT/CCD/CMOS/光电导六大类型结构与机制、响应度与量子效率等关键参数、噪声与 NEP/D*、Si/Ge/InGaAs/GaN 材料波长地图、按波段选型、对比总结表与技术难点及二维材料/量子点优化方向。">
-<meta name="keywords" content="光电探测器,光电效应,PIN光电二极管,APD,SPAD,PMT,CCD,CMOS图像传感器,响应度,量子效率,暗电流,NEP,InGaAs,GaN,二维材料">
-<meta name="date" content="2026-10-22">
+<meta name="keywords" content="光电探测器,光电效应,PIN光电二极管,APD,SPAD,PMT,CCD,CMOS图像传感器,响应度,量子效率,暗电流,NEP,InGaAs,GaN,氧化镓,Ga2O3,日盲探测器,超宽禁带,深紫外探测,二维材料">
+<meta name="date" content="2026-10-24">
 
 <link rel="stylesheet" href="../../assets/css/article.css">
 <!-- favicon -->
@@ -65,9 +65,11 @@
           <li><a href="#s8">总结对比：一张表完成选型</a></li>
           <li><a href="#s9">当前技术难点与不足</a></li>
           <li><a href="#s10">优化方向与新材料</a></li>
-          <li><a href="#s11">与本站学习路径的衔接</a></li>
-          <li><a href="#s12">易错点</a></li>
-          <li><a href="#s13">自测</a></li>
+          <li><a href="#s11">最新研究进展：五条主线</a></li>
+          <li><a href="#s12">专题：氧化镓（Ga₂O₃）日盲探测器</a></li>
+          <li><a href="#s13">与本站学习路径的衔接</a></li>
+          <li><a href="#s14">易错点</a></li>
+          <li><a href="#s15">自测</a></li>
         </ol>
       </div>
 
@@ -396,7 +398,7 @@
         <tr><th>方向</th><th>在做什么</th><th>为什么有希望 / 卡点</th></tr>
         <tr><td><strong>胶体量子点（CQD）</strong></td><td>溶液合成 PbS 量子点，带隙随尺寸 0.4~1.4 eV 连续可调，旋涂成膜</td><td>把 SWIR 探测做成「涂出来的」，室温工作、成本逼近 CMOS；卡点：表面钝化与稳定性、迁移率</td></tr>
         <tr><td><strong>二维材料</strong></td><td>石墨烯（超宽带 300 nm~THz、超快 ps 响应）、MoS₂/WSe₂（原子层光电二极管）、黑磷（带隙随层数 0.3~2 eV，中红外潜力）</td><td>原子级薄 → 与任意衬底集成、柔性；卡点：吸收率只有 ~2%（需波导/腔增强）、大面积均匀性与接触电阻</td></tr>
-        <tr><td><strong>SiC / Ga₂O₃ 日盲紫外</strong></td><td>宽禁带（3.2~4.9 eV）本征日盲：可见光天然不响应</td><td>免滤光片、耐极端环境；卡点：p 型掺杂与外延缺陷，暗电流仍需降 1~2 个量级</td></tr>
+        <tr><td><strong>SiC / Ga₂O₃ 日盲紫外</strong></td><td>宽禁带（3.2~4.9 eV）本征日盲：可见光天然不响应</td><td>免滤光片、耐极端环境；卡点：p 型掺杂与外延缺陷，暗电流仍需降 1~2 个量级（Ga₂O₃ 专题详见第 12 节）</td></tr>
         <tr><td><strong>SPAD 大阵列化</strong></td><td>3D 堆栈 SPAD 相机（传感层+逻辑层键合）、SiPM 全数字化</td><td>dToF/量子成像的产业引擎；卡点：后脉冲与暗计数随工艺收窄</td></tr>
         <tr><td><strong>超导纳米线 SNSPD</strong></td><td>2~4 K 下 NbN/NbTiN 纳米线，探测效率 &gt;98%、暗计数极低、抖动 &lt;15 ps</td><td>量子通信/光量子计算的事实标准；卡点：制冷系统（正在从液氦向紧凑脉冲管过渡）与良率</td></tr>
         <tr><td><strong>钙钛矿探测器</strong></td><td>与钙钛矿太阳能同源：吸收强、缺陷容忍、可低温印刷，X 射线/可见光探测均已展示</td><td>成本革命候选；卡点与太阳能一样是稳定性与含铅</td></tr>
@@ -409,18 +411,227 @@
         「<strong>能搭上某种成熟工艺的顺风车</strong>」：量子点搭印刷电子、二维材料搭任意衬底异质集成、SNSPD 搭量子信息产业。
         判断一项探测器新技术的前景，就看它离哪条成熟产线最近。</div>
 
-      <h2 id="s11">11. 与本站学习路径的衔接</h2>
+      <h2 id="s11">11. 最新研究进展：五条主线</h2>
+
+      <p>探测器领域近年的论文与产品，可以归纳到五条主线上。每条主线背后都是同一个动机：<strong>把「更灵敏 / 更快 / 更便宜」三角继续往前推</strong>。</p>
+
+      <h3>11.1 单光子阵列化与事件相机</h3>
+      <p>SPAD 从单通道走向<strong>百万像素级 3D 堆栈阵列</strong>（传感层 + 逻辑电路晶圆键合），配合时间数字转换器（TDC）直接输出光子到达时间戳。
+      由此催生两类产品形态：① <strong>dToF 激光雷达</strong>（车载、机器人）与间接飞行时间（iToF）深度相机；② <strong>事件相机（Event/DVS）</strong>——像素只在亮度变化时输出，帧率等效上千万 fps、功耗毫瓦级，适合高速运动捕捉、眼动追踪与低延迟 SLAM。
+      学术热点则集中在压暗计数率与后脉冲（pixel-level DSP、3D 堆栈工艺缩小）。</p>
+
+      <h3>11.2 红外室温化与低成本化</h3>
+      <ul>
+        <li><strong>II 类应变层超晶格（T2SL）</strong>：InAs/GaSb 交替生长，带隙由层厚而非组分决定，可绕开 MCT 的组分均匀性难题，且俄歇复合被抑制——正把「高温工作（HOT）」从 77 K 推向 150~200 K，目标省掉一级制冷；</li>
+        <li><strong>HgTe 胶体量子点</strong>：溶液法涂布、室温工作、可覆盖 1~5 μm 甚至到长波，与 CMOS 读出电路直接倒装；早期是「高暗电流 + 低迁移率」，近年经配体工程（HgTe 2D 配体交换）与栅压调控，SWIR 成像探测率已逼近 InGaAs 的量级；</li>
+        <li><strong>非制冷长波红外（氧化钒/硅测辐射热计）</strong>：像素尺寸一路缩到 12 μm 乃至 8 μm、NETD &lt;40 mK，正在把热成像推向「千元级」消费品。</li>
+      </ul>
+
+      <h3>11.3 深紫外（日盲）探测：超宽禁带半导体的战场</h3>
+      <p>臭氧层吸收 280 nm 以下阳光，地表 200~280 nm 形成天然的「背景黑洞」——日盲探测器在军事（导弹尾焰预警）、电力（电晕放电检测）、生化（紫外荧光分析）上有不可替代性。
+      材料从<strong>宽禁带</strong>（SiC 3.26 eV、GaN 3.4 eV）走向<strong>超宽禁带</strong>（Ga₂O₃ 4.8~4.9 eV、AlGaN &gt;5 eV、AlN 6.2 eV、金刚石 5.5 eV），日盲截止波长从 365/380 nm 一路压到 250/200 nm。
+      这一块近三年的论文热点正是第 12 节的主题——氧化镓。</p>
+
+      <h3>11.4 新机理与新概念器件</h3>
+      <ul>
+        <li><strong>光门控与光电导增益</strong>：利用陷阱态把光生空穴「存住」，电子循环流动获得 10²~10⁴ 的内增益——灵敏度暴涨，代价是响应慢（ms~s），适合「弱光检测」而非「高速通信」；</li>
+        <li><strong>热载流子探测器</strong>：不依赖带隙，靠超快能量弛豫前「拦截」热电子，理论上把响应拉到 THz 波段（石墨烯等零带隙材料的主场）；</li>
+        <li><strong>神经形态/光突触</strong>：把探测与记忆、突触权重融合进一个器件（二维材料异质结、铁电光电导），探索「感存算一体」的传感器形态；</li>
+        <li><strong>二维材料异质结</strong>：石墨烯/MoS₂/WSe₂ 等范德华异质结实现自供电、偏振敏感、超宽带的柔性探测，尚需解决吸收率与接触问题。</li>
+      </ul>
+
+      <h3>11.5 集成化与智能探测</h3>
+      <p>趋势与芯片行业同频：<strong>「探测」正在从分立器件变成片上系统</strong>——单芯片同时输出强度、光谱、偏振、深度四维信息（超构表面 + 探测器阵列 + 片上神经网络），
+      以及探测器与读出电路 3D 混合集成（SPAD-Si、HgTe CQD-ROIC、Ga₂O₃-CMOS）。
+      换句话说，探测器竞争的下一章，比的不再只是「响应度数字」，而是<strong>「每个像素能算多少」</strong>。</p>
+
+      <h2 id="s12">12. 专题：氧化镓（Ga₂O₃）日盲探测器</h2>
+
+      <p>氧化镓是近五年超宽禁带半导体里最「出圈」的材料：功率电子界用它做低成本大尺寸衬底，光电子界则盯上了它 4.8~4.9 eV 的带隙——<strong>刚好落在深紫外日盲区的甜点位置</strong>。
+      本节按「材料画像 → 器件结构 → 性能指标 → 研究现状 → 横向对比 → 瓶颈 → 趋势」的顺序，把这个专题讲透。</p>
+
+      <h3>12.1 材料画像：日盲的「天选之子」，也是「偏科的怪才」</h3>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="超宽禁带半导体带隙与日盲窗口分布">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">带隙决定日盲截止波长：Ga₂O₃ 卡在 250 nm 的黄金位置</text>
+          <!-- 日盲区背景 -->
+          <rect x="60" y="40" width="120" height="216" fill="var(--up)" fill-opacity=".07"/>
+          <text x="120" y="58" text-anchor="middle" font-size="10" fill="var(--up)">日盲区 200~280 nm</text>
+          <text x="120" y="74" text-anchor="middle" font-size="9" fill="var(--text-mute)">臭氧吸收，地表背景≈0</text>
+          <!-- 波长轴 -->
+          <line x1="60" y1="262" x2="640" y2="262" stroke="var(--border)" stroke-width="1.2"/>
+          <g font-size="9.5" fill="var(--text-mute)">
+            <text x="60" y="278" fill="var(--text-mute)">200 nm</text><text x="140" y="278" fill="var(--text-mute)">250</text><text x="220" y="278" fill="var(--text-mute)">280</text>
+            <text x="300" y="278" fill="var(--text-mute)">365</text><text x="380" y="278" fill="var(--text-mute)">400</text><text x="460" y="278" fill="var(--text-mute)">450</text>
+            <text x="540" y="278" fill="var(--text-mute)">500</text><text x="610" y="278" fill="var(--text-mute)">600</text>
+          </g>
+          <text x="636" y="294" text-anchor="end" font-size="9.5" fill="var(--text-mute)">波长 →（280 nm 以右为可见光，背景极强）</text>
+          <!-- 材料带 -->
+          <g font-size="10">
+            <rect x="76" y="90" width="118" height="24" rx="5" fill="var(--accent)" fill-opacity=".45"/>
+            <text x="82" y="106" fill="var(--text)">金刚石 5.5 eV → 225 nm</text>
+            <rect x="70" y="122" width="128" height="24" rx="5" fill="var(--fin)" fill-opacity=".45"/>
+            <text x="76" y="138" fill="var(--text)">AlN 6.2 eV → 200 nm</text>
+            <rect x="118" y="154" width="102" height="24" rx="5" fill="var(--semi)" fill-opacity=".55"/>
+            <text x="124" y="170" fill="var(--text)">Ga₂O₃ 4.9 eV → 253 nm</text>
+            <rect x="196" y="186" width="88" height="24" rx="5" fill="var(--up)" fill-opacity=".4"/>
+            <text x="202" y="202" fill="var(--text-soft)">4H-SiC 3.26 eV</text>
+            <rect x="288" y="186" width="72" height="24" rx="5" fill="var(--text-mute)" fill-opacity=".45"/>
+            <text x="294" y="202" fill="var(--text-soft)">GaN 3.4 eV</text>
+          </g>
+          <text x="400" y="200" font-size="10" fill="var(--text-soft)">→ 380 nm（勉强日盲）</text>
+          <text x="400" y="170" font-size="10" fill="var(--text-soft)">→ 365 nm</text>
+          <!-- 结论 -->
+          <text x="340" y="240" text-anchor="middle" font-size="11" fill="var(--text-mute)">Ga₂O₃ 的带隙既保证可见光完全不响应，又比 AlN/金刚石更容易做材料和器件——日盲「性价比」的最优点</text>
+        </svg>
+      </figure>
+
+      <ul>
+        <li><strong>带隙 4.8~4.9 eV</strong>：日盲截止波长 240~260 nm，可见光到日盲区之间的<strong>抑制比可达 10⁶~10⁸</strong>，可以完全扔掉滤光片；</li>
+        <li><strong>衬底便宜且大尺寸</strong>：β-Ga₂O₃ 可用熔体法（导模法/直拉）生长，<strong>成本只有 SiC/GaN 衬底的几分之一</strong>，2 英寸已量产、4~6 英寸在推进——这是它在「材料工业」层面最大的杀手锏；</li>
+        <li><strong>电子性质尚可</strong>：电子迁移率 ~200 cm²/V·s（薄膜更低），肖特基接触成熟，做单极电子器件没有障碍；</li>
+        <li><strong>两个硬伤</strong>：① <strong>空穴几乎动不了</strong>——价带极平坦 + 强电子–声子耦合使空穴以「小极化子」形式自陷，迁移率只有 10⁻³~10⁻¹ cm²/V·s，<strong>p 型掺杂近乎不可能</strong>，双极器件（PN 结、双极晶体管）成为材料学禁区；② <strong>导热差</strong>（~10~30 W/m·K，比 SiC 低一个量级），器件散热受限。</li>
+      </ul>
+
+      <h3>12.2 器件结构：绕开 p 型难题的四条路线</h3>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ga2O3 四类探测器结构与性能权衡">
+          <text x="340" y="24" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="700">Ga₂O₃ 探测器四条结构路线：增益与速度的取舍</text>
+          <!-- MSM -->
+          <text x="90" y="52" text-anchor="middle" font-size="11.5" fill="var(--semi)" font-weight="700">MSM 光电导</text>
+          <rect x="40" y="64" width="100" height="14" fill="var(--text)" fill-opacity=".55"/>
+          <rect x="46" y="78" width="30" height="26" fill="var(--text)" fill-opacity=".55"/>
+          <rect x="104" y="78" width="30" height="26" fill="var(--text)" fill-opacity=".55"/>
+          <rect x="40" y="104" width="100" height="22" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="90" y="92" text-anchor="middle" font-size="8.5" fill="var(--text)">Ga₂O₃</text>
+          <text x="90" y="142" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">高增益 · 慢响应</text>
+          <text x="90" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">R 可达 10²~10³ A/W</text>
+          <!-- 肖特基 -->
+          <text x="262" y="52" text-anchor="middle" font-size="11.5" fill="var(--accent)" font-weight="700">肖特基二极管</text>
+          <rect x="212" y="64" width="100" height="10" fill="var(--text)" fill-opacity=".35"/>
+          <rect x="212" y="74" width="100" height="20" fill="var(--accent)" fill-opacity=".3"/>
+          <rect x="212" y="94" width="100" height="22" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="262" y="88" text-anchor="middle" font-size="8.5" fill="var(--text)">半透明 Ni/Au</text>
+          <text x="262" y="142" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">无增益 · 快 · 暗电流低</text>
+          <text x="262" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">μs~ms · pA~nA</text>
+          <!-- 异质结 -->
+          <text x="434" y="52" text-anchor="middle" font-size="11.5" fill="var(--up)" font-weight="700">异质结（NiO/Ga₂O₃ 等）</text>
+          <rect x="384" y="64" width="100" height="16" fill="var(--up)" fill-opacity=".3"/>
+          <rect x="384" y="80" width="100" height="16" fill="var(--accent)" fill-opacity=".25"/>
+          <rect x="384" y="96" width="100" height="20" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="434" y="76" text-anchor="middle" font-size="8.5" fill="var(--text)">p 型氧化物</text>
+          <text x="434" y="142" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">自供电 · 光伏模式</text>
+          <text x="434" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">用「别人的空穴」解 Ga₂O₃ 之难</text>
+          <!-- APD -->
+          <text x="606" y="52" text-anchor="middle" font-size="11.5" fill="var(--down)" font-weight="700">日盲 APD</text>
+          <rect x="556" y="64" width="100" height="12" fill="var(--text)" fill-opacity=".35"/>
+          <rect x="556" y="76" width="100" height="20" fill="var(--semi)" fill-opacity=".3"/>
+          <rect x="556" y="96" width="100" height="14" fill="var(--down)" fill-opacity=".35"/>
+          <rect x="556" y="110" width="100" height="10" fill="var(--semi)" fill-opacity=".3"/>
+          <text x="606" y="105" text-anchor="middle" font-size="8.5" fill="var(--text)">高场雪崩区</text>
+          <text x="606" y="142" text-anchor="middle" font-size="9.5" fill="var(--text-soft)">倍增 10²~10⁴</text>
+          <text x="606" y="158" text-anchor="middle" font-size="9.5" fill="var(--text-mute)">前沿：单光子级尝试</text>
+          <!-- 权衡轴 -->
+          <line x1="60" y1="190" x2="620" y2="190" stroke="var(--border)" stroke-width="1"/>
+          <text x="90" y="208" text-anchor="middle" font-size="10" fill="var(--text-mute)">← 增益优先</text>
+          <text x="340" y="208" text-anchor="middle" font-size="10" fill="var(--text-mute)">结构选型 = 在「增益 / 速度 / 噪声 / 工艺难度」之间找平衡点</text>
+          <text x="590" y="208" text-anchor="middle" font-size="10" fill="var(--text-mute)">速度优先 →</text>
+          <!-- 光谱扩展 -->
+          <rect x="60" y="228" width="560" height="64" rx="8" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+          <text x="76" y="252" font-size="10.5" fill="var(--text)" font-weight="700">如何把「只看 250 nm」的探测器扩展到可见/近红外？</text>
+          <text x="76" y="272" font-size="9.5" fill="var(--text-soft)">① 缺陷工程（氧空位引入亚带隙吸收，牺牲日盲比与速度）② Sn 合金化 GaSnO 调带隙 ③ 光门控陷阱增益</text>
+          <text x="76" y="286" font-size="9.5" fill="var(--text-soft)">④ 双光子/弱光上转换 ⑤ 异质结与低维界面态工程 —— 每一条都在「波段」与「性能」之间做交易</text>
+        </svg>
+      </figure>
+
+      <ul>
+        <li><strong>MSM（金属–半导体–金属）光电导</strong>：结构最简单、无 PN 结门槛，暗电流低、可加高压换取 10²~10³ 的响应度，但慢响应与持续光电导是通病；</li>
+        <li><strong>肖特基二极管</strong>：半透明金属电极 + Ga₂O₃，响应快（μs~ms）、暗电流低（pA~nA），是高性能日盲探测的主力构型；</li>
+        <li><strong>异质结</strong>（NiO/Ga₂O₃、SnO₂/Ga₂O₃、Ga₂O₃/Si）：借 p 型氧化物的空穴补短板，做成<strong>自供电光伏型</strong>探测器（零偏置、低功耗）；</li>
+        <li><strong>日盲 APD</strong>：近年的前沿方向，利用 Ga₂O₃ 高临界击穿场强（~8 MV/cm，约为硅的 4 倍）做低噪声雪崩，已实现 10²~10⁴ 倍增与 10¹³ Jones 级探测率，单光子探测在验证中。</li>
+      </ul>
+
+      <h3>12.3 关键性能指标：文献报道的典型水平</h3>
+
+      <table class="term-table">
+        <tr><th>指标</th><th>Ga₂O₃ 探测器典型水平（文献报道）</th><th>物理含义与注意事项</th></tr>
+        <tr><td><strong>响应度 R</strong></td><td>MSM 光电导型 10⁻²~10³ A/W（高增益慢响应）；肖特基型 ~0.05~1 A/W @ 254 nm</td><td>数值跨度大正说明「增益–速度」权衡：比较必须同时给出带宽，否则数字无意义</td></tr>
+        <tr><td><strong>探测率 D*</strong></td><td>常规器件 10⁹~10¹³ Jones；日盲 APD 报道已达 ~10¹³ Jones 量级</td><td>已逼近 SiC 商用水平，日盲区背景近零是天然加成</td></tr>
+        <tr><td><strong>响应速度</strong></td><td>肖特基/APD 型 μs~ms；高增益光电导型 ms~s（持续光电导）</td><td>陷阱辅助增益必然牺牲速度——「快且灵敏」仍是待攻关目标</td></tr>
+        <tr><td><strong>暗电流</strong></td><td>低偏压肖特基 pA~nA 级（10⁻¹²~10⁻⁹ A）；高偏压光电导型 μA 级</td><td>决定噪声地板；高温下热生载流子随 4.9 eV 大带隙本就受抑制，室温暗电流理论上极低</td></tr>
+        <tr><td><strong>光谱响应</strong></td><td>本征截止 240~260 nm；日盲比 R₂₅₄/R₄₀₀ 常报 &gt;10³~10⁴</td><td>缺陷/合金化可扩展到可见甚至近红外，但日盲比随之崩塌——「扩展」与「日盲」是对立项</td></tr>
+        <tr><td><strong>温度特性</strong></td><td>室温可用；高温（300 °C+）衰减远小于窄带隙器件</td><td>大带隙的附加红利：航空航天、发动机近场监测等高温场景</td></tr>
+      </table>
+
+      <h3>12.4 研究现状：从「发论文」走向「做阵列」</h3>
+      <ul>
+        <li><strong>衬底与薄膜</strong>：β-Ga₂O₃ 2 英寸衬底已商用（日本企业产业化领先），4 英寸示范、6 英寸路线图清晰；国内多个团队在外延薄膜（MOCVD/MBE）与缺陷控制上快速跟进；</li>
+        <li><strong>器件性能</strong>：单器件（MSM/肖特基）在 255 nm 的响应度–速度–暗电流组合已接近「可用」水平，日盲 APD 报道高倍增与低过剩噪声，是 2020 年以来最密集的突破点；</li>
+        <li><strong>阵列化</strong>：小规模日盲焦平面（8×8 到 128×128 级）与单像素成像（单探测器 + 空间光调制）已有演示，<strong>百万像素级阵列与片上读出电路仍是空白</strong>；</li>
+        <li><strong>光谱扩展</strong>：缺陷工程、Sn 合金化（GaSnO 带隙可调至 ~3.5 eV）、非晶/纳米晶 Ga₂O₃ 已实现可见光响应，但如何做到「宽谱 + 快 + 低暗电流」三全是公开难题；</li>
+        <li><strong>产业格局</strong>：日本在衬底与功率电子上先行（日盲探测器多为其附带方向），中国在论文产出与应用验证（电晕检测、日盲通信）上活跃，欧美以国防应用牵引为主。</li>
+      </ul>
+
+      <h3>12.5 横向对比：Ga₂O₃ vs 其他宽禁带日盲材料</h3>
+
+      <table class="term-table">
+        <tr><th>维度</th><th>Ga₂O₃</th><th>4H-SiC</th><th>GaN / AlGaN</th><th>AlN</th><th>金刚石</th></tr>
+        <tr><td>带隙 / 截止波长</td><td>4.8~4.9 eV / 250 nm</td><td>3.26 eV / 380 nm</td><td>3.4~6 eV / 365~200 nm</td><td>6.2 eV / 200 nm</td><td>5.5 eV / 225 nm</td></tr>
+        <tr><td>日盲「纯度」</td><td>高（可见抑制 10⁶~10⁸）</td><td>中（近紫外尾漏）</td><td>Al 组分越高越纯</td><td>极高</td><td>极高</td></tr>
+        <tr><td>衬底成本/尺寸</td><td><strong>低、大（2→6 英寸，熔体法）</strong></td><td>中、6 英寸成熟</td><td>高、4~6 英寸</td><td>很高、2 英寸级</td><td>极高、小尺寸</td></tr>
+        <tr><td>电子迁移率</td><td>~200 cm²/V·s</td><td>~1000 cm²/V·s</td><td>~1000~2000 cm²/V·s</td><td>低</td><td>很高（但载流子浓度难控）</td></tr>
+        <tr><td>导热率</td><td><strong>差（10~30 W/m·K）</strong></td><td>优（~400 W/m·K）</td><td>良（~130~200）</td><td>良</td><td>极优（~2000）</td></tr>
+        <tr><td>p 型可得性</td><td><strong>几乎不可能（自陷空穴）</strong></td><td>难（受主深）</td><td>可（Mg 掺杂成熟）</td><td>极难</td><td>难（B 掺杂）</td></tr>
+        <tr><td>器件成熟度</td><td>单器件活跃、阵列空白</td><td>商用（UV LED/探测器）</td><td>商用（UV-C 探测成熟）</td><td>研究级</td><td>研究级</td></tr>
+        <tr><td>核心优势</td><td>成本、大尺寸、增益潜力</td><td>工艺稳、散热好</td><td>双极器件、生态全</td><td>日盲最纯</td><td>极端环境无敌</td></tr>
+        <tr><td>核心短板</td><td>导热差、无 p 型、阵列缺失</td><td>日盲截止偏长</td><td>衬底贵、AlGaN 裂纹</td><td>材料与工艺最难</td><td>成本与尺寸</td></tr>
+        <tr><td>典型定位</td><td>低成本日盲单点/线阵探测、UV 传感</td><td>成熟日盲器件、功率-光电子双修</td><td>日盲成像、UV-C LED 配套</td><td>极限日盲科研</td><td>极端高温高压探测</td></tr>
+      </table>
+
+      <div class="note"><b>一句话定位：</b>
+        <strong>GaN/SiC 是「全能选手」，Ga₂O₃ 是「偏科天才」</strong>——它用「没有 p 型 + 散热差」换来了「便宜的大衬底 + 高日盲纯度 + 高击穿场强」。
+        在「只要探测 250 nm 附近、量大、要便宜」的场景（电晕监测、UV 传感、日盲通信接收），它是最优选；
+        在「要成像阵列、要高温高功率、要双极器件」的场景，短中期仍属于 GaN/SiC。</div>
+
+      <h3>12.6 技术瓶颈：六个待解的结</h3>
+      <ol>
+        <li><strong>p 型缺失的结构性代价</strong>：没有 PN 结就做不成高效双极型/三极管结构，探测器只能停留在「单极 + 异质结」形态，器件物理的设计空间被材料物理锁死；</li>
+        <li><strong>空穴输运灾难</strong>：小极化子自陷空穴导致双极输运与倍增物理都不友好——APD 的增益-噪声理论在 Ga₂O₃ 里需要重写（电子触发雪崩反而是优势，需扬长避短）；</li>
+        <li><strong>散热瓶颈</strong>：导热率低一个量级，大功率 UV 探测或密集阵列下热生暗电流与可靠性下降，封装热设计成为系统工程级难题；</li>
+        <li><strong>衬底与界面缺陷</strong>：位错、堆垛层错、氧空位既是暗电流之源又是「光谱扩展」的帮手——如何「按需造缺陷」是材料学精细活；</li>
+        <li><strong>增益-带宽-噪声三角</strong>：高增益依赖陷阱，陷阱带来持续光电导与 1/f 噪声，「又快又灵敏又线性」的器件尚未出现；</li>
+        <li><strong>阵列与集成生态空白</strong>：没有类似 CMOS 图像传感器的读出电路生态，焦平面、片上集成、标准化工艺几乎从零开始——这是它离「产业」最远的一段路。</li>
+      </ol>
+
+      <h3>12.7 发展趋势：五个可见方向</h3>
+      <ul>
+        <li><strong>合金化调带隙</strong>：(Al,Ga)₂O₃ 把截止波长从 250 nm 连续拉到 200 nm 附近，覆盖整个日盲区——与 AlGaN 同思路但衬底更便宜；</li>
+        <li><strong>异质结与能带工程</strong>：NiO/Ga₂O₃、SnO₂/Ga₂O₃、Ga₂O₃/Si 等日盲自供电探测器，零偏置低功耗适配物联网 UV 传感；</li>
+        <li><strong>日盲 APD / 单光子</strong>：利用 8 MV/cm 临界场强做低噪声雪崩，配合日盲背景优势，有望做出「免制冷日盲单光子阵列」；</li>
+        <li><strong>阵列化与 3D 集成</strong>：日盲焦平面（预警、电晕成像）+ 与 Si CMOS 读出电路倒装/键合集成，是从「论文」走向「产品」的关键一跃；</li>
+        <li><strong>薄膜化与柔性化</strong>：非晶/纳米晶 Ga₂O₃ 薄膜低温沉积在柔性衬底上，做可穿戴 UV 剂量贴片——绕开单晶衬底成本，把「日盲」做成大众传感器。</li>
+      </ul>
+
+      <h3>12.8 应用定位：日盲的红利清单</h3>
+      <p>日盲探测器的价值全在「<strong>背景为零</strong>」四个字上——它只对 200~280 nm 敏感，而太阳在这个波段被臭氧层屏蔽，
+      于是任何日盲信号都是「人为或异常」：导弹尾焰中的 OH/CO 分子带辐射（导弹预警）、高压设备的电晕放电（电力巡检）、
+      紫外荧光（生化分析与水质监测）、日盲保密通信（大气衰减大反而成抗截获优势）、火焰早期探测与发动机健康监测。
+      这些场景共同要求「高温、高可靠、低成本、大量部署」——恰好是 Ga₂O₃ 的甜区，也是它值得专门写一节的原因。</p>
+
+      <h2 id="s13">13. 与本站学习路径的衔接</h2>
 
       <ul>
         <li><strong>第 2、3 篇（能带、PN 结）</strong>：内光电效应就是 PN 结的第三次出场；暗电流的本质是耗尽区热生载流子，与漏电流同源；</li>
-        <li><strong>第 6 篇（器件微缩）</strong>：SPAD 像素的暗计数率与后脉冲，随工艺缩小而恶化——「缩小不总是好事」的又一例；</li>
-        <li><strong>第 8 篇（材料）</strong>：材料地图一张图就是带隙工程的应用题；SiC/GaN/钙钛矿三条新材料线与功率/光电子共享同一个材料体系；</li>
+        <li><strong>第 8 篇（材料）</strong>：材料地图一张图就是带隙工程的应用题；SiC/GaN/钙钛矿三条新材料线与功率/光电子共享同一个材料体系；第 12 节的 Ga₂O₃ 则是「材料物理反过来锁死器件设计空间」（无 p 型 → 无 PN 结）的最佳教案；</li>
+        <li><strong>第 6 篇（器件微缩）</strong>：SPAD 像素的暗计数率与后脉冲，随工艺缩小而恶化——「缩小不总是好事」的又一例；而 Ga₂O₃ 日盲 APD 的增益-噪声理论必须重写，因为雪崩由电子触发、空穴不参与——「载流子不对称性」既是缺陷也是武器；</li>
         <li><strong>第 18 篇（封测）</strong>：PMT 的真空封装、InGaAs 的倒装焊、SPAD 的 3D 堆栈键合——探测器的性能上限常常死在封装上；</li>
         <li><strong>第 34 篇（光电子技术）</strong>：本篇是其第 6 节的完整展开——发光、传光、收光三兄弟在此合体；</li>
         <li><strong>第 35 篇（太阳能电池）</strong>：光伏效应的同一场戏，太阳能电池追求「收能量」，探测器追求「收信息」——噪声观完全不同。</li>
       </ul>
 
-      <h2 id="s12">12. 易错点</h2>
+      <h2 id="s14">14. 易错点</h2>
 
       <ol>
         <li><strong>「响应度大 = 器件好」</strong>：R 随波长线性上升（R = ηλ/1.24），比较必须同波长；两颗不同材料器件的 R 高低，更可能反映波长而不是优劣——比 QE 更公平；</li>
@@ -429,9 +640,11 @@
         <li><strong>「硅探测器做不好是工艺问题」</strong>：1.1 μm 截止是带隙 1.12 eV 的物理决定，工艺再好也造不出室温硅 1550 nm 探测器（除非借锗、缺陷工程或双光子吸收等非主流路径）；</li>
         <li><strong>「NEP 越大越灵敏」</strong>：反了，NEP 是「等效最小可测功率」，越小越好；而它的归一化孪生 D* 越大越好——两个指标方向相反，念报告时别混；</li>
         <li><strong>「带宽只是 RC 问题」</strong>：把 I 层做厚减小电容，渡越时间同时变长；真正的带宽设计是「渡越时间、RC、扩散尾巴」三者的联合优化，有时还要加谐振腔。</li>
+        <li><strong>「Ga₂O₃ 响应度 10³ A/W，比 InGaAs 的 1.25 A/W 强三个数量级」</strong>：这是跨波段、跨机理的错位比较。高响应度来自光电导增益（陷阱存空穴、电子循环流动），代价是 ms~s 级慢响应与非线性；InGaAs 的 1.25 A/W 是「QE≈100% 无增益」的物理极限值，配 GHz 带宽。比较灵敏度请统一到 D* 与 NEP，并注明带宽；</li>
+        <li><strong>「日盲比越高越好，所以要无限扩展响应范围」</strong>：日盲比与响应范围是对立项——缺陷工程/合金化把光谱拉到可见甚至近红外的同时，R₂₅₄/R₄₀₀ 从 10⁴ 跌到 10¹ 量级，滤光优势荡然无存。选型先问「你到底要日盲还是宽谱」。</li>
       </ol>
 
-      <h2 id="s13">13. 自测</h2>
+      <h2 id="s15">15. 自测</h2>
 
       <details class="quiz"><summary>自测 1：光纤通信为什么在 1310/1550 nm 不能用硅探测器？Ge-on-Si 和 InGaAs 各自怎么权衡？</summary>
         <div>硅带隙 1.12 eV，截止波长 ~1.1 μm，1310/1550 nm 光子能量（0.95/0.8 eV）低于带隙，半导体完全透明——这是带隙决定的物理边界，与工艺无关。InGaAs（In₀.₅₃Ga₀.₄₇As 晶格匹配 InP）是性能最优解：QE&gt;90%、暗电流 nA 级、带宽可到 50 GHz，但生长在 InP 上，无法与硅 CMOS 单片集成，只能混合集成（倒装/键合），成本高。Ge-on-Si 用外延 Ge 补位（Ge 带 0.66 eV，覆盖到 1.85 μm），与 CMOS 兼容、可在波导上直接生长实现单片集成，代价是暗电流大 2~3 个量级（小带隙 + Ge/Si 界面位错）且材料纯度受限。结论：<strong>分立高性能器件选 InGaAs，硅光集成选 Ge-on-Si</strong>——「性能 vs 集成度」是这条边界上永恒的交换。</div>
@@ -445,6 +658,19 @@
       <details class="quiz"><summary>自测 4：CMOS 传感器靠什么在画质不占优的情况下取代了 CCD？两者今天的残余阵地分别在哪？</summary>
         <div>CMOS 的胜利是系统工程性的：① <strong>像素内放大 + 列并行 ADC</strong>——并行读出绕开了 CCD 全局串行搬运的速度天花板，做出千帧级高速与全局快门之外的灵活开窗；② <strong>低功耗与单片集成</strong>：像素与逻辑同片（曝光控制、HDR、片上 AI 预处理），BSI 与堆栈式键合把 QE 推到 80%+ 的同时缩小模组；③ <strong>搭上 CMOS 工艺摩尔快车</strong>：像素缩小、晶圆级光学、成本随规模指数下降。CCD 的画质优势（读出噪声 ~2 e⁻、均一性、满阱线性）在低照度科学场景仍不可替代——今天的天文相机、科学级 X 射线成像、高精度光度测量仍是 CCD/SCMOS 的阵地；而 sCMOS（科学级 CMOS）正在用「CCD 的画质 + CMOS 的速度」两头蚕食。这场替代再次验证：<strong>阵列化 + 工艺生态 + 系统集成 的复合优势，最终压过单点画质参数</strong>。</div>
       </details>
+
+      <details class="quiz"><summary>自测 5：为什么 Ga₂O₃ 日盲探测器多用肖特基/MSM/异质结结构，而不是通信和成像里最常见的 PIN 结构？这对它的性能上限意味着什么？</summary>
+        <div>根源在材料物理：β-Ga₂O₃ 价带极平坦 + 强电子–声子耦合，空穴以小极化子形式自陷，迁移率只有 10⁻³~10⁻¹ cm²/V·s，且 p 型掺杂近乎不可能——<strong>做不出可用的 PN 结</strong>，PIN 这种「P-I-N 双注入」结构自然无从谈起。于是产业界绕道：① 用金属-半导体肖特基结（只需电子一侧导通）；② 用 MSM 光电导（连结都不需要，纯漂移输运）；③ 用 NiO/SnO₂ 等 p 型氧化物搭异质结，「借别人的空穴」。代价是器件物理的设计空间被锁死：没有双极注入就没有高效载流子利用率，没有 PN 结的电场整形手段，雪崩与增益的精细控制也更难。但换个角度，电子-only 的输运反而让 APD 的雪崩「只由电子触发」，增益-噪声特性更干净——这是 Ga₂O₃ 日盲 APD 近年进展快的深层原因。<strong>材料决定结构，结构决定性能上限</strong>——这是 Ga₂O₃ 教给半导体设计的最重要一课。</div>
+      </details>
+      <details class="quiz"><summary>自测 6：某厂商宣称其 Ga₂O₃ 探测器「日盲比 &gt;10⁶、响应速度 &lt;1 ms、响应度 &gt;100 A/W」三合一，请判断这条宣传的可信度，并说明理由。</summary>
+        <div>高度可疑。这三个指标在物理上互相冲突：&gt;100 A/W 的响应度必然来自光电导增益（陷阱存储光生空穴、电子循环流动），而<strong>陷阱寿命直接决定持续光电导</strong>——高增益器件的响应时间通常在 ms~s 级，很难同时 &lt;1 ms；&lt;1 ms 的快响应要求浅能级、少陷阱，增益也就上不去（肖特基型通常 0.05~1 A/W）。日盲比 &gt;10⁶ 本身可信（大带隙本征抑制），但「高增益 + 快 + 日盲」三者在当前文献中没有同时出现的报道。正确的提问方式是：在什么带宽下测的响应度？增益机制是什么？光暗电流比与噪声谱长什么样？——<strong>看到探测器参数，先问测量条件，再看数字</strong>。</div>
+      </details>
+
+      <div class="tip"><b>本篇小结：</b>
+        探测器选型五步口诀——<strong>波长定材料、功率定结构（PIN/APD vs SPAD/PMT）、速度定厚度、阵列定生态、场景定成本</strong>。
+        而 Ga₂O₃ 专题给我们的启发超出探测器本身：一项材料的真正竞争力，不只在带隙表上的那个数字，
+        更在<strong>衬底成本、载流子对称性、导热与工艺生态</strong>这些「材料性格」上——功率电子与光电子两个领域同时押注它，赌的都是同一件事：
+        便宜的大尺寸衬底，值得整个产业为它重写器件规则。</div>
 
       <div class="tip"><b>下一篇预告：</b>
         到这里，光电子的「发射—传输—接收」三段全部闭环。接下来我们转向信息世界的另一半根基——
@@ -460,6 +686,9 @@
         <span class="chip">#CMOS传感器</span>
         <span class="chip">#InGaAs</span>
         <span class="chip">#量子点</span>
+        <span class="chip">#氧化镓</span>
+        <span class="chip">#日盲探测器</span>
+        <span class="chip">#超宽禁带</span>
       </div>
 
       <div class="series">
